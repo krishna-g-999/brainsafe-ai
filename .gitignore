@@ -1,0 +1,12 @@
+
+# Exclude manuscript and figures
+manuscript/
+figures/
+*.pdf
+*.docx
+*.pptx
+supplementary/
+results/plots/
+*.png
+*.svg
+*.tiff

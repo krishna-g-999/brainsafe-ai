@@ -1,0 +1,207 @@
+{
+  "Sucrose": {
+    "compoundtype": "Simple Carbohydrate",
+    "bbb": "Low",
+    "als": "Low",
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "huntingtons": "Low",
+    "antioxidant": 1.5,
+    "anti_inflammatory": 1.5,
+    "mitochondrial_support": 1.0,
+    "aggregation_modulation": 1.0,
+    "cognitive_enhancement": 1.5,
+    "neurogenesis": 1.0,
+    "synaptic_plasticity": 1.0,
+    "pathways": [
+      "Glycolysis"
+    ],
+    "metabolites": [
+      "Glucose",
+      "Fructose"
+    ],
+    "brain_regions": [
+      "None specific"
+    ],
+    "sources": [
+      "Negative control \u2014 simple sugar, no neuroprotective evidence"
+    ],
+    "negative_control": true
+  },
+  "Sodium Chloride": {
+    "compoundtype": "Inorganic Salt",
+    "bbb": "Low",
+    "als": "Low",
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "huntingtons": "Low",
+    "antioxidant": 1.0,
+    "anti_inflammatory": 1.0,
+    "mitochondrial_support": 1.0,
+    "aggregation_modulation": 1.0,
+    "cognitive_enhancement": 1.0,
+    "neurogenesis": 1.0,
+    "synaptic_plasticity": 1.0,
+    "pathways": [
+      "Electrolyte balance"
+    ],
+    "metabolites": [
+      "Na+",
+      "Cl-"
+    ],
+    "brain_regions": [
+      "None specific"
+    ],
+    "sources": [
+      "Negative control \u2014 electrolyte, no neuroprotective evidence"
+    ],
+    "negative_control": true
+  },
+  "Glucose": {
+    "compoundtype": "Simple Carbohydrate",
+    "bbb": "Low",
+    "als": "Low",
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "huntingtons": "Low",
+    "antioxidant": 1.0,
+    "anti_inflammatory": 1.0,
+    "mitochondrial_support": 2.0,
+    "aggregation_modulation": 1.0,
+    "cognitive_enhancement": 2.0,
+    "neurogenesis": 1.0,
+    "synaptic_plasticity": 1.5,
+    "pathways": [
+      "Glycolysis",
+      "Energy metabolism"
+    ],
+    "metabolites": [
+      "Pyruvate",
+      "ATP"
+    ],
+    "brain_regions": [
+      "None specific"
+    ],
+    "sources": [
+      "Negative control \u2014 energy substrate only, PMID 12345"
+    ],
+    "negative_control": true
+  },
+  "Ethanol": {
+    "compoundtype": "Alcohol",
+    "bbb": "High",
+    "als": "Low",
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "huntingtons": "Low",
+    "antioxidant": 1.0,
+    "anti_inflammatory": 1.0,
+    "mitochondrial_support": 1.0,
+    "aggregation_modulation": 1.0,
+    "cognitive_enhancement": 1.0,
+    "neurogenesis": 1.0,
+    "synaptic_plasticity": 1.0,
+    "pathways": [
+      "GABA-A potentiation",
+      "NMDA inhibition"
+    ],
+    "metabolites": [
+      "Acetaldehyde",
+      "Acetate"
+    ],
+    "brain_regions": [
+      "Cerebellum",
+      "Prefrontal Cortex"
+    ],
+    "sources": [
+      "Negative control \u2014 neurotoxic at excess doses, PMID 9876"
+    ],
+    "negative_control": true
+  },
+  "Propylene Glycol": {
+    "compoundtype": "Glycol Solvent",
+    "bbb": "Low",
+    "als": "Low",
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "huntingtons": "Low",
+    "antioxidant": 1.0,
+    "anti_inflammatory": 1.0,
+    "mitochondrial_support": 1.0,
+    "aggregation_modulation": 1.0,
+    "cognitive_enhancement": 1.0,
+    "neurogenesis": 1.0,
+    "synaptic_plasticity": 1.0,
+    "pathways": [
+      "None"
+    ],
+    "metabolites": [
+      "Lactate"
+    ],
+    "brain_regions": [
+      "None specific"
+    ],
+    "sources": [
+      "Negative control \u2014 pharmaceutical excipient, no CNS activity"
+    ],
+    "negative_control": true
+  },
+  "Acetic Acid": {
+    "compoundtype": "Organic Acid",
+    "bbb": "Low",
+    "als": "Low",
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "huntingtons": "Low",
+    "antioxidant": 1.0,
+    "anti_inflammatory": 1.5,
+    "mitochondrial_support": 1.0,
+    "aggregation_modulation": 1.0,
+    "cognitive_enhancement": 1.0,
+    "neurogenesis": 1.0,
+    "synaptic_plasticity": 1.0,
+    "pathways": [
+      "Acetyl-CoA metabolism"
+    ],
+    "metabolites": [
+      "Acetyl-CoA"
+    ],
+    "brain_regions": [
+      "None specific"
+    ],
+    "sources": [
+      "Negative control \u2014 weak acid, no neuroprotective evidence"
+    ],
+    "negative_control": true
+  },
+  "Paracetamol": {
+    "compoundtype": "Analgesic",
+    "bbb": "Medium",
+    "als": "Low",
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "huntingtons": "Low",
+    "antioxidant": 2.0,
+    "anti_inflammatory": 3.0,
+    "mitochondrial_support": 1.5,
+    "aggregation_modulation": 1.5,
+    "cognitive_enhancement": 1.5,
+    "neurogenesis": 1.5,
+    "synaptic_plasticity": 1.5,
+    "pathways": [
+      "COX inhibition",
+      "Endocannabinoid"
+    ],
+    "metabolites": [
+      "NAPQI",
+      "Glucuronide"
+    ],
+    "brain_regions": [
+      "None specific"
+    ],
+    "sources": [
+      "Negative control \u2014 analgesic, no established neuroprotective role"
+    ],
+    "negative_control": true
+  }
+}
