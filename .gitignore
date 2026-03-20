@@ -7,6 +7,5 @@ figures/
 *.pptx
 supplementary/
 results/plots/
-*.png
 *.svg
 *.tiff
