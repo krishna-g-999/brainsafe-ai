@@ -2380,13 +2380,13 @@ def render_report(compound_name, data):
 
 
 _logo_html = (
-    f'<img src="data:image/svg+xml;base64,{LOGO_B64}" class="header-logo-img">'
+    f'<img src="data:image/png;base64,{LOGO_B64}" class="header-logo-img">'
     if LOGO_B64 else
     '<div class="header-logo-img" style="display:flex;align-items:center;justify-content:center;background:#1A3A5C;font-size:1.6rem;color:#F0A500;font-weight:800;">B</div>'
 )
 
 _sssihl_logo_html = (
-    f'<img src="data:image/svg+xml;base64,{SSSIHL_LOGO_B64}" class="header-inst-logo">'
+    f'<img src="data:image/png;base64,{SSSIHL_LOGO_B64}" class="header-inst-logo">'
     if SSSIHL_LOGO_B64 else ""
 )
 
@@ -2562,7 +2562,7 @@ with tab_about:
     with col_logo:
         if LOGO_B64:
             st.markdown(
-                f'<img src="data:image/svg+xml;base64,{LOGO_B64}" '
+                f'<img src="data:image/png;base64,{LOGO_B64}" '
                 f'style="width:220px;border-radius:12px;box-shadow:0 4px 16px rgba(13,33,55,0.15);display:block;margin:0 auto;">',
                 unsafe_allow_html=True
             )
