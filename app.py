@@ -329,9 +329,9 @@ def get_db_stats() -> dict:
 
 @st.cache_data
 def get_logo_b64():
-    if os.path.exists('sainet_logo.png'):
+    if os.path.exists('sai_net_logo.png'):
 
-        with open('sainet_logo.png','rb') as f:
+        with open('sai_net_logo.png','rb') as f:
 
             return base64.b64encode(f.read()).decode()
 
