@@ -329,16 +329,22 @@ def get_db_stats() -> dict:
 
 @st.cache_data
 def get_logo_b64():
-    if os.path.exists("sai_net_logo.png"):
-        with open("sai_net_logo.png", "rb") as f:
+    if os.path.exists('sainet_logo.png'):
+
+        with open('sainet_logo.png','rb') as f:
+
             return base64.b64encode(f.read()).decode()
-    return __import__('base64').b64encode(b'<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><circle cx="100" cy="100" r="96" fill="#0D2137" stroke="#F0A500" stroke-width="4"/><text x="100" y="130" font-family="Arial Black" font-size="110" font-weight="900" fill="#F0A500" text-anchor="middle">B</text></svg>').decode()
+
+    return 'PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9Ijk2IiBmaWxsPSIjMEQyMTM3IiBzdHJva2U9IiNGMEE1MDAiIHN0cm9rZS13aWR0aD0iNCIvPjx0ZXh0IHg9IjEwMCIgeT0iMTMwIiBmb250LWZhbWlseT0iQXJpYWwgQmxhY2ssc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMTAiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNGMEE1MDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkI8L3RleHQ+PC9zdmc+'
 
 def get_sssihl_logo_b64():
-    if os.path.exists("sssihl_logo.png"):
-        with open("sssihl_logo.png", "rb") as f:
+    if os.path.exists('sssihl_logo.png'):
+
+        with open('sssihl_logo.png','rb') as f:
+
             return base64.b64encode(f.read()).decode()
-    return ""
+
+    return 'PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9Ijk2IiBmaWxsPSIjMUEzQTVDIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMyIvPjx0ZXh0IHg9IjEwMCIgeT0iMTA1IiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNiIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI0ZGRkZGRiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+U1NTSUhMPC90ZXh0Pjx0ZXh0IHg9IjEwMCIgeT0iMTM1IiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iI0FBQ0NFRSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+UHJhc2FudGhpIE5pbGF5YW08L3RleHQ+PC9zdmc+'
 
 COMPOUNDS = load_compounds()
 
@@ -2374,13 +2380,13 @@ def render_report(compound_name, data):
 
 
 _logo_html = (
-    f'<img src="data:image/png;base64,{LOGO_B64}" class="header-logo-img">'
+    f'<img src="data:image/svg+xml;base64,{LOGO_B64}" class="header-logo-img">'
     if LOGO_B64 else
     '<div class="header-logo-img" style="display:flex;align-items:center;justify-content:center;background:#1A3A5C;font-size:1.6rem;color:#F0A500;font-weight:800;">B</div>'
 )
 
 _sssihl_logo_html = (
-    f'<img src="data:image/png;base64,{SSSIHL_LOGO_B64}" class="header-inst-logo">'
+    f'<img src="data:image/svg+xml;base64,{SSSIHL_LOGO_B64}" class="header-inst-logo">'
     if SSSIHL_LOGO_B64 else ""
 )
 
@@ -2556,7 +2562,7 @@ with tab_about:
     with col_logo:
         if LOGO_B64:
             st.markdown(
-                f'<img src="data:image/png;base64,{LOGO_B64}" '
+                f'<img src="data:image/svg+xml;base64,{LOGO_B64}" '
                 f'style="width:220px;border-radius:12px;box-shadow:0 4px 16px rgba(13,33,55,0.15);display:block;margin:0 auto;">',
                 unsafe_allow_html=True
             )
