@@ -464,7 +464,23 @@ def predict_unknown_via_ml(compound_name: str) -> dict | None:
 
     v3_nps, v3_neighbours, v3_max_sim, v3_confidence = None, [], 0.0, "Low"
     v3_diseases, v3_pathways = {}, []
-    smiles = (pc.get("isomeric_smiles") or pc.get("smiles") or "")
+    # Robust SMILES extraction — filters "N/A" string values
+    def _clean(v):
+        return v if (v and str(v).strip() not in ("N/A","NA","None","","null")) else None
+    smiles = (
+        _clean(pc.get("isomeric_smiles"))
+        or _clean(pc.get("canonical_smiles"))
+        or _clean(pc.get("smiles"))
+        or ""
+    )
+    # If still empty, fetch directly via our own PubChem client
+    if not smiles and V3_KNN_AVAILABLE:
+        try:
+            from ml_v3_engine import get_smiles_pubchem as _get_smi
+            _smi, _ = _get_smi(compound_name)
+            if _smi: smiles = _smi
+        except Exception:
+            pass
     if V3_KNN_AVAILABLE and smiles:
         try:
             v3_nps, v3_neighbours, v3_max_sim, v3_confidence = predict_nps_knn(smiles)
