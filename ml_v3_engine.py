@@ -340,15 +340,35 @@ def predict_new_compound(compound_name, models_dir='models_v3'):
 
     # 3. Predict NPS
     nps_pred = None
-    nps_pred_rule = None
-    if os.path.exists(f'{models_dir}/rf_v3.pkl'):
-        rf    = joblib.load(f'{models_dir}/rf_v3.pkl')
-        ridge = joblib.load(f'{models_dir}/ridge_v3.pkl')
-        rf_pred    = rf.predict([feats])[0]
-        ridge_pred = ridge.predict([feats])[0]
-        nps_pred   = round((rf_pred + ridge_pred) / 2, 1)
-        nps_pred   = max(0, min(100, nps_pred))
-        print(f"2. NPS Prediction: {nps_pred}/100  (RF={rf_pred:.1f}, Ridge={ridge_pred:.1f})")
+    mol = Chem.MolFromSmiles(smiles)
+    phys = np.array([
+        float(props.get('MolecularWeight', 400)),
+        float(props.get('XLogP', 2)),
+        float(props.get('TPSA', 80)),
+        rdMolDescriptors.CalcNumHBD(mol) if mol else 2,
+        rdMolDescriptors.CalcNumHBA(mol) if mol else 4,
+        rdMolDescriptors.CalcNumRotatableBonds(mol) if mol else 4,
+        rdMolDescriptors.CalcNumAromaticRings(mol) if mol else 1,
+        Descriptors.NumHeteroatoms(mol) if mol else 3,
+    ]).reshape(1,-1)
+
+    # Track A: NPS from physicochemical features
+    if os.path.exists(f'{models_dir}/rf_nps.pkl'):
+        rf_nps    = joblib.load(f'{models_dir}/rf_nps.pkl')
+        ridge_nps = joblib.load(f'{models_dir}/ridge_nps.pkl')
+        rf_pred   = rf_nps.predict(phys)[0]
+        rdg_pred  = ridge_nps.predict(phys)[0]
+        nps_pred  = round(max(0, min(100, (rf_pred + rdg_pred) / 2)), 1)
+        print(f"2. NPS Prediction: {nps_pred}/100  (RF={rf_pred:.1f}, Ridge={rdg_pred:.1f})")
+
+    # Track C: Similarity search
+    if os.path.exists(f'{models_dir}/similarity_index.pkl') and feats is not None:
+        idx = joblib.load(f'{models_dir}/similarity_index.pkl')
+        query_fp = feats[:1024]
+        sims = [np.dot(query_fp, f) / (np.linalg.norm(query_fp)*np.linalg.norm(f)+1e-9)
+                for f in idx['fps']]
+        top_i  = np.argmax(sims)
+        print(f"   Nearest compound: {idx['names'][top_i]} (similarity={sims[top_i]:.2f})")
     else:
         # v3 not trained yet — use rule-based NPS estimate from physicochemical + disease
         mw_tmp   = float(props.get('MolecularWeight', 500))
