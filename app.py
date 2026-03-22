@@ -438,49 +438,22 @@ def build_ml_predictor():
 
 def predict_unknown_via_ml(compound_name: str) -> dict | None:
     """
-    Predict neuroprotective profile for a compound not in the database.
-
-    Workflow:
-      1. Fetch PubChem properties → compute BBB level (CNS-MPO rules)
-      2. Fetch ChEMBL mechanism-of-action text → infer disease relevance keywords
-      3. Assemble feature vector → run through the cached ML model
-      4. Return a compound entry dict with ml_predicted=True and source provenance
-
+    v3: PubChem SMILES + KNN NPS + disease relevance + pathway annotation.
     Returns None if PubChem cannot identify the compound.
     """
     model, scaler = build_ml_predictor()
-    if model is None:
-        return None
     pc = fetch_pubchem(compound_name)
-
-    # ── v3 KNN NPS upgrade ───────────────────────────────────────────────────
-    _v3_nps        = None
-    _v3_confidence = "Low"
-    _v3_neighbours = []
-    _v3_max_sim    = 0.0
-    _v3_diseases   = {}
-    _v3_pathways   = []
-
-    if V3_KNN_AVAILABLE and pc and "error" not in pc:
-        try:
-            _smiles = pc.get("isomeric_smiles") or pc.get("smiles","")
-            if _smiles:
-                _v3_nps, _v3_neighbours, _v3_max_sim, _v3_confidence = predict_nps_knn(_smiles)
-                _v3_targets  = get_chembl_targets(compound_name)
-                _v3_diseases = predict_disease_relevance(compound_name, _smiles, _v3_targets)
-                _v3_pathways = predict_pathways(compound_name, _v3_targets)
-        except Exception as _e:
-            pass  # fall back to existing logic silently
-    # ────────────────────────────────────────────────────────────────────────
     if pc.get("error"):
         return None
     try:
         mw   = float(pc.get("mw",   999))
-        logp = float(pc.get("xlogp", 5.0)) if pc.get("xlogp") not in (None, "N/A") else 5.0
-        tpsa = float(pc.get("tpsa", 999))  if pc.get("tpsa")  not in (None, "N/A") else 999.0
-        hbd  = float(pc.get("hbd",   99))  if pc.get("hbd")   not in (None, "N/A") else 99.0
+        logp = float(pc.get("xlogp", 5.0))  if pc.get("xlogp") not in (None, "N/A") else 5.0
+        tpsa = float(pc.get("tpsa", 999))   if pc.get("tpsa")  not in (None, "N/A") else 999.0
+        hbd  = float(pc.get("hbd",   99))   if pc.get("hbd")   not in (None, "N/A") else 99.0
     except (TypeError, ValueError):
         return None
+
+    # BBB class (CNS-MPO rules)
     if   mw <= 360 and 1.0 <= logp <= 3.0 and tpsa <= 60 and hbd <= 1:
         bbb_str, bbb_num = "High",    3
     elif mw <= 450 and 0.0 <= logp <= 4.0 and tpsa <= 90 and hbd <= 3:
@@ -489,6 +462,22 @@ def predict_unknown_via_ml(compound_name: str) -> dict | None:
         bbb_str, bbb_num = "Low-Med", 1
     else:
         bbb_str, bbb_num = "Low",     0
+
+    # v3: KNN NPS + disease + pathway
+    v3_nps, v3_neighbours, v3_max_sim, v3_confidence = None, [], 0.0, "Low"
+    v3_diseases, v3_pathways = {}, []
+    smiles = (pc.get("isomeric_smiles") or pc.get("smiles") or "")
+    if V3_KNN_AVAILABLE and smiles:
+        try:
+            v3_nps, v3_neighbours, v3_max_sim, v3_confidence = predict_nps_knn(smiles)
+            v3_targets  = get_chembl_targets(compound_name)
+            v3_diseases = predict_disease_relevance(compound_name, smiles, v3_targets)
+            v3_pathways = predict_pathways(compound_name, v3_targets)
+        except Exception:
+            pass
+
+    # Legacy ML scores (kept for existing display panels)
+    scores = {col: 5.0 for col in _ML_SCORE_COLS}
     ch = fetch_chembl(compound_name)
     mech_text = " ".join(
         (m.get("target", "") + " " + m.get("action", "")).lower()
@@ -497,54 +486,68 @@ def predict_unknown_via_ml(compound_name: str) -> dict | None:
     dis_nums: dict[str, int] = {}
     for dis, kws in _DIS_KW.items():
         dis_nums[dis] = 2 if any(kw in mech_text for kw in kws) else 0
-        _mt   = ' '.join(m.get('target','') or '' for m in ch.get('mechanisms',[]))
-        _poly = 1.0 if any(p_ in compound_name.lower() for p_ in POLYPHENOL_TYPES) else 0.0
-        _nn   = float(sum(1 for kw in NEURO_KWS if kw in _mt.lower()))
-        _nm   = float(min(len(ch.get('mechanisms',[])), 8))
-        feat = np.array([[
-            float(bbb_num),
-            float(dis_nums.get('als', 0)),
-            float(dis_nums.get('alzheimers', 0)),
-            float(dis_nums.get('parkinsons', 0)),
-            float(dis_nums.get('huntingtons', 0)),
-            float(max(2, min(sum(
-                1 for _m in ch.get('mechanisms', [])
-                for _kw in TARGETTOPATHWAY
-                if _kw in (_m.get('target', '') or '').lower()
-            ), 8))),
-            _poly, _nn, _nm,
-        ]], dtype=float)
-    from sklearn.preprocessing import StandardScaler
-    preds = model.predict(scaler.transform(feat))[0]
-    scores = {col: round(float(np.clip(v, 1.0, 10.0)), 1) for col, v in zip(_ML_SCORE_COLS, preds)}
-    dis_levels = {d: ("High" if v == 2 else "Low") for d, v in dis_nums.items()}
+    if model is not None and scaler is not None:
+        try:
+            _mt   = " ".join(m.get("target","") or "" for m in ch.get("mechanisms",[]))
+            _poly = 1.0 if any(p_ in compound_name.lower() for p_ in POLYPHENOL_TYPES) else 0.0
+            _nn   = float(sum(1 for kw in NEURO_KWS if kw in _mt.lower()))
+            _nm   = float(min(len(ch.get("mechanisms",[])), 8))
+            feat  = np.array([[
+                float(bbb_num),
+                float(dis_nums.get("als", 0)),
+                float(dis_nums.get("alzheimers", 0)),
+                float(dis_nums.get("parkinsons", 0)),
+                float(dis_nums.get("huntingtons", 0)),
+                float(max(2, min(sum(
+                    1 for _m in ch.get("mechanisms", [])
+                    for _kw in TARGETTOPATHWAY
+                    if _kw in (_m.get("target", "") or "").lower()
+                ), 8))),
+                _poly, _nn, _nm,
+            ]], dtype=float)
+            preds  = model.predict(scaler.transform(feat))[0]
+            scores = {col: round(float(np.clip(v, 1.0, 10.0)), 1)
+                      for col, v in zip(_ML_SCORE_COLS, preds)}
+        except Exception:
+            pass
+
+    # Merge disease relevance: prefer v3, fall back to legacy
+    if v3_diseases:
+        dis_levels = v3_diseases
+    else:
+        dis_levels = {d: ("High" if v == 2 else "Low") for d, v in dis_nums.items()}
+
+    # Final NPS
+    nps_final = v3_nps if v3_nps is not None else round(
+        float(np.mean([scores.get(c, 5.0) for c in _ML_SCORE_COLS])) * 10, 1)
+
     return {
-        "compound_type":  ch.get("molecule_type", "Unknown"),
-        "bbb":            bbb_str,
+        "compound_type":    ch.get("molecule_type", "Unknown"),
+        "bbb":              bbb_str,
         **scores,
         **dis_levels,
-        "pathways":       ["NF-kB", "Nrf2/GSH"],
-        "metabolites":    ["ROS", "IL-6"],
-        "brain_regions":  ["Cortex", "Hippocampus"],
-        "data_source":    "pubchem_ml_predicted",
-        "confidence":     "low",
-        "ml_predicted":   True,
-        "chembl_id":      ch.get("chembl_id", ""),
+        "pathways":         v3_pathways if v3_pathways else ["NF-kB", "Nrf2/GSH"],
+        "metabolites":      ["ROS", "IL-6"],
+        "brain_regions":    ["Cortex", "Hippocampus"],
+        "data_source":      "pubchem_ml_predicted",
+        "confidence":       v3_confidence.lower() if v3_confidence else "low",
+        "ml_predicted":     True,
+        "chembl_id":        ch.get("chembl_id", ""),
         "chembl_max_phase": ch.get("max_phase"),
         "indication_diseases": [d for d, v in dis_nums.items() if v > 0],
-        "model_cv_r2":    0.20,
-        "pubchem_cid":    pc.get("cid", ""),
-        "nps_knn":        _v3_nps,
-        "nps_confidence": _v3_confidence,
-        "nps_neighbours": _v3_neighbours,
-        "nps_max_sim":    _v3_max_sim,
-        "v3_diseases":    _v3_diseases,
-        "v3_pathways":    _v3_pathways,
+        "model_cv_r2":      0.20,
+        "pubchem_cid":      pc.get("cid", ""),
         "mw": mw, "xlogp": logp, "tpsa": tpsa,
-        "_live_ml": True,
-        "_v3_knn":  V3_KNN_AVAILABLE,
+        "_live_ml":         True,
+        "nps":              nps_final,
+        "nps_knn":          v3_nps,
+        "nps_confidence":   v3_confidence,
+        "nps_neighbours":   v3_neighbours,
+        "nps_max_sim":      round(v3_max_sim, 3),
+        "v3_diseases":      v3_diseases,
+        "v3_pathways":      v3_pathways,
+        "smiles":           smiles,
     }
-
 
 ENZYME_ALIASES = {
     "N-Acetylcysteine": "NAC",
