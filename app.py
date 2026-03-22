@@ -9,6 +9,12 @@ import networkx as nx
 import numpy as np
 from scorer import neuro_score
 from pubchem_client import fetch_pubchem, fetch_chembl, fetch_kegg_pathways
+try:
+    from ml_v3_knn import predict_nps_knn
+    from ml_v3_engine import predict_disease_relevance, predict_pathways, get_chembl_targets
+    V3_KNN_AVAILABLE = True
+except ImportError:
+    V3_KNN_AVAILABLE = False
 
 # ── v2 Feature Engineering constants (biological domain knowledge) ────────
 POLYPHENOL_TYPES = {"flavonoid","polyphenol","catechin","stilbene","terpene",
@@ -446,6 +452,26 @@ def predict_unknown_via_ml(compound_name: str) -> dict | None:
     if model is None:
         return None
     pc = fetch_pubchem(compound_name)
+
+    # ── v3 KNN NPS upgrade ───────────────────────────────────────────────────
+    _v3_nps        = None
+    _v3_confidence = "Low"
+    _v3_neighbours = []
+    _v3_max_sim    = 0.0
+    _v3_diseases   = {}
+    _v3_pathways   = []
+
+    if V3_KNN_AVAILABLE and pc and "error" not in pc:
+        try:
+            _smiles = pc.get("isomeric_smiles") or pc.get("smiles","")
+            if _smiles:
+                _v3_nps, _v3_neighbours, _v3_max_sim, _v3_confidence = predict_nps_knn(_smiles)
+                _v3_targets  = get_chembl_targets(compound_name)
+                _v3_diseases = predict_disease_relevance(compound_name, _smiles, _v3_targets)
+                _v3_pathways = predict_pathways(compound_name, _v3_targets)
+        except Exception as _e:
+            pass  # fall back to existing logic silently
+    # ────────────────────────────────────────────────────────────────────────
     if pc.get("error"):
         return None
     try:
@@ -508,8 +534,15 @@ def predict_unknown_via_ml(compound_name: str) -> dict | None:
         "indication_diseases": [d for d, v in dis_nums.items() if v > 0],
         "model_cv_r2":    0.20,
         "pubchem_cid":    pc.get("cid", ""),
+        "nps_knn":        _v3_nps,
+        "nps_confidence": _v3_confidence,
+        "nps_neighbours": _v3_neighbours,
+        "nps_max_sim":    _v3_max_sim,
+        "v3_diseases":    _v3_diseases,
+        "v3_pathways":    _v3_pathways,
         "mw": mw, "xlogp": logp, "tpsa": tpsa,
         "_live_ml": True,
+        "_v3_knn":  V3_KNN_AVAILABLE,
     }
 
 
