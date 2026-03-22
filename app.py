@@ -453,7 +453,6 @@ def predict_unknown_via_ml(compound_name: str) -> dict | None:
     except (TypeError, ValueError):
         return None
 
-    # BBB class (CNS-MPO rules)
     if   mw <= 360 and 1.0 <= logp <= 3.0 and tpsa <= 60 and hbd <= 1:
         bbb_str, bbb_num = "High",    3
     elif mw <= 450 and 0.0 <= logp <= 4.0 and tpsa <= 90 and hbd <= 3:
@@ -463,7 +462,6 @@ def predict_unknown_via_ml(compound_name: str) -> dict | None:
     else:
         bbb_str, bbb_num = "Low",     0
 
-    # v3: KNN NPS + disease + pathway
     v3_nps, v3_neighbours, v3_max_sim, v3_confidence = None, [], 0.0, "Low"
     v3_diseases, v3_pathways = {}, []
     smiles = (pc.get("isomeric_smiles") or pc.get("smiles") or "")
@@ -476,7 +474,6 @@ def predict_unknown_via_ml(compound_name: str) -> dict | None:
         except Exception:
             pass
 
-    # Legacy ML scores (kept for existing display panels)
     scores = {col: 5.0 for col in _ML_SCORE_COLS}
     ch = fetch_chembl(compound_name)
     mech_text = " ".join(
@@ -511,13 +508,9 @@ def predict_unknown_via_ml(compound_name: str) -> dict | None:
         except Exception:
             pass
 
-    # Merge disease relevance: prefer v3, fall back to legacy
-    if v3_diseases:
-        dis_levels = v3_diseases
-    else:
-        dis_levels = {d: ("High" if v == 2 else "Low") for d, v in dis_nums.items()}
-
-    # Final NPS
+    dis_levels = v3_diseases if v3_diseases else {
+        d: ("High" if v == 2 else "Low") for d, v in dis_nums.items()
+    }
     nps_final = v3_nps if v3_nps is not None else round(
         float(np.mean([scores.get(c, 5.0) for c in _ML_SCORE_COLS])) * 10, 1)
 
@@ -548,6 +541,7 @@ def predict_unknown_via_ml(compound_name: str) -> dict | None:
         "v3_pathways":      v3_pathways,
         "smiles":           smiles,
     }
+
 
 ENZYME_ALIASES = {
     "N-Acetylcysteine": "NAC",
