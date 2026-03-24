@@ -1,0 +1,8 @@
+Tool,Year,Disease,n,Validation,R²/AUC,Open,Mechanistic dims
+AlzPlatform,2014,AD only,1974,CV,AUC=0.82,✅,1
+NPClassifier,2021,NPs only,7000,Test set,Acc=0.94,✅,1
+ADMETlab 2.0,2021,General ADMET,2547,Hold-out,R²=0.71,✅,1
+NeuroPred,2019,AD/PD,312,CV,R²=0.58,❌,2
+SwissTargetPred.,2019,Multi-disease,376342,Test set,Acc=0.77,✅,1
+DeepSynergy,2018,General,583,CV,R²=0.68,✅,1
+BrainSafe AI v5,2026,AD/PD/ALS/HD,325,LOO+Hold-out,R²=0.78 ρ=0.88,✅,7

@@ -1,0 +1,88 @@
+Feature,Group,Description,Importance
+bbb_enc,BBB,"Blood-brain barrier class (0=Low,1=Med,2=High)",0.0
+emb_pca_0,ChemBERTa PCA,ChemBERTa-77 embedding PCA component,0.0
+emb_pca_1,ChemBERTa PCA,ChemBERTa-77 embedding PCA component,0.0
+emb_pca_2,ChemBERTa PCA,ChemBERTa-77 embedding PCA component,0.0
+emb_pca_3,ChemBERTa PCA,ChemBERTa-77 embedding PCA component,0.0
+emb_pca_4,ChemBERTa PCA,ChemBERTa-77 embedding PCA component,0.0
+emb_pca_5,ChemBERTa PCA,ChemBERTa-77 embedding PCA component,0.0
+emb_pca_6,ChemBERTa PCA,ChemBERTa-77 embedding PCA component,0.0
+emb_pca_7,ChemBERTa PCA,ChemBERTa-77 embedding PCA component,0.0
+emb_pca_8,ChemBERTa PCA,ChemBERTa-77 embedding PCA component,0.0
+emb_pca_9,ChemBERTa PCA,ChemBERTa-77 embedding PCA component,0.0
+emb_pca_10,ChemBERTa PCA,ChemBERTa-77 embedding PCA component,0.0
+emb_pca_11,ChemBERTa PCA,ChemBERTa-77 embedding PCA component,0.0
+emb_pca_12,ChemBERTa PCA,ChemBERTa-77 embedding PCA component,0.0
+emb_pca_13,ChemBERTa PCA,ChemBERTa-77 embedding PCA component,0.0
+emb_pca_14,ChemBERTa PCA,ChemBERTa-77 embedding PCA component,0.0
+emb_pca_15,ChemBERTa PCA,ChemBERTa-77 embedding PCA component,0.0
+emb_pca_16,ChemBERTa PCA,ChemBERTa-77 embedding PCA component,0.0
+emb_pca_17,ChemBERTa PCA,ChemBERTa-77 embedding PCA component,0.0
+emb_pca_18,ChemBERTa PCA,ChemBERTa-77 embedding PCA component,0.0
+emb_pca_19,ChemBERTa PCA,ChemBERTa-77 embedding PCA component,0.0
+emb_pca_20,ChemBERTa PCA,ChemBERTa-77 embedding PCA component,0.0
+emb_pca_21,ChemBERTa PCA,ChemBERTa-77 embedding PCA component,0.0
+emb_pca_22,ChemBERTa PCA,ChemBERTa-77 embedding PCA component,0.0
+emb_pca_23,ChemBERTa PCA,ChemBERTa-77 embedding PCA component,0.0
+emb_pca_24,ChemBERTa PCA,ChemBERTa-77 embedding PCA component,0.0
+emb_pca_25,ChemBERTa PCA,ChemBERTa-77 embedding PCA component,0.0
+emb_pca_26,ChemBERTa PCA,ChemBERTa-77 embedding PCA component,0.0
+emb_pca_27,ChemBERTa PCA,ChemBERTa-77 embedding PCA component,0.0
+emb_pca_28,ChemBERTa PCA,ChemBERTa-77 embedding PCA component,0.0
+emb_pca_29,ChemBERTa PCA,ChemBERTa-77 embedding PCA component,0.0
+emb_pca_30,ChemBERTa PCA,ChemBERTa-77 embedding PCA component,0.0
+emb_pca_31,ChemBERTa PCA,ChemBERTa-77 embedding PCA component,0.0
+alzheimers,Disease Targets,ChEMBL target count per disease,0.0
+parkinsons,Disease Targets,ChEMBL target count per disease,0.0
+als,Disease Targets,ChEMBL target count per disease,0.0
+huntingtons,Disease Targets,ChEMBL target count per disease,0.0
+ecfp_pca_0,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_1,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_2,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_3,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_4,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_5,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_6,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_7,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_8,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_9,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_10,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_11,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_12,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_13,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_14,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_15,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_16,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_17,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_18,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_19,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_20,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_21,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_22,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_23,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_24,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_25,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_26,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_27,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_28,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_29,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_30,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_31,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_32,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_33,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_34,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_35,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_36,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_37,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_38,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_39,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_40,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_41,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_42,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_43,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_44,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_45,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_46,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_47,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_48,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0
+ecfp_pca_49,ECFP-4 PCA,Morgan r=2 fingerprint PCA component,0.0

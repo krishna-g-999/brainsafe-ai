@@ -1,11 +1,12 @@
-
-# Exclude manuscript and figures
-manuscript/
-figures/
-*.pdf
-*.docx
-*.pptx
-supplementary/
-results/plots/
-*.svg
-*.tiff
+__pycache__/
+*.pyc
+*.pkl
+*.h5
+.env
+*.egg-info/
+dist/
+build/
+.DS_Store
+*.log
+models_v5/   # large model files — use Git LFS or Zenodo
+*.csv        # data files — release via Zenodo DOI

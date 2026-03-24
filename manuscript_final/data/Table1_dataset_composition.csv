@@ -1,0 +1,6 @@
+Disease,n,BBB-High (%),SMILES (%),Median ChEMBL Phase,Mean NPS (±SD)
+Alzheimer's Disease,194,35%,95%,4.0,67.8 ± 4.6
+Parkinson's Disease,119,47%,95%,4.0,65.8 ± 8.3
+ALS,97,39%,96%,4.0,63.5 ± 8.4
+Huntington's Disease,71,42%,93%,3.0,60.5 ± 11.2
+TOTAL,325,28%,97%,—,62.4 ± 8.0

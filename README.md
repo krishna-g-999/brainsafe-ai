@@ -1,29 +1,37 @@
-# BrainSafe AI
+# BrainSafe AI v5
 
-A computational platform for neuroprotective compound scoring, BBB permeability prediction, and ML-based compound expansion for neurodegenerative disease research.
+**Multi-Dimensional Neuroprotective Scoring Platform for
+Neurodegenerative Disease Drug Discovery**
 
-## Live App
-[**https://brainsafe-ai.streamlit.app**](https://brainsafe-ai.streamlit.app)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://YOUR-URL.streamlit.app)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## Features
-- Neuroprotection Score (NPS) for 134 curated + 191 ML-predicted compounds
-- Blood-brain barrier permeability prediction
-- Morgan fingerprint-based ML feature vectors (98.4% score uniqueness)
-- Supports 325 compounds with live PubChem + ChEMBL lookup
-- Interactive Streamlit web application
+## About
+BrainSafe AI v5 computes a Neuroprotective Score (NPS) and 7 mechanistic
+dimension scores for any compound against all four major NDDs
+(Alzheimer's, Parkinson's, ALS, Huntington's).
 
-## Run Locally
-Install dependencies and launch:
+**Hold-out R² = 0.782 | Spearman ρ = 0.880 | n=325 gold compounds**
 
-    pip install -r requirements.txt
-    streamlit run app.py
+## Web Interface
+→ https://YOUR-URL.streamlit.app
+No login required. Enter compound name, SMILES, or InChI.
 
-## Tech Stack
-- Python 3.11, RDKit 2025.09.5, scikit-learn, Streamlit
-- Random Forest classifier with Morgan circular fingerprints (radius=2, 64-bit)
+## Repository Structure
+brainsafe_ai/
+├── app.py # Streamlit web application
+├── brainsafe_v5_training_set.csv # Gold-standard database (via Zenodo)
+├── manuscript_final/ # Manuscript figures and tables
+│ ├── figures/ # Main + supplementary figures
+│ ├── validation_figures/ # Validation figures
+│ ├── data/ # Tables S1-S2 + validation reports
+│ └── manuscript/ # Manuscript draft (NAR Web Server)
+├── models_v5/ # Trained models (via Zenodo)
+└── requirements.txt
 
 ## Citation
-Gunanathan K. et al. BrainSafe AI: Brain Health Compound Explorer — a SAI-Net Translational Module (2026)
+> Gunanathan K et al. (2026) BrainSafe AI: A Multi-Dimensional
+> Neuroprotective Scoring Platform. *Nucleic Acids Research* (submitted).
 
-## Source Code
-https://github.com/krishna-g-999/brainsafe-ai
+## Zenodo DOI
+[![DOI](https://zenodo.org/badge/DOI/PLACEHOLDER.svg)](https://doi.org/PLACEHOLDER)
