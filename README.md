@@ -34,4 +34,4 @@ brainsafe_ai/
 > Neuroprotective Scoring Platform. *Nucleic Acids Research* (submitted).
 
 ## Zenodo DOI
-[![DOI](https://zenodo.org/badge/DOI/PLACEHOLDER.svg)](https://doi.org/PLACEHOLDER)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19200559.svg)](https://doi.org/10.5281/zenodo.19200559)

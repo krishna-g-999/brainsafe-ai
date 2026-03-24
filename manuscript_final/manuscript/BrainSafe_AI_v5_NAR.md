@@ -448,7 +448,7 @@ database are freely available without registration.
 
 All source code, trained models (v5), and the 325-compound gold-standard
 database are available at: https://github.com/[your-repo]/brainsafe-ai
-(MIT licence, DOI: https://doi.org/[ZENODO-DOI]).
+(MIT licence, DOI: https://doi.org/10.5281/zenodo.19200559).
 The web server is permanently hosted at: https://[your-url].streamlit.app
 The complete compound database with all scores is provided in Table S1.
 
