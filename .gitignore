@@ -40,3 +40,6 @@ run_order_extracted/
 run_order.zip
 manuscript_final/
 BrainSafe_Supplementary/
+
+# Claude Code local settings
+.claude/
