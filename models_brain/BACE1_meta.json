@@ -1,0 +1,21 @@
+{
+  "endpoint": "BACE1",
+  "meaning": "Alzheimer's / amyloid (BACE1 inhib.)",
+  "n": 8067,
+  "pos": 7303,
+  "pos_rate": 0.905,
+  "auroc": 0.95,
+  "pr_auc": 0.994,
+  "balanced_acc": 0.886,
+  "mcc": 0.614,
+  "brier": 0.039,
+  "calibrated": true,
+  "threshold": 0.907,
+  "cv": "scaffold GroupKFold(5)",
+  "leak_median_tanimoto": 0.711,
+  "source": "ChEMBL measured pChEMBL (>=6 active, <5 inactive)",
+  "temporal_auroc": 0.915,
+  "temporal_cutoff_year": 2017,
+  "cluster_split_auroc": 0.94,
+  "conformal_coverage": 0.902
+}

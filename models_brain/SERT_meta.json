@@ -1,0 +1,21 @@
+{
+  "endpoint": "SERT",
+  "meaning": "depression (serotonin transporter)",
+  "n": 4471,
+  "pos": 4326,
+  "pos_rate": 0.968,
+  "auroc": 0.926,
+  "pr_auc": 0.996,
+  "balanced_acc": 0.853,
+  "mcc": 0.39,
+  "brier": 0.018,
+  "calibrated": true,
+  "threshold": 0.971,
+  "cv": "scaffold GroupKFold(5)",
+  "leak_median_tanimoto": 0.643,
+  "source": "ChEMBL measured pChEMBL (>=6 active, <5 inactive)",
+  "temporal_auroc": 0.731,
+  "temporal_cutoff_year": 2015,
+  "cluster_split_auroc": 0.959,
+  "conformal_coverage": 0.898
+}

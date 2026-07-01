@@ -1,0 +1,2 @@
+endpoint,n,scaffold_cv_R2,RMSE,Spearman,temporal_R2,crosscheck_curated_vs_measured_Spearman,prior_curated_R2,source
+antioxidant_DPPH_measured,2862,0.43,0.597,0.636,-0.021,0.387,0.25,ChEMBL DPPH radical-scavenging assays (measured IC50/EC50 -> pIC50)

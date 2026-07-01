@@ -1,0 +1,21 @@
+{
+  "endpoint": "MAO_B",
+  "meaning": "Parkinson's / dopamine (MAO-B inhib.)",
+  "n": 3455,
+  "pos": 2254,
+  "pos_rate": 0.652,
+  "auroc": 0.885,
+  "pr_auc": 0.925,
+  "balanced_acc": 0.807,
+  "mcc": 0.606,
+  "brier": 0.122,
+  "calibrated": true,
+  "threshold": 0.661,
+  "cv": "scaffold GroupKFold(5)",
+  "leak_median_tanimoto": 0.589,
+  "source": "ChEMBL measured pChEMBL (>=6 active, <5 inactive)",
+  "temporal_auroc": 0.758,
+  "temporal_cutoff_year": 2020,
+  "cluster_split_auroc": 0.873,
+  "conformal_coverage": 0.895
+}

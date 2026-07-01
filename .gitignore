@@ -1,0 +1,42 @@
+# ---- Python environment (never commit the 1.5 GB venv) ----
+brainsafe_env/
+__pycache__/
+*.pyc
+*.pyo
+
+# ---- Large trained-model binaries (regenerable from released scripts; host on Zenodo) ----
+models_brain/*.joblib
+models_brain_reg/*.joblib
+models_v5/*.joblib
+models_genuine/*.joblib
+figures/_oof_cache.npz
+*.npz
+
+# keep the small metadata / reports that document the models
+!models_brain/*_meta.json
+!models_brain/*_conformal.json
+!models_brain/*.json
+!models_brain_reg/*_meta.json
+!models_brain_reg/*.json
+!models_genuine/*_meta.json
+!models_v5/*.json
+
+# ---- Raw API caches, logs, backups, scratch ----
+data/_chembl_cache/
+logs/
+*.log
+*.bak
+*.lowercase_bak
+*.pre_druggability_bak
+*.all529_bak
+_*.py
+scratchpad/
+.DS_Store
+
+# ---- Superseded / extracted / archive folders (keep repo clean) ----
+old_version_extracted/
+new_improvements_extracted/
+run_order_extracted/
+run_order.zip
+manuscript_final/
+BrainSafe_Supplementary/

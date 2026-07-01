@@ -1,0 +1,354 @@
+# -*- coding: utf-8 -*-
+"""Submission-standard Word manuscript (python-docx). Numbers read from saved artifacts
+(supplementary CSVs, BS_auroc_cis.json); figures embedded from figures/. Adds line numbering,
+structured abstract, highlights, abbreviations, equations, hyperparameter/software tables,
+AUROC 95% CIs, and full front/back matter."""
+import os, json
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+import pandas as pd
+from docx import Document
+from docx.shared import Pt, Inches
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.enum.table import WD_TABLE_ALIGNMENT
+from docx.oxml.ns import qn
+from docx.oxml import OxmlElement
+
+doc = Document()
+st = doc.styles["Normal"]; st.font.name = "Calibri"; st.font.size = Pt(11)
+sec = doc.sections[0]; sec.page_width, sec.page_height = Inches(8.5), Inches(11)
+for m in ("top_margin", "bottom_margin", "left_margin", "right_margin"): setattr(sec, m, Inches(1))
+# continuous line numbering (submission standard)
+ln = OxmlElement("w:lnNumType"); ln.set(qn("w:countBy"), "1"); ln.set(qn("w:restart"), "continuous"); ln.set(qn("w:distance"), "360")
+sec._sectPr.append(ln)
+
+def H(t, lvl=1): return doc.add_heading(t, level=lvl)
+def P(t, italic=False, bold=False, align=None, size=None):
+    p = doc.add_paragraph(); r = p.add_run(t); r.italic = italic; r.bold = bold
+    if size: r.font.size = Pt(size)
+    if align == "c": p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    if align == "j": p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+    return p
+def bullet(t):
+    p = doc.add_paragraph(style="List Bullet"); p.add_run(t).font.size = Pt(10.5)
+def eq(t):
+    p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.CENTER; r = p.add_run(t); r.italic = True; r.font.size = Pt(10.5)
+def figure(path, caption, width=6.3):
+    if os.path.exists(path):
+        doc.add_picture(path, width=Inches(width)); doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
+    P(caption, italic=True, size=9)
+def table_from_df(df):
+    df = df.fillna("–")
+    t = doc.add_table(rows=1, cols=len(df.columns)); t.alignment = WD_TABLE_ALIGNMENT.CENTER; t.style = "Table Grid"
+    for j, c in enumerate(df.columns):
+        cl = t.rows[0].cells[j]; cl.text = ""; r = cl.paragraphs[0].add_run(str(c)); r.bold = True; r.font.size = Pt(8.5)
+    for _, row in df.iterrows():
+        cs = t.add_row().cells
+        for j, c in enumerate(df.columns):
+            cs[j].text = ""; rr = cs[j].paragraphs[0].add_run(str(row[c])); rr.font.size = Pt(8.5)
+    return t
+
+cis = json.load(open("BS_auroc_cis.json")) if os.path.exists("BS_auroc_cis.json") else {}
+
+# ---- TITLE ----
+ti = doc.add_paragraph(); ti.alignment = WD_ALIGN_PARAGRAPH.CENTER
+r = ti.add_run("BrainSafe AI: an evidence-grounded, calibrated, blood–brain-barrier-gated "
+               "multi-endpoint predictor of small-molecule effects on the human brain")
+r.bold = True; r.font.size = Pt(16)
+P("Running title: Multi-endpoint prediction of brain effects from measured data", align="c", italic=True, size=10)
+P("Author(s): [To be completed]   ·   ORCID: [____]", align="c", size=10)
+P("Affiliation: Sri Sathya Sai Institute of Higher Learning, India   ·   Corresponding author: [email]", align="c", size=10)
+
+# ---- GRAPHICAL ABSTRACT ----
+figure("figures/graphical_abstract.png", "Graphical abstract.", width=6.6)
+
+# ---- HIGHLIGHTS ----
+H("Highlights", 2)
+for h in [
+    "An open tool predicts CNS-relevant effects of any small molecule from structure alone, trained only on measured public data (ChEMBL_37, B3DB; 64,474 records).",
+    "Eight classification endpoints (BBB, AChE, BChE, BACE1, GSK-3β, MAO-A, MAO-B, hERG) plus four receptor potency regressions and a measured antioxidant model.",
+    "Probabilities are isotonic-calibrated and accompanied by conformal prediction sets with empirical coverage close to the 90% target.",
+    "Models are evaluated under random, scaffold, leave-cluster-out and temporal splits; predictions are BBB-gated and grounded in nearest measured analogues.",
+]:
+    bullet(h)
+
+# ---- ABSTRACT ----
+H("Abstract", 1)
+P("Background. Predicting whether a small molecule acts on the brain requires several properties to "
+  "be assessed jointly: blood–brain-barrier (BBB) penetration, engagement of disease-relevant "
+  "central-nervous-system (CNS) targets, developability, safety and clinical precedent; existing "
+  "public tools address only subsets of these (Daina et al., 2017; Fu et al., 2024). "
+  "Results. We present BrainSafe AI, an open tool that, from chemical structure alone, integrates "
+  "eight machine-learning endpoints trained on measured public bioactivity data (ChEMBL_37 pChEMBL "
+  "values and the B3DB database; Mendez et al., 2019; Meng et al., 2021): BBB penetration; inhibition "
+  "of AChE, BChE, BACE1, GSK-3β, MAO-A and MAO-B; and the hERG cardiotoxicity liability. Four "
+  "receptor targets (D2, A2A, 5-HT2A, SERT) are modelled by potency regression, a deterministic "
+  "druggability/CNS-MPO layer (Wager et al., 2010) is added, and a clinical-precedent layer of 504 "
+  "nervous-system compounds with clinical-phase annotations contextualises predictions. Probabilities "
+  "are isotonic-calibrated (Niculescu-Mizil and Caruana, 2005) with Mondrian conformal prediction "
+  "sets (Norinder et al., 2014); each prediction reports its nearest measured analogues and is "
+  "combined into BBB-gated per-disease scores. Across random, scaffold, leave-cluster-out and "
+  "temporal validation, random-split AUROC was 0.94–0.98, scaffold and cluster AUROC 0.87–0.95, and "
+  "temporal AUROC 0.61–0.92, with conformal coverage of 0.885–0.905. "
+  "Conclusion. BrainSafe AI integrates measured-data CNS profiling that is calibrated, "
+  "evidence-grounded, BBB-gated and safety-aware. Availability: code, models and data are released; "
+  "the tool is for research use and is pending peer review.", align="j")
+P("Keywords: QSAR; blood–brain barrier; neurodegeneration; conformal prediction; applicability "
+  "domain; cheminformatics; ChEMBL.", italic=True, size=10)
+
+H("Abbreviations", 2)
+P("AUROC, area under the receiver-operating-characteristic curve; BBB, blood–brain barrier; CNS, "
+  "central nervous system; CNS-MPO, CNS multiparameter optimisation; ECFP, extended-connectivity "
+  "fingerprint; MCC, Matthews correlation coefficient; PR-AUC, area under the precision–recall "
+  "curve; OOF, out-of-fold; CV, cross-validation; ATC, Anatomical Therapeutic Chemical; DPPH, "
+  "2,2-diphenyl-1-picrylhydrazyl; QED, quantitative estimate of drug-likeness; AChE/BChE, "
+  "acetyl-/butyryl-cholinesterase; BACE1, β-secretase 1; GSK-3β, glycogen synthase kinase-3β; MAO, "
+  "monoamine oxidase; hERG, human ether-à-go-go-related gene; SERT, serotonin transporter.", size=10)
+
+# ---- 1 INTRODUCTION ----
+H("1. Introduction", 1)
+P("Disorders of the nervous system are a leading and rising cause of global disability (GBD 2021 "
+  "Nervous System Disorders Collaborators, 2024), and the discovery of safe, brain-penetrant "
+  "modulators remains slow. Natural products and flavonoids are widely studied for neuroprotective "
+  "and antioxidant activity, but integrated CNS profiles for individual compounds are dispersed "
+  "across the literature (Hasan et al., 2023). A compound’s likely brain effect depends jointly on "
+  "BBB penetration, engagement of disease-relevant CNS targets, developability, safety, and clinical "
+  "precedent.", align="j")
+P("Existing public resources address parts of this problem. General ADMET platforms (Daina et al., "
+  "2017; Xiong et al., 2021; Fu et al., 2024; Cheng et al., 2012) predict BBB and hERG but not "
+  "CNS-target activity; generic target-prediction tools (Daina et al., 2019; Awale and Reymond, "
+  "2019) predict protein targets by similarity but do not condition on brain penetration, synthesise "
+  "disease-level effects, provide calibrated uncertainty, or integrate a safety axis. "
+  "Endpoint-specific QSAR models have been reported for AChE/BACE1 (Ponzoni et al., 2019), MAO-B "
+  "(Kumar et al., 2024), GSK-3β (Galati et al., 2023) and BBB permeability (Kumar et al., 2022; "
+  "Huang et al., 2024) but are not combined in a single tool. BrainSafe AI integrates these "
+  "endpoints, trained on measured public data and evaluated under four validation regimes.", align="j")
+
+# ---- 2 METHODS ----
+H("2. Materials and methods", 1)
+figure("figures/fig1_workflow.png",
+       "Figure 1. Overview of the BrainSafe AI pipeline, from measured data sources through curation, "
+       "featurisation, ensemble training and calibration/conformal prediction to the integrated "
+       "outputs and the four validation regimes.")
+H("2.1 Data sources", 2)
+P("Target bioactivities were retrieved from ChEMBL version 37 (release 2026-05-01) via its REST API "
+  "(Gaulton et al., 2012; Mendez et al., 2019; Zdrazil et al., 2024), retaining records with a "
+  "defined pChEMBL value (standard types IC50, Ki, Kd, EC50, Potency) for AChE (CHEMBL220), BChE "
+  "(CHEMBL1914), BACE1 (CHEMBL4822), GSK-3β (CHEMBL262), MAO-A (CHEMBL1951), MAO-B (CHEMBL2039), the "
+  "hERG anti-target (CHEMBL240), and receptors D2 (CHEMBL217), A2A (CHEMBL251), 5-HT2A (CHEMBL224) "
+  "and SERT (CHEMBL228). BBB labels were taken from B3DB (Meng et al., 2021); antioxidant data from "
+  "ChEMBL DPPH radical-scavenging assays (IC50/EC50 → pIC50); and clinical precedent from ChEMBL ATC "
+  "level-1 ‘N’ molecules with a clinical phase. Structures for user-entered compounds are resolved "
+  "via PubChem (Kim et al., 2023). All endpoints are trained on measured experimental data (Table 1), "
+  "totalling 64,474 measured compound–endpoint records; ChEMBL document years (1976–2025) were "
+  "retained to enable temporal validation (Sheridan, 2013).", align="j")
+s0 = pd.read_csv("supplementary/STable0_data_provenance.csv")
+P("Table 1. Data provenance for each endpoint (all trained on measured experimental data).", italic=True, size=9)
+table_from_df(s0[["Endpoint","Role","Modality","Source","Identifier","Measurement","n","Year range"]])
+P("")
+H("2.2 Curation and labelling", 2)
+P("SMILES were canonicalised and deduplicated by InChIKey (Bento et al., 2020). For classification, "
+  "activities were aggregated per compound by median pChEMBL and labelled active where pChEMBL ≥ 6 "
+  "(potency ≤ 1 µM) and inactive where pChEMBL < 5 (> 10 µM); the intermediate range was discarded. "
+  "Receptor targets, 96–98% active because binders are preferentially reported, were modelled by "
+  "potency regression on median pChEMBL rather than binary classification.", align="j")
+H("2.3 Molecular representation, models and hyperparameters", 2)
+P("Molecules were represented by a 1,024-bit Morgan (ECFP, radius 2) fingerprint (Rogers and Hahn, "
+  "2010) concatenated with 24 RDKit physicochemical descriptors. Classification used an "
+  "unweighted-mean ensemble of random forest (Breiman, 2001), extremely randomised trees (Geurts et "
+  "al., 2006) and histogram gradient boosting (Friedman, 2001; Ke et al., 2017) in scikit-learn "
+  "(Pedregosa et al., 2011); regression used the corresponding regressor ensemble. Hyperparameters "
+  "are listed in Table 2. A pre-specified quality gate (MCC ≥ 0.45 under scaffold CV) governed "
+  "deployment; endpoints failing the gate as classifiers (D2, A2A, 5-HT2A, SERT) were served as "
+  "regressions.", align="j")
+P("Table 2. Model architecture and hyperparameters.", italic=True, size=9)
+hp = pd.DataFrame([
+    ["Random forest (classifier/regressor)", "n_estimators=300; min_samples_leaf=2; class_weight=balanced_subsample (clf)"],
+    ["Extremely randomised trees", "n_estimators=300; min_samples_leaf=2; class_weight=balanced_subsample (clf)"],
+    ["Histogram gradient boosting", "max_iter=300; learning_rate=0.06"],
+    ["Ensemble", "unweighted mean of the three base learners (probabilities / predictions)"],
+    ["Calibration", "isotonic regression on scaffold-CV out-of-fold predictions"],
+    ["Conformal prediction", "Mondrian (class-conditional) inductive; significance ε = 0.10; 50/50 calibration/test"],
+    ["Applicability domain", "maximum Tanimoto similarity to training set; flag threshold 0.30"],
+    ["Baselines", "Tanimoto k-NN (k=5); logistic regression (balanced, standardised features)"],
+    ["Random seed", "42 (all stages)"],
+], columns=["Component", "Setting"])
+table_from_df(hp); P("")
+P("Table 3. Software environment.", italic=True, size=9)
+sw = pd.DataFrame([["Python","3.13"],["RDKit","2026.03.2"],["scikit-learn","1.8.0"],["NumPy","2.4.6"],
+                   ["pandas","3.0.3"],["SciPy","1.17.1"],["matplotlib","3.10.9"]], columns=["Package","Version"])
+table_from_df(sw); P("")
+H("2.4 Calibration, conformal prediction and integration", 2)
+P("Calibrated probabilities were obtained by isotonic regression on scaffold-CV out-of-fold scores "
+  "(Niculescu-Mizil and Caruana, 2005). Class-conditional (Mondrian) inductive conformal prediction "
+  "(Vovk et al., 2005; Norinder et al., 2014; Mervin et al., 2021) yields, for a query with score s "
+  "and per-class calibration nonconformity sets, a p-value per class c", align="j")
+eq("p_c = (#{α in A_c : α ≥ α_query} + 1) / (|A_c| + 1),   α_active = 1 − s,   α_inactive = s")
+P("and a prediction set comprising classes with p_c > ε (ε = 0.10). Effective CNS engagement combines "
+  "target activity with brain penetration,", align="j")
+eq("Engagement(target) = P(active | target) × P(BBB-penetrant)")
+P("and per-disease scores take the maximum engagement over the targets mapped to each disease. "
+  "Druggability is a deterministic composite of QED (Bickerton et al., 2012), Lipinski (Lipinski et "
+  "al., 2001) and Veber (Veber et al., 2002) compliance, the CNS-MPO desirability score (Wager et "
+  "al., 2010) and PAINS alerts (Baell and Holloway, 2010). Each prediction returns the nearest "
+  "measured analogues by Tanimoto similarity (Willett, 2006).", align="j")
+H("2.5 Validation regimes", 2)
+P("Models were evaluated under: (i) a random stratified split; (ii) scaffold GroupKFold (k = 5) on "
+  "Bemis–Murcko generic scaffolds (Bemis and Murcko, 1996), with all transforms fit within each fold "
+  "(Tropsha, 2010; Wu et al., 2018); (iii) leave-cluster-out using sphere-exclusion clusters held "
+  "out in full; and (iv) temporal validation, training on compounds reported up to the "
+  "75th-percentile ChEMBL document year and testing on the most recent ~25% (Sheridan, 2013). "
+  "Classification metrics were AUROC (with 95% bootstrap confidence intervals, 1,000 resamples), "
+  "PR-AUC, balanced accuracy, MCC and Brier score; regression metrics were R², RMSE and Spearman ρ. "
+  "Code, models and data-fetch scripts are released; a Streamlit application provides the interface.",
+  align="j")
+
+# ---- 3 RESULTS ----
+H("3. Results", 1)
+figure("figures/fig2_dataset.png",
+       "Figure 2. Training-set size and class balance for each endpoint.")
+H("3.1 Classification performance", 2)
+s1 = pd.read_csv("supplementary/STable1_classification_metrics.csv")
+def ci_str(ep):
+    c = cis.get(ep, {}).get("ci95"); return f"[{c[0]}, {c[1]}]" if c else "–"
+t1 = s1[["endpoint","n","pos_rate","AUROC_random","AUROC_scaffold","AUROC_cluster","AUROC_temporal","Brier","MCC","conformal_coverage"]].copy()
+t1.insert(5, "Scaffold 95% CI", [ci_str(e) for e in s1["endpoint"]])
+t1.columns = ["Endpoint","n","Pos.","AUROC rand","AUROC scaf","Scaf 95% CI","AUROC clust","AUROC temp","Brier","MCC","Conf. cov."]
+P("Table 4. Classification performance under four validation regimes, with 95% bootstrap CI on the "
+  "scaffold-CV AUROC, Brier score, MCC and empirical conformal coverage (target 0.90).", italic=True, size=9)
+table_from_df(t1); P("")
+figure("figures/fig3_validation.png",
+       "Figure 3. AUROC across validation regimes; error bars on scaffold-CV bars denote 95% bootstrap CIs.")
+figure("figures/fig4_roc_calibration.png",
+       "Figure 4. (A) Scaffold cross-validation ROC curves (out-of-fold). (B) Reliability diagrams after "
+       "isotonic calibration for representative endpoints.")
+figure("figures/fig5_conformal_comparison.png",
+       "Figure 5. (A) Empirical coverage of 90%-level conformal prediction sets. (B) Scaffold-CV AUROC "
+       "of the deployed ensemble versus Tanimoto k-nearest-neighbour and logistic-regression baselines.")
+P("Random-split AUROC was 0.94–0.98 across endpoints; scaffold and leave-cluster-out AUROC were "
+  "0.87–0.95; and temporal-split AUROC was 0.61–0.92 (Figure 3; Table 4). Isotonic calibration gave "
+  "Brier scores of 0.04–0.14 (Figure 4B) and empirical conformal coverage of 0.885–0.905 against the "
+  "0.90 target (Figure 5A). The ensemble equalled or exceeded the k-nearest-neighbour and "
+  "logistic-regression baselines for every endpoint (Figure 5B).", align="j")
+H("3.2 Comparison with the literature", 2)
+figure("figures/fig6_benchmark.png",
+       "Figure 6. Per-endpoint random-split AUROC (this work) relative to reported random-split ranges.")
+P("On like-for-like random splits, per-endpoint AUROC was within or above reported ranges, for "
+  "example BBB (0.88–0.96) and hERG (0.86–0.93) (Kumar et al., 2022; Huang et al., 2024; Figure 6).", align="j")
+H("3.3 Receptor potency regression and antioxidant model", 2)
+s2 = pd.read_csv("supplementary/STable2_receptor_regression.csv")
+t2 = s2[["receptor","n","scaffold_cv_R2","RMSE","Spearman","temporal_R2"]].copy()
+t2.columns = ["Receptor","n","Scaffold R²","RMSE","Spearman","Temporal R²"]
+P("Table 5. Receptor potency-regression performance (scaffold cross-validation and temporal split).", italic=True, size=9)
+table_from_df(t2); P("")
+figure("figures/fig7_regression.png",
+       "Figure 7. Predicted versus measured potency (scaffold cross-validation) for the measured "
+       "antioxidant (DPPH) model and the four receptor potency-regression endpoints (panels A–E).")
+am = json.load(open("models_genuine/antioxidant_measured_meta.json"))
+P(f"Receptor potency regressions achieved scaffold-CV R² of 0.34–0.53 and Spearman ρ of 0.57–0.71; "
+  f"temporal R² was lower (Table 5), and these endpoints are reported as ranking-grade. The "
+  f"antioxidant model trained on measured DPPH data (n = {am['n']}) achieved scaffold-CV R² = "
+  f"{am['scaffold_cv_r2']}, RMSE = {am['rmse']} and Spearman = {am['spearman']} (Figure 7); the "
+  f"earlier curated score correlated only weakly with measured DPPH (Spearman = "
+  f"{am['crosscheck_curated_vs_measured_spearman']}).", align="j")
+H("3.4 Behaviour on reference compounds", 2)
+P("With chemistry-only inputs the integrated system reproduced established pharmacology: rivastigmine "
+  "resolved to Alzheimer’s disease via BChE; rasagiline to Parkinson’s disease via MAO-B; fluoxetine "
+  "to depression via SERT with a corresponding clinical-precedent match; terfenadine, withdrawn for "
+  "cardiotoxicity, was predicted positive at hERG; and resveratrol was predicted BBB non-penetrant, "
+  "consistent with reported flavonoid CNS bioavailability (Hasan et al., 2023).", align="j")
+
+# ---- 4 DISCUSSION ----
+H("4. Discussion", 1)
+P("The contribution of BrainSafe AI is integrative. Its components — fingerprint and tree-ensemble "
+  "QSAR, BBB and hERG models, conformal prediction and the QED/CNS-MPO druggability rules — are "
+  "individually established (Rogers and Hahn, 2010; Breiman, 2001; Norinder et al., 2014; Wager et "
+  "al., 2010). Their combination into a single measured-data CNS profiler that is calibrated, "
+  "conformal, evidence-grounded, BBB-gated, safety-aware and clinically contextualised is not, to our "
+  "knowledge, available as a unit in existing tools (Daina et al., 2017, 2019; Fu et al., 2024; Awale "
+  "and Reymond, 2019).", align="j")
+P("AUROC decreased from random (0.94–0.98) to temporal (0.61–0.92) splits, consistent with the "
+  "proportion of novel chemotypes in each test set: 71–91% of recent test compounds carried "
+  "Bemis–Murcko scaffolds absent from training. Where temporal AUROC remained high (BACE1, 0.92) the "
+  "recent test set was 93% active; where it was class-balanced (MAO-A, 45% active) the value was "
+  "0.61. Reporting all four regimes characterises generalisation across chemical space and time "
+  "(Sheridan, 2013; Tropsha, 2010).", align="j")
+P("Several limitations apply. The models predict target engagement, not the direction of modulation "
+  "(agonism versus antagonism); engagement is distinct from clinical efficacy, and the "
+  "clinical-precedent layer reports structural similarity to compounds with documented clinical "
+  "phases rather than predicting efficacy; no prospective experimental validation has been performed; "
+  "and GSK-3β and MAO-A generalise less well under temporal validation and are flagged as "
+  "lower-confidence, while pooled DPPH antioxidant data show weak temporal transfer. Intended use is "
+  "research hypothesis generation and prioritisation, not clinical or diagnostic application.", align="j")
+
+# ---- 5 CONCLUSION ----
+H("5. Conclusion", 1)
+P("BrainSafe AI is a calibrated, evidence-grounded multi-endpoint CNS profiler built on measured "
+  "public data, with per-endpoint performance within or above reported ranges on like-for-like "
+  "splits and scaffold, cluster and temporal metrics reported alongside. Its limitations are "
+  "documented, and it is suitable for an application/resource publication and for research "
+  "prioritisation.", align="j")
+
+# ---- BACK MATTER ----
+H("Data and code availability", 2)
+P("All trained models, datasets, validation reports (random, scaffold, cluster, temporal, conformal), "
+  "supplementary tables and figures, and the fetch/train/validation scripts are provided in the "
+  "project repository [URL/DOI to be added on acceptance], under an open licence. Source data derive "
+  "from ChEMBL_37 (Mendez et al., 2019; Zdrazil et al., 2024) and B3DB (Meng et al., 2021). The "
+  "interactive application is provided as app_v6_final.py.", align="j")
+H("Ethics statement", 2)
+P("This study used only publicly available molecular and bioactivity data and did not involve human "
+  "participants, human tissue, or animals; no ethical approval was required.", align="j")
+H("Author contributions, funding and competing interests", 2)
+P("Author contributions: [To be completed]. Funding: [To be completed]. Competing interests: the "
+  "authors declare no competing interests. [Confirm on submission.]", align="j")
+
+# ---- REFERENCES ----
+doc.add_page_break(); H("References", 1)
+refs = [
+"Awale, M. and Reymond, J.-L. (2019) ‘The polypharmacology browser PPB2: target prediction combining nearest neighbors with machine learning’, Journal of Chemical Information and Modeling, 59(1), pp. 10–17.",
+"Baell, J.B. and Holloway, G.A. (2010) ‘New substructure filters for removal of pan assay interference compounds (PAINS) from screening libraries and for their exclusion in bioassays’, Journal of Medicinal Chemistry, 53(7), pp. 2719–2740.",
+"Bemis, G.W. and Murcko, M.A. (1996) ‘The properties of known drugs. 1. Molecular frameworks’, Journal of Medicinal Chemistry, 39(15), pp. 2887–2893.",
+"Bento, A.P., Hersey, A., Félix, E., Landrum, G., Gaulton, A., Atkinson, F., Bellis, L.J., De Veij, M. and Leach, A.R. (2020) ‘An open source chemical structure curation pipeline using RDKit’, Journal of Cheminformatics, 12, 51.",
+"Bickerton, G.R., Paolini, G.V., Besnard, J., Muresan, S. and Hopkins, A.L. (2012) ‘Quantifying the chemical beauty of drugs’, Nature Chemistry, 4(2), pp. 90–98.",
+"Breiman, L. (2001) ‘Random forests’, Machine Learning, 45(1), pp. 5–32.",
+"Cheng, F., Li, W., Zhou, Y., Shen, J., Wu, Z., Liu, G., Lee, P.W. and Tang, Y. (2012) ‘admetSAR: a comprehensive source and free tool for assessment of chemical ADMET properties’, Journal of Chemical Information and Modeling, 52(11), pp. 3099–3105.",
+"Daina, A., Michielin, O. and Zoete, V. (2017) ‘SwissADME: a free web tool to evaluate pharmacokinetics, drug-likeness and medicinal chemistry friendliness of small molecules’, Scientific Reports, 7, 42717.",
+"Daina, A., Michielin, O. and Zoete, V. (2019) ‘SwissTargetPrediction: updated data and new features for efficient prediction of protein targets of small molecules’, Nucleic Acids Research, 47(W1), pp. W357–W364.",
+"Friedman, J.H. (2001) ‘Greedy function approximation: a gradient boosting machine’, Annals of Statistics, 29(5), pp. 1189–1232.",
+"Fu, L., Shi, S., Yi, J., Wang, N., He, Y., Wu, Z., Peng, J., Deng, Y., Wang, W., Wu, C., Lyu, A., Zeng, X., Zhao, W., Hou, T. and Cao, D. (2024) ‘ADMETlab 3.0: an updated comprehensive online ADMET prediction platform’, Nucleic Acids Research, 52(W1), pp. W422–W431.",
+"Galati, S., Di Stefano, M., Bertini, S., Granchi, C., Giordano, A., Gado, F., Macchia, M., Tuccinardi, T. and Poli, G. (2023) ‘Identification of new GSK3β inhibitors through a consensus machine learning-based virtual screening’, International Journal of Molecular Sciences, 24(24), 17233.",
+"Gaulton, A., Bellis, L.J., Bento, A.P., Chambers, J., Davies, M., Hersey, A., Light, Y., McGlinchey, S., Michalovich, D., Al-Lazikani, B. and Overington, J.P. (2012) ‘ChEMBL: a large-scale bioactivity database for drug discovery’, Nucleic Acids Research, 40(D1), pp. D1100–D1107.",
+"GBD 2021 Nervous System Disorders Collaborators (2024) ‘Global, regional, and national burden of disorders affecting the nervous system, 1990–2021’, The Lancet Neurology, 23(4), pp. 344–381.",
+"Geurts, P., Ernst, D. and Wehenkel, L. (2006) ‘Extremely randomized trees’, Machine Learning, 63(1), pp. 3–42.",
+"Hasan, S., Khatri, N., Rahman, Z.N., Menezes, A.A., Martini, J., Shehjar, F., Mujeeb, N. and Shah, Z.A. (2023) ‘Neuroprotective potential of flavonoids in brain disorders’, Brain Sciences, 13(9), 1258.",
+"Huang, E.T.C., Yang, J.-S., Liao, K.Y.K., Tseng, W.C.W., Lee, C.K., Gill, M., Compas, C., See, S. and Tsai, F.-J. (2024) ‘Predicting blood–brain barrier permeability of molecules with a large language model and machine learning’, Scientific Reports, 14, 15844.",
+"Ke, G., Meng, Q., Finley, T., Wang, T., Chen, W., Ma, W., Ye, Q. and Liu, T.-Y. (2017) ‘LightGBM: a highly efficient gradient boosting decision tree’, Advances in Neural Information Processing Systems, 30, pp. 3146–3154.",
+"Kim, S., Chen, J., Cheng, T., Gindulyte, A., He, J., He, S., Li, Q., Shoemaker, B.A., Thiessen, P.A., Yu, B., Zaslavsky, L., Zhang, J. and Bolton, E.E. (2023) ‘PubChem 2023 update’, Nucleic Acids Research, 51(D1), pp. D1373–D1380.",
+"Kumar, R., Sharma, A., Alexiou, A., Bilgrami, A.L., Kamal, M.A. and Ashraf, G.M. (2022) ‘DeePred-BBB: a blood brain barrier permeability prediction model with improved accuracy’, Frontiers in Neuroscience, 16, 858126.",
+"Kumar, S., Bhowmik, R., Oh, J.M., Abdelgawad, M.A., Ghoneim, M.M., Al-Serwi, R.H., Kim, H. and Mathew, B. (2024) ‘Machine learning driven web-based app platform for the discovery of monoamine oxidase B inhibitors’, Scientific Reports, 14, 4868.",
+"Lipinski, C.A., Lombardo, F., Dominy, B.W. and Feeney, P.J. (2001) ‘Experimental and computational approaches to estimate solubility and permeability in drug discovery and development settings’, Advanced Drug Delivery Reviews, 46(1–3), pp. 3–26.",
+"Mendez, D., Gaulton, A., Bento, A.P., Chambers, J., De Veij, M., Félix, E., Magariños, M.P., Mosquera, J.F., Mutowo, P., Nowotka, M., Gordillo-Marañón, M., Hunter, F., Junco, L., Mugumbate, G., Rodriguez-Lopez, M., Atkinson, F., Bosc, N., Radoux, C.J., Segura-Cabrera, A., Hersey, A. and Leach, A.R. (2019) ‘ChEMBL: towards direct deposition of bioassay data’, Nucleic Acids Research, 47(D1), pp. D930–D940.",
+"Meng, F., Xi, Y., Huang, J. and Ayers, P.W. (2021) ‘A curated diverse molecular database of blood-brain barrier permeability with chemical descriptors’, Scientific Data, 8, 289.",
+"Mervin, L.H., Johansson, S., Semenova, E., Giblin, K.A. and Engkvist, O. (2021) ‘Uncertainty quantification in drug design’, Drug Discovery Today, 26(2), pp. 474–489.",
+"Niculescu-Mizil, A. and Caruana, R. (2005) ‘Predicting good probabilities with supervised learning’, Proceedings of the 22nd International Conference on Machine Learning, pp. 625–632.",
+"Norinder, U., Carlsson, L., Boyer, S. and Eklund, M. (2014) ‘Introducing conformal prediction in predictive modeling. A transparent and flexible alternative to applicability domain determination’, Journal of Chemical Information and Modeling, 54(6), pp. 1596–1603.",
+"Pedregosa, F., Varoquaux, G., Gramfort, A., Michel, V., Thirion, B., Grisel, O., Blondel, M., Prettenhofer, P., Weiss, R., Dubourg, V., Vanderplas, J., Passos, A., Cournapeau, D., Brucher, M., Perrot, M. and Duchesnay, É. (2011) ‘Scikit-learn: machine learning in Python’, Journal of Machine Learning Research, 12, pp. 2825–2830.",
+"Ponzoni, I., Sebastián-Pérez, V., Martínez, M.J., Roca, C., De la Cruz Pérez, C., Cravero, F., Vazquez, G.E., Páez, J.A., Díaz, M.F. and Campillo, N.E. (2019) ‘QSAR classification models for predicting the activity of inhibitors of beta-secretase (BACE1) associated with Alzheimer’s disease’, Scientific Reports, 9, 9102.",
+"RDKit (2024) RDKit: open-source cheminformatics. Available at: https://www.rdkit.org (Accessed: 2026).",
+"Rogers, D. and Hahn, M. (2010) ‘Extended-connectivity fingerprints’, Journal of Chemical Information and Modeling, 50(5), pp. 742–754.",
+"Sheridan, R.P. (2013) ‘Time-split cross-validation as a method for estimating the goodness of prospective prediction’, Journal of Chemical Information and Modeling, 53(4), pp. 783–790.",
+"Tropsha, A. (2010) ‘Best practices for QSAR model development, validation, and exploitation’, Molecular Informatics, 29(6–7), pp. 476–488.",
+"Veber, D.F., Johnson, S.R., Cheng, H.-Y., Smith, B.R., Ward, K.W. and Kopple, K.D. (2002) ‘Molecular properties that influence the oral bioavailability of drug candidates’, Journal of Medicinal Chemistry, 45(12), pp. 2615–2623.",
+"Vovk, V., Gammerman, A. and Shafer, G. (2005) Algorithmic learning in a random world. New York: Springer.",
+"Wager, T.T., Hou, X., Verhoest, P.R. and Villalobos, A. (2010) ‘Moving beyond rules: the development of a central nervous system multiparameter optimization (CNS MPO) approach’, ACS Chemical Neuroscience, 1(6), pp. 435–449.",
+"Willett, P. (2006) ‘Similarity-based virtual screening using 2D fingerprints’, Drug Discovery Today, 11(23–24), pp. 1046–1053.",
+"Wu, Z., Ramsundar, B., Feinberg, E.N., Gomes, J., Geniesse, C., Pappu, A.S., Leswing, K. and Pande, V. (2018) ‘MoleculeNet: a benchmark for molecular machine learning’, Chemical Science, 9(2), pp. 513–530.",
+"Xiong, G., Wu, Z., Yi, J., Fu, L., Yang, Z., Hsieh, C., Yin, M., Zeng, X., Wu, C., Lu, A., Chen, X., Hou, T. and Cao, D. (2021) ‘ADMETlab 2.0: an integrated online platform for accurate and comprehensive predictions of ADMET properties’, Nucleic Acids Research, 49(W1), pp. W5–W14.",
+"Zdrazil, B., Felix, E., Hunter, F., Manners, E.J., Blackshaw, J., Corbett, S., de Veij, M., Ioannidis, H., Mendez, D., Mosquera, J.F., Magariños, M.P., Bosc, N., Arcila, R., Kizilören, T., Gaulton, A., Bento, A.P., Adasme, M.F., Monecke, P., Landrum, G.A. and Leach, A.R. (2024) ‘The ChEMBL Database in 2023’, Nucleic Acids Research, 52(D1), pp. D1180–D1192.",
+]
+for rd in refs:
+    p = doc.add_paragraph(); p.paragraph_format.left_indent = Inches(0.5); p.paragraph_format.first_line_indent = Inches(-0.5); p.paragraph_format.space_after = Pt(6)
+    p.add_run(rd).font.size = Pt(10)
+P(f"Total references: {len(refs)}.", italic=True, size=9)
+doc.save("BrainSafe_AI_Manuscript.docx")
+print("Saved BrainSafe_AI_Manuscript.docx |", len(refs), "references | graphical abstract + 7 figures | 5 tables | line numbers + highlights + abbreviations")

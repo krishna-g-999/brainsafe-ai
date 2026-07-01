@@ -1,0 +1,9 @@
+endpoint,BrainSafe_random_AUROC,published_random_AUROC_range
+BBB,0.963,0.88-0.96
+AChE,0.975,~0.90-0.97
+BChE,0.976,~0.90-0.97
+BACE1,0.956,~0.90-0.96
+GSK3B,0.943,~0.88-0.95
+MAO_B,0.96,~0.88-0.96
+MAO_A,0.95,~0.85-0.95
+hERG,0.95,0.86-0.93

@@ -1,0 +1,15 @@
+Endpoint,Role,Modality,Source,Identifier,Measurement,n,Year range
+BBB,BBB gate,Classification,B3DB (measured),B3DB,BBB+/- permeability,7807,curated
+AChE,Alzheimer's,Classification,ChEMBL (measured),CHEMBL220,pChEMBL (IC50/Ki/Kd/EC50),4324,1986-2025
+BChE,Alzheimer's,Classification,ChEMBL (measured),CHEMBL1914,pChEMBL (IC50/Ki/Kd/EC50),2580,1976-2025
+BACE1,Alzheimer's,Classification,ChEMBL (measured),CHEMBL4822,pChEMBL (IC50/Ki/Kd/EC50),8067,2001-2025
+GSK3B,Neuroprotection (tau),Classification,ChEMBL (measured),CHEMBL262,pChEMBL (IC50/Ki/Kd/EC50),4044,2000-2025
+MAO-B,Parkinson's,Classification,ChEMBL (measured),CHEMBL2039,pChEMBL (IC50/Ki/Kd/EC50),3455,1990-2025
+MAO-A,Depression,Classification,ChEMBL (measured),CHEMBL1951,pChEMBL (IC50/Ki/Kd/EC50),2141,1990-2025
+D2,Parkinson's/psychosis,Regression,ChEMBL (measured),CHEMBL217,pChEMBL (IC50/Ki/Kd/EC50),7511,1987-2025
+A2A,Parkinson's,Regression,ChEMBL (measured),CHEMBL251,pChEMBL (IC50/Ki/Kd/EC50),5547,1992-2025
+HT2A,Mood/psychosis,Regression,ChEMBL (measured),CHEMBL224,pChEMBL (IC50/Ki/Kd/EC50),5256,1994-2025
+SERT,Depression,Regression,ChEMBL (measured),CHEMBL228,pChEMBL (IC50/Ki/Kd/EC50),4471,1980-2025
+hERG,Safety (cardiotox),Classification,ChEMBL (measured),CHEMBL240,pChEMBL (IC50/Ki/Kd/EC50),5905,1995-2025
+Antioxidant,Oxidative stress,Regression,ChEMBL DPPH (measured),DPPH assays,pIC50 (radical scavenging),2862,curated
+Clinical precedent,Translational,Reference (k-NN),ChEMBL ATC-N (measured),ATC level-1 N,max clinical phase 1-4,504,curated

@@ -1,0 +1,21 @@
+{
+  "endpoint": "BBB",
+  "meaning": "blood-brain-barrier penetration",
+  "n": 7805,
+  "pos": 4956,
+  "pos_rate": 0.635,
+  "auroc": 0.921,
+  "pr_auc": 0.952,
+  "balanced_acc": 0.839,
+  "mcc": 0.659,
+  "brier": 0.105,
+  "calibrated": true,
+  "threshold": 0.647,
+  "cv": "scaffold GroupKFold(5)",
+  "leak_median_tanimoto": 0.483,
+  "source": "B3DB (measured)",
+  "temporal_auroc": null,
+  "temporal_cutoff_year": null,
+  "cluster_split_auroc": 0.906,
+  "conformal_coverage": 0.897
+}
