@@ -1,0 +1,19 @@
+{
+  "endpoint": "SERT",
+  "meaning": "depression (serotonin transporter) \u2014 pKi/pIC50",
+  "task": "regression (pChEMBL)",
+  "n": 4471,
+  "y_min": 4.0,
+  "y_max": 11.0,
+  "y_std": 1.03,
+  "scaffold_cv_r2": 0.338,
+  "rmse": 0.841,
+  "spearman": 0.573,
+  "temporal": {
+    "cutoff_year": 2015,
+    "n_test": 998,
+    "r2": 0.171,
+    "rmse": 0.999
+  },
+  "source": "ChEMBL measured pChEMBL"
+}

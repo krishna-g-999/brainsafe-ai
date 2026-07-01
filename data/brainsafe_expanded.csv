@@ -1,0 +1,364 @@
+name,smiles,bbb,compound_type,data_source,ad_target_count,pd_target_count,als_target_count,hd_target_count,antioxidant,anti_inflammatory,mitochondrial_support,aggregation_modulation,cognitive_enhancement,neurogenesis,synaptic_plasticity,tier,sample_weight
+Curcumin,COc1cc(/C=C/C(=O)CC(=O)/C=C/c2ccc(O)c(OC)c2)ccc1O,Medium,Polyphenol / Curcuminoid,curated,2,2,1,1,90.0,90.0,70.0,80.0,70.0,60.0,70.0,gold_literature,1.0
+Resveratrol,Oc1ccc(/C=C/c2cc(O)cc(O)c2)cc1,High,Stilbenoid,curated,1,1,2,1,80.0,80.0,90.0,70.0,80.0,70.0,80.0,gold_literature,1.0
+Vitamin B12,,High,Vitamin B-group / Cobalamin,curated,2,0,1,0,60.0,80.0,70.0,50.0,70.0,50.0,60.0,gold_literature,1.0
+Omega-3 (DHA/EPA),CC/C=C\C/C=C\C/C=C\C/C=C\C/C=C\C/C=C\CCC(=O)O,High,Polyunsaturated Fatty Acid,curated,2,1,1,1,70.0,90.0,60.0,60.0,80.0,80.0,90.0,gold_literature,1.0
+Metformin,CN(C)C(=N)NC(N)=N,Medium,Biguanide Drug,curated,2,2,1,0,70.0,70.0,80.0,90.0,60.0,70.0,50.0,gold_literature,1.0
+Coenzyme Q10,COc1c(OC)c(C)c(CC/C=C(\C)CCC/C=C(\C)CCC/C=C(\C)CCC/C=C(\C)CCC/C=C(\C)CCC/C=C(\C)CCC/C=C(\C)CCC/C=C(\C)C)c(=O)c1=O,Medium,Coenzyme / Mitochondrial Antioxidant,curated,1,2,2,2,90.0,60.0,100.0,70.0,60.0,50.0,50.0,gold_literature,1.0
+Quercetin,O=c1c(O)c(-c2ccc(O)c(O)c2)oc2cc(O)cc(O)c12,Medium,Flavonol,curated,1,2,0,0,80.0,80.0,60.0,70.0,70.0,60.0,60.0,gold_literature,1.0
+Nicotinamide Riboside,NC(=O)c1ccc[n+](C2OC(CO)C(O)C2O)c1,High,NAD+ Precursor / Vitamin B3 Derivative,curated,2,1,1,1,70.0,60.0,90.0,70.0,80.0,70.0,70.0,gold_literature,1.0
+Ashwagandha,CC12CCC3C(C1(O)CC(=O)C2=O)CCC4=CC(=O)CCC34C,Medium,Adaptogenic Herb / Withanolides,curated,1,1,1,0,80.0,90.0,70.0,60.0,80.0,70.0,80.0,gold_literature,1.0
+Ginkgo Biloba,CC1(CCC(=C)C1)C(/C=C/C(=O)O)=C,High,Herbal Extract / Flavonoids + Terpenoids,curated,2,1,0,0,80.0,70.0,70.0,60.0,90.0,60.0,80.0,gold_literature,1.0
+Sulforaphane,CS(=O)CCCCN=C=S,Medium,Isothiocyanate,curated,2,2,1,1,90.0,90.0,80.0,70.0,70.0,70.0,60.0,gold_literature,1.0
+Vitamin C,OCC(O)C1OC(=O)C(O)=C1O,High,Vitamin / Ascorbic Acid,curated,2,1,1,0,90.0,70.0,70.0,60.0,70.0,50.0,60.0,gold_literature,1.0
+Vitamin E,Cc1c(C)c2c(c(C)c1O)CC(C)(CCCC(C)CCCC(C)CCCC(C)C)O2,High,Vitamin / Tocopherol,curated,1,0,0,1,100.0,60.0,80.0,50.0,60.0,40.0,50.0,gold_literature,1.0
+Alpha-Lipoic Acid,OC(=O)CCCCC1CCSS1,High,Antioxidant Cofactor / Dithiol,curated,1,2,1,1,90.0,80.0,90.0,70.0,70.0,50.0,60.0,gold_literature,1.0
+N-Acetylcysteine,CC(=O)NC(CS)C(=O)O,Medium,Amino Acid Derivative / GSH Precursor,curated,1,1,2,1,90.0,70.0,80.0,60.0,60.0,50.0,50.0,gold_literature,1.0
+Hesperetin,COc1ccc(C2CC(=O)c3c(O)cc(O)cc3O2)cc1O,Medium,Flavanone,curated,1,1,0,0,80.0,80.0,60.0,70.0,60.0,50.0,60.0,gold_literature,1.0
+Naringenin,O=C1CC(c2ccc(O)cc2)Oc2cc(O)cc(O)c21,Medium,Flavanone,curated,1,0,0,0,80.0,70.0,70.0,60.0,60.0,60.0,60.0,gold_literature,1.0
+Apigenin,O=c1cc(-c2ccc(O)cc2)oc2cc(O)cc(O)c12,High,Flavone,curated,1,2,1,0,80.0,90.0,70.0,80.0,70.0,70.0,70.0,gold_literature,1.0
+Allicin,,Medium,Organosulfur Compound,curated,0,1,0,0,70.0,80.0,60.0,50.0,50.0,40.0,50.0,gold_literature,1.0
+Hyperforin,,Medium,Phloroglucinol Derivative / St. John's Wort,curated,1,0,0,0,70.0,80.0,70.0,60.0,60.0,50.0,60.0,gold_literature,1.0
+Bilobalide,,High,Terpenoid / Ginkgo Biloba,curated,2,1,0,0,80.0,70.0,80.0,70.0,80.0,60.0,70.0,gold_literature,1.0
+Thiamine,Cc1ncc(C[n+]2csc(CCO)c2C)c(N)n1,High,Vitamin B1,curated,1,0,1,0,60.0,60.0,90.0,50.0,60.0,40.0,50.0,gold_literature,1.0
+Riboflavin,Cc1cc2nc3c(=O)[nH]c(=O)nc3n(CC(O)C(O)C(O)CO)c2cc1C,High,Vitamin B2,curated,0,0,0,0,70.0,50.0,80.0,40.0,50.0,40.0,40.0,gold_literature,1.0
+Niacin,OC(=O)c1cccnc1,High,Vitamin B3,curated,2,1,1,1,70.0,60.0,90.0,60.0,70.0,50.0,50.0,gold_literature,1.0
+Creatine,CN(CC(=O)O)C(=N)N,Low-Med,Nitrogenous Organic Acid,curated,1,1,2,2,60.0,50.0,100.0,70.0,60.0,40.0,50.0,gold_literature,1.0
+Lutein,CC1=C(/C=C/C(C)=C/C=C/C(C)=C/C=C/C=C(C)/C=C/C=C(C)/C=C/C2=C(C)CC(O)CC2(C)C)C(C)(C)CC(O)C1,Medium,Carotenoid / Xanthophyll,curated,1,0,0,0,90.0,70.0,60.0,50.0,60.0,40.0,40.0,gold_literature,1.0
+Lycopene,CC(C)=CCCC(C)=CCC=C(C)CCC=C(C)CCC=C(C)CCC=C(C)CCC=C(C)C,Medium,Carotenoid,curated,1,1,0,0,90.0,60.0,70.0,60.0,50.0,40.0,40.0,gold_literature,1.0
+EGCG,O=C(OC1Cc2c(O)cc(O)cc2OC1c1cc(O)c(O)c(O)c1)c1cc(O)c(O)c(O)c1,Medium,Catechin / Flavan-3-ol / Green Tea,curated,2,2,1,1,90.0,90.0,80.0,90.0,80.0,70.0,80.0,gold_literature,1.0
+Chlorogenic Acid,OC1CC(OC(=O)/C=C/c2ccc(O)c(O)c2)CC(O)C1C(=O)O,Medium,Phenolic Acid,curated,1,0,0,0,80.0,80.0,70.0,60.0,70.0,50.0,60.0,gold_literature,1.0
+Vitamin D,,High,Vitamin / Secosteroid,curated,2,1,1,1,70.0,80.0,60.0,70.0,70.0,60.0,60.0,gold_literature,1.0
+Fisetin,O=c1c(O)c(-c2ccc(O)c(O)c2)oc2cc(O)ccc12,Medium,Flavonol / Senolytic,curated,2,2,1,1,90.0,80.0,70.0,80.0,80.0,80.0,80.0,gold_literature,1.0
+Pterostilbene,COc1cc(/C=C/c2ccc(O)cc2)cc(OC)c1,High,Stilbenoid / Resveratrol Analog,curated,1,1,2,1,80.0,80.0,80.0,70.0,80.0,70.0,70.0,gold_literature,1.0
+Bacopa Monnieri,OCC1OC(OC2CCC3(C)C4CC=C5C(CCC5(CO)CO)C4(C)CCC3C2O)C(O)C(O)C1O,Medium,Adaptogenic Herb / Bacosides,curated,2,1,0,0,80.0,90.0,70.0,60.0,90.0,70.0,90.0,gold_literature,1.0
+Lion's Mane (Hericenone),CCCCCCCCCC(=O)Cc1cc(O)cc(O)c1C=O,Medium,Functional Mushroom / Hericenones and Erinacines,curated,2,1,1,0,70.0,70.0,60.0,80.0,90.0,100.0,80.0,gold_literature,1.0
+Rhodiola,OCC(=O)c1ccc(O)cc1,Medium,Adaptogenic Herb / Rosavins and Salidroside,curated,1,0,1,0,80.0,80.0,80.0,50.0,70.0,60.0,70.0,gold_literature,1.0
+Phosphatidylserine,CCCCCCCCCCCCCCCC(=O)OCC(COP(=O)(O)OCC(N)C(=O)O)OC(=O)CCCCCCCCCCCCCCC,High,Phospholipid,curated,1,1,0,0,60.0,70.0,70.0,60.0,80.0,50.0,70.0,gold_literature,1.0
+Uridine,O=c1ccn(C2OC(CO)C(O)C2O)c(=O)[nH]1,High,Nucleoside,curated,2,1,1,0,50.0,60.0,80.0,70.0,70.0,70.0,80.0,gold_literature,1.0
+Taurine,NCCS(=O)(=O)O,High,Amino Sulfonic Acid,curated,1,2,2,1,80.0,80.0,90.0,60.0,60.0,60.0,60.0,gold_literature,1.0
+Kaempferol,O=c1c(O)c(-c2ccc(O)cc2)oc2cc(O)cc(O)c12,Medium,Flavonol,curated,1,1,0,0,80.0,80.0,60.0,70.0,70.0,60.0,70.0,gold_literature,1.0
+Myricetin,O=c1c(O)c(-c2cc(O)c(O)c(O)c2)oc2cc(O)cc(O)c12,Low,Flavonol,curated,1,1,0,0,90.0,80.0,60.0,80.0,60.0,50.0,60.0,gold_literature,1.0
+Luteolin,O=c1cc(-c2ccc(O)c(O)c2)oc2cc(O)cc(O)c12,Medium,Flavone,curated,2,1,1,0,80.0,90.0,70.0,70.0,70.0,60.0,70.0,gold_literature,1.0
+Catechin,OC1Cc2c(O)cc(O)cc2OC1c1ccc(O)c(O)c1,Medium,Flavan-3-ol,curated,1,1,0,0,80.0,70.0,60.0,70.0,60.0,60.0,60.0,gold_literature,1.0
+Epicatechin,OC1Cc2c(O)cc(O)cc2OC1c1ccc(O)c(O)c1,Medium,Flavan-3-ol,curated,1,1,0,0,80.0,70.0,70.0,60.0,70.0,70.0,80.0,gold_literature,1.0
+Rutin,O=c1c(OC2OC(CO)C(O)C(O)C2O)c(-c2ccc(O)c(O)c2)oc2cc(O)cc(O)c12,Low,Flavonol Glycoside,curated,0,0,0,0,70.0,70.0,60.0,60.0,60.0,50.0,50.0,gold_literature,1.0
+Baicalein,O=c1cc(-c2ccccc2)oc2cc(O)c(O)c(O)c12,High,Flavone / Scutellaria baicalensis,curated,2,2,1,0,80.0,90.0,70.0,80.0,70.0,60.0,70.0,gold_literature,1.0
+Wogonin,COc1c(O)cc(O)c2c(=O)cc(-c3ccccc3)oc12,High,Flavone,curated,1,1,0,0,70.0,80.0,60.0,70.0,60.0,50.0,60.0,gold_literature,1.0
+Daidzein,O=C1c2ccc(O)cc2OC=C1c1ccc(O)cc1,Medium,Isoflavone,curated,1,0,0,0,70.0,70.0,60.0,60.0,60.0,60.0,60.0,gold_literature,1.0
+Genistein,O=C1c2cc(O)cc(O)c2OC(=C1O)c1ccc(O)cc1,Medium,Isoflavone,curated,1,0,0,0,70.0,80.0,60.0,70.0,70.0,60.0,60.0,gold_literature,1.0
+Cyanidin,,Low,Anthocyanin,curated,1,1,0,0,90.0,80.0,60.0,70.0,70.0,60.0,70.0,gold_literature,1.0
+Delphinidin,,Low,Anthocyanin,curated,1,0,0,0,90.0,80.0,60.0,70.0,60.0,50.0,60.0,gold_literature,1.0
+Nobiletin,COc1ccc(-c2cc(=O)c3c(OC)c(OC)c(OC)c(OC)c3o2)cc1OC,High,Polymethoxylated Flavone,curated,2,1,1,0,70.0,80.0,70.0,80.0,80.0,70.0,80.0,gold_literature,1.0
+Silymarin,COc1ccc(C2Oc3cc(O)cc(O)c3C(=O)C2c2ccc(O)c(OC)c2)cc1O,Low,Flavonolignan / Milk Thistle,curated,1,1,0,0,90.0,80.0,70.0,70.0,60.0,60.0,60.0,gold_literature,1.0
+Galangin,O=c1c(O)c(-c2ccccc2)oc2cc(O)cc(O)c12,Medium,Flavonol,curated,1,0,0,0,70.0,70.0,60.0,70.0,60.0,50.0,60.0,gold_literature,1.0
+Taxifolin,O=C1CC(c2ccc(O)c(O)c2)Oc2cc(O)cc(O)c21,Low,Dihydroflavonol,curated,1,0,0,0,90.0,80.0,70.0,70.0,60.0,50.0,60.0,gold_literature,1.0
+Isorhamnetin,COc1ccc(-c2oc3cc(O)cc(O)c3c(=O)c2O)cc1O,Low,Flavonol,curated,0,0,0,0,80.0,70.0,60.0,60.0,60.0,50.0,50.0,gold_literature,1.0
+Phloretin,O=C(CCc1ccc(O)cc1)c1c(O)cc(O)cc1O,Low,Dihydrochalcone,curated,0,0,0,0,70.0,70.0,60.0,60.0,50.0,50.0,50.0,gold_literature,1.0
+Eriodictyol,O=C1CC(c2ccc(O)c(O)c2)Oc2cc(O)cc(O)c21,Low,Flavanone,curated,1,0,0,0,80.0,80.0,60.0,60.0,60.0,50.0,60.0,gold_literature,1.0
+Xanthohumol,COc1cc(CC=C(C)C)cc(O)c1C(=O)/C=C/c1ccc(O)cc1,Low,Chalcone / Hops,curated,0,0,0,0,80.0,70.0,60.0,60.0,50.0,50.0,50.0,gold_literature,1.0
+Magnesium L-Threonate,OC(C(O)C(=O)O)C(=O)O,High,Mineral Supplement,curated,2,1,1,1,60.0,70.0,70.0,60.0,90.0,70.0,100.0,gold_literature,1.0
+Zinc,,Medium,Mineral Supplement,curated,1,0,0,0,70.0,60.0,60.0,60.0,60.0,50.0,60.0,gold_literature,1.0
+Selenium,,High,Trace Mineral,curated,1,0,1,0,80.0,70.0,70.0,60.0,60.0,50.0,50.0,gold_literature,1.0
+Melatonin,COc1ccc2[nH]cc(CCNC(C)=O)c2c1,High,Neurohormone / Pineal Indolamine,curated,2,2,1,1,90.0,80.0,80.0,70.0,70.0,70.0,60.0,gold_literature,1.0
+L-Theanine,CNC(=O)CCC(N)C(=O)O,High,Non-Protein Amino Acid / Green Tea,curated,1,0,0,0,60.0,70.0,60.0,50.0,80.0,60.0,80.0,gold_literature,1.0
+PQQ,OC(=O)c1cnc2cc(C(=O)O)c(=O)c(=O)c2c1,High,Redox Cofactor / Pyrroloquinoline Quinone,curated,2,1,1,1,90.0,70.0,100.0,70.0,80.0,80.0,70.0,gold_literature,1.0
+Berberine,COc1ccc2c(c1OC)-c1cc3c(cc1[N+]2=CC)OCO3,Low,Isoquinoline Alkaloid / Berberis species,curated,2,1,0,0,70.0,80.0,70.0,80.0,70.0,50.0,60.0,gold_literature,1.0
+Astaxanthin,CC1=C(/C=C/C(C)=C/C=C/C(C)=C/C=C/C=C(C)/C=C/C=C(C)/C=C/C2=C(C)C(=O)C(O)(CC2)C)C(C)(C)C(=O)C(O)C1,High,Keto-Carotenoid,curated,2,1,1,1,100.0,80.0,70.0,60.0,70.0,60.0,70.0,gold_literature,1.0
+Spermidine,NCCCCNCCCN,High,Polyamine,curated,2,2,1,1,70.0,70.0,80.0,90.0,80.0,70.0,80.0,gold_literature,1.0
+L-Carnitine,C[N+](C)(C)CC(O)CC([O-])=O,Medium,Amino Acid Derivative / Fatty Acid Transporter,curated,1,1,1,1,60.0,60.0,90.0,60.0,70.0,50.0,60.0,gold_literature,1.0
+Acetyl-L-Carnitine,CC(=O)OC(CC([O-])=O)C[N+](C)(C)C,High,Amino Acid Derivative / ALCAR,curated,2,1,1,1,70.0,70.0,90.0,60.0,90.0,60.0,70.0,gold_literature,1.0
+Lithium Orotate,OC(=O)C1=CC(=O)NC(=O)N1,High,Mineral Salt / Trace Lithium,curated,2,1,0,1,50.0,70.0,60.0,80.0,70.0,80.0,70.0,gold_literature,1.0
+Vinpocetine,CCOC(=O)c1c(CC)nc2ccccc2c1CC1CCCCN1,High,Alkaloid Derivative / Vinca minor,curated,1,0,0,0,60.0,70.0,70.0,60.0,80.0,50.0,70.0,gold_literature,1.0
+Phosphatidylcholine,CCCCCCCCCCCCCCCC(=O)OCC(COP(=O)([O-])OCC[N+](C)(C)C)OC(=O)CCCCCCCCCCCCCCC,Medium,Phospholipid / Membrane Component,curated,1,0,0,0,50.0,60.0,70.0,50.0,70.0,50.0,70.0,gold_literature,1.0
+Glycine,NCC(=O)O,High,Amino Acid / Inhibitory Neurotransmitter Precursor,curated,1,0,1,0,60.0,70.0,70.0,60.0,60.0,50.0,70.0,gold_literature,1.0
+Citicoline (CDP-Choline),C[N+](C)(C)CCOP(=O)(O)OP(=O)(O)OC[C@@H]1O[C@@H](n2ccc(=O)nc2N)[C@H](O)[C@@H]1O,High,Nucleotide / Cholinergic Nootropic,curated,2,1,0,0,60.0,70.0,80.0,60.0,90.0,60.0,80.0,gold_literature,1.0
+Alpha-GPC,C[N+](C)(C)CCOP(=O)([O-])OCC(O)CO,High,Cholinergic Supplement / Phospholipid Precursor,curated,2,1,0,0,50.0,60.0,70.0,60.0,90.0,60.0,80.0,gold_literature,1.0
+Huperzine A,C[C@@H]1CCNC(=C1)/C1=C\CC(=O)c2cc(=C)ccn21,High,Lycopodium Alkaloid / AChE Inhibitor,curated,2,1,0,0,70.0,70.0,60.0,70.0,90.0,70.0,80.0,gold_literature,1.0
+Piperine,O=C(/C=C/C=C/c1ccc2c(c1)OCO2)N1CCCCC1,High,Alkaloid / Black Pepper,curated,1,1,0,0,70.0,80.0,60.0,70.0,70.0,60.0,70.0,gold_literature,1.0
+Saffron (Crocin),COC(=O)/C=C\C=C(/C)\C=C\C=C(\C)/C=C/C=C(\C)C=CC1=C(C)CCCC1(C)C,High,Carotenoid Glycoside / Crocus sativus,curated,2,1,0,0,80.0,80.0,70.0,80.0,80.0,70.0,80.0,gold_literature,1.0
+Beta-Hydroxybutyrate (BHB),CC(O)CC(=O)O,High,Ketone Body / Metabolic Fuel,curated,2,1,1,1,70.0,80.0,90.0,70.0,80.0,60.0,70.0,gold_literature,1.0
+Gotu Kola (Centella),CC1(C)CCC2(C(=O)O)CCC3C(=CCC4C5(C)CCC(O)C(C)(CO)C5CCC43C)C2C1,High,Adaptogenic Herb / Triterpenoids,curated,2,1,0,0,80.0,80.0,70.0,70.0,80.0,80.0,80.0,gold_literature,1.0
+Carnosine,NCCC(=O)NC(Cc1c[nH]cn1)C(=O)O,High,Dipeptide / Anti-Glycation Agent,curated,1,0,1,0,80.0,70.0,70.0,80.0,70.0,50.0,60.0,gold_literature,1.0
+SAMe (S-Adenosylmethionine),C[S+](CCC(N)C(=O)O)CC1OC(n2cnc3c(N)ncnc32)C(O)C1O,High,Methyl Donor / Endogenous Metabolite,curated,1,1,0,0,60.0,70.0,70.0,60.0,70.0,60.0,60.0,gold_literature,1.0
+Honokiol,C=CCc1ccc(O)c(-c2ccc(O)c(CC=C)c2)c1,High,Neolignan / Magnolia Bark,curated,1,1,0,0,80.0,90.0,70.0,80.0,70.0,60.0,70.0,gold_literature,1.0
+Spermine,NCCCCNCCCNCCCCN,High,Polyamine / Endogenous,curated,1,1,1,1,70.0,70.0,80.0,80.0,70.0,70.0,70.0,gold_literature,1.0
+Pantothenate (Vitamin B5),CC(C)(CO)C(O)C(=O)NCCC(=O)O,High,Vitamin B5 / CoA Precursor,curated,0,0,1,0,60.0,60.0,90.0,50.0,60.0,50.0,50.0,gold_literature,1.0
+Cystine,NC(CSSC(N)C(=O)O)C(=O)O,Medium,Amino Acid Dimer / GSH Precursor,curated,0,0,1,0,80.0,60.0,60.0,50.0,50.0,40.0,40.0,gold_literature,1.0
+Pyridoxine (Vitamin B6),Cc1ncc(CO)c(CO)c1O,High,Vitamin B6,curated,1,1,1,0,70.0,70.0,70.0,50.0,70.0,50.0,70.0,gold_literature,1.0
+Folate (Vitamin B9),Nc1nc2ncc(CNc3ccc(CC(=O)NC(CCC(=O)O)C(=O)O)cc3)nc2c(=O)[nH]1,High,Vitamin B9 / One-Carbon Donor,curated,2,1,1,0,60.0,70.0,60.0,50.0,70.0,60.0,50.0,gold_literature,1.0
+Glutathione (GSH),NCC(=O)NC(CS)C(=O)NCC(=O)O,Low,Endogenous Tripeptide Antioxidant,curated,1,2,1,1,100.0,80.0,80.0,70.0,60.0,50.0,60.0,gold_literature,1.0
+L-Tyrosine,NC(Cc1ccc(O)cc1)C(=O)O,High,Essential Amino Acid / Catecholamine Precursor,curated,0,1,0,1,50.0,50.0,50.0,40.0,70.0,50.0,60.0,gold_literature,1.0
+L-Tryptophan,NC(Cc1c[nH]c2ccccc12)C(=O)O,High,Essential Amino Acid / Serotonin Precursor,curated,1,0,0,0,60.0,60.0,50.0,40.0,70.0,60.0,60.0,gold_literature,1.0
+5-HTP,NC(Cc1c[nH]c2ccc(O)cc12)C(=O)O,High,Serotonin Precursor / Amino Acid Derivative,curated,1,0,0,0,50.0,60.0,50.0,40.0,60.0,50.0,60.0,gold_literature,1.0
+L-Glutamine,NC(=O)CCC(N)C(=O)O,High,Amino Acid / Glutamate Precursor,curated,0,0,1,0,60.0,60.0,70.0,40.0,60.0,50.0,50.0,gold_literature,1.0
+L-Arginine,NC(=N)NCCCC(N)C(=O)O,Medium,Semi-Essential Amino Acid / NO Precursor,curated,0,0,0,0,60.0,60.0,60.0,40.0,60.0,50.0,60.0,gold_literature,1.0
+L-Methionine,CSCCC(N)C(=O)O,High,Essential Amino Acid / Methyl Donor Precursor,curated,0,0,0,0,60.0,50.0,60.0,50.0,50.0,50.0,50.0,gold_literature,1.0
+Inositol,OC1C(O)C(O)C(O)C(O)C1O,Medium,Sugar Alcohol / Phosphoinositide Precursor,curated,1,0,0,0,50.0,60.0,60.0,50.0,60.0,50.0,70.0,gold_literature,1.0
+GABA,NCCCC(=O)O,Low,Inhibitory Neurotransmitter / Amino Acid,curated,0,0,0,0,50.0,60.0,50.0,40.0,60.0,50.0,70.0,gold_literature,1.0
+Idebenone,COc1c(OC)c(C)c(CC/C=C(/C)CCCCCO)c(=O)c1=O,High,Synthetic CoQ10 Analog / Benzoquinone,curated,2,2,1,1,90.0,70.0,90.0,70.0,70.0,50.0,60.0,gold_literature,1.0
+Ubiquinol,COc1c(OC)c(C)c(CC/C=C(\C)CC/C=C(\C)CC/C=C(\C)CC/C=C(\C)C)c(O)c1O,Medium,Reduced CoQ10 / Mitochondrial Antioxidant,curated,1,2,2,2,90.0,70.0,100.0,70.0,60.0,50.0,60.0,gold_literature,1.0
+Memantine,CN(C)C1(C)CC2CC1CC2,High,NMDA Receptor Antagonist Drug (FDA-approved AD),curated,2,1,0,1,50.0,70.0,60.0,70.0,70.0,50.0,60.0,gold_literature,1.0
+Galantamine,COc1ccc2c(c1)CC1NCC3CC(O)c4cc(OC)ccc4C3(C1)C2,High,AChE Inhibitor Drug (FDA-approved AD) / Amaryllidaceae,curated,2,1,0,0,60.0,70.0,60.0,70.0,90.0,60.0,80.0,gold_literature,1.0
+Ursolic Acid,CC1(C)CCC2(C(=O)O)CCC3(C)C(=CCC4C5(C)CCC(O)C(C)(C)C5CCC43C)C2C1,Medium,Pentacyclic Triterpenoid / Phytochemical,curated,1,1,0,0,80.0,80.0,70.0,70.0,60.0,60.0,60.0,gold_literature,1.0
+Caffeine,Cn1cnc2c1c(=O)n(C)c(=O)n2C,High,Methylxanthine Alkaloid / Adenosine Antagonist,curated,1,2,0,0,60.0,60.0,60.0,70.0,80.0,50.0,70.0,gold_literature,1.0
+Oleocanthal,CCCCC/C=C\CCCCCCCC(=O)OCC(=O)c1ccc(O)cc1,High,Phenolic Aldehyde / Extra Virgin Olive Oil,curated,2,1,0,0,80.0,90.0,60.0,80.0,70.0,60.0,70.0,gold_literature,1.0
+Palmitoylethanolamide (PEA),CCCCCCCCCCCCCCCC(=O)NCCO,High,Endogenous Fatty Acid Amide / Lipid Mediator,curated,1,1,1,0,60.0,90.0,60.0,60.0,70.0,60.0,70.0,gold_literature,1.0
+Biotin (Vitamin B7),OC(=O)CCCCC1SCC2NC(=O)NC12,High,Vitamin B7 / Enzyme Cofactor,curated,0,0,0,0,50.0,50.0,70.0,40.0,50.0,40.0,50.0,gold_literature,1.0
+Sesamin,C1OC2=CC3=C(C=C2O1)C(OCC1=CC2=C(C=C1)OCO2)CO3,Medium,Lignan / Sesame Seed,curated,1,1,0,0,80.0,80.0,60.0,60.0,60.0,50.0,60.0,gold_literature,1.0
+Oleic Acid,CCCCCCCC/C=C\CCCCCCCC(=O)O,High,Monounsaturated Fatty Acid (Omega-9),curated,1,0,0,0,60.0,70.0,60.0,50.0,60.0,50.0,60.0,gold_literature,1.0
+Donepezil,COc1cc2c(cc1OC)CC(CC(=O)Cc1ccc(OC)c(OC)c1)C2,High,AChE Inhibitor Drug — FDA-approved Alzheimer's (DrugBank DB00843),curated,2,1,0,0,50.0,70.0,50.0,80.0,90.0,50.0,80.0,gold_literature,1.0
+Rivastigmine,CCN(C)C(=O)Oc1cccc(C(C)N(C)CC)c1,High,AChE/BuChE Inhibitor Drug — FDA-approved AD/PD Dementia (DrugBank DB00989),curated,2,2,0,0,40.0,60.0,50.0,70.0,80.0,40.0,70.0,gold_literature,1.0
+Rasagiline,C#CN1CCC2=CC=CC=C12,High,MAO-B Inhibitor Drug — FDA-approved Parkinson's (ChEMBL CHEMBL1016),curated,0,2,0,0,60.0,60.0,70.0,80.0,70.0,60.0,60.0,gold_literature,1.0
+Selegiline,C#CCN(C)C(C)Cc1ccccc1,High,MAO-B Inhibitor Drug — FDA-approved Parkinson's (DrugBank DB01037 / ChEMBL897),curated,1,2,0,0,60.0,60.0,70.0,70.0,70.0,50.0,60.0,gold_literature,1.0
+Icariin,COc1ccc(C2=COc3cc(OC)cc(O)c3C2=O)cc1OC,Medium,Prenylated Flavonol Glycoside / Epimedium (ChEMBL),curated,2,1,0,0,80.0,70.0,60.0,70.0,80.0,80.0,70.0,gold_literature,1.0
+Ferulic Acid,COc1cc(/C=C/C(=O)O)ccc1O,Medium,Hydroxycinnamic Acid Phenolic / Plant Cell Walls (ChEMBL),curated,2,1,0,0,80.0,80.0,60.0,80.0,60.0,60.0,60.0,gold_literature,1.0
+Rosmarinic Acid,OC(/C=C/c1ccc(O)c(O)c1)C(=O)Oc1ccc(O)c(O)c1,Medium,Polyphenol Ester / Rosemary & Herbs (ChEMBL),curated,1,1,0,0,90.0,80.0,60.0,70.0,60.0,50.0,60.0,gold_literature,1.0
+Ellagic Acid,O=c1oc2cc(O)c(O)cc2c2cc(O)c(O)cc12,Low,"Polyphenol / Pomegranate, Berries (ChEMBL)",curated,1,1,0,0,90.0,80.0,70.0,70.0,60.0,50.0,50.0,gold_literature,1.0
+Thymoquinone,CC1=CC(=O)C(C(C)C)=CC1=O,High,Monoterpene Ketone / Nigella sativa (ChEMBL),curated,1,2,0,0,90.0,80.0,70.0,70.0,70.0,60.0,60.0,gold_literature,1.0
+Caffeic Acid,OC(=O)/C=C/c1ccc(O)c(O)c1,Medium,"Hydroxycinnamic Acid / Coffee, Fruits (ChEMBL)",curated,1,0,0,0,80.0,70.0,60.0,60.0,60.0,50.0,60.0,gold_literature,1.0
+Proanthocyanidin (OPC),OC1Cc2c(O)cc(O)cc2OC1c1cc(C2Cc3c(O)cc(O)cc3OC2O)ccc1O,Low,"Oligomeric Flavan-3-ol / Grape Seed, Pine Bark (ChEMBL)",curated,1,1,0,0,90.0,80.0,70.0,70.0,60.0,50.0,60.0,gold_literature,1.0
+Mangiferin,OCC1OC(Oc2c(O)cc3oc4cc(O)cc(O)c4c(=O)c3c2O)C(O)C(O)C1O,Low,C-glucosyl Xanthone / Mango (ChEMBL),curated,1,1,0,0,80.0,80.0,70.0,70.0,70.0,60.0,60.0,gold_literature,1.0
+Baicalin,O=c1cc(-c2ccccc2)oc2cc(OC3OC(C(=O)O)C(O)C(O)C3O)c(O)c(O)c12,Medium,Flavone Glucuronide / Scutellaria baicalensis (ChEMBL),curated,2,1,1,1,80.0,80.0,60.0,70.0,70.0,70.0,70.0,gold_literature,1.0
+Carnosic Acid,CC(C)c1cc2cc(O)c(O)cc2c(C(=O)O)c1,High,Diterpene Phenol / Rosemary (ChEMBL),curated,1,2,0,0,90.0,80.0,70.0,70.0,70.0,70.0,60.0,gold_literature,1.0
+Valproic Acid,CCCC(CCC)C(=O)O,High,HDAC Inhibitor Drug — FDA-approved Epilepsy/Bipolar (DrugBank DB00313),curated,1,0,1,1,50.0,70.0,50.0,70.0,60.0,70.0,60.0,gold_literature,1.0
+Nicotinamide,NC(=O)c1cccnc1,High,Vitamin B3 Amide / NAD+ Precursor (DrugBank DB00627),curated,1,0,0,1,60.0,60.0,80.0,60.0,60.0,50.0,50.0,gold_literature,1.0
+Ergothioneine,,High,Thiol Amino Acid Antioxidant / Mushrooms (ChEMBL),curated,1,1,1,0,90.0,70.0,70.0,70.0,60.0,50.0,50.0,gold_literature,1.0
+Naringin,O=C1CC(c2ccc(OC3OC(CO)C(O)C(O)C3OC3OC(C)C(O)C(O)C3O)cc2)Oc2cc(O)cc(O)c21,Low,Flavanone Glycoside / Citrus peel (ChEMBL),curated,1,1,0,0,70.0,70.0,60.0,60.0,60.0,60.0,60.0,gold_literature,1.0
+Hesperidin,COc1ccc(C2CC(=O)c3c(O)cc(OC4OC(CO)C(O)C(O)C4OC4OC(C)C(O)C(O)C4O)cc3O2)cc1O,Low,Flavanone Glycoside / Citrus peel (DrugBank DB13745),curated,1,0,0,0,70.0,70.0,60.0,60.0,70.0,50.0,60.0,gold_literature,1.0
+Chrysin,O=c1cc(-c2ccccc2)oc2cc(O)cc(O)c12,Medium,"Flavone / Honey, Propolis (ChEMBL)",curated,1,1,0,0,70.0,70.0,60.0,60.0,60.0,60.0,60.0,gold_literature,1.0
+Aspirin,CC(=O)Oc1ccccc1C(=O)O,Moderate,NSAID / Salicylate,curated,0,0,0,0,20.0,50.0,20.0,30.0,30.0,20.0,20.0,gold_literature,1.0
+Levodopa,NC(Cc1ccc(O)c(O)c1)C(=O)O,High,FDA-Approved Drug,curated,0,2,0,0,50.0,40.0,50.0,40.0,60.0,40.0,60.0,gold_literature,1.0
+Riluzole,Nc1nc2cc(OC(F)(F)F)ccc2s1,High,FDA-Approved Drug,curated,0,0,2,0,60.0,70.0,60.0,50.0,50.0,40.0,50.0,gold_literature,1.0
+Edaravone,Cc1cc(=O)[nH]n1-c1ccccc1,Medium,FDA-Approved Drug,curated,0,0,2,0,90.0,70.0,70.0,50.0,50.0,40.0,40.0,gold_literature,1.0
+Tetrabenazine,COc1ccc2c(c1OC)CC(=O)CC2C1CCN(C)CC1,High,FDA-Approved Drug,curated,0,0,0,2,30.0,40.0,40.0,50.0,50.0,30.0,40.0,gold_literature,1.0
+Deutetrabenazine,COc1ccc2c(c1OC)CC(=O)CC2C1CC[N](C)CC1,High,FDA-Approved Drug,curated,0,0,0,2,30.0,40.0,40.0,50.0,50.0,30.0,40.0,gold_literature,1.0
+HALOPERIDOL,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,0,0,2,60.0,60.0,48.0,48.0,52.0,36.0,41.0,gold_ml_predicted,0.9
+ROLIPRAM,,High,Clinical Candidate,chembl_ml_predicted,0,0,0,2,58.0,58.0,57.0,57.0,54.0,45.0,48.0,gold_ml_predicted,0.9
+RISPERIDONE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,0,2,63.0,60.0,57.0,56.0,55.0,43.0,48.0,gold_ml_predicted,0.9
+FENOFIBRATE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,0,0,2,56.0,60.0,46.0,47.0,50.0,35.0,42.0,gold_ml_predicted,0.9
+OLANZAPINE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,0,2,60.0,62.0,59.0,53.0,51.0,46.0,51.0,gold_ml_predicted,0.9
+BIOTIN,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,0,2,54.0,61.0,51.0,58.0,52.0,35.0,42.0,gold_ml_predicted,0.9
+EPIGALOCATECHIN GALLATE,,Low,Clinical Candidate,chembl_ml_predicted,0,0,0,2,59.0,59.0,51.0,53.0,52.0,36.0,42.0,gold_ml_predicted,0.9
+BUPROPION,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,0,2,56.0,61.0,46.0,52.0,48.0,37.0,42.0,gold_ml_predicted,0.9
+LAQUINIMOD,,Medium,Clinical Candidate,chembl_ml_predicted,0,0,0,2,57.0,59.0,48.0,51.0,49.0,37.0,41.0,gold_ml_predicted,0.9
+CANNABINOL,,Low-Med,Clinical Candidate,chembl_ml_predicted,0,0,0,2,56.0,56.0,48.0,51.0,49.0,34.0,41.0,gold_ml_predicted,0.9
+NEFLAMAPIMOD,,Low-Med,Clinical Candidate,chembl_ml_predicted,0,0,0,2,63.0,61.0,56.0,52.0,56.0,45.0,51.0,gold_ml_predicted,0.9
+CANNABIDIOL,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,0,0,2,64.0,59.0,58.0,55.0,54.0,45.0,47.0,gold_ml_predicted,0.9
+MINOCYCLINE,,Low,FDA-Approved Drug,chembl_ml_predicted,0,0,0,2,60.0,57.0,50.0,52.0,50.0,36.0,40.0,gold_ml_predicted,0.9
+SRX246,,Low,Clinical Candidate,chembl_ml_predicted,0,0,0,2,57.0,56.0,47.0,57.0,51.0,35.0,41.0,gold_ml_predicted,0.9
+NILOTINIB,,Low,FDA-Approved Drug,chembl_ml_predicted,0,0,0,2,56.0,58.0,47.0,53.0,53.0,36.0,43.0,gold_ml_predicted,0.9
+URSODIOL,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,0,0,2,55.0,60.0,48.0,55.0,51.0,36.0,41.0,gold_ml_predicted,0.9
+UBIDECARENONE,,Low,Clinical Candidate,chembl_ml_predicted,0,0,0,2,63.0,60.0,56.0,59.0,54.0,44.0,49.0,gold_ml_predicted,0.9
+SERTRALINE HYDROCHLORIDE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,0,0,2,64.0,60.0,58.0,55.0,56.0,45.0,49.0,gold_ml_predicted,0.9
+MARDEPODECT,,Low-Med,Clinical Candidate,chembl_ml_predicted,0,0,0,2,61.0,57.0,56.0,56.0,52.0,46.0,50.0,gold_ml_predicted,0.9
+SODIUM PHENYLBUTYRATE,,High,FDA-Approved Drug,chembl_ml_predicted,0,0,0,2,49.0,56.0,49.0,51.0,53.0,37.0,43.0,gold_ml_predicted,0.9
+LATREPIRDINE,,Medium,Clinical Candidate,chembl_ml_predicted,0,0,0,2,65.0,60.0,58.0,57.0,54.0,48.0,49.0,gold_ml_predicted,0.9
+PRIDOPIDINE,,High,Clinical Candidate,chembl_ml_predicted,0,0,0,2,57.0,55.0,57.0,53.0,55.0,43.0,49.0,gold_ml_predicted,0.9
+TIAPRIDE HYDROCHLORIDE,,Medium,Clinical Candidate,chembl_ml_predicted,0,0,0,2,59.0,57.0,48.0,53.0,50.0,34.0,40.0,gold_ml_predicted,0.9
+DIVALPROEX SODIUM,,High,FDA-Approved Drug,chembl_ml_predicted,0,0,0,2,46.0,56.0,48.0,52.0,53.0,36.0,43.0,gold_ml_predicted,0.9
+BEVANTOLOL HYDROCHLORIDE,,Medium,Clinical Candidate,chembl_ml_predicted,0,0,0,2,64.0,63.0,58.0,57.0,52.0,45.0,49.0,gold_ml_predicted,0.9
+VALBENAZINE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,0,2,57.0,60.0,48.0,57.0,50.0,36.0,40.0,gold_ml_predicted,0.9
+MAVOGLURANT,,High,Clinical Candidate,chembl_ml_predicted,0,0,0,2,56.0,59.0,48.0,55.0,51.0,35.0,40.0,gold_ml_predicted,0.9
+PBF-999,,Low-Med,Clinical Candidate,chembl_ml_predicted,0,0,0,2,63.0,58.0,56.0,52.0,54.0,47.0,49.0,gold_ml_predicted,0.9
+BRANAPLAM,,Low-Med,Clinical Candidate,chembl_ml_predicted,0,0,0,2,66.0,60.0,58.0,54.0,50.0,42.0,49.0,gold_ml_predicted,0.9
+GSK-356278,,Low-Med,Clinical Candidate,chembl_ml_predicted,0,0,0,2,60.0,60.0,51.0,58.0,51.0,37.0,41.0,gold_ml_predicted,0.9
+TRIHEPTANOIN,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,0,0,2,57.0,62.0,48.0,55.0,51.0,36.0,42.0,gold_ml_predicted,0.9
+CIMETIDINE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,66.0,59.0,71.0,50.0,57.0,48.0,51.0,gold_ml_predicted,0.9
+MOXIFLOXACIN,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,59.0,61.0,74.0,57.0,51.0,37.0,41.0,gold_ml_predicted,0.9
+PYRIMETHAMINE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,61.0,63.0,76.0,47.0,50.0,38.0,42.0,gold_ml_predicted,0.9
+DRONABINOL,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,65.0,65.0,76.0,55.0,51.0,38.0,41.0,gold_ml_predicted,0.9
+COLCHICINE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,60.0,61.0,71.0,50.0,54.0,38.0,42.0,gold_ml_predicted,0.9
+CELECOXIB,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,74.0,64.0,78.0,55.0,55.0,46.0,50.0,gold_ml_predicted,0.9
+ACETYLCYSTEINE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,0,0,2,58.0,61.0,48.0,52.0,51.0,35.0,41.0,gold_ml_predicted,0.9
+IBUDILAST,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,62.0,63.0,74.0,52.0,50.0,38.0,42.0,gold_ml_predicted,0.9
+EZOGABINE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,59.0,59.0,73.0,52.0,52.0,37.0,43.0,gold_ml_predicted,0.9
+DEXTROMETHORPHAN,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,67.0,62.0,74.0,54.0,55.0,45.0,51.0,gold_ml_predicted,0.9
+RITONAVIR,,Low,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,62.0,60.0,74.0,54.0,54.0,37.0,43.0,gold_ml_predicted,0.9
+CAPSAICIN,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,60.0,64.0,74.0,55.0,49.0,37.0,40.0,gold_ml_predicted,0.9
+CREATININE,,Low-Med,Clinical Candidate,chembl_ml_predicted,0,0,2,0,73.0,67.0,74.0,56.0,54.0,47.0,48.0,gold_ml_predicted,0.9
+DEFERIPRONE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,67.0,66.0,72.0,49.0,53.0,46.0,52.0,gold_ml_predicted,0.9
+ISTRADEFYLLINE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,69.0,64.0,71.0,57.0,52.0,49.0,48.0,gold_ml_predicted,0.9
+INOSINE,,Low,Clinical Candidate,chembl_ml_predicted,0,0,2,0,70.0,60.0,76.0,51.0,53.0,43.0,48.0,gold_ml_predicted,0.9
+ATROPINE,,High,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,61.0,59.0,73.0,57.0,51.0,39.0,41.0,gold_ml_predicted,0.9
+DUTASTERIDE,,Low,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,63.0,64.0,76.0,53.0,53.0,37.0,42.0,gold_ml_predicted,0.9
+DEXTROSE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,72.0,65.0,75.0,52.0,54.0,45.0,48.0,gold_ml_predicted,0.9
+DOLUTEGRAVIR,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,62.0,62.0,75.0,55.0,50.0,37.0,40.0,gold_ml_predicted,0.9
+LEVOSIMENDAN,,Low-Med,Clinical Candidate,chembl_ml_predicted,0,0,2,0,69.0,59.0,77.0,52.0,54.0,46.0,49.0,gold_ml_predicted,0.9
+TRAMETINIB,,Low,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,59.0,61.0,69.0,56.0,53.0,37.0,41.0,gold_ml_predicted,0.9
+DEXPRAMIPEXOLE DIHYDROCHLORIDE,,Medium,Clinical Candidate,chembl_ml_predicted,0,0,2,0,73.0,65.0,74.0,52.0,54.0,44.0,48.0,gold_ml_predicted,0.9
+QUINIDINE SULFATE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,65.0,58.0,75.0,56.0,54.0,46.0,53.0,gold_ml_predicted,0.9
+VOTOPLAM,,Low-Med,Clinical Candidate,chembl_ml_predicted,0,0,0,2,61.0,63.0,57.0,57.0,53.0,47.0,53.0,gold_ml_predicted,0.9
+DALZANEMDOR,,Low-Med,Clinical Candidate,chembl_ml_predicted,0,0,0,2,66.0,62.0,60.0,56.0,56.0,44.0,49.0,gold_ml_predicted,0.9
+BRANAPLAM HYDROCHLORIDE,,Low-Med,Clinical Candidate,chembl_ml_predicted,0,0,0,2,66.0,60.0,58.0,54.0,50.0,42.0,49.0,gold_ml_predicted,0.9
+CIPROFLOXACIN,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,63.0,63.0,77.0,56.0,53.0,38.0,41.0,gold_ml_predicted,0.9
+VALPROATE SODIUM,,High,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,57.0,60.0,74.0,52.0,52.0,37.0,42.0,gold_ml_predicted,0.9
+TRETINOIN,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,63.0,61.0,77.0,59.0,51.0,37.0,41.0,gold_ml_predicted,0.9
+THALIDOMIDE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,72.0,67.0,74.0,52.0,54.0,45.0,48.0,gold_ml_predicted,0.9
+SERINE,,Low-Med,Clinical Candidate,chembl_ml_predicted,0,0,2,0,63.0,64.0,73.0,51.0,51.0,38.0,41.0,gold_ml_predicted,0.9
+PREDNISONE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,61.0,63.0,76.0,56.0,50.0,37.0,41.0,gold_ml_predicted,0.9
+METHYLPREDNISOLONE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,63.0,62.0,77.0,50.0,49.0,37.0,41.0,gold_ml_predicted,0.9
+DEXMEDETOMIDINE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,70.0,61.0,73.0,55.0,56.0,47.0,50.0,gold_ml_predicted,0.9
+FASUDIL,,Medium,Clinical Candidate,chembl_ml_predicted,0,0,2,0,65.0,64.0,72.0,51.0,52.0,36.0,43.0,gold_ml_predicted,0.9
+ENOXACIN,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,66.0,64.0,78.0,54.0,53.0,37.0,40.0,gold_ml_predicted,0.9
+CLENBUTEROL,,Medium,Clinical Candidate,chembl_ml_predicted,0,0,2,0,72.0,64.0,71.0,52.0,56.0,46.0,52.0,gold_ml_predicted,0.9
+LACOSAMIDE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,64.0,65.0,73.0,58.0,54.0,37.0,42.0,gold_ml_predicted,0.9
+PRAMIPEXOLE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,73.0,65.0,75.0,52.0,54.0,44.0,47.0,gold_ml_predicted,0.9
+ALEPLASININ,,Low-Med,Clinical Candidate,chembl_ml_predicted,2,0,0,0,70.0,73.0,65.0,59.0,80.0,55.0,67.0,gold_ml_predicted,0.9
+POZANICLINE,,High,Clinical Candidate,chembl_ml_predicted,2,0,0,0,72.0,71.0,64.0,54.0,80.0,56.0,70.0,gold_ml_predicted,0.9
+QUINIDINE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,66.0,61.0,74.0,56.0,54.0,47.0,53.0,gold_ml_predicted,0.9
+SARACATINIB,,Low,Clinical Candidate,chembl_ml_predicted,2,0,0,0,72.0,75.0,63.0,58.0,79.0,56.0,68.0,gold_ml_predicted,0.9
+PIMOZIDE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,61.0,62.0,70.0,55.0,53.0,38.0,41.0,gold_ml_predicted,0.9
+MYCOPHENOLATE MOFETIL,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,62.0,62.0,73.0,56.0,51.0,36.0,40.0,gold_ml_predicted,0.9
+SEMAGACESTAT,,Low-Med,Clinical Candidate,chembl_ml_predicted,2,0,0,0,71.0,73.0,63.0,65.0,78.0,56.0,68.0,gold_ml_predicted,0.9
+MEMANTINE HYDROCHLORIDE,,High,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,69.0,63.0,74.0,56.0,54.0,45.0,47.0,gold_ml_predicted,0.9
+PIOGLITAZONE HYDROCHLORIDE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,66.0,59.0,74.0,55.0,57.0,46.0,53.0,gold_ml_predicted,0.9
+AVAGACESTAT,,Low,Clinical Candidate,chembl_ml_predicted,2,0,0,0,71.0,74.0,65.0,58.0,79.0,58.0,75.0,gold_ml_predicted,0.9
+SUVOREXANT,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,72.0,71.0,67.0,58.0,81.0,55.0,74.0,gold_ml_predicted,0.9
+CARBIDOPA,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,63.0,63.0,71.0,53.0,49.0,38.0,41.0,gold_ml_predicted,0.9
+DEXTROMETHORPHAN HYDROBROMIDE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,67.0,62.0,74.0,54.0,55.0,45.0,51.0,gold_ml_predicted,0.9
+FLORBETAPIR F 18,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,73.0,75.0,62.0,62.0,79.0,56.0,70.0,gold_ml_predicted,0.9
+VELUSETRAG,,Low,Clinical Candidate,chembl_ml_predicted,2,0,0,0,73.0,70.0,66.0,58.0,80.0,57.0,69.0,gold_ml_predicted,0.9
+ICOSAPENT ETHYL,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,70.0,69.0,64.0,58.0,75.0,62.0,68.0,gold_ml_predicted,0.9
+UDENAFIL,,Low,Clinical Candidate,chembl_ml_predicted,2,0,0,0,75.0,74.0,62.0,63.0,78.0,58.0,71.0,gold_ml_predicted,0.9
+CERLAPIRDINE,,Medium,Clinical Candidate,chembl_ml_predicted,2,0,0,0,73.0,72.0,66.0,53.0,82.0,59.0,72.0,gold_ml_predicted,0.9
+PRAMIPEXOLE DIHYDROCHLORIDE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,73.0,65.0,74.0,52.0,54.0,44.0,48.0,gold_ml_predicted,0.9
+GEMFIBROZIL,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,67.0,72.0,63.0,58.0,80.0,55.0,71.0,gold_ml_predicted,0.9
+ADENOSINE,,Low,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,72.0,60.0,61.0,56.0,57.0,45.0,50.0,gold_ml_predicted,0.9
+IDAZOXAN,,Medium,Clinical Candidate,chembl_ml_predicted,2,0,0,0,75.0,72.0,63.0,58.0,79.0,57.0,70.0,gold_ml_predicted,0.9
+BROMOCRIPTINE,,Low,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,75.0,74.0,66.0,60.0,81.0,57.0,71.0,gold_ml_predicted,0.9
+FLUCONAZOLE,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,67.0,68.0,63.0,54.0,79.0,57.0,71.0,gold_ml_predicted,0.9
+ISOTRETINOIN,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,73.0,72.0,66.0,61.0,80.0,59.0,71.0,gold_ml_predicted,0.9
+LORAZEPAM,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,71.0,70.0,67.0,53.0,79.0,60.0,66.0,gold_ml_predicted,0.9
+ROPINIROLE,,High,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,60.0,60.0,54.0,60.0,54.0,40.0,43.0,gold_ml_predicted,0.9
+ESTRADIOL,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,74.0,70.0,65.0,62.0,79.0,55.0,65.0,gold_ml_predicted,0.9
+LAMIVUDINE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,73.0,69.0,65.0,59.0,82.0,59.0,76.0,gold_ml_predicted,0.9
+MEDROXYPROGESTERONE ACETATE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,68.0,68.0,66.0,60.0,78.0,58.0,67.0,gold_ml_predicted,0.9
+"LIPOIC ACID, ALPHA",,High,Clinical Candidate,chembl_ml_predicted,2,0,0,0,67.0,68.0,64.0,57.0,80.0,54.0,71.0,gold_ml_predicted,0.9
+ITRACONAZOLE,,Low,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,69.0,72.0,62.0,50.0,80.0,59.0,71.0,gold_ml_predicted,0.9
+ACITRETIN,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,70.0,69.0,65.0,62.0,78.0,55.0,66.0,gold_ml_predicted,0.9
+LEVETIRACETAM,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,69.0,70.0,63.0,55.0,78.0,57.0,69.0,gold_ml_predicted,0.9
+RIFAMPIN,,Low,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,72.0,73.0,64.0,56.0,77.0,56.0,66.0,gold_ml_predicted,0.9
+ATORVASTATIN CALCIUM,,Low,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,72.0,70.0,66.0,58.0,79.0,56.0,70.0,gold_ml_predicted,0.9
+PRELADENANT,,Low,Clinical Candidate,chembl_ml_predicted,0,2,0,0,63.0,61.0,52.0,56.0,55.0,42.0,43.0,gold_ml_predicted,0.9
+ARGININE,,Low,Clinical Candidate,chembl_ml_predicted,2,0,0,0,67.0,69.0,66.0,54.0,74.0,58.0,67.0,gold_ml_predicted,0.9
+ESCITALOPRAM,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,70.0,70.0,63.0,56.0,82.0,60.0,72.0,gold_ml_predicted,0.9
+NEFIRACETAM,,High,Clinical Candidate,chembl_ml_predicted,2,0,0,0,70.0,74.0,64.0,59.0,78.0,55.0,69.0,gold_ml_predicted,0.9
+AMANTADINE HYDROCHLORIDE,,High,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,69.0,64.0,63.0,56.0,55.0,45.0,51.0,gold_ml_predicted,0.9
+RIFAXIMIN,,Low,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,71.0,71.0,66.0,57.0,79.0,55.0,69.0,gold_ml_predicted,0.9
+FOLIC ACID,,Low,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,69.0,73.0,63.0,53.0,78.0,57.0,66.0,gold_ml_predicted,0.9
+PROPRANOLOL HYDROCHLORIDE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,71.0,65.0,63.0,60.0,56.0,47.0,52.0,gold_ml_predicted,0.9
+NILVADIPINE,,Low,Clinical Candidate,chembl_ml_predicted,2,0,0,0,74.0,69.0,63.0,53.0,78.0,57.0,67.0,gold_ml_predicted,0.9
+HYDRALAZINE HYDROCHLORIDE,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,74.0,71.0,64.0,55.0,78.0,58.0,71.0,gold_ml_predicted,0.9
+DOXYCYCLINE,,Low,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,72.0,69.0,64.0,56.0,81.0,56.0,74.0,gold_ml_predicted,0.9
+OMEGA-3-ACID ETHYL ESTERS,,Low,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,72.0,70.0,63.0,58.0,76.0,62.0,69.0,gold_ml_predicted,0.9
+NAPROXEN SODIUM,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,72.0,69.0,62.0,67.0,76.0,54.0,67.0,gold_ml_predicted,0.9
+ISOCARBOXAZID,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,71.0,69.0,64.0,56.0,78.0,59.0,65.0,gold_ml_predicted,0.9
+MIFEPRISTONE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,72.0,73.0,67.0,53.0,81.0,59.0,72.0,gold_ml_predicted,0.9
+FLUDEOXYGLUCOSE F 18,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,72.0,73.0,66.0,58.0,80.0,59.0,69.0,gold_ml_predicted,0.9
+DROXIDOPA,,Low,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,68.0,65.0,53.0,57.0,55.0,41.0,43.0,gold_ml_predicted,0.9
+BREXPIPRAZOLE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,73.0,73.0,67.0,58.0,81.0,57.0,75.0,gold_ml_predicted,0.9
+IOFLUPANE I 123,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,63.0,63.0,53.0,58.0,54.0,43.0,43.0,gold_ml_predicted,0.9
+NICOTINE,,High,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,67.0,62.0,59.0,56.0,59.0,47.0,51.0,gold_ml_predicted,0.9
+FLUMAZENIL,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,66.0,61.0,52.0,52.0,56.0,40.0,42.0,gold_ml_predicted,0.9
+DIAZEPAM,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,73.0,71.0,67.0,55.0,76.0,58.0,66.0,gold_ml_predicted,0.9
+CLOZAPINE,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,72.0,71.0,65.0,50.0,81.0,60.0,68.0,gold_ml_predicted,0.9
+LOVASTATIN,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,67.0,60.0,53.0,60.0,53.0,41.0,42.0,gold_ml_predicted,0.9
+CARBAMAZEPINE,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,72.0,69.0,66.0,54.0,77.0,55.0,67.0,gold_ml_predicted,0.9
+ACETAMINOPHEN,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,66.0,65.0,52.0,53.0,54.0,40.0,43.0,gold_ml_predicted,0.9
+BROMAZEPAM,,High,Clinical Candidate,chembl_ml_predicted,2,0,0,0,67.0,71.0,68.0,59.0,83.0,56.0,70.0,gold_ml_predicted,0.9
+BROTIZOLAM,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,72.0,67.0,67.0,52.0,79.0,57.0,66.0,gold_ml_predicted,0.9
+PIRACETAM,,Low-Med,Clinical Candidate,chembl_ml_predicted,2,0,0,0,73.0,73.0,66.0,57.0,81.0,61.0,70.0,gold_ml_predicted,0.9
+BENPERIDOL,,Medium,Clinical Candidate,chembl_ml_predicted,2,0,0,0,72.0,71.0,65.0,61.0,78.0,57.0,71.0,gold_ml_predicted,0.9
+SAFINAMIDE MESYLATE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,65.0,60.0,52.0,54.0,51.0,40.0,43.0,gold_ml_predicted,0.9
+ENTACAPONE,,Low,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,65.0,62.0,56.0,53.0,52.0,41.0,42.0,gold_ml_predicted,0.9
+CHOLECALCIFEROL,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,72.0,63.0,60.0,62.0,58.0,47.0,50.0,gold_ml_predicted,0.9
+PREGABALIN,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,65.0,68.0,63.0,55.0,75.0,57.0,72.0,gold_ml_predicted,0.9
+CLOMETHIAZOLE,,High,Clinical Candidate,chembl_ml_predicted,2,0,0,0,67.0,69.0,67.0,55.0,79.0,64.0,69.0,gold_ml_predicted,0.9
+BUDIPINE,,Low-Med,Clinical Candidate,chembl_ml_predicted,0,2,0,0,74.0,68.0,61.0,57.0,56.0,46.0,51.0,gold_ml_predicted,0.9
+DOMPERIDONE,,Medium,Clinical Candidate,chembl_ml_predicted,0,2,0,0,71.0,65.0,64.0,59.0,58.0,47.0,51.0,gold_ml_predicted,0.9
+SAFINAMIDE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,64.0,59.0,52.0,53.0,52.0,40.0,43.0,gold_ml_predicted,0.9
+AMISULPRIDE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,70.0,70.0,62.0,54.0,78.0,56.0,71.0,gold_ml_predicted,0.9
+GLUTATHIONE,,Low,Clinical Candidate,chembl_ml_predicted,0,2,0,0,62.0,61.0,53.0,56.0,56.0,40.0,43.0,gold_ml_predicted,0.9
+MARAVIROC,,Low,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,69.0,71.0,66.0,62.0,81.0,56.0,74.0,gold_ml_predicted,0.9
+CHLORAL HYDRATE,,Medium,Clinical Candidate,chembl_ml_predicted,2,0,0,0,74.0,70.0,67.0,57.0,72.0,56.0,65.0,gold_ml_predicted,0.9
+CLARITHROMYCIN,,Low,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,65.0,62.0,54.0,61.0,53.0,40.0,43.0,gold_ml_predicted,0.9
+BENSERAZIDE,,Low,Clinical Candidate,chembl_ml_predicted,0,2,0,0,68.0,64.0,54.0,57.0,55.0,41.0,43.0,gold_ml_predicted,0.9
+BROMOCRIPTINE MESYLATE,,Low,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,66.0,64.0,56.0,60.0,53.0,40.0,41.0,gold_ml_predicted,0.9
+FLUDROCORTISONE ACETATE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,64.0,62.0,55.0,57.0,56.0,42.0,42.0,gold_ml_predicted,0.9
+CABERGOLINE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,63.0,63.0,56.0,59.0,54.0,42.0,42.0,gold_ml_predicted,0.9
+MELEVODOPA,,Low-Med,Clinical Candidate,chembl_ml_predicted,0,2,0,0,65.0,62.0,52.0,54.0,55.0,42.0,43.0,gold_ml_predicted,0.9
+DEXETIMIDE,,Medium,Clinical Candidate,chembl_ml_predicted,0,2,0,0,72.0,65.0,62.0,59.0,56.0,48.0,50.0,gold_ml_predicted,0.9
+PARDOPRUNOX,,Medium,Clinical Candidate,chembl_ml_predicted,0,2,0,0,67.0,63.0,60.0,57.0,58.0,47.0,55.0,gold_ml_predicted,0.9
+GLYCEROL PHENYLBUTYRATE,,Low,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,70.0,65.0,54.0,57.0,55.0,41.0,45.0,gold_ml_predicted,0.9
+TOZADENANT,,Medium,Clinical Candidate,chembl_ml_predicted,0,2,0,0,64.0,63.0,51.0,58.0,54.0,40.0,42.0,gold_ml_predicted,0.9
+IPRATROPIUM BROMIDE,,High,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,62.0,61.0,54.0,62.0,54.0,42.0,43.0,gold_ml_predicted,0.9
+ATROPINE SULFATE,,High,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,61.0,59.0,54.0,61.0,54.0,41.0,42.0,gold_ml_predicted,0.9
+NABILONE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,66.0,65.0,52.0,59.0,56.0,41.0,44.0,gold_ml_predicted,0.9
+PHENYTOIN,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,77.0,73.0,64.0,63.0,76.0,58.0,69.0,gold_ml_predicted,0.9
+SULPIRIDE,,Low-Med,Clinical Candidate,chembl_ml_predicted,2,0,0,0,68.0,71.0,62.0,54.0,79.0,57.0,72.0,gold_ml_predicted,0.9
+PHENOBARBITAL,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,71.0,75.0,63.0,60.0,77.0,57.0,70.0,gold_ml_predicted,0.9
+FLUOXETINE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,72.0,73.0,65.0,66.0,78.0,59.0,66.0,gold_ml_predicted,0.9
+PAROXETINE,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,75.0,73.0,64.0,58.0,78.0,58.0,70.0,gold_ml_predicted,0.9
+SERTINDOLE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,74.0,72.0,65.0,58.0,78.0,60.0,71.0,gold_ml_predicted,0.9
+PERPHENAZINE,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,69.0,70.0,66.0,52.0,81.0,59.0,77.0,gold_ml_predicted,0.9
+OXAZEPAM,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,73.0,71.0,68.0,53.0,79.0,61.0,66.0,gold_ml_predicted,0.9
+LORMETAZEPAM,,Medium,Clinical Candidate,chembl_ml_predicted,2,0,0,0,74.0,69.0,65.0,53.0,76.0,60.0,65.0,gold_ml_predicted,0.9
+ZIDOVUDINE,,Low,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,74.0,71.0,63.0,62.0,78.0,56.0,68.0,gold_ml_predicted,0.9
+TRIMIPRAMINE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,70.0,70.0,64.0,56.0,79.0,57.0,69.0,gold_ml_predicted,0.9
+MAPROTILINE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,70.0,69.0,64.0,58.0,80.0,59.0,70.0,gold_ml_predicted,0.9
+LAMOTRIGINE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,74.0,69.0,65.0,52.0,82.0,60.0,70.0,gold_ml_predicted,0.9
+TADALAFIL,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,73.0,72.0,67.0,53.0,78.0,60.0,72.0,gold_ml_predicted,0.9
+PIPAMPERONE,,Medium,Clinical Candidate,chembl_ml_predicted,2,0,0,0,67.0,69.0,65.0,52.0,79.0,56.0,70.0,gold_ml_predicted,0.9
+FLUSPIRILENE,,Low-Med,Clinical Candidate,chembl_ml_predicted,2,0,0,0,70.0,71.0,66.0,60.0,78.0,55.0,70.0,gold_ml_predicted,0.9
+GABAPENTIN,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,68.0,69.0,64.0,55.0,78.0,56.0,68.0,gold_ml_predicted,0.9
+TIAPRIDE,,Medium,Clinical Candidate,chembl_ml_predicted,2,0,0,0,74.0,75.0,63.0,58.0,79.0,56.0,71.0,gold_ml_predicted,0.9
+OXCARBAZEPINE,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,75.0,71.0,64.0,54.0,77.0,60.0,64.0,gold_ml_predicted,0.9
+MOCLOBEMIDE,,High,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,70.0,71.0,61.0,58.0,78.0,55.0,70.0,gold_ml_predicted,0.9
+ZOPICLONE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,70.0,72.0,64.0,53.0,81.0,59.0,70.0,gold_ml_predicted,0.9
+ROFLUMILAST,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,72.0,74.0,63.0,54.0,80.0,58.0,74.0,gold_ml_predicted,0.9
+TOPIRAMATE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,72.0,67.0,66.0,55.0,78.0,57.0,65.0,gold_ml_predicted,0.9
+PALIPERIDONE,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,73.0,71.0,61.0,62.0,80.0,62.0,76.0,gold_ml_predicted,0.9
+FLUPHENAZINE ENANTHATE,,Low,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,74.0,73.0,64.0,55.0,79.0,59.0,77.0,gold_ml_predicted,0.9
+VENLAFAXINE HYDROCHLORIDE,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,68.0,70.0,62.0,58.0,80.0,57.0,71.0,gold_ml_predicted,0.9
+MEGESTROL ACETATE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,68.0,69.0,65.0,62.0,79.0,57.0,68.0,gold_ml_predicted,0.9
+NICERGOLINE,,Low-Med,Clinical Candidate,chembl_ml_predicted,2,0,0,0,73.0,73.0,65.0,55.0,78.0,60.0,66.0,gold_ml_predicted,0.9
+MELPERONE,,Medium,Clinical Candidate,chembl_ml_predicted,2,0,0,0,72.0,71.0,66.0,57.0,79.0,57.0,70.0,gold_ml_predicted,0.9
+Diosmetin,COc1ccc(-c2cc(=O)c3c(O)cc(O)cc3o2)cc1O,Medium,flavone,class_prior,2,0,0,0,45.0,50.0,35.0,30.0,35.0,25.0,25.0,gold_curated,0.85
+Tangeretin,COc1ccc(-c2cc(=O)c3c(OC)c(OC)c(OC)cc3o2)cc1OC,Medium,flavone,chembl_api,2,0,0,0,45.0,50.0,35.0,30.0,35.0,25.0,25.0,gold_curated,0.85
+Morin,O=c1c(O)c(-c2ccc(O)cc2O)oc2cc(O)cc(O)c12,Medium,flavonol,chembl_api,2,0,0,0,55.0,50.0,40.0,40.0,45.0,30.0,30.0,gold_curated,0.85
+Formononetin,COc1ccc(-c2coc3cc(O)ccc3c2=O)cc1,Medium,isoflavone,chembl_api,2,0,0,0,45.0,50.0,35.0,30.0,35.0,25.0,25.0,gold_curated,0.85
+Puerarin,OC[C@H]1O[C@@H](c2c(O)cc3c(=O)c(-c4ccc(O)cc4)coc3c2)[C@H](O)[C@@H](O)[C@@H]1O,Medium,isoflavone_glycoside,chembl_api,2,2,0,0,4.6,50.0,35.0,30.0,35.0,25.0,25.0,gold_curated,0.85
+Epigallocatechin,Oc1cc2c(cc1O)C(O)C(c1cc(O)c(O)c(O)c1)O2,Medium,flavan3ol,chembl_api,2,2,0,0,43.2,55.0,45.0,50.0,50.0,35.0,35.0,gold_curated,0.85
+Epicatechin gallate,OC(=O)c1cc(O)c(O)c(O)c1,Medium,flavan3ol,chembl_api,2,0,0,0,60.0,55.0,45.0,50.0,92.6,35.0,35.0,gold_curated,0.85
+Malvidin,COc1cc(-c2[o+]c3cc(O)cc(O)c3cc2O)cc(OC)c1O,Medium,anthocyanidin,chembl_api,2,2,0,0,,,,,,,,gold_curated,0.85
+Butein,O=C(/C=C/c1ccc(O)c(O)c1)c1ccc(O)cc1O,Medium,chalcone,chembl_api,2,2,0,0,,,,,,,,gold_curated,0.85
+Isoliquiritigenin,O=C(/C=C/c1ccc(O)cc1)c1ccc(O)cc1O,Medium,chalcone,chembl_api,2,0,2,0,,,,,,,,gold_curated,0.85
+Piceatannol,Oc1ccc(/C=C/c2cc(O)cc(O)c2)cc1O,Medium,stilbene,chembl_api,2,2,0,0,65.0,60.0,50.0,55.0,55.0,45.0,40.0,gold_curated,0.85
+Amantadine,NC12CC3CC(CC(C3)C1)C2,Medium,drug_pd,chembl_api,0,2,0,0,,,,,,,,gold_curated,0.85
+Alpha-tocopherol,Cc1c(C)c2c(c(C)c1O)CC[C@@H](C)CCC[C@@H](C)CCC[C@@H](C)CCCO2,Medium,vitamin,chembl_api,2,2,2,0,6.2,30.0,40.0,20.0,35.0,35.0,25.0,gold_curated,0.85
+Ascorbic acid,OC[C@H](O)[C@H]1OC(=O)C(O)=C1O,Medium,vitamin,chembl_api,2,2,0,0,35.0,30.0,40.0,20.0,35.0,35.0,25.0,gold_curated,0.85
+Cyanocobalamin,N#CC[Co],Medium,vitamin_b12,chembl_api,2,0,2,0,26.7,30.0,40.0,20.0,15.4,35.0,25.0,gold_curated,0.85
+Oleanolic acid,CC12CCC(O)(CC1)C(C)(C2CCC1(C)C2CC=C3C4CCC(C)(C4CCC23)C(=O)O)C,Medium,triterpenoid,chembl_api,2,0,0,0,,,,,,,,gold_curated,0.85
+Betulinic acid,CC(=C)[C@@H]1CC[C@@]2(CC1)[C@H]1CC[C@@]3(C(=O)O)[C@@H](CC[C@@H]3[C@@H]1[C@H]2O)C,Medium,triterpenoid,chembl_api,2,0,0,2,1.9,,,,42.4,,,gold_curated,0.85
+Ginkgolide B,CC(C)(O)[C@]12OC(=O)[C@@]1([C@H]1CC[C@H](OC3OC(=O)[C@H]4[C@H]5CC(=O)O[C@@H]5[C@@]45CC(=O)O[C@@H]4[C@H]15CC(=O)O5)C[C@H]1O)O2,Medium,terpenoid,chembl_api,2,2,0,0,,,,,,,,gold_curated,0.85
+Andrographolide,C[C@@H]1CC[C@]2(CO)[C@@H](CC=C(C)[C@H]1[C@@H]2O)C(=C)C=O,Medium,diterpenoid,chembl_api,2,0,2,0,,,,,,,,gold_curated,0.85
+Tanshinone IIA,CC1(C)CC2=CC(=O)c3cccc4c3C2(C1)C(=O)CC4=O,Medium,diterpenoid,chembl_api,2,2,0,0,,,,,,,,gold_curated,0.85
+Theophylline,Cn1cnc2c1c(=O)[nH]c(=O)n2C,Medium,alkaloid,chembl_api,0,2,0,0,11.7,40.0,35.0,30.0,45.0,30.0,30.0,gold_curated,0.85
+Coptisine,c1cc2c(cc1-c1ccncc1)[n+](CC1=CC(OC)=C(OC)C=C1)cc2,Medium,alkaloid,chembl_api,2,0,0,0,35.0,40.0,35.0,30.0,45.0,30.0,30.0,gold_curated,0.85
+Lycopodine,C[N+]1([C@H]2CC[C@H]3CC[C@@H](C[C@H]32)[C@@H]1CC)CC,Medium,alkaloid,chembl_api,2,0,0,0,35.0,40.0,35.0,30.0,92.6,30.0,30.0,gold_curated,0.85
+Protocatechuic acid,OC(=O)c1ccc(O)c(O)c1,Medium,polyphenol,chembl_api,0,2,0,0,50.0,45.0,35.0,35.0,35.0,25.0,25.0,gold_curated,0.85
+Magnolol,C=CCc1ccc(O)cc1-c1ccc(O)cc1CC=C,Medium,polyphenol,chembl_api,2,0,0,0,50.0,45.0,35.0,35.0,35.0,25.0,25.0,gold_curated,0.85
+DHA,CCCCCC=CCC=CCC=CCC=CCC=CCC=CCCCCC(=O)O,Medium,omega3,chembl_api,2,0,2,0,40.5,24.6,,,,,,gold_curated,0.85
+EPA,CCCCC=CCC=CCC=CCC=CCC=CCCCCC(=O)O,Medium,omega3,chembl_api,2,2,0,0,,,,,,,,gold_curated,0.85
+Bisdemethoxycurcumin,O=C(/C=C/c1ccc(O)cc1)CC(=O)/C=C/c1ccc(O)cc1,Medium,curcuminoid,chembl_api,2,2,0,0,75.0,70.0,55.0,65.0,65.0,50.0,50.0,gold_curated,0.85
+Demethoxycurcumin,COc1cc(/C=C/C(=O)CC(=O)/C=C/c2ccc(O)cc2)ccc1O,Medium,curcuminoid,chembl_api,2,0,0,0,75.0,70.0,55.0,65.0,65.0,50.0,50.0,gold_curated,0.85
+Tetrahydrocurcumin,COc1cc(CCC(=O)CC(=O)CCc2ccc(O)c(OC)c2)ccc1O,Medium,curcuminoid,chembl_api,2,2,0,0,75.0,70.0,55.0,65.0,65.0,50.0,50.0,gold_curated,0.85
+MPTP,CN1CC(CC=C1)Cc1ccccc1,Medium,neurotoxin,chembl_api,0,0,0,0,40.5,24.6,5.0,5.0,5.0,5.0,5.0,gold_curated,0.85
+Rotenone,COc1ccc2c(c1OC)[C@@H]1CC(=C)C(=O)O[C@H]1[C@H](CC2)c1ccc2c(c1)OCO2,Medium,neurotoxin,chembl_api,0,0,0,0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,gold_curated,0.85
+6-Hydroxydopamine,Nc1cc(O)c(O)cc1CCO,Medium,neurotoxin,chembl_api,0,0,0,0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,gold_curated,0.85
+Acrylamide,NC(=O)C=C,Medium,neurotoxin,chembl_api,0,0,0,0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,gold_curated,0.85
+Methylmercury,[Hg]C,Medium,neurotoxin,chembl_api,0,0,0,0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,gold_curated,0.85
+Mannitol,OC[C@@H](O)[C@@H](O)[C@H](O)[C@H](O)CO,Medium,inactive_control,chembl_api,0,0,0,0,,,,,,,,gold_curated,0.85
+Sucrose,OC[C@H]1O[C@@](CO)(O[C@@H]2O[C@H](CO)[C@@H](O)[C@H](O)[C@H]2O)[C@@H](O)[C@@H]1O,Medium,inactive_control,chembl_api,0,0,0,0,,,,,,,,gold_curated,0.85
+Propylene glycol,CC(O)CO,Medium,inactive_control,chembl_api,0,0,0,0,,,,,,,,gold_curated,0.85

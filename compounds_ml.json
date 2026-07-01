@@ -1,0 +1,7234 @@
+{
+  "HALOPERIDOL": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 6.0,
+    "anti_inflammatory": 6.0,
+    "mitochondrial_support": 4.8,
+    "aggregation_modulation": 4.8,
+    "cognitive_enhancement": 5.2,
+    "neurogenesis": 3.6,
+    "synaptic_plasticity": 4.1,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "High",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Striatum",
+      "Caudate Nucleus",
+      "Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL54",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "huntingtons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "ROLIPRAM": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "High",
+    "antioxidant": 5.8,
+    "anti_inflammatory": 5.8,
+    "mitochondrial_support": 5.7,
+    "aggregation_modulation": 5.7,
+    "cognitive_enhancement": 5.4,
+    "neurogenesis": 4.5,
+    "synaptic_plasticity": 4.8,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "High",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Striatum",
+      "Caudate Nucleus",
+      "Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL63",
+    "chembl_max_phase": "2.0",
+    "indication_diseases": [
+      "huntingtons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "RISPERIDONE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 6.3,
+    "anti_inflammatory": 6.0,
+    "mitochondrial_support": 5.7,
+    "aggregation_modulation": 5.6,
+    "cognitive_enhancement": 5.5,
+    "neurogenesis": 4.3,
+    "synaptic_plasticity": 4.8,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "High",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Striatum",
+      "Caudate Nucleus",
+      "Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL85",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "huntingtons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "FENOFIBRATE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 5.6,
+    "anti_inflammatory": 6.0,
+    "mitochondrial_support": 4.6,
+    "aggregation_modulation": 4.7,
+    "cognitive_enhancement": 5.0,
+    "neurogenesis": 3.5,
+    "synaptic_plasticity": 4.2,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "High",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Striatum",
+      "Caudate Nucleus",
+      "Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL672",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "huntingtons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "OLANZAPINE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 6.0,
+    "anti_inflammatory": 6.2,
+    "mitochondrial_support": 5.9,
+    "aggregation_modulation": 5.3,
+    "cognitive_enhancement": 5.1,
+    "neurogenesis": 4.6,
+    "synaptic_plasticity": 5.1,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "High",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Striatum",
+      "Caudate Nucleus",
+      "Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL715",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "huntingtons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "BIOTIN": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 5.4,
+    "anti_inflammatory": 6.1,
+    "mitochondrial_support": 5.1,
+    "aggregation_modulation": 5.8,
+    "cognitive_enhancement": 5.2,
+    "neurogenesis": 3.5,
+    "synaptic_plasticity": 4.2,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "High",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Striatum",
+      "Caudate Nucleus",
+      "Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL857",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "huntingtons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "EPIGALOCATECHIN GALLATE": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Low",
+    "antioxidant": 5.9,
+    "anti_inflammatory": 5.9,
+    "mitochondrial_support": 5.1,
+    "aggregation_modulation": 5.3,
+    "cognitive_enhancement": 5.2,
+    "neurogenesis": 3.6,
+    "synaptic_plasticity": 4.2,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "High",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Striatum",
+      "Caudate Nucleus",
+      "Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL297453",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "huntingtons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "BUPROPION": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 5.6,
+    "anti_inflammatory": 6.1,
+    "mitochondrial_support": 4.6,
+    "aggregation_modulation": 5.2,
+    "cognitive_enhancement": 4.8,
+    "neurogenesis": 3.7,
+    "synaptic_plasticity": 4.2,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "High",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Striatum",
+      "Caudate Nucleus",
+      "Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL894",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "huntingtons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "LAQUINIMOD": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Medium",
+    "antioxidant": 5.7,
+    "anti_inflammatory": 5.9,
+    "mitochondrial_support": 4.8,
+    "aggregation_modulation": 5.1,
+    "cognitive_enhancement": 4.9,
+    "neurogenesis": 3.7,
+    "synaptic_plasticity": 4.1,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "High",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Striatum",
+      "Caudate Nucleus",
+      "Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL66092",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "huntingtons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "CANNABINOL": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Low-Med",
+    "antioxidant": 5.6,
+    "anti_inflammatory": 5.6,
+    "mitochondrial_support": 4.8,
+    "aggregation_modulation": 5.1,
+    "cognitive_enhancement": 4.9,
+    "neurogenesis": 3.4,
+    "synaptic_plasticity": 4.1,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "High",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Striatum",
+      "Caudate Nucleus",
+      "Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL74415",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "huntingtons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "NEFLAMAPIMOD": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Low-Med",
+    "antioxidant": 6.3,
+    "anti_inflammatory": 6.1,
+    "mitochondrial_support": 5.6,
+    "aggregation_modulation": 5.2,
+    "cognitive_enhancement": 5.6,
+    "neurogenesis": 4.5,
+    "synaptic_plasticity": 5.1,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "High",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Striatum",
+      "Caudate Nucleus",
+      "Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL119385",
+    "chembl_max_phase": "2.0",
+    "indication_diseases": [
+      "huntingtons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "CANNABIDIOL": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 6.4,
+    "anti_inflammatory": 5.9,
+    "mitochondrial_support": 5.8,
+    "aggregation_modulation": 5.5,
+    "cognitive_enhancement": 5.4,
+    "neurogenesis": 4.5,
+    "synaptic_plasticity": 4.7,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "High",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Striatum",
+      "Caudate Nucleus",
+      "Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL190461",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "huntingtons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "MINOCYCLINE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low",
+    "antioxidant": 6.0,
+    "anti_inflammatory": 5.7,
+    "mitochondrial_support": 5.0,
+    "aggregation_modulation": 5.2,
+    "cognitive_enhancement": 5.0,
+    "neurogenesis": 3.6,
+    "synaptic_plasticity": 4.0,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "High",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Striatum",
+      "Caudate Nucleus",
+      "Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1434",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "huntingtons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "SRX246": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Low",
+    "antioxidant": 5.7,
+    "anti_inflammatory": 5.6,
+    "mitochondrial_support": 4.7,
+    "aggregation_modulation": 5.7,
+    "cognitive_enhancement": 5.1,
+    "neurogenesis": 3.5,
+    "synaptic_plasticity": 4.1,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "High",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Striatum",
+      "Caudate Nucleus",
+      "Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL244243",
+    "chembl_max_phase": "2.0",
+    "indication_diseases": [
+      "huntingtons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "NILOTINIB": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low",
+    "antioxidant": 5.6,
+    "anti_inflammatory": 5.8,
+    "mitochondrial_support": 4.7,
+    "aggregation_modulation": 5.3,
+    "cognitive_enhancement": 5.3,
+    "neurogenesis": 3.6,
+    "synaptic_plasticity": 4.3,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "High",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Striatum",
+      "Caudate Nucleus",
+      "Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL255863",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "huntingtons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "URSODIOL": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 5.5,
+    "anti_inflammatory": 6.0,
+    "mitochondrial_support": 4.8,
+    "aggregation_modulation": 5.5,
+    "cognitive_enhancement": 5.1,
+    "neurogenesis": 3.6,
+    "synaptic_plasticity": 4.1,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "High",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Striatum",
+      "Caudate Nucleus",
+      "Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1551",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "huntingtons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "UBIDECARENONE": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Low",
+    "antioxidant": 6.3,
+    "anti_inflammatory": 6.0,
+    "mitochondrial_support": 5.6,
+    "aggregation_modulation": 5.9,
+    "cognitive_enhancement": 5.4,
+    "neurogenesis": 4.4,
+    "synaptic_plasticity": 4.9,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "High",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Striatum",
+      "Caudate Nucleus",
+      "Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL454801",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "huntingtons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "SERTRALINE HYDROCHLORIDE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 6.4,
+    "anti_inflammatory": 6.0,
+    "mitochondrial_support": 5.8,
+    "aggregation_modulation": 5.5,
+    "cognitive_enhancement": 5.6,
+    "neurogenesis": 4.5,
+    "synaptic_plasticity": 4.9,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "High",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Striatum",
+      "Caudate Nucleus",
+      "Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1709",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "huntingtons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "MARDEPODECT": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Low-Med",
+    "antioxidant": 6.1,
+    "anti_inflammatory": 5.7,
+    "mitochondrial_support": 5.6,
+    "aggregation_modulation": 5.6,
+    "cognitive_enhancement": 5.2,
+    "neurogenesis": 4.6,
+    "synaptic_plasticity": 5.0,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "High",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Striatum",
+      "Caudate Nucleus",
+      "Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL562318",
+    "chembl_max_phase": "2.0",
+    "indication_diseases": [
+      "huntingtons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "SODIUM PHENYLBUTYRATE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "High",
+    "antioxidant": 4.9,
+    "anti_inflammatory": 5.6,
+    "mitochondrial_support": 4.9,
+    "aggregation_modulation": 5.1,
+    "cognitive_enhancement": 5.3,
+    "neurogenesis": 3.7,
+    "synaptic_plasticity": 4.3,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "High",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Striatum",
+      "Caudate Nucleus",
+      "Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1746",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "huntingtons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "LATREPIRDINE": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Medium",
+    "antioxidant": 6.5,
+    "anti_inflammatory": 6.0,
+    "mitochondrial_support": 5.8,
+    "aggregation_modulation": 5.7,
+    "cognitive_enhancement": 5.4,
+    "neurogenesis": 4.8,
+    "synaptic_plasticity": 4.9,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "High",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Striatum",
+      "Caudate Nucleus",
+      "Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL589390",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "huntingtons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "PRIDOPIDINE": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "High",
+    "antioxidant": 5.7,
+    "anti_inflammatory": 5.5,
+    "mitochondrial_support": 5.7,
+    "aggregation_modulation": 5.3,
+    "cognitive_enhancement": 5.5,
+    "neurogenesis": 4.3,
+    "synaptic_plasticity": 4.9,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "High",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Striatum",
+      "Caudate Nucleus",
+      "Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL596802",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "huntingtons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "TIAPRIDE HYDROCHLORIDE": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Medium",
+    "antioxidant": 5.9,
+    "anti_inflammatory": 5.7,
+    "mitochondrial_support": 4.8,
+    "aggregation_modulation": 5.3,
+    "cognitive_enhancement": 5.0,
+    "neurogenesis": 3.4,
+    "synaptic_plasticity": 4.0,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "High",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Striatum",
+      "Caudate Nucleus",
+      "Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1256772",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "huntingtons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "DIVALPROEX SODIUM": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "High",
+    "antioxidant": 4.6,
+    "anti_inflammatory": 5.6,
+    "mitochondrial_support": 4.8,
+    "aggregation_modulation": 5.2,
+    "cognitive_enhancement": 5.3,
+    "neurogenesis": 3.6,
+    "synaptic_plasticity": 4.3,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "High",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Striatum",
+      "Caudate Nucleus",
+      "Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL2105613",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "huntingtons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "BEVANTOLOL HYDROCHLORIDE": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Medium",
+    "antioxidant": 6.4,
+    "anti_inflammatory": 6.3,
+    "mitochondrial_support": 5.8,
+    "aggregation_modulation": 5.7,
+    "cognitive_enhancement": 5.2,
+    "neurogenesis": 4.5,
+    "synaptic_plasticity": 4.9,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "High",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Striatum",
+      "Caudate Nucleus",
+      "Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL2106060",
+    "chembl_max_phase": "2.0",
+    "indication_diseases": [
+      "huntingtons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "VALBENAZINE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 5.7,
+    "anti_inflammatory": 6.0,
+    "mitochondrial_support": 4.8,
+    "aggregation_modulation": 5.7,
+    "cognitive_enhancement": 5.0,
+    "neurogenesis": 3.6,
+    "synaptic_plasticity": 4.0,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "High",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Striatum",
+      "Caudate Nucleus",
+      "Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL2364639",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "huntingtons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "MAVOGLURANT": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "High",
+    "antioxidant": 5.6,
+    "anti_inflammatory": 5.9,
+    "mitochondrial_support": 4.8,
+    "aggregation_modulation": 5.5,
+    "cognitive_enhancement": 5.1,
+    "neurogenesis": 3.5,
+    "synaptic_plasticity": 4.0,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "High",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Striatum",
+      "Caudate Nucleus",
+      "Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL3087515",
+    "chembl_max_phase": "2.0",
+    "indication_diseases": [
+      "huntingtons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "PBF-999": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Low-Med",
+    "antioxidant": 6.3,
+    "anti_inflammatory": 5.8,
+    "mitochondrial_support": 5.6,
+    "aggregation_modulation": 5.2,
+    "cognitive_enhancement": 5.4,
+    "neurogenesis": 4.7,
+    "synaptic_plasticity": 4.9,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "High",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Striatum",
+      "Caudate Nucleus",
+      "Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL3942498",
+    "chembl_max_phase": "1.0",
+    "indication_diseases": [
+      "huntingtons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "BRANAPLAM": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Low-Med",
+    "antioxidant": 6.6,
+    "anti_inflammatory": 6.0,
+    "mitochondrial_support": 5.8,
+    "aggregation_modulation": 5.4,
+    "cognitive_enhancement": 5.0,
+    "neurogenesis": 4.2,
+    "synaptic_plasticity": 4.9,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "High",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Striatum",
+      "Caudate Nucleus",
+      "Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL4290141",
+    "chembl_max_phase": "2.0",
+    "indication_diseases": [
+      "huntingtons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "GSK-356278": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Low-Med",
+    "antioxidant": 6.0,
+    "anti_inflammatory": 6.0,
+    "mitochondrial_support": 5.1,
+    "aggregation_modulation": 5.8,
+    "cognitive_enhancement": 5.1,
+    "neurogenesis": 3.7,
+    "synaptic_plasticity": 4.1,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "High",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Striatum",
+      "Caudate Nucleus",
+      "Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL4297384",
+    "chembl_max_phase": "1.0",
+    "indication_diseases": [
+      "huntingtons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "TRIHEPTANOIN": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 5.7,
+    "anti_inflammatory": 6.2,
+    "mitochondrial_support": 4.8,
+    "aggregation_modulation": 5.5,
+    "cognitive_enhancement": 5.1,
+    "neurogenesis": 3.6,
+    "synaptic_plasticity": 4.2,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "High",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Striatum",
+      "Caudate Nucleus",
+      "Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL4297585",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "huntingtons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "CIMETIDINE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 6.6,
+    "anti_inflammatory": 5.9,
+    "mitochondrial_support": 7.1,
+    "aggregation_modulation": 5.0,
+    "cognitive_enhancement": 5.7,
+    "neurogenesis": 4.8,
+    "synaptic_plasticity": 5.1,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL30",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "MOXIFLOXACIN": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 5.9,
+    "anti_inflammatory": 6.1,
+    "mitochondrial_support": 7.4,
+    "aggregation_modulation": 5.7,
+    "cognitive_enhancement": 5.1,
+    "neurogenesis": 3.7,
+    "synaptic_plasticity": 4.1,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL32",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "PYRIMETHAMINE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 6.1,
+    "anti_inflammatory": 6.3,
+    "mitochondrial_support": 7.6,
+    "aggregation_modulation": 4.7,
+    "cognitive_enhancement": 5.0,
+    "neurogenesis": 3.8,
+    "synaptic_plasticity": 4.2,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL36",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "DRONABINOL": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 6.5,
+    "anti_inflammatory": 6.5,
+    "mitochondrial_support": 7.6,
+    "aggregation_modulation": 5.5,
+    "cognitive_enhancement": 5.1,
+    "neurogenesis": 3.8,
+    "synaptic_plasticity": 4.1,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL465",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "COLCHICINE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 6.0,
+    "anti_inflammatory": 6.1,
+    "mitochondrial_support": 7.1,
+    "aggregation_modulation": 5.0,
+    "cognitive_enhancement": 5.4,
+    "neurogenesis": 3.8,
+    "synaptic_plasticity": 4.2,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL107",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "CELECOXIB": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 7.4,
+    "anti_inflammatory": 6.4,
+    "mitochondrial_support": 7.8,
+    "aggregation_modulation": 5.5,
+    "cognitive_enhancement": 5.5,
+    "neurogenesis": 4.6,
+    "synaptic_plasticity": 5.0,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL118",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "ACETYLCYSTEINE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 5.8,
+    "anti_inflammatory": 6.1,
+    "mitochondrial_support": 4.8,
+    "aggregation_modulation": 5.2,
+    "cognitive_enhancement": 5.1,
+    "neurogenesis": 3.5,
+    "synaptic_plasticity": 4.1,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "High",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Striatum",
+      "Caudate Nucleus",
+      "Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL600",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "huntingtons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "IBUDILAST": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 6.2,
+    "anti_inflammatory": 6.3,
+    "mitochondrial_support": 7.4,
+    "aggregation_modulation": 5.2,
+    "cognitive_enhancement": 5.0,
+    "neurogenesis": 3.8,
+    "synaptic_plasticity": 4.2,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL19449",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "EZOGABINE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 5.9,
+    "anti_inflammatory": 5.9,
+    "mitochondrial_support": 7.3,
+    "aggregation_modulation": 5.2,
+    "cognitive_enhancement": 5.2,
+    "neurogenesis": 3.7,
+    "synaptic_plasticity": 4.3,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL41355",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "DEXTROMETHORPHAN": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 6.7,
+    "anti_inflammatory": 6.2,
+    "mitochondrial_support": 7.4,
+    "aggregation_modulation": 5.4,
+    "cognitive_enhancement": 5.5,
+    "neurogenesis": 4.5,
+    "synaptic_plasticity": 5.1,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL52440",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "RITONAVIR": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low",
+    "antioxidant": 6.2,
+    "anti_inflammatory": 6.0,
+    "mitochondrial_support": 7.4,
+    "aggregation_modulation": 5.4,
+    "cognitive_enhancement": 5.4,
+    "neurogenesis": 3.7,
+    "synaptic_plasticity": 4.3,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL163",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "CAPSAICIN": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 6.0,
+    "anti_inflammatory": 6.4,
+    "mitochondrial_support": 7.4,
+    "aggregation_modulation": 5.5,
+    "cognitive_enhancement": 4.9,
+    "neurogenesis": 3.7,
+    "synaptic_plasticity": 4.0,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL294199",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "CREATININE": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Low-Med",
+    "antioxidant": 7.3,
+    "anti_inflammatory": 6.7,
+    "mitochondrial_support": 7.4,
+    "aggregation_modulation": 5.6,
+    "cognitive_enhancement": 5.4,
+    "neurogenesis": 4.7,
+    "synaptic_plasticity": 4.8,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL65567",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "DEFERIPRONE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 6.7,
+    "anti_inflammatory": 6.6,
+    "mitochondrial_support": 7.2,
+    "aggregation_modulation": 4.9,
+    "cognitive_enhancement": 5.3,
+    "neurogenesis": 4.6,
+    "synaptic_plasticity": 5.2,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL70927",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "ISTRADEFYLLINE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 6.9,
+    "anti_inflammatory": 6.4,
+    "mitochondrial_support": 7.1,
+    "aggregation_modulation": 5.7,
+    "cognitive_enhancement": 5.2,
+    "neurogenesis": 4.9,
+    "synaptic_plasticity": 4.8,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL431770",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "INOSINE": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Low",
+    "antioxidant": 7.0,
+    "anti_inflammatory": 6.0,
+    "mitochondrial_support": 7.6,
+    "aggregation_modulation": 5.1,
+    "cognitive_enhancement": 5.3,
+    "neurogenesis": 4.3,
+    "synaptic_plasticity": 4.8,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1556",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "ATROPINE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "High",
+    "antioxidant": 6.1,
+    "anti_inflammatory": 5.9,
+    "mitochondrial_support": 7.3,
+    "aggregation_modulation": 5.7,
+    "cognitive_enhancement": 5.1,
+    "neurogenesis": 3.9,
+    "synaptic_plasticity": 4.1,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL517712",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "DUTASTERIDE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low",
+    "antioxidant": 6.3,
+    "anti_inflammatory": 6.4,
+    "mitochondrial_support": 7.6,
+    "aggregation_modulation": 5.3,
+    "cognitive_enhancement": 5.3,
+    "neurogenesis": 3.7,
+    "synaptic_plasticity": 4.2,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1200969",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "DEXTROSE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 7.2,
+    "anti_inflammatory": 6.5,
+    "mitochondrial_support": 7.5,
+    "aggregation_modulation": 5.2,
+    "cognitive_enhancement": 5.4,
+    "neurogenesis": 4.5,
+    "synaptic_plasticity": 4.8,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1222250",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "DOLUTEGRAVIR": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 6.2,
+    "anti_inflammatory": 6.2,
+    "mitochondrial_support": 7.5,
+    "aggregation_modulation": 5.5,
+    "cognitive_enhancement": 5.0,
+    "neurogenesis": 3.7,
+    "synaptic_plasticity": 4.0,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1229211",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "LEVOSIMENDAN": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Low-Med",
+    "antioxidant": 6.9,
+    "anti_inflammatory": 5.9,
+    "mitochondrial_support": 7.7,
+    "aggregation_modulation": 5.2,
+    "cognitive_enhancement": 5.4,
+    "neurogenesis": 4.6,
+    "synaptic_plasticity": 4.9,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL2051955",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "TRAMETINIB": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low",
+    "antioxidant": 5.9,
+    "anti_inflammatory": 6.1,
+    "mitochondrial_support": 6.9,
+    "aggregation_modulation": 5.6,
+    "cognitive_enhancement": 5.3,
+    "neurogenesis": 3.7,
+    "synaptic_plasticity": 4.1,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL2103875",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "DEXPRAMIPEXOLE DIHYDROCHLORIDE": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Medium",
+    "antioxidant": 7.3,
+    "anti_inflammatory": 6.5,
+    "mitochondrial_support": 7.4,
+    "aggregation_modulation": 5.2,
+    "cognitive_enhancement": 5.4,
+    "neurogenesis": 4.4,
+    "synaptic_plasticity": 4.8,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL2105687",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "QUINIDINE SULFATE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 6.5,
+    "anti_inflammatory": 5.8,
+    "mitochondrial_support": 7.5,
+    "aggregation_modulation": 5.6,
+    "cognitive_enhancement": 5.4,
+    "neurogenesis": 4.6,
+    "synaptic_plasticity": 5.3,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL3707183",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "VOTOPLAM": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Low-Med",
+    "antioxidant": 6.1,
+    "anti_inflammatory": 6.3,
+    "mitochondrial_support": 5.7,
+    "aggregation_modulation": 5.7,
+    "cognitive_enhancement": 5.3,
+    "neurogenesis": 4.7,
+    "synaptic_plasticity": 5.3,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "High",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Striatum",
+      "Caudate Nucleus",
+      "Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL4850295",
+    "chembl_max_phase": "2.0",
+    "indication_diseases": [
+      "huntingtons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "DALZANEMDOR": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Low-Med",
+    "antioxidant": 6.6,
+    "anti_inflammatory": 6.2,
+    "mitochondrial_support": 6.0,
+    "aggregation_modulation": 5.6,
+    "cognitive_enhancement": 5.6,
+    "neurogenesis": 4.4,
+    "synaptic_plasticity": 4.9,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "High",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Striatum",
+      "Caudate Nucleus",
+      "Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL5095095",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "huntingtons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "BRANAPLAM HYDROCHLORIDE": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Low-Med",
+    "antioxidant": 6.6,
+    "anti_inflammatory": 6.0,
+    "mitochondrial_support": 5.8,
+    "aggregation_modulation": 5.4,
+    "cognitive_enhancement": 5.0,
+    "neurogenesis": 4.2,
+    "synaptic_plasticity": 4.9,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "High",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Striatum",
+      "Caudate Nucleus",
+      "Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL5095406",
+    "chembl_max_phase": "1.0",
+    "indication_diseases": [
+      "huntingtons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "CIPROFLOXACIN": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 6.3,
+    "anti_inflammatory": 6.3,
+    "mitochondrial_support": 7.7,
+    "aggregation_modulation": 5.6,
+    "cognitive_enhancement": 5.3,
+    "neurogenesis": 3.8,
+    "synaptic_plasticity": 4.1,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL8",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "VALPROATE SODIUM": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "High",
+    "antioxidant": 5.7,
+    "anti_inflammatory": 6.0,
+    "mitochondrial_support": 7.4,
+    "aggregation_modulation": 5.2,
+    "cognitive_enhancement": 5.2,
+    "neurogenesis": 3.7,
+    "synaptic_plasticity": 4.2,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL433",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "TRETINOIN": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 6.3,
+    "anti_inflammatory": 6.1,
+    "mitochondrial_support": 7.7,
+    "aggregation_modulation": 5.9,
+    "cognitive_enhancement": 5.1,
+    "neurogenesis": 3.7,
+    "synaptic_plasticity": 4.1,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL38",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "THALIDOMIDE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 7.2,
+    "anti_inflammatory": 6.7,
+    "mitochondrial_support": 7.4,
+    "aggregation_modulation": 5.2,
+    "cognitive_enhancement": 5.4,
+    "neurogenesis": 4.5,
+    "synaptic_plasticity": 4.8,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL468",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "SERINE": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Low-Med",
+    "antioxidant": 6.3,
+    "anti_inflammatory": 6.4,
+    "mitochondrial_support": 7.3,
+    "aggregation_modulation": 5.1,
+    "cognitive_enhancement": 5.1,
+    "neurogenesis": 3.8,
+    "synaptic_plasticity": 4.1,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL11298",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "PREDNISONE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 6.1,
+    "anti_inflammatory": 6.3,
+    "mitochondrial_support": 7.6,
+    "aggregation_modulation": 5.6,
+    "cognitive_enhancement": 5.0,
+    "neurogenesis": 3.7,
+    "synaptic_plasticity": 4.1,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL635",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "METHYLPREDNISOLONE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 6.3,
+    "anti_inflammatory": 6.2,
+    "mitochondrial_support": 7.7,
+    "aggregation_modulation": 5.0,
+    "cognitive_enhancement": 4.9,
+    "neurogenesis": 3.7,
+    "synaptic_plasticity": 4.1,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL650",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "DEXMEDETOMIDINE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 7.0,
+    "anti_inflammatory": 6.1,
+    "mitochondrial_support": 7.3,
+    "aggregation_modulation": 5.5,
+    "cognitive_enhancement": 5.6,
+    "neurogenesis": 4.7,
+    "synaptic_plasticity": 5.0,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL778",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "FASUDIL": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Medium",
+    "antioxidant": 6.5,
+    "anti_inflammatory": 6.4,
+    "mitochondrial_support": 7.2,
+    "aggregation_modulation": 5.1,
+    "cognitive_enhancement": 5.2,
+    "neurogenesis": 3.6,
+    "synaptic_plasticity": 4.3,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL38380",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "ENOXACIN": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 6.6,
+    "anti_inflammatory": 6.4,
+    "mitochondrial_support": 7.8,
+    "aggregation_modulation": 5.4,
+    "cognitive_enhancement": 5.3,
+    "neurogenesis": 3.7,
+    "synaptic_plasticity": 4.0,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL826",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "CLENBUTEROL": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Medium",
+    "antioxidant": 7.2,
+    "anti_inflammatory": 6.4,
+    "mitochondrial_support": 7.1,
+    "aggregation_modulation": 5.2,
+    "cognitive_enhancement": 5.6,
+    "neurogenesis": 4.6,
+    "synaptic_plasticity": 5.2,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL49080",
+    "chembl_max_phase": "2.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "LACOSAMIDE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 6.4,
+    "anti_inflammatory": 6.5,
+    "mitochondrial_support": 7.3,
+    "aggregation_modulation": 5.8,
+    "cognitive_enhancement": 5.4,
+    "neurogenesis": 3.7,
+    "synaptic_plasticity": 4.2,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL58323",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "PRAMIPEXOLE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 7.3,
+    "anti_inflammatory": 6.5,
+    "mitochondrial_support": 7.5,
+    "aggregation_modulation": 5.2,
+    "cognitive_enhancement": 5.4,
+    "neurogenesis": 4.4,
+    "synaptic_plasticity": 4.7,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL301265",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "ALEPLASININ": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Low-Med",
+    "antioxidant": 7.0,
+    "anti_inflammatory": 7.3,
+    "mitochondrial_support": 6.5,
+    "aggregation_modulation": 5.9,
+    "cognitive_enhancement": 8.0,
+    "neurogenesis": 5.5,
+    "synaptic_plasticity": 6.7,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL325424",
+    "chembl_max_phase": "2.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "POZANICLINE": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "High",
+    "antioxidant": 7.2,
+    "anti_inflammatory": 7.1,
+    "mitochondrial_support": 6.4,
+    "aggregation_modulation": 5.4,
+    "cognitive_enhancement": 8.0,
+    "neurogenesis": 5.6,
+    "synaptic_plasticity": 7.0,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL127071",
+    "chembl_max_phase": "2.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "QUINIDINE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 6.6,
+    "anti_inflammatory": 6.1,
+    "mitochondrial_support": 7.4,
+    "aggregation_modulation": 5.6,
+    "cognitive_enhancement": 5.4,
+    "neurogenesis": 4.7,
+    "synaptic_plasticity": 5.3,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1294",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "SARACATINIB": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Low",
+    "antioxidant": 7.2,
+    "anti_inflammatory": 7.5,
+    "mitochondrial_support": 6.3,
+    "aggregation_modulation": 5.8,
+    "cognitive_enhancement": 7.9,
+    "neurogenesis": 5.6,
+    "synaptic_plasticity": 6.8,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL217092",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "PIMOZIDE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 6.1,
+    "anti_inflammatory": 6.2,
+    "mitochondrial_support": 7.0,
+    "aggregation_modulation": 5.5,
+    "cognitive_enhancement": 5.3,
+    "neurogenesis": 3.8,
+    "synaptic_plasticity": 4.1,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1423",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "MYCOPHENOLATE MOFETIL": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 6.2,
+    "anti_inflammatory": 6.2,
+    "mitochondrial_support": 7.3,
+    "aggregation_modulation": 5.6,
+    "cognitive_enhancement": 5.1,
+    "neurogenesis": 3.6,
+    "synaptic_plasticity": 4.0,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1456",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "SEMAGACESTAT": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Low-Med",
+    "antioxidant": 7.1,
+    "anti_inflammatory": 7.3,
+    "mitochondrial_support": 6.3,
+    "aggregation_modulation": 6.5,
+    "cognitive_enhancement": 7.8,
+    "neurogenesis": 5.6,
+    "synaptic_plasticity": 6.8,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL520733",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "MEMANTINE HYDROCHLORIDE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "High",
+    "antioxidant": 6.9,
+    "anti_inflammatory": 6.3,
+    "mitochondrial_support": 7.4,
+    "aggregation_modulation": 5.6,
+    "cognitive_enhancement": 5.4,
+    "neurogenesis": 4.5,
+    "synaptic_plasticity": 4.7,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1699",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "PIOGLITAZONE HYDROCHLORIDE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 6.6,
+    "anti_inflammatory": 5.9,
+    "mitochondrial_support": 7.4,
+    "aggregation_modulation": 5.5,
+    "cognitive_enhancement": 5.7,
+    "neurogenesis": 4.6,
+    "synaptic_plasticity": 5.3,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1715",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "AVAGACESTAT": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Low",
+    "antioxidant": 7.1,
+    "anti_inflammatory": 7.4,
+    "mitochondrial_support": 6.5,
+    "aggregation_modulation": 5.8,
+    "cognitive_enhancement": 7.9,
+    "neurogenesis": 5.8,
+    "synaptic_plasticity": 7.5,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1090771",
+    "chembl_max_phase": "2.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "SUVOREXANT": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 7.2,
+    "anti_inflammatory": 7.1,
+    "mitochondrial_support": 6.7,
+    "aggregation_modulation": 5.8,
+    "cognitive_enhancement": 8.1,
+    "neurogenesis": 5.5,
+    "synaptic_plasticity": 7.4,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1083659",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "CARBIDOPA": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 6.3,
+    "anti_inflammatory": 6.3,
+    "mitochondrial_support": 7.1,
+    "aggregation_modulation": 5.3,
+    "cognitive_enhancement": 4.9,
+    "neurogenesis": 3.8,
+    "synaptic_plasticity": 4.1,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1200748",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "DEXTROMETHORPHAN HYDROBROMIDE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 6.7,
+    "anti_inflammatory": 6.2,
+    "mitochondrial_support": 7.4,
+    "aggregation_modulation": 5.4,
+    "cognitive_enhancement": 5.5,
+    "neurogenesis": 4.5,
+    "synaptic_plasticity": 5.1,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1256818",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "FLORBETAPIR F 18": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 7.3,
+    "anti_inflammatory": 7.5,
+    "mitochondrial_support": 6.2,
+    "aggregation_modulation": 6.2,
+    "cognitive_enhancement": 7.9,
+    "neurogenesis": 5.6,
+    "synaptic_plasticity": 7.0,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "Amyloid cascade",
+      "PI3K/Akt"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1774461",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "VELUSETRAG": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Low",
+    "antioxidant": 7.3,
+    "anti_inflammatory": 7.0,
+    "mitochondrial_support": 6.6,
+    "aggregation_modulation": 5.8,
+    "cognitive_enhancement": 8.0,
+    "neurogenesis": 5.7,
+    "synaptic_plasticity": 6.9,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL2087337",
+    "chembl_max_phase": "2.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "ICOSAPENT ETHYL": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 7.0,
+    "anti_inflammatory": 6.9,
+    "mitochondrial_support": 6.4,
+    "aggregation_modulation": 5.8,
+    "cognitive_enhancement": 7.5,
+    "neurogenesis": 6.2,
+    "synaptic_plasticity": 6.8,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL2095209",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "UDENAFIL": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Low",
+    "antioxidant": 7.5,
+    "anti_inflammatory": 7.4,
+    "mitochondrial_support": 6.2,
+    "aggregation_modulation": 6.3,
+    "cognitive_enhancement": 7.8,
+    "neurogenesis": 5.8,
+    "synaptic_plasticity": 7.1,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL2103849",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "CERLAPIRDINE": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Medium",
+    "antioxidant": 7.3,
+    "anti_inflammatory": 7.2,
+    "mitochondrial_support": 6.6,
+    "aggregation_modulation": 5.3,
+    "cognitive_enhancement": 8.2,
+    "neurogenesis": 5.9,
+    "synaptic_plasticity": 7.2,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL2103880",
+    "chembl_max_phase": "2.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "PRAMIPEXOLE DIHYDROCHLORIDE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 7.3,
+    "anti_inflammatory": 6.5,
+    "mitochondrial_support": 7.4,
+    "aggregation_modulation": 5.2,
+    "cognitive_enhancement": 5.4,
+    "neurogenesis": 4.4,
+    "synaptic_plasticity": 4.8,
+    "alzheimers": "Low",
+    "parkinsons": "Low",
+    "als": "High",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Motor Cortex",
+      "Spinal Cord",
+      "Brainstem"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL3182733",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "als"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "GEMFIBROZIL": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 6.7,
+    "anti_inflammatory": 7.2,
+    "mitochondrial_support": 6.3,
+    "aggregation_modulation": 5.8,
+    "cognitive_enhancement": 8.0,
+    "neurogenesis": 5.5,
+    "synaptic_plasticity": 7.1,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL457",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "ADENOSINE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low",
+    "antioxidant": 7.2,
+    "anti_inflammatory": 6.0,
+    "mitochondrial_support": 6.1,
+    "aggregation_modulation": 5.6,
+    "cognitive_enhancement": 5.7,
+    "neurogenesis": 4.5,
+    "synaptic_plasticity": 5.0,
+    "alzheimers": "Low",
+    "parkinsons": "High",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Substantia Nigra",
+      "Striatum",
+      "Basal Ganglia"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL477",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "parkinsons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "IDAZOXAN": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Medium",
+    "antioxidant": 7.5,
+    "anti_inflammatory": 7.2,
+    "mitochondrial_support": 6.3,
+    "aggregation_modulation": 5.8,
+    "cognitive_enhancement": 7.9,
+    "neurogenesis": 5.7,
+    "synaptic_plasticity": 7.0,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL10316",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "BROMOCRIPTINE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low",
+    "antioxidant": 7.5,
+    "anti_inflammatory": 7.4,
+    "mitochondrial_support": 6.6,
+    "aggregation_modulation": 6.0,
+    "cognitive_enhancement": 8.1,
+    "neurogenesis": 5.7,
+    "synaptic_plasticity": 7.1,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL493",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "FLUCONAZOLE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 6.7,
+    "anti_inflammatory": 6.8,
+    "mitochondrial_support": 6.3,
+    "aggregation_modulation": 5.4,
+    "cognitive_enhancement": 7.9,
+    "neurogenesis": 5.7,
+    "synaptic_plasticity": 7.1,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL106",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "ISOTRETINOIN": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 7.3,
+    "anti_inflammatory": 7.2,
+    "mitochondrial_support": 6.6,
+    "aggregation_modulation": 6.1,
+    "cognitive_enhancement": 8.0,
+    "neurogenesis": 5.9,
+    "synaptic_plasticity": 7.1,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL547",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "LORAZEPAM": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 7.1,
+    "anti_inflammatory": 7.0,
+    "mitochondrial_support": 6.7,
+    "aggregation_modulation": 5.3,
+    "cognitive_enhancement": 7.9,
+    "neurogenesis": 6.0,
+    "synaptic_plasticity": 6.6,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL580",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "ROPINIROLE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "High",
+    "antioxidant": 6.0,
+    "anti_inflammatory": 6.0,
+    "mitochondrial_support": 5.4,
+    "aggregation_modulation": 6.0,
+    "cognitive_enhancement": 5.4,
+    "neurogenesis": 4.0,
+    "synaptic_plasticity": 4.3,
+    "alzheimers": "Low",
+    "parkinsons": "High",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Substantia Nigra",
+      "Striatum",
+      "Basal Ganglia"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL589",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "parkinsons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "ESTRADIOL": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 7.4,
+    "anti_inflammatory": 7.0,
+    "mitochondrial_support": 6.5,
+    "aggregation_modulation": 6.2,
+    "cognitive_enhancement": 7.9,
+    "neurogenesis": 5.5,
+    "synaptic_plasticity": 6.5,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL135",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "LAMIVUDINE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 7.3,
+    "anti_inflammatory": 6.9,
+    "mitochondrial_support": 6.5,
+    "aggregation_modulation": 5.9,
+    "cognitive_enhancement": 8.2,
+    "neurogenesis": 5.9,
+    "synaptic_plasticity": 7.6,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL141",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "MEDROXYPROGESTERONE ACETATE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 6.8,
+    "anti_inflammatory": 6.8,
+    "mitochondrial_support": 6.6,
+    "aggregation_modulation": 6.0,
+    "cognitive_enhancement": 7.8,
+    "neurogenesis": 5.8,
+    "synaptic_plasticity": 6.7,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL717",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "LIPOIC ACID, ALPHA": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "High",
+    "antioxidant": 6.7,
+    "anti_inflammatory": 6.8,
+    "mitochondrial_support": 6.4,
+    "aggregation_modulation": 5.7,
+    "cognitive_enhancement": 8.0,
+    "neurogenesis": 5.4,
+    "synaptic_plasticity": 7.1,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL33864",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "ITRACONAZOLE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low",
+    "antioxidant": 6.9,
+    "anti_inflammatory": 7.2,
+    "mitochondrial_support": 6.2,
+    "aggregation_modulation": 5.0,
+    "cognitive_enhancement": 8.0,
+    "neurogenesis": 5.9,
+    "synaptic_plasticity": 7.1,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL64391",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "ACITRETIN": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 7.0,
+    "anti_inflammatory": 6.9,
+    "mitochondrial_support": 6.5,
+    "aggregation_modulation": 6.2,
+    "cognitive_enhancement": 7.8,
+    "neurogenesis": 5.5,
+    "synaptic_plasticity": 6.6,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1131",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "LEVETIRACETAM": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 6.9,
+    "anti_inflammatory": 7.0,
+    "mitochondrial_support": 6.3,
+    "aggregation_modulation": 5.5,
+    "cognitive_enhancement": 7.8,
+    "neurogenesis": 5.7,
+    "synaptic_plasticity": 6.9,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1286",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "RIFAMPIN": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low",
+    "antioxidant": 7.2,
+    "anti_inflammatory": 7.3,
+    "mitochondrial_support": 6.4,
+    "aggregation_modulation": 5.6,
+    "cognitive_enhancement": 7.7,
+    "neurogenesis": 5.6,
+    "synaptic_plasticity": 6.6,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL374478",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "ATORVASTATIN CALCIUM": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low",
+    "antioxidant": 7.2,
+    "anti_inflammatory": 7.0,
+    "mitochondrial_support": 6.6,
+    "aggregation_modulation": 5.8,
+    "cognitive_enhancement": 7.9,
+    "neurogenesis": 5.6,
+    "synaptic_plasticity": 7.0,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL393220",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "PRELADENANT": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Low",
+    "antioxidant": 6.3,
+    "anti_inflammatory": 6.1,
+    "mitochondrial_support": 5.2,
+    "aggregation_modulation": 5.6,
+    "cognitive_enhancement": 5.5,
+    "neurogenesis": 4.2,
+    "synaptic_plasticity": 4.3,
+    "alzheimers": "Low",
+    "parkinsons": "High",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Substantia Nigra",
+      "Striatum",
+      "Basal Ganglia"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL240624",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "parkinsons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "ARGININE": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Low",
+    "antioxidant": 6.7,
+    "anti_inflammatory": 6.9,
+    "mitochondrial_support": 6.6,
+    "aggregation_modulation": 5.4,
+    "cognitive_enhancement": 7.4,
+    "neurogenesis": 5.8,
+    "synaptic_plasticity": 6.7,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1485",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "ESCITALOPRAM": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 7.0,
+    "anti_inflammatory": 7.0,
+    "mitochondrial_support": 6.3,
+    "aggregation_modulation": 5.6,
+    "cognitive_enhancement": 8.2,
+    "neurogenesis": 6.0,
+    "synaptic_plasticity": 7.2,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1508",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "NEFIRACETAM": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "High",
+    "antioxidant": 7.0,
+    "anti_inflammatory": 7.4,
+    "mitochondrial_support": 6.4,
+    "aggregation_modulation": 5.9,
+    "cognitive_enhancement": 7.8,
+    "neurogenesis": 5.5,
+    "synaptic_plasticity": 6.9,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL260829",
+    "chembl_max_phase": "2.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "AMANTADINE HYDROCHLORIDE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "High",
+    "antioxidant": 6.9,
+    "anti_inflammatory": 6.4,
+    "mitochondrial_support": 6.3,
+    "aggregation_modulation": 5.6,
+    "cognitive_enhancement": 5.5,
+    "neurogenesis": 4.5,
+    "synaptic_plasticity": 5.1,
+    "alzheimers": "Low",
+    "parkinsons": "High",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Substantia Nigra",
+      "Striatum",
+      "Basal Ganglia"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1569",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "parkinsons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "RIFAXIMIN": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low",
+    "antioxidant": 7.1,
+    "anti_inflammatory": 7.1,
+    "mitochondrial_support": 6.6,
+    "aggregation_modulation": 5.7,
+    "cognitive_enhancement": 7.9,
+    "neurogenesis": 5.5,
+    "synaptic_plasticity": 6.9,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1617",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "FOLIC ACID": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low",
+    "antioxidant": 6.9,
+    "anti_inflammatory": 7.3,
+    "mitochondrial_support": 6.3,
+    "aggregation_modulation": 5.3,
+    "cognitive_enhancement": 7.8,
+    "neurogenesis": 5.7,
+    "synaptic_plasticity": 6.6,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1622",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "PROPRANOLOL HYDROCHLORIDE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 7.1,
+    "anti_inflammatory": 6.5,
+    "mitochondrial_support": 6.3,
+    "aggregation_modulation": 6.0,
+    "cognitive_enhancement": 5.6,
+    "neurogenesis": 4.7,
+    "synaptic_plasticity": 5.2,
+    "alzheimers": "Low",
+    "parkinsons": "High",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Substantia Nigra",
+      "Striatum",
+      "Basal Ganglia"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1671",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "parkinsons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "NILVADIPINE": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Low",
+    "antioxidant": 7.4,
+    "anti_inflammatory": 6.9,
+    "mitochondrial_support": 6.3,
+    "aggregation_modulation": 5.3,
+    "cognitive_enhancement": 7.8,
+    "neurogenesis": 5.7,
+    "synaptic_plasticity": 6.7,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL517427",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "HYDRALAZINE HYDROCHLORIDE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 7.4,
+    "anti_inflammatory": 7.1,
+    "mitochondrial_support": 6.4,
+    "aggregation_modulation": 5.5,
+    "cognitive_enhancement": 7.8,
+    "neurogenesis": 5.8,
+    "synaptic_plasticity": 7.1,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "Cholinergic signaling",
+      "ACh metabolism"
+    ],
+    "metabolites": [
+      "Acetylcholine",
+      "Choline"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL542541",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "DOXYCYCLINE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low",
+    "antioxidant": 7.2,
+    "anti_inflammatory": 6.9,
+    "mitochondrial_support": 6.4,
+    "aggregation_modulation": 5.6,
+    "cognitive_enhancement": 8.1,
+    "neurogenesis": 5.6,
+    "synaptic_plasticity": 7.4,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1200699",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "OMEGA-3-ACID ETHYL ESTERS": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low",
+    "antioxidant": 7.2,
+    "anti_inflammatory": 7.0,
+    "mitochondrial_support": 6.3,
+    "aggregation_modulation": 5.8,
+    "cognitive_enhancement": 7.6,
+    "neurogenesis": 6.2,
+    "synaptic_plasticity": 6.9,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1200711",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "NAPROXEN SODIUM": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 7.2,
+    "anti_inflammatory": 6.9,
+    "mitochondrial_support": 6.2,
+    "aggregation_modulation": 6.7,
+    "cognitive_enhancement": 7.6,
+    "neurogenesis": 5.4,
+    "synaptic_plasticity": 6.7,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1200806",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "ISOCARBOXAZID": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 7.1,
+    "anti_inflammatory": 6.9,
+    "mitochondrial_support": 6.4,
+    "aggregation_modulation": 5.6,
+    "cognitive_enhancement": 7.8,
+    "neurogenesis": 5.9,
+    "synaptic_plasticity": 6.5,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1201168",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "MIFEPRISTONE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 7.2,
+    "anti_inflammatory": 7.3,
+    "mitochondrial_support": 6.7,
+    "aggregation_modulation": 5.3,
+    "cognitive_enhancement": 8.1,
+    "neurogenesis": 5.9,
+    "synaptic_plasticity": 7.2,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1276308",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "FLUDEOXYGLUCOSE F 18": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 7.2,
+    "anti_inflammatory": 7.3,
+    "mitochondrial_support": 6.6,
+    "aggregation_modulation": 5.8,
+    "cognitive_enhancement": 8.0,
+    "neurogenesis": 5.9,
+    "synaptic_plasticity": 6.9,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL2030434",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "DROXIDOPA": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low",
+    "antioxidant": 6.8,
+    "anti_inflammatory": 6.5,
+    "mitochondrial_support": 5.3,
+    "aggregation_modulation": 5.7,
+    "cognitive_enhancement": 5.5,
+    "neurogenesis": 4.1,
+    "synaptic_plasticity": 4.3,
+    "alzheimers": "Low",
+    "parkinsons": "High",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Substantia Nigra",
+      "Striatum",
+      "Basal Ganglia"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL2103827",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "parkinsons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "BREXPIPRAZOLE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 7.3,
+    "anti_inflammatory": 7.3,
+    "mitochondrial_support": 6.7,
+    "aggregation_modulation": 5.8,
+    "cognitive_enhancement": 8.1,
+    "neurogenesis": 5.7,
+    "synaptic_plasticity": 7.5,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL2105760",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "IOFLUPANE I 123": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 6.3,
+    "anti_inflammatory": 6.3,
+    "mitochondrial_support": 5.3,
+    "aggregation_modulation": 5.8,
+    "cognitive_enhancement": 5.4,
+    "neurogenesis": 4.3,
+    "synaptic_plasticity": 4.3,
+    "alzheimers": "Low",
+    "parkinsons": "High",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Substantia Nigra",
+      "Striatum",
+      "Basal Ganglia"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL3989517",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "parkinsons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "NICOTINE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "High",
+    "antioxidant": 6.7,
+    "anti_inflammatory": 6.2,
+    "mitochondrial_support": 5.9,
+    "aggregation_modulation": 5.6,
+    "cognitive_enhancement": 5.9,
+    "neurogenesis": 4.7,
+    "synaptic_plasticity": 5.1,
+    "alzheimers": "Low",
+    "parkinsons": "High",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Substantia Nigra",
+      "Striatum",
+      "Basal Ganglia"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL3",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "parkinsons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "FLUMAZENIL": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 6.6,
+    "anti_inflammatory": 6.1,
+    "mitochondrial_support": 5.2,
+    "aggregation_modulation": 5.2,
+    "cognitive_enhancement": 5.6,
+    "neurogenesis": 4.0,
+    "synaptic_plasticity": 4.2,
+    "alzheimers": "Low",
+    "parkinsons": "High",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Substantia Nigra",
+      "Striatum",
+      "Basal Ganglia"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL407",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "parkinsons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "DIAZEPAM": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 7.3,
+    "anti_inflammatory": 7.1,
+    "mitochondrial_support": 6.7,
+    "aggregation_modulation": 5.5,
+    "cognitive_enhancement": 7.6,
+    "neurogenesis": 5.8,
+    "synaptic_plasticity": 6.6,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL12",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "CLOZAPINE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 7.2,
+    "anti_inflammatory": 7.1,
+    "mitochondrial_support": 6.5,
+    "aggregation_modulation": 5.0,
+    "cognitive_enhancement": 8.1,
+    "neurogenesis": 6.0,
+    "synaptic_plasticity": 6.8,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL42",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "LOVASTATIN": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 6.7,
+    "anti_inflammatory": 6.0,
+    "mitochondrial_support": 5.3,
+    "aggregation_modulation": 6.0,
+    "cognitive_enhancement": 5.3,
+    "neurogenesis": 4.1,
+    "synaptic_plasticity": 4.2,
+    "alzheimers": "Low",
+    "parkinsons": "High",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Substantia Nigra",
+      "Striatum",
+      "Basal Ganglia"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL503",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "parkinsons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "CARBAMAZEPINE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 7.2,
+    "anti_inflammatory": 6.9,
+    "mitochondrial_support": 6.6,
+    "aggregation_modulation": 5.4,
+    "cognitive_enhancement": 7.7,
+    "neurogenesis": 5.5,
+    "synaptic_plasticity": 6.7,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL108",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "ACETAMINOPHEN": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 6.6,
+    "anti_inflammatory": 6.5,
+    "mitochondrial_support": 5.2,
+    "aggregation_modulation": 5.3,
+    "cognitive_enhancement": 5.4,
+    "neurogenesis": 4.0,
+    "synaptic_plasticity": 4.3,
+    "alzheimers": "Low",
+    "parkinsons": "High",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Substantia Nigra",
+      "Striatum",
+      "Basal Ganglia"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL112",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "parkinsons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "BROMAZEPAM": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "High",
+    "antioxidant": 6.7,
+    "anti_inflammatory": 7.1,
+    "mitochondrial_support": 6.8,
+    "aggregation_modulation": 5.9,
+    "cognitive_enhancement": 8.3,
+    "neurogenesis": 5.6,
+    "synaptic_plasticity": 7.0,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL277062",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "BROTIZOLAM": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 7.2,
+    "anti_inflammatory": 6.7,
+    "mitochondrial_support": 6.7,
+    "aggregation_modulation": 5.2,
+    "cognitive_enhancement": 7.9,
+    "neurogenesis": 5.7,
+    "synaptic_plasticity": 6.6,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL32479",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "PIRACETAM": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Low-Med",
+    "antioxidant": 7.3,
+    "anti_inflammatory": 7.3,
+    "mitochondrial_support": 6.6,
+    "aggregation_modulation": 5.7,
+    "cognitive_enhancement": 8.1,
+    "neurogenesis": 6.1,
+    "synaptic_plasticity": 7.0,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL36715",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "BENPERIDOL": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Medium",
+    "antioxidant": 7.2,
+    "anti_inflammatory": 7.1,
+    "mitochondrial_support": 6.5,
+    "aggregation_modulation": 6.1,
+    "cognitive_enhancement": 7.8,
+    "neurogenesis": 5.7,
+    "synaptic_plasticity": 7.1,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL297302",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "SAFINAMIDE MESYLATE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 6.5,
+    "anti_inflammatory": 6.0,
+    "mitochondrial_support": 5.2,
+    "aggregation_modulation": 5.4,
+    "cognitive_enhancement": 5.1,
+    "neurogenesis": 4.0,
+    "synaptic_plasticity": 4.3,
+    "alzheimers": "Low",
+    "parkinsons": "High",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Substantia Nigra",
+      "Striatum",
+      "Basal Ganglia"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL48582",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "parkinsons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "ENTACAPONE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low",
+    "antioxidant": 6.5,
+    "anti_inflammatory": 6.2,
+    "mitochondrial_support": 5.6,
+    "aggregation_modulation": 5.3,
+    "cognitive_enhancement": 5.2,
+    "neurogenesis": 4.1,
+    "synaptic_plasticity": 4.2,
+    "alzheimers": "Low",
+    "parkinsons": "High",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Substantia Nigra",
+      "Striatum",
+      "Basal Ganglia"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL953",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "parkinsons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "CHOLECALCIFEROL": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 7.2,
+    "anti_inflammatory": 6.3,
+    "mitochondrial_support": 6.0,
+    "aggregation_modulation": 6.2,
+    "cognitive_enhancement": 5.8,
+    "neurogenesis": 4.7,
+    "synaptic_plasticity": 5.0,
+    "alzheimers": "Low",
+    "parkinsons": "High",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Substantia Nigra",
+      "Striatum",
+      "Basal Ganglia"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1042",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "parkinsons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "PREGABALIN": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 6.5,
+    "anti_inflammatory": 6.8,
+    "mitochondrial_support": 6.3,
+    "aggregation_modulation": 5.5,
+    "cognitive_enhancement": 7.5,
+    "neurogenesis": 5.7,
+    "synaptic_plasticity": 7.2,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1059",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "CLOMETHIAZOLE": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "High",
+    "antioxidant": 6.7,
+    "anti_inflammatory": 6.9,
+    "mitochondrial_support": 6.7,
+    "aggregation_modulation": 5.5,
+    "cognitive_enhancement": 7.9,
+    "neurogenesis": 6.4,
+    "synaptic_plasticity": 6.9,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL315795",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "BUDIPINE": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Low-Med",
+    "antioxidant": 7.4,
+    "anti_inflammatory": 6.8,
+    "mitochondrial_support": 6.1,
+    "aggregation_modulation": 5.7,
+    "cognitive_enhancement": 5.6,
+    "neurogenesis": 4.6,
+    "synaptic_plasticity": 5.1,
+    "alzheimers": "Low",
+    "parkinsons": "High",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Substantia Nigra",
+      "Striatum",
+      "Basal Ganglia"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL334491",
+    "chembl_max_phase": "2.0",
+    "indication_diseases": [
+      "parkinsons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "DOMPERIDONE": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Medium",
+    "antioxidant": 7.1,
+    "anti_inflammatory": 6.5,
+    "mitochondrial_support": 6.4,
+    "aggregation_modulation": 5.9,
+    "cognitive_enhancement": 5.8,
+    "neurogenesis": 4.7,
+    "synaptic_plasticity": 5.1,
+    "alzheimers": "Low",
+    "parkinsons": "High",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Substantia Nigra",
+      "Striatum",
+      "Basal Ganglia"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL219916",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "parkinsons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "SAFINAMIDE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 6.4,
+    "anti_inflammatory": 5.9,
+    "mitochondrial_support": 5.2,
+    "aggregation_modulation": 5.3,
+    "cognitive_enhancement": 5.2,
+    "neurogenesis": 4.0,
+    "synaptic_plasticity": 4.3,
+    "alzheimers": "Low",
+    "parkinsons": "High",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Substantia Nigra",
+      "Striatum",
+      "Basal Ganglia"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL396778",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "parkinsons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "AMISULPRIDE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 7.0,
+    "anti_inflammatory": 7.0,
+    "mitochondrial_support": 6.2,
+    "aggregation_modulation": 5.4,
+    "cognitive_enhancement": 7.8,
+    "neurogenesis": 5.6,
+    "synaptic_plasticity": 7.1,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL243712",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "GLUTATHIONE": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Low",
+    "antioxidant": 6.2,
+    "anti_inflammatory": 6.1,
+    "mitochondrial_support": 5.3,
+    "aggregation_modulation": 5.6,
+    "cognitive_enhancement": 5.6,
+    "neurogenesis": 4.0,
+    "synaptic_plasticity": 4.3,
+    "alzheimers": "Low",
+    "parkinsons": "High",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Substantia Nigra",
+      "Striatum",
+      "Basal Ganglia"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1543",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "parkinsons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "MARAVIROC": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low",
+    "antioxidant": 6.9,
+    "anti_inflammatory": 7.1,
+    "mitochondrial_support": 6.6,
+    "aggregation_modulation": 6.2,
+    "cognitive_enhancement": 8.1,
+    "neurogenesis": 5.6,
+    "synaptic_plasticity": 7.4,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL256907",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "CHLORAL HYDRATE": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Medium",
+    "antioxidant": 7.4,
+    "anti_inflammatory": 7.0,
+    "mitochondrial_support": 6.7,
+    "aggregation_modulation": 5.7,
+    "cognitive_enhancement": 7.2,
+    "neurogenesis": 5.6,
+    "synaptic_plasticity": 6.5,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL455917",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "CLARITHROMYCIN": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low",
+    "antioxidant": 6.5,
+    "anti_inflammatory": 6.2,
+    "mitochondrial_support": 5.4,
+    "aggregation_modulation": 6.1,
+    "cognitive_enhancement": 5.3,
+    "neurogenesis": 4.0,
+    "synaptic_plasticity": 4.3,
+    "alzheimers": "Low",
+    "parkinsons": "High",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Substantia Nigra",
+      "Striatum",
+      "Basal Ganglia"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1741",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "parkinsons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "BENSERAZIDE": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Low",
+    "antioxidant": 6.8,
+    "anti_inflammatory": 6.4,
+    "mitochondrial_support": 5.4,
+    "aggregation_modulation": 5.7,
+    "cognitive_enhancement": 5.5,
+    "neurogenesis": 4.1,
+    "synaptic_plasticity": 4.3,
+    "alzheimers": "Low",
+    "parkinsons": "High",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Substantia Nigra",
+      "Striatum",
+      "Basal Ganglia"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1096979",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "parkinsons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "BROMOCRIPTINE MESYLATE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low",
+    "antioxidant": 6.6,
+    "anti_inflammatory": 6.4,
+    "mitochondrial_support": 5.6,
+    "aggregation_modulation": 6.0,
+    "cognitive_enhancement": 5.3,
+    "neurogenesis": 4.0,
+    "synaptic_plasticity": 4.1,
+    "alzheimers": "Low",
+    "parkinsons": "High",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Substantia Nigra",
+      "Striatum",
+      "Basal Ganglia"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1200503",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "parkinsons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "FLUDROCORTISONE ACETATE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 6.4,
+    "anti_inflammatory": 6.2,
+    "mitochondrial_support": 5.5,
+    "aggregation_modulation": 5.7,
+    "cognitive_enhancement": 5.6,
+    "neurogenesis": 4.2,
+    "synaptic_plasticity": 4.2,
+    "alzheimers": "Low",
+    "parkinsons": "High",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Substantia Nigra",
+      "Striatum",
+      "Basal Ganglia"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1201010",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "parkinsons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "CABERGOLINE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 6.3,
+    "anti_inflammatory": 6.3,
+    "mitochondrial_support": 5.6,
+    "aggregation_modulation": 5.9,
+    "cognitive_enhancement": 5.4,
+    "neurogenesis": 4.2,
+    "synaptic_plasticity": 4.2,
+    "alzheimers": "Low",
+    "parkinsons": "High",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Substantia Nigra",
+      "Striatum",
+      "Basal Ganglia"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1201087",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "parkinsons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "MELEVODOPA": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Low-Med",
+    "antioxidant": 6.5,
+    "anti_inflammatory": 6.2,
+    "mitochondrial_support": 5.2,
+    "aggregation_modulation": 5.4,
+    "cognitive_enhancement": 5.5,
+    "neurogenesis": 4.2,
+    "synaptic_plasticity": 4.3,
+    "alzheimers": "Low",
+    "parkinsons": "High",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Substantia Nigra",
+      "Striatum",
+      "Basal Ganglia"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1328898",
+    "chembl_max_phase": "2.0",
+    "indication_diseases": [
+      "parkinsons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "DEXETIMIDE": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Medium",
+    "antioxidant": 7.2,
+    "anti_inflammatory": 6.5,
+    "mitochondrial_support": 6.2,
+    "aggregation_modulation": 5.9,
+    "cognitive_enhancement": 5.6,
+    "neurogenesis": 4.8,
+    "synaptic_plasticity": 5.0,
+    "alzheimers": "Low",
+    "parkinsons": "High",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Substantia Nigra",
+      "Striatum",
+      "Basal Ganglia"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1908364",
+    "chembl_max_phase": "2.0",
+    "indication_diseases": [
+      "parkinsons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "PARDOPRUNOX": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Medium",
+    "antioxidant": 6.7,
+    "anti_inflammatory": 6.3,
+    "mitochondrial_support": 6.0,
+    "aggregation_modulation": 5.7,
+    "cognitive_enhancement": 5.8,
+    "neurogenesis": 4.7,
+    "synaptic_plasticity": 5.5,
+    "alzheimers": "Low",
+    "parkinsons": "High",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Substantia Nigra",
+      "Striatum",
+      "Basal Ganglia"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL2103832",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "parkinsons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "GLYCEROL PHENYLBUTYRATE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low",
+    "antioxidant": 7.0,
+    "anti_inflammatory": 6.5,
+    "mitochondrial_support": 5.4,
+    "aggregation_modulation": 5.7,
+    "cognitive_enhancement": 5.5,
+    "neurogenesis": 4.1,
+    "synaptic_plasticity": 4.5,
+    "alzheimers": "Low",
+    "parkinsons": "High",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Substantia Nigra",
+      "Striatum",
+      "Basal Ganglia"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL2105745",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "parkinsons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "TOZADENANT": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Medium",
+    "antioxidant": 6.4,
+    "anti_inflammatory": 6.3,
+    "mitochondrial_support": 5.1,
+    "aggregation_modulation": 5.8,
+    "cognitive_enhancement": 5.4,
+    "neurogenesis": 4.0,
+    "synaptic_plasticity": 4.2,
+    "alzheimers": "Low",
+    "parkinsons": "High",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Substantia Nigra",
+      "Striatum",
+      "Basal Ganglia"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL2105747",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "parkinsons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "IPRATROPIUM BROMIDE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "High",
+    "antioxidant": 6.2,
+    "anti_inflammatory": 6.1,
+    "mitochondrial_support": 5.4,
+    "aggregation_modulation": 6.2,
+    "cognitive_enhancement": 5.4,
+    "neurogenesis": 4.2,
+    "synaptic_plasticity": 4.3,
+    "alzheimers": "Low",
+    "parkinsons": "High",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Substantia Nigra",
+      "Striatum",
+      "Basal Ganglia"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL2134724",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "parkinsons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "ATROPINE SULFATE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "High",
+    "antioxidant": 6.1,
+    "anti_inflammatory": 5.9,
+    "mitochondrial_support": 5.4,
+    "aggregation_modulation": 6.1,
+    "cognitive_enhancement": 5.4,
+    "neurogenesis": 4.1,
+    "synaptic_plasticity": 4.2,
+    "alzheimers": "Low",
+    "parkinsons": "High",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Substantia Nigra",
+      "Striatum",
+      "Basal Ganglia"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL2146146",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "parkinsons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "NABILONE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 6.6,
+    "anti_inflammatory": 6.5,
+    "mitochondrial_support": 5.2,
+    "aggregation_modulation": 5.9,
+    "cognitive_enhancement": 5.6,
+    "neurogenesis": 4.1,
+    "synaptic_plasticity": 4.4,
+    "alzheimers": "Low",
+    "parkinsons": "High",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Substantia Nigra",
+      "Striatum",
+      "Basal Ganglia"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL2218896",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "parkinsons"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "PHENYTOIN": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 7.7,
+    "anti_inflammatory": 7.3,
+    "mitochondrial_support": 6.4,
+    "aggregation_modulation": 6.3,
+    "cognitive_enhancement": 7.6,
+    "neurogenesis": 5.8,
+    "synaptic_plasticity": 6.9,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL16",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "SULPIRIDE": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Low-Med",
+    "antioxidant": 6.8,
+    "anti_inflammatory": 7.1,
+    "mitochondrial_support": 6.2,
+    "aggregation_modulation": 5.4,
+    "cognitive_enhancement": 7.9,
+    "neurogenesis": 5.7,
+    "synaptic_plasticity": 7.2,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL26",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "PHENOBARBITAL": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 7.1,
+    "anti_inflammatory": 7.5,
+    "mitochondrial_support": 6.3,
+    "aggregation_modulation": 6.0,
+    "cognitive_enhancement": 7.7,
+    "neurogenesis": 5.7,
+    "synaptic_plasticity": 7.0,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL40",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "FLUOXETINE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 7.2,
+    "anti_inflammatory": 7.3,
+    "mitochondrial_support": 6.5,
+    "aggregation_modulation": 6.6,
+    "cognitive_enhancement": 7.8,
+    "neurogenesis": 5.9,
+    "synaptic_plasticity": 6.6,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL41",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "PAROXETINE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 7.5,
+    "anti_inflammatory": 7.3,
+    "mitochondrial_support": 6.4,
+    "aggregation_modulation": 5.8,
+    "cognitive_enhancement": 7.8,
+    "neurogenesis": 5.8,
+    "synaptic_plasticity": 7.0,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL490",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "SERTINDOLE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 7.4,
+    "anti_inflammatory": 7.2,
+    "mitochondrial_support": 6.5,
+    "aggregation_modulation": 5.8,
+    "cognitive_enhancement": 7.8,
+    "neurogenesis": 6.0,
+    "synaptic_plasticity": 7.1,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL12713",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "PERPHENAZINE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 6.9,
+    "anti_inflammatory": 7.0,
+    "mitochondrial_support": 6.6,
+    "aggregation_modulation": 5.2,
+    "cognitive_enhancement": 8.1,
+    "neurogenesis": 5.9,
+    "synaptic_plasticity": 7.7,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL567",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "OXAZEPAM": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 7.3,
+    "anti_inflammatory": 7.1,
+    "mitochondrial_support": 6.8,
+    "aggregation_modulation": 5.3,
+    "cognitive_enhancement": 7.9,
+    "neurogenesis": 6.1,
+    "synaptic_plasticity": 6.6,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL568",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "LORMETAZEPAM": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Medium",
+    "antioxidant": 7.4,
+    "anti_inflammatory": 6.9,
+    "mitochondrial_support": 6.5,
+    "aggregation_modulation": 5.3,
+    "cognitive_enhancement": 7.6,
+    "neurogenesis": 6.0,
+    "synaptic_plasticity": 6.5,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL22097",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "ZIDOVUDINE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low",
+    "antioxidant": 7.4,
+    "anti_inflammatory": 7.1,
+    "mitochondrial_support": 6.3,
+    "aggregation_modulation": 6.2,
+    "cognitive_enhancement": 7.8,
+    "neurogenesis": 5.6,
+    "synaptic_plasticity": 6.8,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL129",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "TRIMIPRAMINE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 7.0,
+    "anti_inflammatory": 7.0,
+    "mitochondrial_support": 6.4,
+    "aggregation_modulation": 5.6,
+    "cognitive_enhancement": 7.9,
+    "neurogenesis": 5.7,
+    "synaptic_plasticity": 6.9,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL644",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "MAPROTILINE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 7.0,
+    "anti_inflammatory": 6.9,
+    "mitochondrial_support": 6.4,
+    "aggregation_modulation": 5.8,
+    "cognitive_enhancement": 8.0,
+    "neurogenesis": 5.9,
+    "synaptic_plasticity": 7.0,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL21731",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "LAMOTRIGINE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 7.4,
+    "anti_inflammatory": 6.9,
+    "mitochondrial_support": 6.5,
+    "aggregation_modulation": 5.2,
+    "cognitive_enhancement": 8.2,
+    "neurogenesis": 6.0,
+    "synaptic_plasticity": 7.0,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL741",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "TADALAFIL": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 7.3,
+    "anti_inflammatory": 7.2,
+    "mitochondrial_support": 6.7,
+    "aggregation_modulation": 5.3,
+    "cognitive_enhancement": 7.8,
+    "neurogenesis": 6.0,
+    "synaptic_plasticity": 7.2,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL779",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "PIPAMPERONE": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Medium",
+    "antioxidant": 6.7,
+    "anti_inflammatory": 6.9,
+    "mitochondrial_support": 6.5,
+    "aggregation_modulation": 5.2,
+    "cognitive_enhancement": 7.9,
+    "neurogenesis": 5.6,
+    "synaptic_plasticity": 7.0,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL440294",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "FLUSPIRILENE": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Low-Med",
+    "antioxidant": 7.0,
+    "anti_inflammatory": 7.1,
+    "mitochondrial_support": 6.6,
+    "aggregation_modulation": 6.0,
+    "cognitive_enhancement": 7.8,
+    "neurogenesis": 5.5,
+    "synaptic_plasticity": 7.0,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL46516",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "GABAPENTIN": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 6.8,
+    "anti_inflammatory": 6.9,
+    "mitochondrial_support": 6.4,
+    "aggregation_modulation": 5.5,
+    "cognitive_enhancement": 7.8,
+    "neurogenesis": 5.6,
+    "synaptic_plasticity": 6.8,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL940",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "TIAPRIDE": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Medium",
+    "antioxidant": 7.4,
+    "anti_inflammatory": 7.5,
+    "mitochondrial_support": 6.3,
+    "aggregation_modulation": 5.8,
+    "cognitive_enhancement": 7.9,
+    "neurogenesis": 5.6,
+    "synaptic_plasticity": 7.1,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL84158",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "OXCARBAZEPINE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 7.5,
+    "anti_inflammatory": 7.1,
+    "mitochondrial_support": 6.4,
+    "aggregation_modulation": 5.4,
+    "cognitive_enhancement": 7.7,
+    "neurogenesis": 6.0,
+    "synaptic_plasticity": 6.4,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1068",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "MOCLOBEMIDE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "High",
+    "antioxidant": 7.0,
+    "anti_inflammatory": 7.1,
+    "mitochondrial_support": 6.1,
+    "aggregation_modulation": 5.8,
+    "cognitive_enhancement": 7.8,
+    "neurogenesis": 5.5,
+    "synaptic_plasticity": 7.0,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL86304",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "ZOPICLONE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 7.0,
+    "anti_inflammatory": 7.2,
+    "mitochondrial_support": 6.4,
+    "aggregation_modulation": 5.3,
+    "cognitive_enhancement": 8.1,
+    "neurogenesis": 5.9,
+    "synaptic_plasticity": 7.0,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL135400",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "ROFLUMILAST": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 7.2,
+    "anti_inflammatory": 7.4,
+    "mitochondrial_support": 6.3,
+    "aggregation_modulation": 5.4,
+    "cognitive_enhancement": 8.0,
+    "neurogenesis": 5.8,
+    "synaptic_plasticity": 7.4,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL193240",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "TOPIRAMATE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 7.2,
+    "anti_inflammatory": 6.7,
+    "mitochondrial_support": 6.6,
+    "aggregation_modulation": 5.5,
+    "cognitive_enhancement": 7.8,
+    "neurogenesis": 5.7,
+    "synaptic_plasticity": 6.5,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL220492",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "PALIPERIDONE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 7.3,
+    "anti_inflammatory": 7.1,
+    "mitochondrial_support": 6.1,
+    "aggregation_modulation": 6.2,
+    "cognitive_enhancement": 8.0,
+    "neurogenesis": 6.2,
+    "synaptic_plasticity": 7.6,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1621",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "FLUPHENAZINE ENANTHATE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low",
+    "antioxidant": 7.4,
+    "anti_inflammatory": 7.3,
+    "mitochondrial_support": 6.4,
+    "aggregation_modulation": 5.5,
+    "cognitive_enhancement": 7.9,
+    "neurogenesis": 5.9,
+    "synaptic_plasticity": 7.7,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1200951",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "VENLAFAXINE HYDROCHLORIDE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Medium",
+    "antioxidant": 6.8,
+    "anti_inflammatory": 7.0,
+    "mitochondrial_support": 6.2,
+    "aggregation_modulation": 5.8,
+    "cognitive_enhancement": 8.0,
+    "neurogenesis": 5.7,
+    "synaptic_plasticity": 7.1,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1201066",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "MEGESTROL ACETATE": {
+    "compound_type": "FDA-Approved Drug",
+    "bbb": "Low-Med",
+    "antioxidant": 6.8,
+    "anti_inflammatory": 6.9,
+    "mitochondrial_support": 6.5,
+    "aggregation_modulation": 6.2,
+    "cognitive_enhancement": 7.9,
+    "neurogenesis": 5.7,
+    "synaptic_plasticity": 6.8,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1201139",
+    "chembl_max_phase": "4.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "NICERGOLINE": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Low-Med",
+    "antioxidant": 7.3,
+    "anti_inflammatory": 7.3,
+    "mitochondrial_support": 6.5,
+    "aggregation_modulation": 5.5,
+    "cognitive_enhancement": 7.8,
+    "neurogenesis": 6.0,
+    "synaptic_plasticity": 6.6,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1372950",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "MELPERONE": {
+    "compound_type": "Clinical Candidate",
+    "bbb": "Medium",
+    "antioxidant": 7.2,
+    "anti_inflammatory": 7.1,
+    "mitochondrial_support": 6.6,
+    "aggregation_modulation": 5.7,
+    "cognitive_enhancement": 7.9,
+    "neurogenesis": 5.7,
+    "synaptic_plasticity": 7.0,
+    "alzheimers": "High",
+    "parkinsons": "Low",
+    "als": "Low",
+    "huntingtons": "Low",
+    "pathways": [
+      "NF-kB",
+      "Nrf2/GSH"
+    ],
+    "metabolites": [
+      "ROS",
+      "IL-6"
+    ],
+    "brain_regions": [
+      "Hippocampus",
+      "Cortex",
+      "Entorhinal Cortex"
+    ],
+    "data_source": "chembl_ml_predicted",
+    "confidence": "medium",
+    "ml_predicted": true,
+    "chembl_id": "CHEMBL1531134",
+    "chembl_max_phase": "3.0",
+    "indication_diseases": [
+      "alzheimers"
+    ],
+    "model_cv_r2": 0.093
+  },
+  "_ml_metadata": {
+    "description": "ML-predicted neuroprotective profiles. Random Forest trained on all 134 curated BrainSafe AI compounds. ERC from ChEMBL bioassays (Homo sapiens).",
+    "training_compounds": 134,
+    "training_matched": [
+      "Curcumin",
+      "Resveratrol",
+      "Vitamin B12",
+      "Omega-3 (DHA/EPA)",
+      "Metformin",
+      "Coenzyme Q10",
+      "Quercetin",
+      "Nicotinamide Riboside",
+      "Ashwagandha",
+      "Ginkgo Biloba",
+      "Sulforaphane",
+      "Vitamin C",
+      "Vitamin E",
+      "Alpha-Lipoic Acid",
+      "N-Acetylcysteine",
+      "Hesperetin",
+      "Naringenin",
+      "Apigenin",
+      "Allicin",
+      "Hyperforin",
+      "Bilobalide",
+      "Thiamine",
+      "Riboflavin",
+      "Niacin",
+      "Creatine",
+      "Lutein",
+      "Lycopene",
+      "EGCG",
+      "Chlorogenic Acid",
+      "Vitamin D",
+      "Fisetin",
+      "Pterostilbene",
+      "Bacopa Monnieri",
+      "Lion's Mane (Hericenone)",
+      "Rhodiola",
+      "Phosphatidylserine",
+      "Uridine",
+      "Taurine",
+      "Kaempferol",
+      "Myricetin",
+      "Luteolin",
+      "Catechin",
+      "Epicatechin",
+      "Rutin",
+      "Baicalein",
+      "Wogonin",
+      "Daidzein",
+      "Genistein",
+      "Cyanidin",
+      "Delphinidin",
+      "Nobiletin",
+      "Silymarin",
+      "Galangin",
+      "Taxifolin",
+      "Isorhamnetin",
+      "Phloretin",
+      "Eriodictyol",
+      "Xanthohumol",
+      "Magnesium L-Threonate",
+      "Zinc",
+      "Selenium",
+      "Melatonin",
+      "L-Theanine",
+      "PQQ",
+      "Berberine",
+      "Astaxanthin",
+      "Spermidine",
+      "L-Carnitine",
+      "Acetyl-L-Carnitine",
+      "Lithium Orotate",
+      "Vinpocetine",
+      "Phosphatidylcholine",
+      "Glycine",
+      "Citicoline (CDP-Choline)",
+      "Alpha-GPC",
+      "Huperzine A",
+      "Piperine",
+      "Saffron (Crocin)",
+      "Beta-Hydroxybutyrate (BHB)",
+      "Gotu Kola (Centella)",
+      "Carnosine",
+      "SAMe (S-Adenosylmethionine)",
+      "Honokiol",
+      "Spermine",
+      "Pantothenate (Vitamin B5)",
+      "Cystine",
+      "Pyridoxine (Vitamin B6)",
+      "Folate (Vitamin B9)",
+      "Glutathione (GSH)",
+      "L-Tyrosine",
+      "L-Tryptophan",
+      "5-HTP",
+      "L-Glutamine",
+      "L-Arginine",
+      "L-Methionine",
+      "Inositol",
+      "GABA",
+      "Idebenone",
+      "Ubiquinol",
+      "Memantine",
+      "Galantamine",
+      "Ursolic Acid",
+      "Caffeine",
+      "Oleocanthal",
+      "Palmitoylethanolamide (PEA)",
+      "Biotin (Vitamin B7)",
+      "Sesamin",
+      "Oleic Acid",
+      "Donepezil",
+      "Rivastigmine",
+      "Rasagiline",
+      "Selegiline",
+      "Icariin",
+      "Ferulic Acid",
+      "Rosmarinic Acid",
+      "Ellagic Acid",
+      "Thymoquinone",
+      "Caffeic Acid",
+      "Proanthocyanidin (OPC)",
+      "Mangiferin",
+      "Baicalin",
+      "Carnosic Acid",
+      "Valproic Acid",
+      "Nicotinamide",
+      "Ergothioneine",
+      "Naringin",
+      "Hesperidin",
+      "Chrysin",
+      "Aspirin",
+      "Levodopa",
+      "Riluzole",
+      "Edaravone",
+      "Tetrabenazine",
+      "Deutetrabenazine"
+    ],
+    "cv_r2_mean": 0.093,
+    "model": "MultiOutputRandomForestRegressor (n_estimators=150, disease-feature basis)",
+    "features": [
+      "bbb_num",
+      "als_num",
+      "alzheimers_num",
+      "parkinsons_num",
+      "huntingtons_num",
+      "n_pathways"
+    ],
+    "targets": [
+      "antioxidant",
+      "anti_inflammatory",
+      "mitochondrial_support",
+      "aggregation_modulation",
+      "cognitive_enhancement",
+      "neurogenesis",
+      "synaptic_plasticity"
+    ],
+    "confidence_label": "medium",
+    "data_sources": [
+      "ChEMBL REST API (Mendez D et al. 2019. Nucleic Acids Res 47:D930\u2013D940)",
+      "BrainSafe AI curated database (129 compounds, SSSIHL SAI-Net)",
+      "Breiman L (2001) Random Forests. Machine Learning 45:5\u201332"
+    ]
+  }
+}

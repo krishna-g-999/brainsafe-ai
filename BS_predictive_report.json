@@ -1,0 +1,106 @@
+{
+  "design": "structure-only (Morgan-1024 + 24 descriptors), human-curated labels only, scaffold GroupKFold(5), 2000x bootstrap CI; disease-count features EXCLUDED.",
+  "n_compounds": 339,
+  "n_scaffolds": 131,
+  "leakage_median_tanimoto": 0.341,
+  "per_dimension": {
+    "antioxidant": {
+      "ensemble_r2": 0.189,
+      "ci": [
+        0.076,
+        0.291
+      ],
+      "spearman": 0.441,
+      "mae": 15.82,
+      "knn_r2": 0.042,
+      "mean_r2": -0.033,
+      "genuine": true
+    },
+    "anti_inflammatory": {
+      "ensemble_r2": -0.063,
+      "ci": [
+        -0.167,
+        0.017
+      ],
+      "spearman": 0.162,
+      "mae": 17.47,
+      "knn_r2": -0.099,
+      "mean_r2": -0.015,
+      "genuine": false
+    },
+    "mitochondrial_support": {
+      "ensemble_r2": -0.146,
+      "ci": [
+        -0.26,
+        -0.056
+      ],
+      "spearman": 0.054,
+      "mae": 17.38,
+      "knn_r2": -0.084,
+      "mean_r2": -0.002,
+      "genuine": false
+    },
+    "aggregation_modulation": {
+      "ensemble_r2": -0.129,
+      "ci": [
+        -0.24,
+        -0.037
+      ],
+      "spearman": 0.143,
+      "mae": 18.27,
+      "knn_r2": -0.145,
+      "mean_r2": -0.019,
+      "genuine": false
+    },
+    "cognitive_enhancement": {
+      "ensemble_r2": -0.116,
+      "ci": [
+        -0.221,
+        -0.032
+      ],
+      "spearman": 0.087,
+      "mae": 17.05,
+      "knn_r2": -0.126,
+      "mean_r2": -0.011,
+      "genuine": false
+    },
+    "neurogenesis": {
+      "ensemble_r2": -0.221,
+      "ci": [
+        -0.325,
+        -0.138
+      ],
+      "spearman": -0.01,
+      "mae": 16.16,
+      "knn_r2": -0.183,
+      "mean_r2": -0.008,
+      "genuine": false
+    },
+    "synaptic_plasticity": {
+      "ensemble_r2": -0.201,
+      "ci": [
+        -0.309,
+        -0.107
+      ],
+      "spearman": 0.006,
+      "mae": 18.98,
+      "knn_r2": -0.127,
+      "mean_r2": -0.007,
+      "genuine": false
+    }
+  },
+  "nps": {
+    "ensemble_r2": -0.084,
+    "ci": [
+      -0.187,
+      0.002
+    ]
+  },
+  "genuinely_predictable_dimensions": [
+    "antioxidant"
+  ],
+  "models_saved": [
+    "antioxidant"
+  ],
+  "verdict": "GENUINE structural signal in: antioxidant"
+}

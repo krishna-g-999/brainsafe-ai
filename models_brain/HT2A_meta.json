@@ -1,0 +1,21 @@
+{
+  "endpoint": "HT2A",
+  "meaning": "mood / psychosis (5-HT2A)",
+  "n": 5256,
+  "pos": 5175,
+  "pos_rate": 0.985,
+  "auroc": 0.921,
+  "pr_auc": 0.999,
+  "balanced_acc": 0.848,
+  "mcc": 0.209,
+  "brier": 0.011,
+  "calibrated": true,
+  "threshold": 0.985,
+  "cv": "scaffold GroupKFold(5)",
+  "leak_median_tanimoto": 0.682,
+  "source": "ChEMBL measured pChEMBL (>=6 active, <5 inactive)",
+  "temporal_auroc": 0.736,
+  "temporal_cutoff_year": 2020,
+  "cluster_split_auroc": 0.876,
+  "conformal_coverage": 0.898
+}

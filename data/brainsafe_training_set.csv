@@ -1,0 +1,135 @@
+name,smiles,bbb,compound_type,data_source,ad_target_count,pd_target_count,als_target_count,hd_target_count,antioxidant,anti_inflammatory,mitochondrial_support,aggregation_modulation,cognitive_enhancement,neurogenesis,synaptic_plasticity,tier
+Curcumin,COc1cc(/C=C/C(=O)CC(=O)/C=C/c2ccc(O)c(OC)c2)ccc1O,Medium,Polyphenol / Curcuminoid,curated,2,2,1,1,90.0,90.0,70.0,80.0,70.0,60.0,70.0,gold
+Resveratrol,Oc1ccc(/C=C/c2cc(O)cc(O)c2)cc1,High,Stilbenoid,curated,1,1,2,1,80.0,80.0,90.0,70.0,80.0,70.0,80.0,gold
+Vitamin B12,,High,Vitamin B-group / Cobalamin,curated,2,0,1,0,60.0,80.0,70.0,50.0,70.0,50.0,60.0,gold
+Omega-3 (DHA/EPA),CC/C=C\C/C=C\C/C=C\C/C=C\C/C=C\C/C=C\CCC(=O)O,High,Polyunsaturated Fatty Acid,curated,2,1,1,1,70.0,90.0,60.0,60.0,80.0,80.0,90.0,gold
+Metformin,CN(C)C(=N)NC(N)=N,Medium,Biguanide Drug,curated,2,2,1,0,70.0,70.0,80.0,90.0,60.0,70.0,50.0,gold
+Coenzyme Q10,COc1c(OC)c(C)c(CC/C=C(\C)CCC/C=C(\C)CCC/C=C(\C)CCC/C=C(\C)CCC/C=C(\C)CCC/C=C(\C)CCC/C=C(\C)CCC/C=C(\C)C)c(=O)c1=O,Medium,Coenzyme / Mitochondrial Antioxidant,curated,1,2,2,2,90.0,60.0,100.0,70.0,60.0,50.0,50.0,gold
+Quercetin,O=c1c(O)c(-c2ccc(O)c(O)c2)oc2cc(O)cc(O)c12,Medium,Flavonol,curated,1,2,0,0,80.0,80.0,60.0,70.0,70.0,60.0,60.0,gold
+Nicotinamide Riboside,NC(=O)c1ccc[n+](C2OC(CO)C(O)C2O)c1,High,NAD+ Precursor / Vitamin B3 Derivative,curated,2,1,1,1,70.0,60.0,90.0,70.0,80.0,70.0,70.0,gold
+Ashwagandha,CC12CCC3C(C1(O)CC(=O)C2=O)CCC4=CC(=O)CCC34C,Medium,Adaptogenic Herb / Withanolides,curated,1,1,1,0,80.0,90.0,70.0,60.0,80.0,70.0,80.0,gold
+Ginkgo Biloba,CC1(CCC(=C)C1)C(/C=C/C(=O)O)=C,High,Herbal Extract / Flavonoids + Terpenoids,curated,2,1,0,0,80.0,70.0,70.0,60.0,90.0,60.0,80.0,gold
+Sulforaphane,CS(=O)CCCCN=C=S,Medium,Isothiocyanate,curated,2,2,1,1,90.0,90.0,80.0,70.0,70.0,70.0,60.0,gold
+Vitamin C,OCC(O)C1OC(=O)C(O)=C1O,High,Vitamin / Ascorbic Acid,curated,2,1,1,0,90.0,70.0,70.0,60.0,70.0,50.0,60.0,gold
+Vitamin E,Cc1c(C)c2c(c(C)c1O)CC(C)(CCCC(C)CCCC(C)CCCC(C)C)O2,High,Vitamin / Tocopherol,curated,1,0,0,1,100.0,60.0,80.0,50.0,60.0,40.0,50.0,gold
+Alpha-Lipoic Acid,OC(=O)CCCCC1CCSS1,High,Antioxidant Cofactor / Dithiol,curated,1,2,1,1,90.0,80.0,90.0,70.0,70.0,50.0,60.0,gold
+N-Acetylcysteine,CC(=O)NC(CS)C(=O)O,Medium,Amino Acid Derivative / GSH Precursor,curated,1,1,2,1,90.0,70.0,80.0,60.0,60.0,50.0,50.0,gold
+Hesperetin,COc1ccc(C2CC(=O)c3c(O)cc(O)cc3O2)cc1O,Medium,Flavanone,curated,1,1,0,0,80.0,80.0,60.0,70.0,60.0,50.0,60.0,gold
+Naringenin,O=C1CC(c2ccc(O)cc2)Oc2cc(O)cc(O)c21,Medium,Flavanone,curated,1,0,0,0,80.0,70.0,70.0,60.0,60.0,60.0,60.0,gold
+Apigenin,O=c1cc(-c2ccc(O)cc2)oc2cc(O)cc(O)c12,High,Flavone,curated,1,2,1,0,80.0,90.0,70.0,80.0,70.0,70.0,70.0,gold
+Allicin,,Medium,Organosulfur Compound,curated,0,1,0,0,70.0,80.0,60.0,50.0,50.0,40.0,50.0,gold
+Hyperforin,,Medium,Phloroglucinol Derivative / St. John's Wort,curated,1,0,0,0,70.0,80.0,70.0,60.0,60.0,50.0,60.0,gold
+Bilobalide,,High,Terpenoid / Ginkgo Biloba,curated,2,1,0,0,80.0,70.0,80.0,70.0,80.0,60.0,70.0,gold
+Thiamine,Cc1ncc(C[n+]2csc(CCO)c2C)c(N)n1,High,Vitamin B1,curated,1,0,1,0,60.0,60.0,90.0,50.0,60.0,40.0,50.0,gold
+Riboflavin,Cc1cc2nc3c(=O)[nH]c(=O)nc3n(CC(O)C(O)C(O)CO)c2cc1C,High,Vitamin B2,curated,0,0,0,0,70.0,50.0,80.0,40.0,50.0,40.0,40.0,gold
+Niacin,OC(=O)c1cccnc1,High,Vitamin B3,curated,2,1,1,1,70.0,60.0,90.0,60.0,70.0,50.0,50.0,gold
+Creatine,CN(CC(=O)O)C(=N)N,Low-Med,Nitrogenous Organic Acid,curated,1,1,2,2,60.0,50.0,100.0,70.0,60.0,40.0,50.0,gold
+Lutein,CC1=C(/C=C/C(C)=C/C=C/C(C)=C/C=C/C=C(C)/C=C/C=C(C)/C=C/C2=C(C)CC(O)CC2(C)C)C(C)(C)CC(O)C1,Medium,Carotenoid / Xanthophyll,curated,1,0,0,0,90.0,70.0,60.0,50.0,60.0,40.0,40.0,gold
+Lycopene,CC(C)=CCCC(C)=CCC=C(C)CCC=C(C)CCC=C(C)CCC=C(C)CCC=C(C)C,Medium,Carotenoid,curated,1,1,0,0,90.0,60.0,70.0,60.0,50.0,40.0,40.0,gold
+EGCG,O=C(OC1Cc2c(O)cc(O)cc2OC1c1cc(O)c(O)c(O)c1)c1cc(O)c(O)c(O)c1,Medium,Catechin / Flavan-3-ol / Green Tea,curated,2,2,1,1,90.0,90.0,80.0,90.0,80.0,70.0,80.0,gold
+Chlorogenic Acid,OC1CC(OC(=O)/C=C/c2ccc(O)c(O)c2)CC(O)C1C(=O)O,Medium,Phenolic Acid,curated,1,0,0,0,80.0,80.0,70.0,60.0,70.0,50.0,60.0,gold
+Vitamin D,,High,Vitamin / Secosteroid,curated,2,1,1,1,70.0,80.0,60.0,70.0,70.0,60.0,60.0,gold
+Fisetin,O=c1c(O)c(-c2ccc(O)c(O)c2)oc2cc(O)ccc12,Medium,Flavonol / Senolytic,curated,2,2,1,1,90.0,80.0,70.0,80.0,80.0,80.0,80.0,gold
+Pterostilbene,COc1cc(/C=C/c2ccc(O)cc2)cc(OC)c1,High,Stilbenoid / Resveratrol Analog,curated,1,1,2,1,80.0,80.0,80.0,70.0,80.0,70.0,70.0,gold
+Bacopa Monnieri,OCC1OC(OC2CCC3(C)C4CC=C5C(CCC5(CO)CO)C4(C)CCC3C2O)C(O)C(O)C1O,Medium,Adaptogenic Herb / Bacosides,curated,2,1,0,0,80.0,90.0,70.0,60.0,90.0,70.0,90.0,gold
+Lion's Mane (Hericenone),CCCCCCCCCC(=O)Cc1cc(O)cc(O)c1C=O,Medium,Functional Mushroom / Hericenones and Erinacines,curated,2,1,1,0,70.0,70.0,60.0,80.0,90.0,100.0,80.0,gold
+Rhodiola,OCC(=O)c1ccc(O)cc1,Medium,Adaptogenic Herb / Rosavins and Salidroside,curated,1,0,1,0,80.0,80.0,80.0,50.0,70.0,60.0,70.0,gold
+Phosphatidylserine,CCCCCCCCCCCCCCCC(=O)OCC(COP(=O)(O)OCC(N)C(=O)O)OC(=O)CCCCCCCCCCCCCCC,High,Phospholipid,curated,1,1,0,0,60.0,70.0,70.0,60.0,80.0,50.0,70.0,gold
+Uridine,O=c1ccn(C2OC(CO)C(O)C2O)c(=O)[nH]1,High,Nucleoside,curated,2,1,1,0,50.0,60.0,80.0,70.0,70.0,70.0,80.0,gold
+Taurine,NCCS(=O)(=O)O,High,Amino Sulfonic Acid,curated,1,2,2,1,80.0,80.0,90.0,60.0,60.0,60.0,60.0,gold
+Kaempferol,O=c1c(O)c(-c2ccc(O)cc2)oc2cc(O)cc(O)c12,Medium,Flavonol,curated,1,1,0,0,80.0,80.0,60.0,70.0,70.0,60.0,70.0,gold
+Myricetin,O=c1c(O)c(-c2cc(O)c(O)c(O)c2)oc2cc(O)cc(O)c12,Low,Flavonol,curated,1,1,0,0,90.0,80.0,60.0,80.0,60.0,50.0,60.0,gold
+Luteolin,O=c1cc(-c2ccc(O)c(O)c2)oc2cc(O)cc(O)c12,Medium,Flavone,curated,2,1,1,0,80.0,90.0,70.0,70.0,70.0,60.0,70.0,gold
+Catechin,OC1Cc2c(O)cc(O)cc2OC1c1ccc(O)c(O)c1,Medium,Flavan-3-ol,curated,1,1,0,0,80.0,70.0,60.0,70.0,60.0,60.0,60.0,gold
+Epicatechin,OC1Cc2c(O)cc(O)cc2OC1c1ccc(O)c(O)c1,Medium,Flavan-3-ol,curated,1,1,0,0,80.0,70.0,70.0,60.0,70.0,70.0,80.0,gold
+Rutin,O=c1c(OC2OC(CO)C(O)C(O)C2O)c(-c2ccc(O)c(O)c2)oc2cc(O)cc(O)c12,Low,Flavonol Glycoside,curated,0,0,0,0,70.0,70.0,60.0,60.0,60.0,50.0,50.0,gold
+Baicalein,O=c1cc(-c2ccccc2)oc2cc(O)c(O)c(O)c12,High,Flavone / Scutellaria baicalensis,curated,2,2,1,0,80.0,90.0,70.0,80.0,70.0,60.0,70.0,gold
+Wogonin,COc1c(O)cc(O)c2c(=O)cc(-c3ccccc3)oc12,High,Flavone,curated,1,1,0,0,70.0,80.0,60.0,70.0,60.0,50.0,60.0,gold
+Daidzein,O=C1c2ccc(O)cc2OC=C1c1ccc(O)cc1,Medium,Isoflavone,curated,1,0,0,0,70.0,70.0,60.0,60.0,60.0,60.0,60.0,gold
+Genistein,O=C1c2cc(O)cc(O)c2OC(=C1O)c1ccc(O)cc1,Medium,Isoflavone,curated,1,0,0,0,70.0,80.0,60.0,70.0,70.0,60.0,60.0,gold
+Cyanidin,,Low,Anthocyanin,curated,1,1,0,0,90.0,80.0,60.0,70.0,70.0,60.0,70.0,gold
+Delphinidin,,Low,Anthocyanin,curated,1,0,0,0,90.0,80.0,60.0,70.0,60.0,50.0,60.0,gold
+Nobiletin,COc1ccc(-c2cc(=O)c3c(OC)c(OC)c(OC)c(OC)c3o2)cc1OC,High,Polymethoxylated Flavone,curated,2,1,1,0,70.0,80.0,70.0,80.0,80.0,70.0,80.0,gold
+Silymarin,COc1ccc(C2Oc3cc(O)cc(O)c3C(=O)C2c2ccc(O)c(OC)c2)cc1O,Low,Flavonolignan / Milk Thistle,curated,1,1,0,0,90.0,80.0,70.0,70.0,60.0,60.0,60.0,gold
+Galangin,O=c1c(O)c(-c2ccccc2)oc2cc(O)cc(O)c12,Medium,Flavonol,curated,1,0,0,0,70.0,70.0,60.0,70.0,60.0,50.0,60.0,gold
+Taxifolin,O=C1CC(c2ccc(O)c(O)c2)Oc2cc(O)cc(O)c21,Low,Dihydroflavonol,curated,1,0,0,0,90.0,80.0,70.0,70.0,60.0,50.0,60.0,gold
+Isorhamnetin,COc1ccc(-c2oc3cc(O)cc(O)c3c(=O)c2O)cc1O,Low,Flavonol,curated,0,0,0,0,80.0,70.0,60.0,60.0,60.0,50.0,50.0,gold
+Phloretin,O=C(CCc1ccc(O)cc1)c1c(O)cc(O)cc1O,Low,Dihydrochalcone,curated,0,0,0,0,70.0,70.0,60.0,60.0,50.0,50.0,50.0,gold
+Eriodictyol,O=C1CC(c2ccc(O)c(O)c2)Oc2cc(O)cc(O)c21,Low,Flavanone,curated,1,0,0,0,80.0,80.0,60.0,60.0,60.0,50.0,60.0,gold
+Xanthohumol,COc1cc(CC=C(C)C)cc(O)c1C(=O)/C=C/c1ccc(O)cc1,Low,Chalcone / Hops,curated,0,0,0,0,80.0,70.0,60.0,60.0,50.0,50.0,50.0,gold
+Magnesium L-Threonate,OC(C(O)C(=O)O)C(=O)O,High,Mineral Supplement,curated,2,1,1,1,60.0,70.0,70.0,60.0,90.0,70.0,100.0,gold
+Zinc,,Medium,Mineral Supplement,curated,1,0,0,0,70.0,60.0,60.0,60.0,60.0,50.0,60.0,gold
+Selenium,,High,Trace Mineral,curated,1,0,1,0,80.0,70.0,70.0,60.0,60.0,50.0,50.0,gold
+Melatonin,COc1ccc2[nH]cc(CCNC(C)=O)c2c1,High,Neurohormone / Pineal Indolamine,curated,2,2,1,1,90.0,80.0,80.0,70.0,70.0,70.0,60.0,gold
+L-Theanine,CNC(=O)CCC(N)C(=O)O,High,Non-Protein Amino Acid / Green Tea,curated,1,0,0,0,60.0,70.0,60.0,50.0,80.0,60.0,80.0,gold
+PQQ,OC(=O)c1cnc2cc(C(=O)O)c(=O)c(=O)c2c1,High,Redox Cofactor / Pyrroloquinoline Quinone,curated,2,1,1,1,90.0,70.0,100.0,70.0,80.0,80.0,70.0,gold
+Berberine,COc1ccc2c(c1OC)-c1cc3c(cc1[N+]2=CC)OCO3,Low,Isoquinoline Alkaloid / Berberis species,curated,2,1,0,0,70.0,80.0,70.0,80.0,70.0,50.0,60.0,gold
+Astaxanthin,CC1=C(/C=C/C(C)=C/C=C/C(C)=C/C=C/C=C(C)/C=C/C=C(C)/C=C/C2=C(C)C(=O)C(O)(CC2)C)C(C)(C)C(=O)C(O)C1,High,Keto-Carotenoid,curated,2,1,1,1,100.0,80.0,70.0,60.0,70.0,60.0,70.0,gold
+Spermidine,NCCCCNCCCN,High,Polyamine,curated,2,2,1,1,70.0,70.0,80.0,90.0,80.0,70.0,80.0,gold
+L-Carnitine,C[N+](C)(C)CC(O)CC([O-])=O,Medium,Amino Acid Derivative / Fatty Acid Transporter,curated,1,1,1,1,60.0,60.0,90.0,60.0,70.0,50.0,60.0,gold
+Acetyl-L-Carnitine,CC(=O)OC(CC([O-])=O)C[N+](C)(C)C,High,Amino Acid Derivative / ALCAR,curated,2,1,1,1,70.0,70.0,90.0,60.0,90.0,60.0,70.0,gold
+Lithium Orotate,OC(=O)C1=CC(=O)NC(=O)N1,High,Mineral Salt / Trace Lithium,curated,2,1,0,1,50.0,70.0,60.0,80.0,70.0,80.0,70.0,gold
+Vinpocetine,CCOC(=O)c1c(CC)nc2ccccc2c1CC1CCCCN1,High,Alkaloid Derivative / Vinca minor,curated,1,0,0,0,60.0,70.0,70.0,60.0,80.0,50.0,70.0,gold
+Phosphatidylcholine,CCCCCCCCCCCCCCCC(=O)OCC(COP(=O)([O-])OCC[N+](C)(C)C)OC(=O)CCCCCCCCCCCCCCC,Medium,Phospholipid / Membrane Component,curated,1,0,0,0,50.0,60.0,70.0,50.0,70.0,50.0,70.0,gold
+Glycine,NCC(=O)O,High,Amino Acid / Inhibitory Neurotransmitter Precursor,curated,1,0,1,0,60.0,70.0,70.0,60.0,60.0,50.0,70.0,gold
+Citicoline (CDP-Choline),C[N+](C)(C)CCOP(=O)(O)OP(=O)(O)OC[C@@H]1O[C@@H](n2ccc(=O)nc2N)[C@H](O)[C@@H]1O,High,Nucleotide / Cholinergic Nootropic,curated,2,1,0,0,60.0,70.0,80.0,60.0,90.0,60.0,80.0,gold
+Alpha-GPC,C[N+](C)(C)CCOP(=O)([O-])OCC(O)CO,High,Cholinergic Supplement / Phospholipid Precursor,curated,2,1,0,0,50.0,60.0,70.0,60.0,90.0,60.0,80.0,gold
+Huperzine A,C[C@@H]1CCNC(=C1)/C1=C\CC(=O)c2cc(=C)ccn21,High,Lycopodium Alkaloid / AChE Inhibitor,curated,2,1,0,0,70.0,70.0,60.0,70.0,90.0,70.0,80.0,gold
+Piperine,O=C(/C=C/C=C/c1ccc2c(c1)OCO2)N1CCCCC1,High,Alkaloid / Black Pepper,curated,1,1,0,0,70.0,80.0,60.0,70.0,70.0,60.0,70.0,gold
+Saffron (Crocin),COC(=O)/C=C\C=C(/C)\C=C\C=C(\C)/C=C/C=C(\C)C=CC1=C(C)CCCC1(C)C,High,Carotenoid Glycoside / Crocus sativus,curated,2,1,0,0,80.0,80.0,70.0,80.0,80.0,70.0,80.0,gold
+Beta-Hydroxybutyrate (BHB),CC(O)CC(=O)O,High,Ketone Body / Metabolic Fuel,curated,2,1,1,1,70.0,80.0,90.0,70.0,80.0,60.0,70.0,gold
+Gotu Kola (Centella),CC1(C)CCC2(C(=O)O)CCC3C(=CCC4C5(C)CCC(O)C(C)(CO)C5CCC43C)C2C1,High,Adaptogenic Herb / Triterpenoids,curated,2,1,0,0,80.0,80.0,70.0,70.0,80.0,80.0,80.0,gold
+Carnosine,NCCC(=O)NC(Cc1c[nH]cn1)C(=O)O,High,Dipeptide / Anti-Glycation Agent,curated,1,0,1,0,80.0,70.0,70.0,80.0,70.0,50.0,60.0,gold
+SAMe (S-Adenosylmethionine),C[S+](CCC(N)C(=O)O)CC1OC(n2cnc3c(N)ncnc32)C(O)C1O,High,Methyl Donor / Endogenous Metabolite,curated,1,1,0,0,60.0,70.0,70.0,60.0,70.0,60.0,60.0,gold
+Honokiol,C=CCc1ccc(O)c(-c2ccc(O)c(CC=C)c2)c1,High,Neolignan / Magnolia Bark,curated,1,1,0,0,80.0,90.0,70.0,80.0,70.0,60.0,70.0,gold
+Spermine,NCCCCNCCCNCCCCN,High,Polyamine / Endogenous,curated,1,1,1,1,70.0,70.0,80.0,80.0,70.0,70.0,70.0,gold
+Pantothenate (Vitamin B5),CC(C)(CO)C(O)C(=O)NCCC(=O)O,High,Vitamin B5 / CoA Precursor,curated,0,0,1,0,60.0,60.0,90.0,50.0,60.0,50.0,50.0,gold
+Cystine,NC(CSSC(N)C(=O)O)C(=O)O,Medium,Amino Acid Dimer / GSH Precursor,curated,0,0,1,0,80.0,60.0,60.0,50.0,50.0,40.0,40.0,gold
+Pyridoxine (Vitamin B6),Cc1ncc(CO)c(CO)c1O,High,Vitamin B6,curated,1,1,1,0,70.0,70.0,70.0,50.0,70.0,50.0,70.0,gold
+Folate (Vitamin B9),Nc1nc2ncc(CNc3ccc(CC(=O)NC(CCC(=O)O)C(=O)O)cc3)nc2c(=O)[nH]1,High,Vitamin B9 / One-Carbon Donor,curated,2,1,1,0,60.0,70.0,60.0,50.0,70.0,60.0,50.0,gold
+Glutathione (GSH),NCC(=O)NC(CS)C(=O)NCC(=O)O,Low,Endogenous Tripeptide Antioxidant,curated,1,2,1,1,100.0,80.0,80.0,70.0,60.0,50.0,60.0,gold
+L-Tyrosine,NC(Cc1ccc(O)cc1)C(=O)O,High,Essential Amino Acid / Catecholamine Precursor,curated,0,1,0,1,50.0,50.0,50.0,40.0,70.0,50.0,60.0,gold
+L-Tryptophan,NC(Cc1c[nH]c2ccccc12)C(=O)O,High,Essential Amino Acid / Serotonin Precursor,curated,1,0,0,0,60.0,60.0,50.0,40.0,70.0,60.0,60.0,gold
+5-HTP,NC(Cc1c[nH]c2ccc(O)cc12)C(=O)O,High,Serotonin Precursor / Amino Acid Derivative,curated,1,0,0,0,50.0,60.0,50.0,40.0,60.0,50.0,60.0,gold
+L-Glutamine,NC(=O)CCC(N)C(=O)O,High,Amino Acid / Glutamate Precursor,curated,0,0,1,0,60.0,60.0,70.0,40.0,60.0,50.0,50.0,gold
+L-Arginine,NC(=N)NCCCC(N)C(=O)O,Medium,Semi-Essential Amino Acid / NO Precursor,curated,0,0,0,0,60.0,60.0,60.0,40.0,60.0,50.0,60.0,gold
+L-Methionine,CSCCC(N)C(=O)O,High,Essential Amino Acid / Methyl Donor Precursor,curated,0,0,0,0,60.0,50.0,60.0,50.0,50.0,50.0,50.0,gold
+Inositol,OC1C(O)C(O)C(O)C(O)C1O,Medium,Sugar Alcohol / Phosphoinositide Precursor,curated,1,0,0,0,50.0,60.0,60.0,50.0,60.0,50.0,70.0,gold
+GABA,NCCCC(=O)O,Low,Inhibitory Neurotransmitter / Amino Acid,curated,0,0,0,0,50.0,60.0,50.0,40.0,60.0,50.0,70.0,gold
+Idebenone,COc1c(OC)c(C)c(CC/C=C(/C)CCCCCO)c(=O)c1=O,High,Synthetic CoQ10 Analog / Benzoquinone,curated,2,2,1,1,90.0,70.0,90.0,70.0,70.0,50.0,60.0,gold
+Ubiquinol,COc1c(OC)c(C)c(CC/C=C(\C)CC/C=C(\C)CC/C=C(\C)CC/C=C(\C)C)c(O)c1O,Medium,Reduced CoQ10 / Mitochondrial Antioxidant,curated,1,2,2,2,90.0,70.0,100.0,70.0,60.0,50.0,60.0,gold
+Memantine,CN(C)C1(C)CC2CC1CC2,High,NMDA Receptor Antagonist Drug (FDA-approved AD),curated,2,1,0,1,50.0,70.0,60.0,70.0,70.0,50.0,60.0,gold
+Galantamine,COc1ccc2c(c1)CC1NCC3CC(O)c4cc(OC)ccc4C3(C1)C2,High,AChE Inhibitor Drug (FDA-approved AD) / Amaryllidaceae,curated,2,1,0,0,60.0,70.0,60.0,70.0,90.0,60.0,80.0,gold
+Ursolic Acid,CC1(C)CCC2(C(=O)O)CCC3(C)C(=CCC4C5(C)CCC(O)C(C)(C)C5CCC43C)C2C1,Medium,Pentacyclic Triterpenoid / Phytochemical,curated,1,1,0,0,80.0,80.0,70.0,70.0,60.0,60.0,60.0,gold
+Caffeine,Cn1cnc2c1c(=O)n(C)c(=O)n2C,High,Methylxanthine Alkaloid / Adenosine Antagonist,curated,1,2,0,0,60.0,60.0,60.0,70.0,80.0,50.0,70.0,gold
+Oleocanthal,CCCCC/C=C\CCCCCCCC(=O)OCC(=O)c1ccc(O)cc1,High,Phenolic Aldehyde / Extra Virgin Olive Oil,curated,2,1,0,0,80.0,90.0,60.0,80.0,70.0,60.0,70.0,gold
+Palmitoylethanolamide (PEA),CCCCCCCCCCCCCCCC(=O)NCCO,High,Endogenous Fatty Acid Amide / Lipid Mediator,curated,1,1,1,0,60.0,90.0,60.0,60.0,70.0,60.0,70.0,gold
+Biotin (Vitamin B7),OC(=O)CCCCC1SCC2NC(=O)NC12,High,Vitamin B7 / Enzyme Cofactor,curated,0,0,0,0,50.0,50.0,70.0,40.0,50.0,40.0,50.0,gold
+Sesamin,C1OC2=CC3=C(C=C2O1)C(OCC1=CC2=C(C=C1)OCO2)CO3,Medium,Lignan / Sesame Seed,curated,1,1,0,0,80.0,80.0,60.0,60.0,60.0,50.0,60.0,gold
+Oleic Acid,CCCCCCCC/C=C\CCCCCCCC(=O)O,High,Monounsaturated Fatty Acid (Omega-9),curated,1,0,0,0,60.0,70.0,60.0,50.0,60.0,50.0,60.0,gold
+Donepezil,COc1cc2c(cc1OC)CC(CC(=O)Cc1ccc(OC)c(OC)c1)C2,High,AChE Inhibitor Drug — FDA-approved Alzheimer's (DrugBank DB00843),curated,2,1,0,0,50.0,70.0,50.0,80.0,90.0,50.0,80.0,gold
+Rivastigmine,CCN(C)C(=O)Oc1cccc(C(C)N(C)CC)c1,High,AChE/BuChE Inhibitor Drug — FDA-approved AD/PD Dementia (DrugBank DB00989),curated,2,2,0,0,40.0,60.0,50.0,70.0,80.0,40.0,70.0,gold
+Rasagiline,C#CN1CCC2=CC=CC=C12,High,MAO-B Inhibitor Drug — FDA-approved Parkinson's (ChEMBL CHEMBL1016),curated,0,2,0,0,60.0,60.0,70.0,80.0,70.0,60.0,60.0,gold
+Selegiline,C#CCN(C)C(C)Cc1ccccc1,High,MAO-B Inhibitor Drug — FDA-approved Parkinson's (DrugBank DB01037 / ChEMBL897),curated,1,2,0,0,60.0,60.0,70.0,70.0,70.0,50.0,60.0,gold
+Icariin,COc1ccc(C2=COc3cc(OC)cc(O)c3C2=O)cc1OC,Medium,Prenylated Flavonol Glycoside / Epimedium (ChEMBL),curated,2,1,0,0,80.0,70.0,60.0,70.0,80.0,80.0,70.0,gold
+Ferulic Acid,COc1cc(/C=C/C(=O)O)ccc1O,Medium,Hydroxycinnamic Acid Phenolic / Plant Cell Walls (ChEMBL),curated,2,1,0,0,80.0,80.0,60.0,80.0,60.0,60.0,60.0,gold
+Rosmarinic Acid,OC(/C=C/c1ccc(O)c(O)c1)C(=O)Oc1ccc(O)c(O)c1,Medium,Polyphenol Ester / Rosemary & Herbs (ChEMBL),curated,1,1,0,0,90.0,80.0,60.0,70.0,60.0,50.0,60.0,gold
+Ellagic Acid,O=c1oc2cc(O)c(O)cc2c2cc(O)c(O)cc12,Low,"Polyphenol / Pomegranate, Berries (ChEMBL)",curated,1,1,0,0,90.0,80.0,70.0,70.0,60.0,50.0,50.0,gold
+Thymoquinone,CC1=CC(=O)C(C(C)C)=CC1=O,High,Monoterpene Ketone / Nigella sativa (ChEMBL),curated,1,2,0,0,90.0,80.0,70.0,70.0,70.0,60.0,60.0,gold
+Caffeic Acid,OC(=O)/C=C/c1ccc(O)c(O)c1,Medium,"Hydroxycinnamic Acid / Coffee, Fruits (ChEMBL)",curated,1,0,0,0,80.0,70.0,60.0,60.0,60.0,50.0,60.0,gold
+Proanthocyanidin (OPC),OC1Cc2c(O)cc(O)cc2OC1c1cc(C2Cc3c(O)cc(O)cc3OC2O)ccc1O,Low,"Oligomeric Flavan-3-ol / Grape Seed, Pine Bark (ChEMBL)",curated,1,1,0,0,90.0,80.0,70.0,70.0,60.0,50.0,60.0,gold
+Mangiferin,OCC1OC(Oc2c(O)cc3oc4cc(O)cc(O)c4c(=O)c3c2O)C(O)C(O)C1O,Low,C-glucosyl Xanthone / Mango (ChEMBL),curated,1,1,0,0,80.0,80.0,70.0,70.0,70.0,60.0,60.0,gold
+Baicalin,O=c1cc(-c2ccccc2)oc2cc(OC3OC(C(=O)O)C(O)C(O)C3O)c(O)c(O)c12,Medium,Flavone Glucuronide / Scutellaria baicalensis (ChEMBL),curated,2,1,1,1,80.0,80.0,60.0,70.0,70.0,70.0,70.0,gold
+Carnosic Acid,CC(C)c1cc2cc(O)c(O)cc2c(C(=O)O)c1,High,Diterpene Phenol / Rosemary (ChEMBL),curated,1,2,0,0,90.0,80.0,70.0,70.0,70.0,70.0,60.0,gold
+Valproic Acid,CCCC(CCC)C(=O)O,High,HDAC Inhibitor Drug — FDA-approved Epilepsy/Bipolar (DrugBank DB00313),curated,1,0,1,1,50.0,70.0,50.0,70.0,60.0,70.0,60.0,gold
+Nicotinamide,NC(=O)c1cccnc1,High,Vitamin B3 Amide / NAD+ Precursor (DrugBank DB00627),curated,1,0,0,1,60.0,60.0,80.0,60.0,60.0,50.0,50.0,gold
+Ergothioneine,,High,Thiol Amino Acid Antioxidant / Mushrooms (ChEMBL),curated,1,1,1,0,90.0,70.0,70.0,70.0,60.0,50.0,50.0,gold
+Naringin,O=C1CC(c2ccc(OC3OC(CO)C(O)C(O)C3OC3OC(C)C(O)C(O)C3O)cc2)Oc2cc(O)cc(O)c21,Low,Flavanone Glycoside / Citrus peel (ChEMBL),curated,1,1,0,0,70.0,70.0,60.0,60.0,60.0,60.0,60.0,gold
+Hesperidin,COc1ccc(C2CC(=O)c3c(O)cc(OC4OC(CO)C(O)C(O)C4OC4OC(C)C(O)C(O)C4O)cc3O2)cc1O,Low,Flavanone Glycoside / Citrus peel (DrugBank DB13745),curated,1,0,0,0,70.0,70.0,60.0,60.0,70.0,50.0,60.0,gold
+Chrysin,O=c1cc(-c2ccccc2)oc2cc(O)cc(O)c12,Medium,"Flavone / Honey, Propolis (ChEMBL)",curated,1,1,0,0,70.0,70.0,60.0,60.0,60.0,60.0,60.0,gold
+Aspirin,CC(=O)Oc1ccccc1C(=O)O,Moderate,NSAID / Salicylate,curated,0,0,0,0,20.0,50.0,20.0,30.0,30.0,20.0,20.0,gold
+Levodopa,NC(Cc1ccc(O)c(O)c1)C(=O)O,High,FDA-Approved Drug,curated,0,2,0,0,50.0,40.0,50.0,40.0,60.0,40.0,60.0,gold
+Riluzole,Nc1nc2cc(OC(F)(F)F)ccc2s1,High,FDA-Approved Drug,curated,0,0,2,0,60.0,70.0,60.0,50.0,50.0,40.0,50.0,gold
+Edaravone,Cc1cc(=O)[nH]n1-c1ccccc1,Medium,FDA-Approved Drug,curated,0,0,2,0,90.0,70.0,70.0,50.0,50.0,40.0,40.0,gold
+Tetrabenazine,COc1ccc2c(c1OC)CC(=O)CC2C1CCN(C)CC1,High,FDA-Approved Drug,curated,0,0,0,2,30.0,40.0,40.0,50.0,50.0,30.0,40.0,gold
+Deutetrabenazine,COc1ccc2c(c1OC)CC(=O)CC2C1CC[N](C)CC1,High,FDA-Approved Drug,curated,0,0,0,2,30.0,40.0,40.0,50.0,50.0,30.0,40.0,gold

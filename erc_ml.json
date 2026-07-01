@@ -1,0 +1,188 @@
+{
+  "BROMOCRIPTINE": {
+    "enzymes": [
+      {
+        "name": "D(3) dopamine receptor",
+        "action": "Inhibition",
+        "strength": "Strong",
+        "ec": "",
+        "note": "Inhibition; Ki=0.2 nM (pChEMBL=9.7) \u2014 ChEMBL bioassay, Homo sapiens.",
+        "source": "ChEMBL bioactivity (Mendez et al., 2019)"
+      },
+      {
+        "name": "D(2) dopamine receptor",
+        "action": "Inhibition",
+        "strength": "Strong",
+        "ec": "",
+        "note": "Inhibition; Ki=0.5 nM (pChEMBL=9.3) \u2014 ChEMBL bioassay, Homo sapiens.",
+        "source": "ChEMBL bioactivity (Mendez et al., 2019)"
+      }
+    ],
+    "transporters": [],
+    "cofactors": [],
+    "sources": [
+      "ChEMBL bioactivity database (Mendez D et al. 2019. Nucleic Acids Res 47:D930\u2013D940)",
+      "ML-predicted 7-dimension scores (BrainSafe AI Random Forest, trained on 129 curated compounds)"
+    ]
+  },
+  "BREXPIPRAZOLE": {
+    "enzymes": [
+      {
+        "name": "D(2) dopamine receptor",
+        "action": "Inhibition",
+        "strength": "Strong",
+        "ec": "",
+        "note": "Inhibition; Ki=0.2 nM (pChEMBL=9.7) \u2014 ChEMBL bioassay, Homo sapiens.",
+        "source": "ChEMBL bioactivity (Mendez et al., 2019)"
+      }
+    ],
+    "transporters": [],
+    "cofactors": [],
+    "sources": [
+      "ChEMBL bioactivity database (Mendez D et al. 2019. Nucleic Acids Res 47:D930\u2013D940)",
+      "ML-predicted 7-dimension scores (BrainSafe AI Random Forest, trained on 129 curated compounds)"
+    ]
+  },
+  "FLORBETAPIR F 18": {
+    "enzymes": [
+      {
+        "name": "Amyloid-beta precursor protein",
+        "action": "Inhibition",
+        "strength": "Strong",
+        "ec": "",
+        "note": "Inhibition; Ki=2.9 nM (pChEMBL=8.5) \u2014 ChEMBL bioassay, Homo sapiens.",
+        "source": "ChEMBL bioactivity (Mendez et al., 2019)"
+      }
+    ],
+    "transporters": [],
+    "cofactors": [],
+    "sources": [
+      "ChEMBL bioactivity database (Mendez D et al. 2019. Nucleic Acids Res 47:D930\u2013D940)",
+      "ML-predicted 7-dimension scores (BrainSafe AI Random Forest, trained on 129 curated compounds)"
+    ]
+  },
+  "PALIPERIDONE": {
+    "enzymes": [
+      {
+        "name": "D(2) dopamine receptor",
+        "action": "Inhibition",
+        "strength": "Strong",
+        "ec": "",
+        "note": "Inhibition; Ki=1.6 nM (pChEMBL=8.8) \u2014 ChEMBL bioassay, Homo sapiens.",
+        "source": "ChEMBL bioactivity (Mendez et al., 2019)"
+      },
+      {
+        "name": "D(3) dopamine receptor",
+        "action": "Inhibition",
+        "strength": "Strong",
+        "ec": "",
+        "note": "Inhibition; Ki=7.5 nM (pChEMBL=8.1) \u2014 ChEMBL bioassay, Homo sapiens.",
+        "source": "ChEMBL bioactivity (Mendez et al., 2019)"
+      }
+    ],
+    "transporters": [],
+    "cofactors": [],
+    "sources": [
+      "ChEMBL bioactivity database (Mendez D et al. 2019. Nucleic Acids Res 47:D930\u2013D940)",
+      "ML-predicted 7-dimension scores (BrainSafe AI Random Forest, trained on 129 curated compounds)"
+    ]
+  },
+  "TIAPRIDE": {
+    "enzymes": [
+      {
+        "name": "D(3) dopamine receptor",
+        "action": "Inhibition",
+        "strength": "Moderate",
+        "ec": "",
+        "note": "Inhibition; Ki=390.0 nM (pChEMBL=6.4) \u2014 ChEMBL bioassay, Homo sapiens.",
+        "source": "ChEMBL bioactivity (Mendez et al., 2019)"
+      },
+      {
+        "name": "D(2) dopamine receptor",
+        "action": "Inhibition",
+        "strength": "Moderate",
+        "ec": "",
+        "note": "Inhibition; Ki=411.0 nM (pChEMBL=6.4) \u2014 ChEMBL bioassay, Homo sapiens.",
+        "source": "ChEMBL bioactivity (Mendez et al., 2019)"
+      }
+    ],
+    "transporters": [],
+    "cofactors": [],
+    "sources": [
+      "ChEMBL bioactivity database (Mendez D et al. 2019. Nucleic Acids Res 47:D930\u2013D940)",
+      "ML-predicted 7-dimension scores (BrainSafe AI Random Forest, trained on 129 curated compounds)"
+    ]
+  },
+  "BENPERIDOL": {
+    "enzymes": [
+      {
+        "name": "D(2) dopamine receptor",
+        "action": "Inhibition",
+        "strength": "Strong",
+        "ec": "",
+        "note": "Inhibition; Ki=0.0 nM (pChEMBL=10.6) \u2014 ChEMBL bioassay, Homo sapiens.",
+        "source": "ChEMBL bioactivity (Mendez et al., 2019)"
+      },
+      {
+        "name": "D(4) dopamine receptor",
+        "action": "Inhibition",
+        "strength": "Strong",
+        "ec": "",
+        "note": "Inhibition; Ki=0.1 nM (pChEMBL=10.2) \u2014 ChEMBL bioassay, Homo sapiens.",
+        "source": "ChEMBL bioactivity (Mendez et al., 2019)"
+      },
+      {
+        "name": "D(3) dopamine receptor",
+        "action": "Inhibition",
+        "strength": "Strong",
+        "ec": "",
+        "note": "Inhibition; Ki=0.3 nM (pChEMBL=9.5) \u2014 ChEMBL bioassay, Homo sapiens.",
+        "source": "ChEMBL bioactivity (Mendez et al., 2019)"
+      }
+    ],
+    "transporters": [],
+    "cofactors": [],
+    "sources": [
+      "ChEMBL bioactivity database (Mendez D et al. 2019. Nucleic Acids Res 47:D930\u2013D940)",
+      "ML-predicted 7-dimension scores (BrainSafe AI Random Forest, trained on 129 curated compounds)"
+    ]
+  },
+  "HYDRALAZINE HYDROCHLORIDE": {
+    "enzymes": [
+      {
+        "name": "Acetylcholinesterase",
+        "action": "Inhibition",
+        "strength": "Weak",
+        "ec": "EC 3.1.1.7",
+        "note": "Inhibition; Ki=7000.0 nM (pChEMBL=5.2) \u2014 ChEMBL bioassay, Homo sapiens.",
+        "source": "ChEMBL bioactivity (Mendez et al., 2019)"
+      }
+    ],
+    "transporters": [],
+    "cofactors": [
+      "Choline"
+    ],
+    "sources": [
+      "ChEMBL bioactivity database (Mendez D et al. 2019. Nucleic Acids Res 47:D930\u2013D940)",
+      "ML-predicted 7-dimension scores (BrainSafe AI Random Forest, trained on 129 curated compounds)"
+    ]
+  },
+  "PERPHENAZINE": {
+    "enzymes": [
+      {
+        "name": "D(2) dopamine receptor",
+        "action": "Inhibition",
+        "strength": "Strong",
+        "ec": "",
+        "note": "Inhibition; IC50=0.3 nM (pChEMBL=9.5) \u2014 ChEMBL bioassay, Homo sapiens.",
+        "source": "ChEMBL bioactivity (Mendez et al., 2019)"
+      }
+    ],
+    "transporters": [],
+    "cofactors": [],
+    "sources": [
+      "ChEMBL bioactivity database (Mendez D et al. 2019. Nucleic Acids Res 47:D930\u2013D940)",
+      "ML-predicted 7-dimension scores (BrainSafe AI Random Forest, trained on 129 curated compounds)"
+    ]
+  }
+}

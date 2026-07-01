@@ -1,0 +1,374 @@
+{
+  "A2A": {
+    "n": 5547,
+    "auroc_scaffold_cv": 0.951,
+    "auroc_strict_cluster_split": 0.964,
+    "cluster_split_median_tanimoto": 0.689,
+    "n_clusters": 1277,
+    "similarity_binned_auroc": {
+      "T[0.0-0.4)": {
+        "n": 180,
+        "auroc": 0.836
+      },
+      "T[0.4-0.6)": {
+        "n": 950,
+        "auroc": 0.893
+      },
+      "T[0.6-0.8)": {
+        "n": 3399,
+        "auroc": 0.965
+      },
+      "T[0.8-1.0)": {
+        "n": 1018,
+        "auroc": 0.958
+      }
+    },
+    "conformal": {
+      "target_coverage": 0.9,
+      "empirical_coverage": 0.894,
+      "mean_set_size": 1.07,
+      "frac_singletons": 0.927
+    }
+  },
+  "AChE": {
+    "n": 4324,
+    "auroc_scaffold_cv": 0.915,
+    "auroc_strict_cluster_split": 0.912,
+    "cluster_split_median_tanimoto": 0.612,
+    "n_clusters": 1352,
+    "similarity_binned_auroc": {
+      "T[0.0-0.4)": {
+        "n": 538,
+        "auroc": 0.687
+      },
+      "T[0.4-0.6)": {
+        "n": 1044,
+        "auroc": 0.827
+      },
+      "T[0.6-0.8)": {
+        "n": 1569,
+        "auroc": 0.94
+      },
+      "T[0.8-1.0)": {
+        "n": 1173,
+        "auroc": 0.974
+      }
+    },
+    "conformal": {
+      "target_coverage": 0.9,
+      "empirical_coverage": 0.899,
+      "mean_set_size": 1.17,
+      "frac_singletons": 0.829
+    }
+  },
+  "BACE1": {
+    "n": 8067,
+    "auroc_scaffold_cv": 0.95,
+    "auroc_strict_cluster_split": 0.94,
+    "cluster_split_median_tanimoto": 0.723,
+    "n_clusters": 1509,
+    "similarity_binned_auroc": {
+      "T[0.0-0.4)": {
+        "n": 218,
+        "auroc": 0.652
+      },
+      "T[0.4-0.6)": {
+        "n": 1043,
+        "auroc": 0.919
+      },
+      "T[0.6-0.8)": {
+        "n": 5244,
+        "auroc": 0.937
+      },
+      "T[0.8-1.0)": {
+        "n": 1562,
+        "auroc": 0.966
+      }
+    },
+    "conformal": {
+      "target_coverage": 0.9,
+      "empirical_coverage": 0.902,
+      "mean_set_size": 1.07,
+      "frac_singletons": 0.931
+    }
+  },
+  "BBB": {
+    "n": 7805,
+    "auroc_scaffold_cv": 0.921,
+    "auroc_strict_cluster_split": 0.906,
+    "cluster_split_median_tanimoto": 0.5,
+    "n_clusters": 2793,
+    "similarity_binned_auroc": {
+      "T[0.0-0.4)": {
+        "n": 2587,
+        "auroc": 0.846
+      },
+      "T[0.4-0.6)": {
+        "n": 2851,
+        "auroc": 0.918
+      },
+      "T[0.6-0.8)": {
+        "n": 1953,
+        "auroc": 0.968
+      },
+      "T[0.8-1.0)": {
+        "n": 414,
+        "auroc": 0.951
+      }
+    },
+    "conformal": {
+      "target_coverage": 0.9,
+      "empirical_coverage": 0.897,
+      "mean_set_size": 1.14,
+      "frac_singletons": 0.862
+    }
+  },
+  "BChE": {
+    "n": 2580,
+    "auroc_scaffold_cv": 0.937,
+    "auroc_strict_cluster_split": 0.921,
+    "cluster_split_median_tanimoto": 0.627,
+    "n_clusters": 756,
+    "similarity_binned_auroc": {
+      "T[0.0-0.4)": {
+        "n": 250,
+        "auroc": 0.6
+      },
+      "T[0.4-0.6)": {
+        "n": 485,
+        "auroc": 0.842
+      },
+      "T[0.6-0.8)": {
+        "n": 986,
+        "auroc": 0.949
+      },
+      "T[0.8-1.0)": {
+        "n": 859,
+        "auroc": 0.986
+      }
+    },
+    "conformal": {
+      "target_coverage": 0.9,
+      "empirical_coverage": 0.899,
+      "mean_set_size": 1.09,
+      "frac_singletons": 0.912
+    }
+  },
+  "D2": {
+    "n": 7511,
+    "auroc_scaffold_cv": 0.883,
+    "auroc_strict_cluster_split": 0.908,
+    "cluster_split_median_tanimoto": 0.672,
+    "n_clusters": 1761,
+    "similarity_binned_auroc": {
+      "T[0.0-0.4)": {
+        "n": 281,
+        "auroc": 0.577
+      },
+      "T[0.4-0.6)": {
+        "n": 1568,
+        "auroc": 0.809
+      },
+      "T[0.6-0.8)": {
+        "n": 3880,
+        "auroc": 0.885
+      },
+      "T[0.8-1.0)": {
+        "n": 1782,
+        "auroc": 0.935
+      }
+    },
+    "conformal": {
+      "target_coverage": 0.9,
+      "empirical_coverage": 0.894,
+      "mean_set_size": 1.22,
+      "frac_singletons": 0.779
+    }
+  },
+  "GSK3B": {
+    "n": 4044,
+    "auroc_scaffold_cv": 0.92,
+    "auroc_strict_cluster_split": 0.915,
+    "cluster_split_median_tanimoto": 0.679,
+    "n_clusters": 1210,
+    "similarity_binned_auroc": {
+      "T[0.0-0.4)": {
+        "n": 576,
+        "auroc": 0.814
+      },
+      "T[0.4-0.6)": {
+        "n": 968,
+        "auroc": 0.865
+      },
+      "T[0.6-0.8)": {
+        "n": 1954,
+        "auroc": 0.95
+      },
+      "T[0.8-1.0)": {
+        "n": 546,
+        "auroc": 0.986
+      }
+    },
+    "conformal": {
+      "target_coverage": 0.9,
+      "empirical_coverage": 0.885,
+      "mean_set_size": 1.16,
+      "frac_singletons": 0.845
+    }
+  },
+  "HT2A": {
+    "n": 5256,
+    "auroc_scaffold_cv": 0.921,
+    "auroc_strict_cluster_split": 0.876,
+    "cluster_split_median_tanimoto": 0.656,
+    "n_clusters": 1358,
+    "similarity_binned_auroc": {
+      "T[0.0-0.4)": {
+        "n": 469,
+        "auroc": 0.821
+      },
+      "T[0.4-0.6)": {
+        "n": 1260,
+        "auroc": 0.787
+      },
+      "T[0.6-0.8)": {
+        "n": 2341,
+        "auroc": 0.966
+      },
+      "T[0.8-1.0)": {
+        "n": 1186,
+        "auroc": 0.976
+      }
+    },
+    "conformal": {
+      "target_coverage": 0.9,
+      "empirical_coverage": 0.898,
+      "mean_set_size": 1.1,
+      "frac_singletons": 0.898
+    }
+  },
+  "MAO_A": {
+    "n": 2141,
+    "auroc_scaffold_cv": 0.867,
+    "auroc_strict_cluster_split": 0.89,
+    "cluster_split_median_tanimoto": 0.591,
+    "n_clusters": 866,
+    "similarity_binned_auroc": {
+      "T[0.0-0.4)": {
+        "n": 376,
+        "auroc": 0.63
+      },
+      "T[0.4-0.6)": {
+        "n": 817,
+        "auroc": 0.851
+      },
+      "T[0.6-0.8)": {
+        "n": 705,
+        "auroc": 0.916
+      },
+      "T[0.8-1.0)": {
+        "n": 243,
+        "auroc": 0.948
+      }
+    },
+    "conformal": {
+      "target_coverage": 0.9,
+      "empirical_coverage": 0.905,
+      "mean_set_size": 1.3,
+      "frac_singletons": 0.696
+    }
+  },
+  "MAO_B": {
+    "n": 3455,
+    "auroc_scaffold_cv": 0.885,
+    "auroc_strict_cluster_split": 0.873,
+    "cluster_split_median_tanimoto": 0.62,
+    "n_clusters": 1181,
+    "similarity_binned_auroc": {
+      "T[0.0-0.4)": {
+        "n": 450,
+        "auroc": 0.755
+      },
+      "T[0.4-0.6)": {
+        "n": 1345,
+        "auroc": 0.831
+      },
+      "T[0.6-0.8)": {
+        "n": 1172,
+        "auroc": 0.91
+      },
+      "T[0.8-1.0)": {
+        "n": 488,
+        "auroc": 0.983
+      }
+    },
+    "conformal": {
+      "target_coverage": 0.9,
+      "empirical_coverage": 0.895,
+      "mean_set_size": 1.24,
+      "frac_singletons": 0.763
+    }
+  },
+  "SERT": {
+    "n": 4471,
+    "auroc_scaffold_cv": 0.926,
+    "auroc_strict_cluster_split": 0.959,
+    "cluster_split_median_tanimoto": 0.651,
+    "n_clusters": 1184,
+    "similarity_binned_auroc": {
+      "T[0.0-0.4)": {
+        "n": 354,
+        "auroc": 0.768
+      },
+      "T[0.4-0.6)": {
+        "n": 1318,
+        "auroc": 0.927
+      },
+      "T[0.6-0.8)": {
+        "n": 2126,
+        "auroc": 0.939
+      },
+      "T[0.8-1.0)": {
+        "n": 673,
+        "auroc": 0.857
+      }
+    },
+    "conformal": {
+      "target_coverage": 0.9,
+      "empirical_coverage": 0.898,
+      "mean_set_size": 1.15,
+      "frac_singletons": 0.848
+    }
+  },
+  "hERG": {
+    "n": 5905,
+    "auroc_scaffold_cv": 0.901,
+    "auroc_strict_cluster_split": 0.87,
+    "cluster_split_median_tanimoto": 0.571,
+    "n_clusters": 2364,
+    "similarity_binned_auroc": {
+      "T[0.0-0.4)": {
+        "n": 1222,
+        "auroc": 0.748
+      },
+      "T[0.4-0.6)": {
+        "n": 1643,
+        "auroc": 0.862
+      },
+      "T[0.6-0.8)": {
+        "n": 2539,
+        "auroc": 0.946
+      },
+      "T[0.8-1.0)": {
+        "n": 501,
+        "auroc": 0.975
+      }
+    },
+    "conformal": {
+      "target_coverage": 0.9,
+      "empirical_coverage": 0.896,
+      "mean_set_size": 1.19,
+      "frac_singletons": 0.808
+    }
+  }
+}

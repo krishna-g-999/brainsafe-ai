@@ -1,0 +1,192 @@
+name,smiles,bbb,compound_type,data_source,ad_target_count,pd_target_count,als_target_count,hd_target_count,antioxidant,anti_inflammatory,mitochondrial_support,aggregation_modulation,cognitive_enhancement,neurogenesis,synaptic_plasticity,tier
+HALOPERIDOL,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,0,0,2,60.0,60.0,48.0,48.0,52.0,36.0,41.0,silver
+ROLIPRAM,,High,Clinical Candidate,chembl_ml_predicted,0,0,0,2,58.0,58.0,57.0,57.0,54.0,45.0,48.0,silver
+RISPERIDONE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,0,2,63.0,60.0,57.0,56.0,55.0,43.0,48.0,silver
+FENOFIBRATE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,0,0,2,56.0,60.0,46.0,47.0,50.0,35.0,42.0,silver
+OLANZAPINE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,0,2,60.0,62.0,59.0,53.0,51.0,46.0,51.0,silver
+BIOTIN,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,0,2,54.0,61.0,51.0,58.0,52.0,35.0,42.0,silver
+EPIGALOCATECHIN GALLATE,,Low,Clinical Candidate,chembl_ml_predicted,0,0,0,2,59.0,59.0,51.0,53.0,52.0,36.0,42.0,silver
+BUPROPION,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,0,2,56.0,61.0,46.0,52.0,48.0,37.0,42.0,silver
+LAQUINIMOD,,Medium,Clinical Candidate,chembl_ml_predicted,0,0,0,2,57.0,59.0,48.0,51.0,49.0,37.0,41.0,silver
+CANNABINOL,,Low-Med,Clinical Candidate,chembl_ml_predicted,0,0,0,2,56.0,56.0,48.0,51.0,49.0,34.0,41.0,silver
+NEFLAMAPIMOD,,Low-Med,Clinical Candidate,chembl_ml_predicted,0,0,0,2,63.0,61.0,56.0,52.0,56.0,45.0,51.0,silver
+CANNABIDIOL,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,0,0,2,64.0,59.0,58.0,55.0,54.0,45.0,47.0,silver
+MINOCYCLINE,,Low,FDA-Approved Drug,chembl_ml_predicted,0,0,0,2,60.0,57.0,50.0,52.0,50.0,36.0,40.0,silver
+SRX246,,Low,Clinical Candidate,chembl_ml_predicted,0,0,0,2,57.0,56.0,47.0,57.0,51.0,35.0,41.0,silver
+NILOTINIB,,Low,FDA-Approved Drug,chembl_ml_predicted,0,0,0,2,56.0,58.0,47.0,53.0,53.0,36.0,43.0,silver
+URSODIOL,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,0,0,2,55.0,60.0,48.0,55.0,51.0,36.0,41.0,silver
+UBIDECARENONE,,Low,Clinical Candidate,chembl_ml_predicted,0,0,0,2,63.0,60.0,56.0,59.0,54.0,44.0,49.0,silver
+SERTRALINE HYDROCHLORIDE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,0,0,2,64.0,60.0,58.0,55.0,56.0,45.0,49.0,silver
+MARDEPODECT,,Low-Med,Clinical Candidate,chembl_ml_predicted,0,0,0,2,61.0,57.0,56.0,56.0,52.0,46.0,50.0,silver
+SODIUM PHENYLBUTYRATE,,High,FDA-Approved Drug,chembl_ml_predicted,0,0,0,2,49.0,56.0,49.0,51.0,53.0,37.0,43.0,silver
+LATREPIRDINE,,Medium,Clinical Candidate,chembl_ml_predicted,0,0,0,2,65.0,60.0,58.0,57.0,54.0,48.0,49.0,silver
+PRIDOPIDINE,,High,Clinical Candidate,chembl_ml_predicted,0,0,0,2,57.0,55.0,57.0,53.0,55.0,43.0,49.0,silver
+TIAPRIDE HYDROCHLORIDE,,Medium,Clinical Candidate,chembl_ml_predicted,0,0,0,2,59.0,57.0,48.0,53.0,50.0,34.0,40.0,silver
+DIVALPROEX SODIUM,,High,FDA-Approved Drug,chembl_ml_predicted,0,0,0,2,46.0,56.0,48.0,52.0,53.0,36.0,43.0,silver
+BEVANTOLOL HYDROCHLORIDE,,Medium,Clinical Candidate,chembl_ml_predicted,0,0,0,2,64.0,63.0,58.0,57.0,52.0,45.0,49.0,silver
+VALBENAZINE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,0,2,57.0,60.0,48.0,57.0,50.0,36.0,40.0,silver
+MAVOGLURANT,,High,Clinical Candidate,chembl_ml_predicted,0,0,0,2,56.0,59.0,48.0,55.0,51.0,35.0,40.0,silver
+PBF-999,,Low-Med,Clinical Candidate,chembl_ml_predicted,0,0,0,2,63.0,58.0,56.0,52.0,54.0,47.0,49.0,silver
+BRANAPLAM,,Low-Med,Clinical Candidate,chembl_ml_predicted,0,0,0,2,66.0,60.0,58.0,54.0,50.0,42.0,49.0,silver
+GSK-356278,,Low-Med,Clinical Candidate,chembl_ml_predicted,0,0,0,2,60.0,60.0,51.0,58.0,51.0,37.0,41.0,silver
+TRIHEPTANOIN,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,0,0,2,57.0,62.0,48.0,55.0,51.0,36.0,42.0,silver
+CIMETIDINE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,66.0,59.0,71.0,50.0,57.0,48.0,51.0,silver
+MOXIFLOXACIN,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,59.0,61.0,74.0,57.0,51.0,37.0,41.0,silver
+PYRIMETHAMINE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,61.0,63.0,76.0,47.0,50.0,38.0,42.0,silver
+DRONABINOL,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,65.0,65.0,76.0,55.0,51.0,38.0,41.0,silver
+COLCHICINE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,60.0,61.0,71.0,50.0,54.0,38.0,42.0,silver
+CELECOXIB,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,74.0,64.0,78.0,55.0,55.0,46.0,50.0,silver
+ACETYLCYSTEINE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,0,0,2,58.0,61.0,48.0,52.0,51.0,35.0,41.0,silver
+IBUDILAST,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,62.0,63.0,74.0,52.0,50.0,38.0,42.0,silver
+EZOGABINE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,59.0,59.0,73.0,52.0,52.0,37.0,43.0,silver
+DEXTROMETHORPHAN,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,67.0,62.0,74.0,54.0,55.0,45.0,51.0,silver
+RITONAVIR,,Low,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,62.0,60.0,74.0,54.0,54.0,37.0,43.0,silver
+CAPSAICIN,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,60.0,64.0,74.0,55.0,49.0,37.0,40.0,silver
+CREATININE,,Low-Med,Clinical Candidate,chembl_ml_predicted,0,0,2,0,73.0,67.0,74.0,56.0,54.0,47.0,48.0,silver
+DEFERIPRONE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,67.0,66.0,72.0,49.0,53.0,46.0,52.0,silver
+ISTRADEFYLLINE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,69.0,64.0,71.0,57.0,52.0,49.0,48.0,silver
+INOSINE,,Low,Clinical Candidate,chembl_ml_predicted,0,0,2,0,70.0,60.0,76.0,51.0,53.0,43.0,48.0,silver
+ATROPINE,,High,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,61.0,59.0,73.0,57.0,51.0,39.0,41.0,silver
+DUTASTERIDE,,Low,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,63.0,64.0,76.0,53.0,53.0,37.0,42.0,silver
+DEXTROSE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,72.0,65.0,75.0,52.0,54.0,45.0,48.0,silver
+DOLUTEGRAVIR,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,62.0,62.0,75.0,55.0,50.0,37.0,40.0,silver
+LEVOSIMENDAN,,Low-Med,Clinical Candidate,chembl_ml_predicted,0,0,2,0,69.0,59.0,77.0,52.0,54.0,46.0,49.0,silver
+TRAMETINIB,,Low,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,59.0,61.0,69.0,56.0,53.0,37.0,41.0,silver
+DEXPRAMIPEXOLE DIHYDROCHLORIDE,,Medium,Clinical Candidate,chembl_ml_predicted,0,0,2,0,73.0,65.0,74.0,52.0,54.0,44.0,48.0,silver
+QUINIDINE SULFATE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,65.0,58.0,75.0,56.0,54.0,46.0,53.0,silver
+VOTOPLAM,,Low-Med,Clinical Candidate,chembl_ml_predicted,0,0,0,2,61.0,63.0,57.0,57.0,53.0,47.0,53.0,silver
+DALZANEMDOR,,Low-Med,Clinical Candidate,chembl_ml_predicted,0,0,0,2,66.0,62.0,60.0,56.0,56.0,44.0,49.0,silver
+BRANAPLAM HYDROCHLORIDE,,Low-Med,Clinical Candidate,chembl_ml_predicted,0,0,0,2,66.0,60.0,58.0,54.0,50.0,42.0,49.0,silver
+CIPROFLOXACIN,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,63.0,63.0,77.0,56.0,53.0,38.0,41.0,silver
+VALPROATE SODIUM,,High,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,57.0,60.0,74.0,52.0,52.0,37.0,42.0,silver
+TRETINOIN,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,63.0,61.0,77.0,59.0,51.0,37.0,41.0,silver
+THALIDOMIDE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,72.0,67.0,74.0,52.0,54.0,45.0,48.0,silver
+SERINE,,Low-Med,Clinical Candidate,chembl_ml_predicted,0,0,2,0,63.0,64.0,73.0,51.0,51.0,38.0,41.0,silver
+PREDNISONE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,61.0,63.0,76.0,56.0,50.0,37.0,41.0,silver
+METHYLPREDNISOLONE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,63.0,62.0,77.0,50.0,49.0,37.0,41.0,silver
+DEXMEDETOMIDINE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,70.0,61.0,73.0,55.0,56.0,47.0,50.0,silver
+FASUDIL,,Medium,Clinical Candidate,chembl_ml_predicted,0,0,2,0,65.0,64.0,72.0,51.0,52.0,36.0,43.0,silver
+ENOXACIN,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,66.0,64.0,78.0,54.0,53.0,37.0,40.0,silver
+CLENBUTEROL,,Medium,Clinical Candidate,chembl_ml_predicted,0,0,2,0,72.0,64.0,71.0,52.0,56.0,46.0,52.0,silver
+LACOSAMIDE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,64.0,65.0,73.0,58.0,54.0,37.0,42.0,silver
+PRAMIPEXOLE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,73.0,65.0,75.0,52.0,54.0,44.0,47.0,silver
+ALEPLASININ,,Low-Med,Clinical Candidate,chembl_ml_predicted,2,0,0,0,70.0,73.0,65.0,59.0,80.0,55.0,67.0,silver
+POZANICLINE,,High,Clinical Candidate,chembl_ml_predicted,2,0,0,0,72.0,71.0,64.0,54.0,80.0,56.0,70.0,silver
+QUINIDINE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,66.0,61.0,74.0,56.0,54.0,47.0,53.0,silver
+SARACATINIB,,Low,Clinical Candidate,chembl_ml_predicted,2,0,0,0,72.0,75.0,63.0,58.0,79.0,56.0,68.0,silver
+PIMOZIDE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,61.0,62.0,70.0,55.0,53.0,38.0,41.0,silver
+MYCOPHENOLATE MOFETIL,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,62.0,62.0,73.0,56.0,51.0,36.0,40.0,silver
+SEMAGACESTAT,,Low-Med,Clinical Candidate,chembl_ml_predicted,2,0,0,0,71.0,73.0,63.0,65.0,78.0,56.0,68.0,silver
+MEMANTINE HYDROCHLORIDE,,High,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,69.0,63.0,74.0,56.0,54.0,45.0,47.0,silver
+PIOGLITAZONE HYDROCHLORIDE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,66.0,59.0,74.0,55.0,57.0,46.0,53.0,silver
+AVAGACESTAT,,Low,Clinical Candidate,chembl_ml_predicted,2,0,0,0,71.0,74.0,65.0,58.0,79.0,58.0,75.0,silver
+SUVOREXANT,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,72.0,71.0,67.0,58.0,81.0,55.0,74.0,silver
+CARBIDOPA,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,63.0,63.0,71.0,53.0,49.0,38.0,41.0,silver
+DEXTROMETHORPHAN HYDROBROMIDE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,67.0,62.0,74.0,54.0,55.0,45.0,51.0,silver
+FLORBETAPIR F 18,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,73.0,75.0,62.0,62.0,79.0,56.0,70.0,silver
+VELUSETRAG,,Low,Clinical Candidate,chembl_ml_predicted,2,0,0,0,73.0,70.0,66.0,58.0,80.0,57.0,69.0,silver
+ICOSAPENT ETHYL,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,70.0,69.0,64.0,58.0,75.0,62.0,68.0,silver
+UDENAFIL,,Low,Clinical Candidate,chembl_ml_predicted,2,0,0,0,75.0,74.0,62.0,63.0,78.0,58.0,71.0,silver
+CERLAPIRDINE,,Medium,Clinical Candidate,chembl_ml_predicted,2,0,0,0,73.0,72.0,66.0,53.0,82.0,59.0,72.0,silver
+PRAMIPEXOLE DIHYDROCHLORIDE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,0,2,0,73.0,65.0,74.0,52.0,54.0,44.0,48.0,silver
+GEMFIBROZIL,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,67.0,72.0,63.0,58.0,80.0,55.0,71.0,silver
+ADENOSINE,,Low,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,72.0,60.0,61.0,56.0,57.0,45.0,50.0,silver
+IDAZOXAN,,Medium,Clinical Candidate,chembl_ml_predicted,2,0,0,0,75.0,72.0,63.0,58.0,79.0,57.0,70.0,silver
+BROMOCRIPTINE,,Low,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,75.0,74.0,66.0,60.0,81.0,57.0,71.0,silver
+FLUCONAZOLE,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,67.0,68.0,63.0,54.0,79.0,57.0,71.0,silver
+ISOTRETINOIN,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,73.0,72.0,66.0,61.0,80.0,59.0,71.0,silver
+LORAZEPAM,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,71.0,70.0,67.0,53.0,79.0,60.0,66.0,silver
+ROPINIROLE,,High,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,60.0,60.0,54.0,60.0,54.0,40.0,43.0,silver
+ESTRADIOL,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,74.0,70.0,65.0,62.0,79.0,55.0,65.0,silver
+LAMIVUDINE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,73.0,69.0,65.0,59.0,82.0,59.0,76.0,silver
+MEDROXYPROGESTERONE ACETATE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,68.0,68.0,66.0,60.0,78.0,58.0,67.0,silver
+"LIPOIC ACID, ALPHA",,High,Clinical Candidate,chembl_ml_predicted,2,0,0,0,67.0,68.0,64.0,57.0,80.0,54.0,71.0,silver
+ITRACONAZOLE,,Low,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,69.0,72.0,62.0,50.0,80.0,59.0,71.0,silver
+ACITRETIN,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,70.0,69.0,65.0,62.0,78.0,55.0,66.0,silver
+LEVETIRACETAM,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,69.0,70.0,63.0,55.0,78.0,57.0,69.0,silver
+RIFAMPIN,,Low,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,72.0,73.0,64.0,56.0,77.0,56.0,66.0,silver
+ATORVASTATIN CALCIUM,,Low,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,72.0,70.0,66.0,58.0,79.0,56.0,70.0,silver
+PRELADENANT,,Low,Clinical Candidate,chembl_ml_predicted,0,2,0,0,63.0,61.0,52.0,56.0,55.0,42.0,43.0,silver
+ARGININE,,Low,Clinical Candidate,chembl_ml_predicted,2,0,0,0,67.0,69.0,66.0,54.0,74.0,58.0,67.0,silver
+ESCITALOPRAM,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,70.0,70.0,63.0,56.0,82.0,60.0,72.0,silver
+NEFIRACETAM,,High,Clinical Candidate,chembl_ml_predicted,2,0,0,0,70.0,74.0,64.0,59.0,78.0,55.0,69.0,silver
+AMANTADINE HYDROCHLORIDE,,High,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,69.0,64.0,63.0,56.0,55.0,45.0,51.0,silver
+RIFAXIMIN,,Low,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,71.0,71.0,66.0,57.0,79.0,55.0,69.0,silver
+FOLIC ACID,,Low,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,69.0,73.0,63.0,53.0,78.0,57.0,66.0,silver
+PROPRANOLOL HYDROCHLORIDE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,71.0,65.0,63.0,60.0,56.0,47.0,52.0,silver
+NILVADIPINE,,Low,Clinical Candidate,chembl_ml_predicted,2,0,0,0,74.0,69.0,63.0,53.0,78.0,57.0,67.0,silver
+HYDRALAZINE HYDROCHLORIDE,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,74.0,71.0,64.0,55.0,78.0,58.0,71.0,silver
+DOXYCYCLINE,,Low,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,72.0,69.0,64.0,56.0,81.0,56.0,74.0,silver
+OMEGA-3-ACID ETHYL ESTERS,,Low,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,72.0,70.0,63.0,58.0,76.0,62.0,69.0,silver
+NAPROXEN SODIUM,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,72.0,69.0,62.0,67.0,76.0,54.0,67.0,silver
+ISOCARBOXAZID,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,71.0,69.0,64.0,56.0,78.0,59.0,65.0,silver
+MIFEPRISTONE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,72.0,73.0,67.0,53.0,81.0,59.0,72.0,silver
+FLUDEOXYGLUCOSE F 18,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,72.0,73.0,66.0,58.0,80.0,59.0,69.0,silver
+DROXIDOPA,,Low,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,68.0,65.0,53.0,57.0,55.0,41.0,43.0,silver
+BREXPIPRAZOLE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,73.0,73.0,67.0,58.0,81.0,57.0,75.0,silver
+IOFLUPANE I 123,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,63.0,63.0,53.0,58.0,54.0,43.0,43.0,silver
+NICOTINE,,High,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,67.0,62.0,59.0,56.0,59.0,47.0,51.0,silver
+FLUMAZENIL,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,66.0,61.0,52.0,52.0,56.0,40.0,42.0,silver
+DIAZEPAM,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,73.0,71.0,67.0,55.0,76.0,58.0,66.0,silver
+CLOZAPINE,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,72.0,71.0,65.0,50.0,81.0,60.0,68.0,silver
+LOVASTATIN,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,67.0,60.0,53.0,60.0,53.0,41.0,42.0,silver
+CARBAMAZEPINE,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,72.0,69.0,66.0,54.0,77.0,55.0,67.0,silver
+ACETAMINOPHEN,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,66.0,65.0,52.0,53.0,54.0,40.0,43.0,silver
+BROMAZEPAM,,High,Clinical Candidate,chembl_ml_predicted,2,0,0,0,67.0,71.0,68.0,59.0,83.0,56.0,70.0,silver
+BROTIZOLAM,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,72.0,67.0,67.0,52.0,79.0,57.0,66.0,silver
+PIRACETAM,,Low-Med,Clinical Candidate,chembl_ml_predicted,2,0,0,0,73.0,73.0,66.0,57.0,81.0,61.0,70.0,silver
+BENPERIDOL,,Medium,Clinical Candidate,chembl_ml_predicted,2,0,0,0,72.0,71.0,65.0,61.0,78.0,57.0,71.0,silver
+SAFINAMIDE MESYLATE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,65.0,60.0,52.0,54.0,51.0,40.0,43.0,silver
+ENTACAPONE,,Low,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,65.0,62.0,56.0,53.0,52.0,41.0,42.0,silver
+CHOLECALCIFEROL,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,72.0,63.0,60.0,62.0,58.0,47.0,50.0,silver
+PREGABALIN,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,65.0,68.0,63.0,55.0,75.0,57.0,72.0,silver
+CLOMETHIAZOLE,,High,Clinical Candidate,chembl_ml_predicted,2,0,0,0,67.0,69.0,67.0,55.0,79.0,64.0,69.0,silver
+BUDIPINE,,Low-Med,Clinical Candidate,chembl_ml_predicted,0,2,0,0,74.0,68.0,61.0,57.0,56.0,46.0,51.0,silver
+DOMPERIDONE,,Medium,Clinical Candidate,chembl_ml_predicted,0,2,0,0,71.0,65.0,64.0,59.0,58.0,47.0,51.0,silver
+SAFINAMIDE,,Medium,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,64.0,59.0,52.0,53.0,52.0,40.0,43.0,silver
+AMISULPRIDE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,70.0,70.0,62.0,54.0,78.0,56.0,71.0,silver
+GLUTATHIONE,,Low,Clinical Candidate,chembl_ml_predicted,0,2,0,0,62.0,61.0,53.0,56.0,56.0,40.0,43.0,silver
+MARAVIROC,,Low,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,69.0,71.0,66.0,62.0,81.0,56.0,74.0,silver
+CHLORAL HYDRATE,,Medium,Clinical Candidate,chembl_ml_predicted,2,0,0,0,74.0,70.0,67.0,57.0,72.0,56.0,65.0,silver
+CLARITHROMYCIN,,Low,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,65.0,62.0,54.0,61.0,53.0,40.0,43.0,silver
+BENSERAZIDE,,Low,Clinical Candidate,chembl_ml_predicted,0,2,0,0,68.0,64.0,54.0,57.0,55.0,41.0,43.0,silver
+BROMOCRIPTINE MESYLATE,,Low,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,66.0,64.0,56.0,60.0,53.0,40.0,41.0,silver
+FLUDROCORTISONE ACETATE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,64.0,62.0,55.0,57.0,56.0,42.0,42.0,silver
+CABERGOLINE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,63.0,63.0,56.0,59.0,54.0,42.0,42.0,silver
+MELEVODOPA,,Low-Med,Clinical Candidate,chembl_ml_predicted,0,2,0,0,65.0,62.0,52.0,54.0,55.0,42.0,43.0,silver
+DEXETIMIDE,,Medium,Clinical Candidate,chembl_ml_predicted,0,2,0,0,72.0,65.0,62.0,59.0,56.0,48.0,50.0,silver
+PARDOPRUNOX,,Medium,Clinical Candidate,chembl_ml_predicted,0,2,0,0,67.0,63.0,60.0,57.0,58.0,47.0,55.0,silver
+GLYCEROL PHENYLBUTYRATE,,Low,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,70.0,65.0,54.0,57.0,55.0,41.0,45.0,silver
+TOZADENANT,,Medium,Clinical Candidate,chembl_ml_predicted,0,2,0,0,64.0,63.0,51.0,58.0,54.0,40.0,42.0,silver
+IPRATROPIUM BROMIDE,,High,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,62.0,61.0,54.0,62.0,54.0,42.0,43.0,silver
+ATROPINE SULFATE,,High,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,61.0,59.0,54.0,61.0,54.0,41.0,42.0,silver
+NABILONE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,0,2,0,0,66.0,65.0,52.0,59.0,56.0,41.0,44.0,silver
+PHENYTOIN,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,77.0,73.0,64.0,63.0,76.0,58.0,69.0,silver
+SULPIRIDE,,Low-Med,Clinical Candidate,chembl_ml_predicted,2,0,0,0,68.0,71.0,62.0,54.0,79.0,57.0,72.0,silver
+PHENOBARBITAL,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,71.0,75.0,63.0,60.0,77.0,57.0,70.0,silver
+FLUOXETINE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,72.0,73.0,65.0,66.0,78.0,59.0,66.0,silver
+PAROXETINE,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,75.0,73.0,64.0,58.0,78.0,58.0,70.0,silver
+SERTINDOLE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,74.0,72.0,65.0,58.0,78.0,60.0,71.0,silver
+PERPHENAZINE,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,69.0,70.0,66.0,52.0,81.0,59.0,77.0,silver
+OXAZEPAM,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,73.0,71.0,68.0,53.0,79.0,61.0,66.0,silver
+LORMETAZEPAM,,Medium,Clinical Candidate,chembl_ml_predicted,2,0,0,0,74.0,69.0,65.0,53.0,76.0,60.0,65.0,silver
+ZIDOVUDINE,,Low,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,74.0,71.0,63.0,62.0,78.0,56.0,68.0,silver
+TRIMIPRAMINE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,70.0,70.0,64.0,56.0,79.0,57.0,69.0,silver
+MAPROTILINE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,70.0,69.0,64.0,58.0,80.0,59.0,70.0,silver
+LAMOTRIGINE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,74.0,69.0,65.0,52.0,82.0,60.0,70.0,silver
+TADALAFIL,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,73.0,72.0,67.0,53.0,78.0,60.0,72.0,silver
+PIPAMPERONE,,Medium,Clinical Candidate,chembl_ml_predicted,2,0,0,0,67.0,69.0,65.0,52.0,79.0,56.0,70.0,silver
+FLUSPIRILENE,,Low-Med,Clinical Candidate,chembl_ml_predicted,2,0,0,0,70.0,71.0,66.0,60.0,78.0,55.0,70.0,silver
+GABAPENTIN,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,68.0,69.0,64.0,55.0,78.0,56.0,68.0,silver
+TIAPRIDE,,Medium,Clinical Candidate,chembl_ml_predicted,2,0,0,0,74.0,75.0,63.0,58.0,79.0,56.0,71.0,silver
+OXCARBAZEPINE,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,75.0,71.0,64.0,54.0,77.0,60.0,64.0,silver
+MOCLOBEMIDE,,High,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,70.0,71.0,61.0,58.0,78.0,55.0,70.0,silver
+ZOPICLONE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,70.0,72.0,64.0,53.0,81.0,59.0,70.0,silver
+ROFLUMILAST,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,72.0,74.0,63.0,54.0,80.0,58.0,74.0,silver
+TOPIRAMATE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,72.0,67.0,66.0,55.0,78.0,57.0,65.0,silver
+PALIPERIDONE,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,73.0,71.0,61.0,62.0,80.0,62.0,76.0,silver
+FLUPHENAZINE ENANTHATE,,Low,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,74.0,73.0,64.0,55.0,79.0,59.0,77.0,silver
+VENLAFAXINE HYDROCHLORIDE,,Medium,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,68.0,70.0,62.0,58.0,80.0,57.0,71.0,silver
+MEGESTROL ACETATE,,Low-Med,FDA-Approved Drug,chembl_ml_predicted,2,0,0,0,68.0,69.0,65.0,62.0,79.0,57.0,68.0,silver
+NICERGOLINE,,Low-Med,Clinical Candidate,chembl_ml_predicted,2,0,0,0,73.0,73.0,65.0,55.0,78.0,60.0,66.0,silver
+MELPERONE,,Medium,Clinical Candidate,chembl_ml_predicted,2,0,0,0,72.0,71.0,66.0,57.0,79.0,57.0,70.0,silver

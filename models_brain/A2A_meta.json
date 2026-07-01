@@ -1,0 +1,21 @@
+{
+  "endpoint": "A2A",
+  "meaning": "Parkinson's (adenosine A2A)",
+  "n": 5547,
+  "pos": 5316,
+  "pos_rate": 0.958,
+  "auroc": 0.951,
+  "pr_auc": 0.998,
+  "balanced_acc": 0.889,
+  "mcc": 0.444,
+  "brier": 0.023,
+  "calibrated": true,
+  "threshold": 0.967,
+  "cv": "scaffold GroupKFold(5)",
+  "leak_median_tanimoto": 0.708,
+  "source": "ChEMBL measured pChEMBL (>=6 active, <5 inactive)",
+  "temporal_auroc": 0.92,
+  "temporal_cutoff_year": 2021,
+  "cluster_split_auroc": 0.964,
+  "conformal_coverage": 0.894
+}
