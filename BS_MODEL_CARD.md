@@ -465,3 +465,39 @@ not Parkinson's). Each disease driver is tagged `calibrated-classifier` or `regr
 - **Efficacy is shown as clinical precedent, not predicted.**
 - **Wet-lab prospective validation** still requires experiments.
 - Temporal generalisation to wholly novel scaffolds remains bounded by covariate shift.
+
+## 17. Comparative/non-comparative analysis & comparison with general-purpose LLMs
+
+Added in response to reviewer feedback. Artifacts: `BS_llm_comparison.py`, `BS_llm_comparison.json`,
+`supplementary/STable8_llm_capability_comparison.csv`, `supplementary/STable9_baseline_comparison.csv`.
+
+**Non-comparative (standalone) analysis.** Per-endpoint absolute performance against each endpoint's
+own held-out measured data (AUROC, PR-AUC, MCC, Brier, conformal coverage) — Manuscript §3.1/§3.4;
+STable1–S3.
+
+**Comparative analysis — internal baselines (measured).** Under an identical scaffold-split protocol
+and feature set, the deployed ensemble beats a kNN-Tanimoto "read-across" baseline and logistic
+regression on **every one of the 8 classification endpoints**: mean scaffold AUROC **0.912** (ensemble)
+vs **0.867** (kNN, Δ +0.045) vs **0.808** (logistic, Δ +0.104) (`BS_baseline_comparison.json` → STable9).
+Beating a pure nearest-neighbour read-across shows the model learns SAR beyond structural look-up.
+
+**Comparative analysis — vs general-purpose LLMs (why a dedicated tool?).**
+- *Benchmark evidence (peer-reviewed):* general LLMs underperform specialised ML on molecular property
+  prediction (Guo et al. 2023, NeurIPS D&B; Zhong et al. 2024, arXiv:2403.05075); fine-tuned LLMs match
+  QSAR only in the low-data limit (Jablonka et al. 2024, Nat Mach Intell 6:161); LLMs hallucinate in
+  generative settings (Ji et al. 2023, ACM Comput Surv 55(12):248).
+- *Scientific background:* an LLM is an autoregressive text predictor — no molecular fingerprint, no
+  structure→measured-activity function, no calibrated probability, no coverage guarantee, no
+  applicability domain, no measured-analogue provenance. BrainSafe supplies all six.
+- *Reproducible grounded-output demonstration:* for fixed structures the engine returns calibrated P +
+  conformal set + nearest **measured** analogue with pChEMBL (donepezil→AChE P=0.96, analogue pChEMBL
+  7.75; terfenadine→hERG P=1.00; novel arylpiperazine→honest conformal "uncertain" grounded in a
+  measured analogue). Every value is measurement-traceable — the audit guarantee an LLM cannot give.
+
+**Consolidated scientific-flaw self-audit (threats to validity).** (1) assay-type pooling — mitigated by
+pChEMBL standardisation + median aggregation + grey-zone removal; residual variance flagged on receptor/
+DPPH endpoints. (2) label-threshold sensitivity — full per-threshold P/R/F1 in STable4. (3) AD cut-off —
+empirically justified by monotonically declining AUROC with similarity in STable5. (4) disease mapping —
+transparent knowledge-based rule, provenance-tagged, inspectable/overridable. (5) single hERG safety
+anti-target — other liabilities out of scope. (6) read-across ceiling — ruled out by §3.2/STable9. All
+surfaced in tool output or supplementary tables, none concealed.
