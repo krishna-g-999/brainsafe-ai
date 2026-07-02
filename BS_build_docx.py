@@ -204,9 +204,15 @@ P("Models were evaluated under: (i) a random stratified split; (ii) scaffold Gro
 
 # ---- 3 RESULTS ----
 H("3. Results", 1)
+P("Results are reported in two modes. Non-comparative analysis (Sections 3.1 and 3.3) reports "
+  "each endpoint’s standalone performance against its own held-out measured data — absolute "
+  "discrimination, calibration, conformal coverage and behaviour on reference compounds. "
+  "Comparative analysis (Sections 3.2, 3.4 and 3.5) benchmarks the same models against external "
+  "references: published QSAR performance ranges, simpler internal baselines under an identical "
+  "protocol, and the general-purpose large-language-model paradigm.", align="j")
 figure("figures/fig2_dataset.png",
        "Figure 2. Training-set size and class balance for each endpoint.")
-H("3.1 Classification performance", 2)
+H("3.1 Classification performance (standalone, non-comparative)", 2)
 s1 = pd.read_csv("supplementary/STable1_classification_metrics.csv")
 def ci_str(ep):
     c = cis.get(ep, {}).get("ci95"); return f"[{c[0]}, {c[1]}]" if c else "–"
@@ -227,14 +233,28 @@ figure("figures/fig5_conformal_comparison.png",
 P("Random-split AUROC was 0.94–0.98 across endpoints; scaffold and leave-cluster-out AUROC were "
   "0.87–0.95; and temporal-split AUROC was 0.61–0.92 (Figure 3; Table 4). Isotonic calibration gave "
   "Brier scores of 0.04–0.14 (Figure 4B) and empirical conformal coverage of 0.885–0.905 against the "
-  "0.90 target (Figure 5A). The ensemble equalled or exceeded the k-nearest-neighbour and "
-  "logistic-regression baselines for every endpoint (Figure 5B).", align="j")
-H("3.2 Comparison with the literature", 2)
+  "0.90 target (Figure 5A).", align="j")
+H("3.2 Ablation against simpler baselines (comparative)", 2)
+s9 = pd.read_csv("supplementary/STable9_baseline_comparison.csv")
+_ens = s9["Ensemble_AUROC"].mean(); _knn = s9["kNN_Tanimoto_AUROC"].mean(); _lr = s9["LogisticRegression_AUROC"].mean()
+P("Under an identical scaffold-split protocol and feature set, the deployed ensemble was compared "
+  "with a k-nearest-neighbour Tanimoto ‘read-across’ baseline — the closest algorithmic analogue to "
+  "associative structural recall — and with L2-regularised logistic regression. The ensemble attained "
+  f"a mean scaffold-split AUROC of {_ens:.3f}, versus {_knn:.3f} for k-nearest-neighbour "
+  f"(mean Δ = +{_ens-_knn:.3f}) and {_lr:.3f} for logistic regression (mean Δ = +{_ens-_lr:.3f}), "
+  "and was best on every one of the eight endpoints (Table 6; Figure 5B). Exceeding a pure "
+  "nearest-neighbour read-across indicates the model captures structure–activity relationships not "
+  "reducible to retrieving the most similar known molecule.", align="j")
+t6 = s9[["endpoint","Ensemble_AUROC","kNN_Tanimoto_AUROC","LogisticRegression_AUROC","delta_vs_kNN"]].copy()
+t6.columns = ["Endpoint","Ensemble","kNN-Tanimoto","Logistic reg.","Δ vs kNN"]
+P("Table 6. Scaffold-split AUROC of the deployed ensemble versus baselines (Supplementary Table S9).", italic=True, size=9)
+table_from_df(t6); P("")
+H("3.3 Comparison with the literature (comparative)", 2)
 figure("figures/fig6_benchmark.png",
        "Figure 6. Per-endpoint random-split AUROC (this work) relative to reported random-split ranges.")
 P("On like-for-like random splits, per-endpoint AUROC was within or above reported ranges, for "
   "example BBB (0.88–0.96) and hERG (0.86–0.93) (Kumar et al., 2022; Huang et al., 2024; Figure 6).", align="j")
-H("3.3 Receptor potency regression and antioxidant model", 2)
+H("3.4 Receptor potency regression and antioxidant model (non-comparative)", 2)
 s2 = pd.read_csv("supplementary/STable2_receptor_regression.csv")
 t2 = s2[["receptor","n","scaffold_cv_R2","RMSE","Spearman","temporal_R2"]].copy()
 t2.columns = ["Receptor","n","Scaffold R²","RMSE","Spearman","Temporal R²"]
@@ -250,12 +270,49 @@ P(f"Receptor potency regressions achieved scaffold-CV R² of 0.34–0.53 and Spe
   f"{am['scaffold_cv_r2']}, RMSE = {am['rmse']} and Spearman = {am['spearman']} (Figure 7); the "
   f"earlier curated score correlated only weakly with measured DPPH (Spearman = "
   f"{am['crosscheck_curated_vs_measured_spearman']}).", align="j")
-H("3.4 Behaviour on reference compounds", 2)
+H("3.5 Behaviour on reference compounds (non-comparative)", 2)
 P("With chemistry-only inputs the integrated system reproduced established pharmacology: rivastigmine "
   "resolved to Alzheimer’s disease via BChE; rasagiline to Parkinson’s disease via MAO-B; fluoxetine "
   "to depression via SERT with a corresponding clinical-precedent match; terfenadine, withdrawn for "
   "cardiotoxicity, was predicted positive at hERG; and resveratrol was predicted BBB non-penetrant, "
   "consistent with reported flavonoid CNS bioavailability (Hasan et al., 2023).", align="j")
+
+H("3.6 Comparison with general-purpose large language models (comparative)", 2)
+P("Because general-purpose large language models (LLMs) can be queried in natural language for "
+  "chemical information, we assessed whether a dedicated tool remains warranted, along three lines: "
+  "published benchmark evidence, the scientific basis of the difference, and a reproducible "
+  "demonstration of grounded output.", align="j")
+P("Benchmark evidence. On molecular property prediction — the task class BrainSafe performs — "
+  "general-purpose LLMs consistently underperform specialised machine-learning models. In an "
+  "eight-task chemistry benchmark, LLMs including GPT-4 lag task-specific models on property "
+  "prediction and parse SMILES unreliably (Guo et al., 2023); a dedicated molecule-prediction "
+  "benchmark reports that LLMs ‘generally lag behind ML models’, particularly where molecular "
+  "geometry matters (Zhong et al., 2024); and even fine-tuned LLMs become competitive with dedicated "
+  "QSAR models only in the low-data limit, not at the data scale used here (Jablonka et al., 2024). "
+  "LLMs also exhibit documented factual hallucination in generative settings (Ji et al., 2023).", align="j")
+P("Scientific background. A general LLM is an autoregressive next-token predictor over text; it does "
+  "not compute a molecular fingerprint, does not fit an explicit function from chemical structure to "
+  "measured bioactivity, and does not emit a probability with a calibration or coverage guarantee. "
+  "BrainSafe encodes each molecule as an ECFP-4 fingerprint plus 24 physicochemical descriptors, "
+  "learns a structure-to-measured-activity mapping from 64,474 records, and returns a calibrated "
+  "probability wrapped in a conformal set with empirically verified ~90% coverage, together with the "
+  "nearest measured analogue and its measured pChEMBL — guarantees an LLM cannot provide. Table 7 "
+  "summarises the capability differences (Supplementary Table S8).", align="j")
+s8 = pd.read_csv("supplementary/STable8_llm_capability_comparison.csv")
+s8.columns = ["Dimension","BrainSafe AI","General-purpose LLM"]
+P("Table 7. Capability comparison: BrainSafe AI versus a general-purpose large language model.", italic=True, size=9)
+table_from_df(s8); P("")
+P("Reproducible grounded-output demonstration. For fixed input structures the deployed engine "
+  "returns verifiable artifacts (script BS_llm_comparison.py; output BS_llm_comparison.json): "
+  "donepezil → AChE calibrated P = 0.96 with the nearest measured analogue at Tanimoto 0.71 "
+  "(measured pChEMBL 7.75) and hERG P = 0.89, matching its clinical QT liability; terfenadine → hERG "
+  "P = 1.00, correctly flagging the cardiotoxicity for which it was withdrawn, while correctly "
+  "calling it BBB non-penetrant; and a novel arylpiperazine of an unpublished scaffold → an honest "
+  "conformal ‘uncertain’ set for AChE grounded in a measured analogue (pChEMBL 4.82) rather than a "
+  "confident but unverifiable text answer. Every value is traceable to a measurement. This grounding "
+  "— a calibrated probability, a coverage-guaranteed set, and measured-analogue provenance for any "
+  "structure, including novel ones — is the scientific justification for a dedicated tool "
+  "complementary to, not replaced by, general LLMs.", align="j")
 
 # ---- 4 DISCUSSION ----
 H("4. Discussion", 1)
@@ -272,8 +329,35 @@ P("AUROC decreased from random (0.94–0.98) to temporal (0.61–0.92) splits, c
   "recent test set was 93% active; where it was class-balanced (MAO-A, 45% active) the value was "
   "0.61. Reporting all four regimes characterises generalisation across chemical space and time "
   "(Sheridan, 2013; Tropsha, 2010).", align="j")
-P("Several limitations apply. The models predict target engagement, not the direction of modulation "
-  "(agonism versus antagonism); engagement is distinct from clinical efficacy, and the "
+P("Why a dedicated tool rather than a general-purpose LLM? The comparative evidence (Section 3.6) "
+  "supports a results-backed answer. On the exact task class in question — molecular property "
+  "prediction — general LLMs are documented to underperform specialised machine learning "
+  "(Guo et al., 2023; Zhong et al., 2024), with fine-tuned LLMs matching QSAR only in the low-data "
+  "limit (Jablonka et al., 2024), whereas BrainSafe operates at a 64,474-record scale. More "
+  "fundamentally, the paradigms differ in kind: an LLM emits fluent text without a calibrated "
+  "probability, a coverage guarantee, an applicability-domain boundary, or a link to a specific "
+  "measurement, and is prone to confident hallucination (Ji et al., 2023). BrainSafe returns, for any "
+  "structure, a calibrated probability, a conformal set with empirically verified ~90% coverage, an "
+  "explicit in/out-of-domain flag, and the nearest measured analogue with its pChEMBL. The two are "
+  "therefore complementary rather than interchangeable where a decision must be auditable and "
+  "grounded in measured data.", align="j")
+P("Threats to validity (scientific-flaw self-audit). We enumerate the principal methodological risks "
+  "and how each is bounded. (1) Assay heterogeneity: activities pooled per target span "
+  "IC50/Ki/Kd/EC50/Potency; this is mitigated by ChEMBL’s standardised pChEMBL scale, per-compound "
+  "median aggregation and conservative labelling with the 5–6 grey zone discarded, though residual "
+  "cross-assay variance remains and underlies the wider uncertainty on receptor and pooled DPPH "
+  "endpoints. (2) Label-threshold sensitivity: the pChEMBL ≥6/<5 cut is a modelling choice, so "
+  "per-threshold precision, recall and F1 across operating points are provided (Supplementary "
+  "Table S4). (3) Applicability-domain cut-off: the Tanimoto boundary is empirically justified by a "
+  "monotonic decline in AUROC as train–test similarity falls (Supplementary Table S5). (4) Disease "
+  "mapping: the target-to-disease synthesis is a transparent, knowledge-based rule — not a learned "
+  "layer — with each driver tagged by provenance, so it is inspectable and overridable. (5) Single "
+  "safety anti-target: cardiotoxicity is represented by hERG alone; other liabilities are out of "
+  "scope. (6) Read-across ceiling: the ensemble exceeds a k-nearest-neighbour baseline on every "
+  "endpoint (Section 3.2), so performance is not merely memorised nearest-neighbour recall. Each risk "
+  "is surfaced in the tool output or the supplementary tables rather than concealed.", align="j")
+P("Several further limitations apply. The models predict target engagement, not the direction of "
+  "modulation (agonism versus antagonism); engagement is distinct from clinical efficacy, and the "
   "clinical-precedent layer reports structural similarity to compounds with documented clinical "
   "phases rather than predicting efficacy; no prospective experimental validation has been performed; "
   "and GSK-3β and MAO-A generalise less well under temporal validation and are flagged as "
@@ -320,8 +404,11 @@ refs = [
 "Gaulton, A., Bellis, L.J., Bento, A.P., Chambers, J., Davies, M., Hersey, A., Light, Y., McGlinchey, S., Michalovich, D., Al-Lazikani, B. and Overington, J.P. (2012) ‘ChEMBL: a large-scale bioactivity database for drug discovery’, Nucleic Acids Research, 40(D1), pp. D1100–D1107.",
 "GBD 2021 Nervous System Disorders Collaborators (2024) ‘Global, regional, and national burden of disorders affecting the nervous system, 1990–2021’, The Lancet Neurology, 23(4), pp. 344–381.",
 "Geurts, P., Ernst, D. and Wehenkel, L. (2006) ‘Extremely randomized trees’, Machine Learning, 63(1), pp. 3–42.",
+"Guo, T., Guo, K., Nan, B., Liang, Z., Guo, Z., Chawla, N.V., Wiest, O. and Zhang, X. (2023) ‘What can large language models do in chemistry? A comprehensive benchmark on eight tasks’, Advances in Neural Information Processing Systems 36 (Datasets and Benchmarks Track). arXiv:2305.18365.",
 "Hasan, S., Khatri, N., Rahman, Z.N., Menezes, A.A., Martini, J., Shehjar, F., Mujeeb, N. and Shah, Z.A. (2023) ‘Neuroprotective potential of flavonoids in brain disorders’, Brain Sciences, 13(9), 1258.",
 "Huang, E.T.C., Yang, J.-S., Liao, K.Y.K., Tseng, W.C.W., Lee, C.K., Gill, M., Compas, C., See, S. and Tsai, F.-J. (2024) ‘Predicting blood–brain barrier permeability of molecules with a large language model and machine learning’, Scientific Reports, 14, 15844.",
+"Jablonka, K.M., Schwaller, P., Ortega-Guerrero, A. and Smit, B. (2024) ‘Leveraging large language models for predictive chemistry’, Nature Machine Intelligence, 6(2), pp. 161–169.",
+"Ji, Z., Lee, N., Frieske, R., Yu, T., Su, D., Xu, Y., Ishii, E., Bang, Y.J., Madotto, A. and Fung, P. (2023) ‘Survey of hallucination in natural language generation’, ACM Computing Surveys, 55(12), Article 248.",
 "Ke, G., Meng, Q., Finley, T., Wang, T., Chen, W., Ma, W., Ye, Q. and Liu, T.-Y. (2017) ‘LightGBM: a highly efficient gradient boosting decision tree’, Advances in Neural Information Processing Systems, 30, pp. 3146–3154.",
 "Kim, S., Chen, J., Cheng, T., Gindulyte, A., He, J., He, S., Li, Q., Shoemaker, B.A., Thiessen, P.A., Yu, B., Zaslavsky, L., Zhang, J. and Bolton, E.E. (2023) ‘PubChem 2023 update’, Nucleic Acids Research, 51(D1), pp. D1373–D1380.",
 "Kumar, R., Sharma, A., Alexiou, A., Bilgrami, A.L., Kamal, M.A. and Ashraf, G.M. (2022) ‘DeePred-BBB: a blood brain barrier permeability prediction model with improved accuracy’, Frontiers in Neuroscience, 16, 858126.",
@@ -345,6 +432,7 @@ refs = [
 "Wu, Z., Ramsundar, B., Feinberg, E.N., Gomes, J., Geniesse, C., Pappu, A.S., Leswing, K. and Pande, V. (2018) ‘MoleculeNet: a benchmark for molecular machine learning’, Chemical Science, 9(2), pp. 513–530.",
 "Xiong, G., Wu, Z., Yi, J., Fu, L., Yang, Z., Hsieh, C., Yin, M., Zeng, X., Wu, C., Lu, A., Chen, X., Hou, T. and Cao, D. (2021) ‘ADMETlab 2.0: an integrated online platform for accurate and comprehensive predictions of ADMET properties’, Nucleic Acids Research, 49(W1), pp. W5–W14.",
 "Zdrazil, B., Felix, E., Hunter, F., Manners, E.J., Blackshaw, J., Corbett, S., de Veij, M., Ioannidis, H., Mendez, D., Mosquera, J.F., Magariños, M.P., Bosc, N., Arcila, R., Kizilören, T., Gaulton, A., Bento, A.P., Adasme, M.F., Monecke, P., Landrum, G.A. and Leach, A.R. (2024) ‘The ChEMBL Database in 2023’, Nucleic Acids Research, 52(D1), pp. D1180–D1192.",
+"Zhong, Z., Zhou, K. and Mottin, D. (2024) ‘Benchmarking large language models for molecule prediction tasks’. arXiv:2403.05075.",
 ]
 for rd in refs:
     p = doc.add_paragraph(); p.paragraph_format.left_indent = Inches(0.5); p.paragraph_format.first_line_indent = Inches(-0.5); p.paragraph_format.space_after = Pt(6)

@@ -1,0 +1,365 @@
+{
+  "comparative_summary": {
+    "n_endpoints": 8,
+    "mean_AUROC_ensemble": 0.912,
+    "mean_AUROC_kNN_Tanimoto": 0.867,
+    "mean_AUROC_logistic": 0.808,
+    "mean_delta_vs_kNN": 0.045,
+    "mean_delta_vs_LR": 0.104,
+    "ensemble_wins_all_endpoints": true
+  },
+  "comparative_per_endpoint": [
+    {
+      "endpoint": "BBB",
+      "Ensemble_AUROC": 0.921,
+      "kNN_Tanimoto_AUROC": 0.882,
+      "LogisticRegression_AUROC": 0.792,
+      "delta_vs_kNN": 0.039,
+      "delta_vs_LR": 0.129,
+      "ensemble_best": true
+    },
+    {
+      "endpoint": "AChE",
+      "Ensemble_AUROC": 0.915,
+      "kNN_Tanimoto_AUROC": 0.874,
+      "LogisticRegression_AUROC": 0.828,
+      "delta_vs_kNN": 0.041,
+      "delta_vs_LR": 0.087,
+      "ensemble_best": true
+    },
+    {
+      "endpoint": "BChE",
+      "Ensemble_AUROC": 0.937,
+      "kNN_Tanimoto_AUROC": 0.899,
+      "LogisticRegression_AUROC": 0.866,
+      "delta_vs_kNN": 0.038,
+      "delta_vs_LR": 0.071,
+      "ensemble_best": true
+    },
+    {
+      "endpoint": "BACE1",
+      "Ensemble_AUROC": 0.95,
+      "kNN_Tanimoto_AUROC": 0.885,
+      "LogisticRegression_AUROC": 0.883,
+      "delta_vs_kNN": 0.065,
+      "delta_vs_LR": 0.067,
+      "ensemble_best": true
+    },
+    {
+      "endpoint": "GSK3B",
+      "Ensemble_AUROC": 0.92,
+      "kNN_Tanimoto_AUROC": 0.842,
+      "LogisticRegression_AUROC": 0.831,
+      "delta_vs_kNN": 0.078,
+      "delta_vs_LR": 0.089,
+      "ensemble_best": true
+    },
+    {
+      "endpoint": "MAO_B",
+      "Ensemble_AUROC": 0.885,
+      "kNN_Tanimoto_AUROC": 0.833,
+      "LogisticRegression_AUROC": 0.742,
+      "delta_vs_kNN": 0.052,
+      "delta_vs_LR": 0.143,
+      "ensemble_best": true
+    },
+    {
+      "endpoint": "MAO_A",
+      "Ensemble_AUROC": 0.867,
+      "kNN_Tanimoto_AUROC": 0.853,
+      "LogisticRegression_AUROC": 0.731,
+      "delta_vs_kNN": 0.014,
+      "delta_vs_LR": 0.136,
+      "ensemble_best": true
+    },
+    {
+      "endpoint": "hERG",
+      "Ensemble_AUROC": 0.901,
+      "kNN_Tanimoto_AUROC": 0.871,
+      "LogisticRegression_AUROC": 0.792,
+      "delta_vs_kNN": 0.03,
+      "delta_vs_LR": 0.109,
+      "ensemble_best": true
+    }
+  ],
+  "noncomparative_per_endpoint": {
+    "AChE": {
+      "n": 4324,
+      "pos_rate": 0.716,
+      "AUROC_scaffold": 0.915,
+      "PR_AUC": 0.963,
+      "balanced_acc": 0.834,
+      "MCC": 0.633,
+      "Brier": 0.099,
+      "conformal_coverage": 0.899
+    },
+    "BACE1": {
+      "n": 8067,
+      "pos_rate": 0.905,
+      "AUROC_scaffold": 0.95,
+      "PR_AUC": 0.994,
+      "balanced_acc": 0.886,
+      "MCC": 0.614,
+      "Brier": 0.039,
+      "conformal_coverage": 0.902
+    },
+    "BBB": {
+      "n": 7805,
+      "pos_rate": 0.635,
+      "AUROC_scaffold": 0.921,
+      "PR_AUC": 0.952,
+      "balanced_acc": 0.839,
+      "MCC": 0.659,
+      "Brier": 0.105,
+      "conformal_coverage": 0.897
+    },
+    "BChE": {
+      "n": 2580,
+      "pos_rate": 0.695,
+      "AUROC_scaffold": 0.937,
+      "PR_AUC": 0.974,
+      "balanced_acc": 0.874,
+      "MCC": 0.701,
+      "Brier": 0.09,
+      "conformal_coverage": 0.899
+    },
+    "GSK3B": {
+      "n": 4044,
+      "pos_rate": 0.914,
+      "AUROC_scaffold": 0.92,
+      "PR_AUC": 0.991,
+      "balanced_acc": 0.838,
+      "MCC": 0.468,
+      "Brier": 0.044,
+      "conformal_coverage": 0.885
+    },
+    "MAO_A": {
+      "n": 2141,
+      "pos_rate": 0.376,
+      "AUROC_scaffold": 0.867,
+      "PR_AUC": 0.815,
+      "balanced_acc": 0.799,
+      "MCC": 0.586,
+      "Brier": 0.136,
+      "conformal_coverage": 0.905
+    },
+    "MAO_B": {
+      "n": 3455,
+      "pos_rate": 0.652,
+      "AUROC_scaffold": 0.885,
+      "PR_AUC": 0.925,
+      "balanced_acc": 0.807,
+      "MCC": 0.606,
+      "Brier": 0.122,
+      "conformal_coverage": 0.895
+    },
+    "hERG": {
+      "n": 5905,
+      "pos_rate": 0.415,
+      "AUROC_scaffold": 0.901,
+      "PR_AUC": 0.874,
+      "balanced_acc": 0.817,
+      "MCC": 0.626,
+      "Brier": 0.123,
+      "conformal_coverage": 0.896
+    }
+  },
+  "llm_capability_matrix": [
+    {
+      "dimension": "Input",
+      "BrainSafe_AI": "Chemical structure (SMILES; name/inchi resolved to structure)",
+      "General_LLM": "Natural-language text prompt"
+    },
+    {
+      "dimension": "Molecular representation",
+      "BrainSafe_AI": "ECFP-4 (1024-bit) + 24 computed RDKit physicochemical descriptors",
+      "General_LLM": "Sub-word text tokens; no explicit molecular graph/descriptors"
+    },
+    {
+      "dimension": "Training signal",
+      "BrainSafe_AI": "64,474 measured ChEMBL/B3DB bioactivity records (structure->measured value)",
+      "General_LLM": "Web/text corpus; bioactivity not learned as a measured regression target"
+    },
+    {
+      "dimension": "Primary output",
+      "BrainSafe_AI": "Calibrated probability / potency per endpoint",
+      "General_LLM": "Free-text assertion"
+    },
+    {
+      "dimension": "Uncertainty quantification",
+      "BrainSafe_AI": "Isotonic calibration + Mondrian conformal sets (empirical 88.5-90.5% coverage)",
+      "General_LLM": "None, or verbal and uncalibrated"
+    },
+    {
+      "dimension": "Provenance / grounding",
+      "BrainSafe_AI": "Returns nearest MEASURED analogue(s) + measured pChEMBL for every call",
+      "General_LLM": "Not grounded in specific measurements; hallucination documented"
+    },
+    {
+      "dimension": "Applicability domain",
+      "BrainSafe_AI": "Explicit Tanimoto AD flag; performance shown to degrade with distance (STable5)",
+      "General_LLM": "No domain boundary; equally fluent in- and out-of-domain"
+    },
+    {
+      "dimension": "Reproducibility",
+      "BrainSafe_AI": "Deterministic (fixed seed 42); identical output on re-run",
+      "General_LLM": "Stochastic; version- and prompt-dependent"
+    },
+    {
+      "dimension": "Benchmarked property-prediction accuracy",
+      "BrainSafe_AI": "AUROC 0.87-0.98 (scaffold/random, this work)",
+      "General_LLM": "Underperforms specialised ML on molecular property prediction (Guo 2023; Zhong 2024)"
+    },
+    {
+      "dimension": "Behaviour on a novel compound",
+      "BrainSafe_AI": "Grounded, calibrated prediction or explicit out-of-domain flag",
+      "General_LLM": "May confabulate plausible but unverifiable values"
+    }
+  ],
+  "grounded_output_demonstration": {
+    "Donepezil (approved AChE inhibitor, Alzheimer's)": {
+      "smiles": "O=C1CC(CC2CCN(Cc3ccccc3)CC2)c2cc(OC)c(OC)cc21",
+      "grounded_endpoints": [
+        {
+          "endpoint": "BBB",
+          "calibrated_probability": 0.996,
+          "call": "Penetrant",
+          "in_applicability_domain": true,
+          "nearest_measured_analogue_SMILES": "COc1cc2c(cc1OC)C(=O)C(CC1CCN(Cc3ccccc3)CC1)C2",
+          "nearest_analogue_tanimoto": 0.71,
+          "nearest_analogue_measured_outcome": "active",
+          "nearest_analogue_measured_pChEMBL": null,
+          "conformal_set": [
+            "active"
+          ],
+          "conformal_label": "Confident active (90% conformal)"
+        },
+        {
+          "endpoint": "AChE",
+          "calibrated_probability": 0.96,
+          "call": "Active",
+          "in_applicability_domain": true,
+          "nearest_measured_analogue_SMILES": "COc1cc2c(cc1OC)C(=O)C(CC1CCN(Cc3ccccc3)CC1)C2",
+          "nearest_analogue_tanimoto": 0.71,
+          "nearest_analogue_measured_outcome": "active",
+          "nearest_analogue_measured_pChEMBL": 7.75,
+          "conformal_set": [
+            "active"
+          ],
+          "conformal_label": "Confident active (90% conformal)"
+        },
+        {
+          "endpoint": "hERG",
+          "calibrated_probability": 0.891,
+          "call": "Blocker",
+          "in_applicability_domain": true,
+          "nearest_measured_analogue_SMILES": "COc1cc(N)c(Cl)cc1C(=O)NC1CCN(Cc2ccccc2)CC1",
+          "nearest_analogue_tanimoto": 0.41,
+          "nearest_analogue_measured_outcome": "active",
+          "nearest_analogue_measured_pChEMBL": 6.22,
+          "conformal_set": [
+            "active"
+          ],
+          "conformal_label": "Confident active (90% conformal)"
+        }
+      ]
+    },
+    "Terfenadine (withdrawn, hERG cardiotoxicity)": {
+      "smiles": "CC(C)(C)c1ccc(C(O)CCCN2CCC(C(O)(c3ccccc3)c3ccccc3)CC2)cc1",
+      "grounded_endpoints": [
+        {
+          "endpoint": "BBB",
+          "calibrated_probability": 0.42,
+          "call": "Non-penetrant",
+          "in_applicability_domain": true,
+          "nearest_measured_analogue_SMILES": "CC(C)(C)c1ccc([C@H](O)CCCN2CCC(C(O)(c3ccccc3)c3ccccc3)CC2)cc1",
+          "nearest_analogue_tanimoto": 1.0,
+          "nearest_analogue_measured_outcome": "inactive",
+          "nearest_analogue_measured_pChEMBL": null,
+          "conformal_set": [
+            "inactive"
+          ],
+          "conformal_label": "Confident inactive (90%)"
+        },
+        {
+          "endpoint": "AChE",
+          "calibrated_probability": 0.667,
+          "call": "Inactive",
+          "in_applicability_domain": true,
+          "nearest_measured_analogue_SMILES": "CC1CCN(CCc2ccccc2)CC1",
+          "nearest_analogue_tanimoto": 0.32,
+          "nearest_analogue_measured_outcome": "active",
+          "nearest_analogue_measured_pChEMBL": 6.75,
+          "conformal_set": [
+            "active",
+            "inactive"
+          ],
+          "conformal_label": "Uncertain (both plausible)"
+        },
+        {
+          "endpoint": "hERG",
+          "calibrated_probability": 1.0,
+          "call": "Blocker",
+          "in_applicability_domain": true,
+          "nearest_measured_analogue_SMILES": "CC(C)(C)c1ccc(C(O)CCCN2CCC(C(O)(c3ccccc3)c3ccccc3)CC2)cc1",
+          "nearest_analogue_tanimoto": 1.0,
+          "nearest_analogue_measured_outcome": "active",
+          "nearest_analogue_measured_pChEMBL": 6.98,
+          "conformal_set": [
+            "active"
+          ],
+          "conformal_label": "Confident active (90% conformal)"
+        }
+      ]
+    },
+    "Novel arylpiperazine (hypothetical, unpublished scaffold)": {
+      "smiles": "O=C1CCc2ccccc2N1CCN1CCN(c2ccccc2)CC1",
+      "grounded_endpoints": [
+        {
+          "endpoint": "BBB",
+          "calibrated_probability": 0.997,
+          "call": "Penetrant",
+          "in_applicability_domain": true,
+          "nearest_measured_analogue_SMILES": "CCCCC1CCN(CCCN2C(=O)CCc3ccccc32)CC1",
+          "nearest_analogue_tanimoto": 0.5,
+          "nearest_analogue_measured_outcome": "active",
+          "nearest_analogue_measured_pChEMBL": null,
+          "conformal_set": [
+            "active"
+          ],
+          "conformal_label": "Confident active (90% conformal)"
+        },
+        {
+          "endpoint": "AChE",
+          "calibrated_probability": 0.667,
+          "call": "Inactive",
+          "in_applicability_domain": true,
+          "nearest_measured_analogue_SMILES": "O=C1c2ccccc2CCCC1CC1CCN(c2ccccc2)CC1",
+          "nearest_analogue_tanimoto": 0.35,
+          "nearest_analogue_measured_outcome": "inactive",
+          "nearest_analogue_measured_pChEMBL": 4.82,
+          "conformal_set": [
+            "active",
+            "inactive"
+          ],
+          "conformal_label": "Uncertain (both plausible)"
+        },
+        {
+          "endpoint": "hERG",
+          "calibrated_probability": 0.585,
+          "call": "Blocker",
+          "in_applicability_domain": true,
+          "nearest_measured_analogue_SMILES": "c1ccc(N2CCN(CCCCCCN3CCN(c4ccccn4)CC3)CC2)cc1",
+          "nearest_analogue_tanimoto": 0.39,
+          "nearest_analogue_measured_outcome": "inactive",
+          "nearest_analogue_measured_pChEMBL": 4.89,
+          "conformal_set": [
+            "active"
+          ],
+          "conformal_label": "Confident active (90% conformal)"
+        }
+      ]
+    }
+  },
+  "notes": "Comparative AUROC is scaffold-split (BS_baseline_comparison.json). Non-comparative metrics are the deployed models' saved scaffold-CV values. LLM accuracy claims are cited from Guo et al. 2023 (NeurIPS D&B), Zhong et al. 2024 (arXiv:2403.05075), and Jablonka et al. 2024 (Nat Mach Intell 6:161). The grounded-output demonstration is produced live by the deployed engine."
+}

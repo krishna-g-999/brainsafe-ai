@@ -1,0 +1,11 @@
+dimension,BrainSafe_AI,General_LLM
+Input,Chemical structure (SMILES; name/inchi resolved to structure),Natural-language text prompt
+Molecular representation,ECFP-4 (1024-bit) + 24 computed RDKit physicochemical descriptors,Sub-word text tokens; no explicit molecular graph/descriptors
+Training signal,"64,474 measured ChEMBL/B3DB bioactivity records (structure->measured value)",Web/text corpus; bioactivity not learned as a measured regression target
+Primary output,Calibrated probability / potency per endpoint,Free-text assertion
+Uncertainty quantification,Isotonic calibration + Mondrian conformal sets (empirical 88.5-90.5% coverage),"None, or verbal and uncalibrated"
+Provenance / grounding,Returns nearest MEASURED analogue(s) + measured pChEMBL for every call,Not grounded in specific measurements; hallucination documented
+Applicability domain,Explicit Tanimoto AD flag; performance shown to degrade with distance (STable5),No domain boundary; equally fluent in- and out-of-domain
+Reproducibility,Deterministic (fixed seed 42); identical output on re-run,Stochastic; version- and prompt-dependent
+Benchmarked property-prediction accuracy,"AUROC 0.87-0.98 (scaffold/random, this work)",Underperforms specialised ML on molecular property prediction (Guo 2023; Zhong 2024)
+Behaviour on a novel compound,"Grounded, calibrated prediction or explicit out-of-domain flag",May confabulate plausible but unverifiable values
