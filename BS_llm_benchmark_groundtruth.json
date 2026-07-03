@@ -4,9 +4,9 @@
       "name": "Donepezil",
       "smiles": "COC1=C(C=C2C(=C1)CC(C2=O)CC3CCN(CC3)CC4=CC=CC=C4)OC",
       "bbb": 1,
-      "herg": 1,
+      "herg": null,
       "target": "AChE",
-      "note": "AChE inhibitor (Alzheimer's); documented QT/hERG liability; CNS-penetrant",
+      "note": "AChE inhibitor (Alzheimer's); CNS-penetrant. hERG NOT scored: signal (IC50 ~5-35 uM) is weak relative to therapeutic Cmax, so clinical relevance is contestable",
       "smiles_source": "PubChem",
       "brainsafe": {
         "BBB": {

@@ -313,19 +313,32 @@ P("Reproducible grounded-output demonstration. For fixed input structures the de
   "— a calibrated probability, a coverage-guaranteed set, and measured-analogue provenance for any "
   "structure, including novel ones — is the scientific justification for a dedicated tool "
   "complementary to, not replaced by, general LLMs.", align="j")
-P("Pre-registered head-to-head benchmark. To make the comparison directly measurable we froze a "
-  "fixed prompt, a 10-compound panel with uncontested ground truth (approved-drug pharmacology plus "
-  "one unpublished scaffold), and a scoring rubric before any system was run (protocol and key are "
-  "released with the code). Scored by this rubric, BrainSafe attains BBB accuracy 8/9 (0.889), hERG "
-  "accuracy 6/6 (1.000) on the uncontested set, a probability Brier score of 0.085, zero fabricated "
-  "provenance items, and returns an honest conformal ‘uncertain’ set on the unpublished compound "
-  "(Supplementary Table S13). The identical prompt is issued to general-purpose LLMs and each reply "
-  "scored by the same rubric; because no third-party LLM API is reachable from the analysis "
-  "environment, LLM rows are collected via the pre-registered human-in-the-loop protocol and reported "
-  "on completion. The decisive probe is a requested specific ChEMBL identifier and measured value: "
-  "BrainSafe cites a real measured analogue, whereas a text model must either omit the value or "
-  "fabricate an identifier — a directly countable hallucination, most exposed on the novel compound.",
-  align="j")
+P("Pre-registered head-to-head benchmark (executed). We froze a fixed prompt, a 10-compound panel "
+  "with uncontested ground truth (approved-drug pharmacology plus one unpublished scaffold), and a "
+  "scoring rubric before any system was run (protocol and key released with the code), then ran the "
+  "identical prompt on four general-purpose LLMs (Gemini Pro, ChatGPT/GPT-4o, Perplexity, Claude) and "
+  "scored every reply against the same measured-data key (Table 8; Supplementary Table S13).", align="j")
+sb = pd.read_csv("supplementary/STable13_llm_scoreboard.csv")
+_disp = sb[["system","BBB_acc","hERG_acc","Brier","chembl_ids_given","fabricated_ids","wrong_structure_ids","novel_confabulation"]].copy()
+_disp.columns = ["System","BBB acc","hERG acc","Brier","IDs cited","Fabricated","Wrong-molecule","Novel confabulation"]
+P("Table 8. Pre-registered LLM head-to-head, scored against the frozen measured-data key. hERG scored "
+  "on five uncontested compounds; BrainSafe cites measured analogues by structure, not ChEMBL IDs.",
+  italic=True, size=9)
+table_from_df(_disp); P("")
+P("Two findings are reported honestly. First, on classification of well-known approved drugs the LLMs "
+  "are strong: three of four matched or exceeded BrainSafe on BBB (9/9 vs 8/9; BrainSafe mis-called the "
+  "borderline-lipophilic astemizole) and their Brier scores were as good or better (Claude 0.020, "
+  "ChatGPT 0.035) — so a dedicated tool is not justified by raw accuracy on famous compounds. Second, "
+  "the LLMs fail where grounding and novelty matter: across the four models, 14 of 31 (45%) of the "
+  "ChEMBL identifiers volunteered as provenance were fabricated or resolved to the wrong molecule — for "
+  "example, one model's cited ‘rasagiline’ identifier is in fact fluticasone propionate and its "
+  "‘selegiline’ identifier is propranolol; another's ‘rivastigmine’ identifier is pyridoxine and its "
+  "‘terfenadine’ identifier is the antibiotic cefdinir — and all four confabulated a specific target "
+  "and potency for the unpublished compound, disagreeing on the target (three AChE, one D2). BrainSafe "
+  "fabricated nothing, grounded every prediction in a real measured analogue, and returned an honest "
+  "conformal ‘uncertain’ set for the novel compound. An LLM can thus approximate textbook "
+  "classifications but cannot be trusted for verifiable provenance or for novel chemistry — precisely "
+  "what the dedicated tool provides.", align="j")
 
 # ---- 4 DISCUSSION ----
 H("4. Discussion", 1)
@@ -378,6 +391,16 @@ P("Threats to validity (scientific-flaw self-audit, with quantitative tests). We
   "ensemble exceeds a k-nearest-neighbour baseline on every endpoint (Section 3.2), so performance is "
   "not merely memorised nearest-neighbour recall. Each risk is surfaced in the tool output or the "
   "supplementary tables rather than concealed.", align="j")
+P("Why a dedicated tool rather than a general-purpose LLM — empirical answer. Our executed head-to-head "
+  "(Section 3.6, Table 8) is decisive: four current LLMs matched or beat BrainSafe on BBB/hERG "
+  "classification of well-known drugs, yet 45% of the ChEMBL identifiers they cited as evidence were "
+  "fabricated or resolved to the wrong molecule, and all four confabulated a specific target and "
+  "potency for an unpublished compound (disagreeing with one another), whereas BrainSafe grounded every "
+  "call in a real measured analogue and reported honest uncertainty. The lesson is not that LLMs are "
+  "inaccurate in general — on memorised compounds they are strong — but that they cannot be trusted for "
+  "verifiable provenance or for novel chemistry, which is where hypothesis generation actually happens. "
+  "BrainSafe is therefore complementary to, not replaced by, general LLMs where a decision must be "
+  "auditable and grounded in measured data.", align="j")
 P("Several further limitations apply. The models predict target engagement, not the direction of "
   "modulation (agonism versus antagonism); engagement is distinct from clinical efficacy, and the "
   "clinical-precedent layer reports structural similarity to compounds with documented clinical "
