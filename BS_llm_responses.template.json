@@ -1,0 +1,17 @@
+[
+  {
+    "system": "Gemini <version> (<YYYY-MM-DD>)",
+    "rows": {
+      "Donepezil":   {"bbb": "yes/no", "bbb_p": 0.0, "herg": "yes/no", "herg_p": 0.0, "target": "", "pchembl": null, "chembl_id": null},
+      "Galantamine": {"bbb": "yes/no", "bbb_p": 0.0, "herg": "yes/no", "herg_p": 0.0, "target": "", "pchembl": null, "chembl_id": null},
+      "Rivastigmine":{"bbb": "yes/no", "bbb_p": 0.0, "herg": "yes/no", "herg_p": 0.0, "target": "", "pchembl": null, "chembl_id": null},
+      "Rasagiline":  {"bbb": "yes/no", "bbb_p": 0.0, "herg": "yes/no", "herg_p": 0.0, "target": "", "pchembl": null, "chembl_id": null},
+      "Selegiline":  {"bbb": "yes/no", "bbb_p": 0.0, "herg": "yes/no", "herg_p": 0.0, "target": "", "pchembl": null, "chembl_id": null},
+      "Fluoxetine":  {"bbb": "yes/no", "bbb_p": 0.0, "herg": "yes/no", "herg_p": 0.0, "target": "", "pchembl": null, "chembl_id": null},
+      "Terfenadine": {"bbb": "yes/no", "bbb_p": 0.0, "herg": "yes/no", "herg_p": 0.0, "target": "", "pchembl": null, "chembl_id": null},
+      "Astemizole":  {"bbb": "yes/no", "bbb_p": 0.0, "herg": "yes/no", "herg_p": 0.0, "target": "", "pchembl": null, "chembl_id": null},
+      "Quercetin":   {"bbb": "yes/no", "bbb_p": 0.0, "herg": "yes/no", "herg_p": 0.0, "target": "", "pchembl": null, "chembl_id": null},
+      "Novel-arylpiperazine (unpublished)": {"bbb": "yes/no", "bbb_p": 0.0, "herg": "yes/no", "herg_p": 0.0, "target": "", "pchembl": null, "chembl_id": null}
+    }
+  }
+]

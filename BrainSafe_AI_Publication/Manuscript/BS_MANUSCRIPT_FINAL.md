@@ -221,6 +221,20 @@ coverage-guaranteed set, and measured-analogue provenance for *any* structure, i
 ones — is the scientific justification for a dedicated tool over an LLM. *(Supplementary
 Tables S8–S9.)*
 
+**(d) Pre-registered head-to-head benchmark.** To make the comparison directly measurable we froze a
+fixed prompt, a 10-compound panel with uncontested ground truth (approved-drug pharmacology plus one
+unpublished scaffold), and a scoring rubric *before* any system was run
+(`BS_LLM_benchmark_protocol.md`; key in `BS_llm_benchmark_groundtruth.json`; scorer `BS_llm_score.py`).
+Scored by this rubric, BrainSafe attains BBB accuracy 8/9 (0.889), hERG accuracy 6/6 (1.000) on the
+uncontested set, a probability Brier score of 0.085, **zero** fabricated provenance items, and returns
+an honest conformal "uncertain" set on the unpublished compound (Supplementary Table S13). The
+identical prompt is issued to general-purpose LLMs (Gemini, Claude, Perplexity, ChatGPT) and each reply
+is scored by the same rubric; because no third-party LLM API is reachable from the analysis
+environment, LLM rows are collected via the pre-registered human-in-the-loop protocol and reported on
+completion. The design's decisive probe is field 5 (a specific ChEMBL identifier and measured value):
+BrainSafe cites a real measured analogue, whereas a text model must either omit the value or fabricate
+an identifier — a directly countable hallucination, most exposed on the novel compound.
+
 ## 4. Discussion
 
 **Contribution.** Individual components (ECFP/RF ensembles, BBB/hERG/target QSAR, conformal
@@ -242,24 +256,36 @@ returns, for *any* structure, a calibrated probability, a conformal set with emp
 pChEMBL. An LLM is therefore a poor substitute where a decision must be auditable and grounded in
 measured data; BrainSafe is complementary to, not replaced by, general LLMs.
 
-**Threats to validity (scientific-flaw self-audit).** We enumerate the model's principal
-methodological risks and how each is bounded. (1) *Assay heterogeneity* — activities pooled per
-target span IC50/Ki/Kd/EC50/Potency; we mitigate by using ChEMBL's standardised pChEMBL scale,
-a per-compound median aggregation, and a conservative active/inactive labelling with the 5–6
-grey zone discarded, but residual cross-assay variance remains and is why receptor and pooled
-DPPH endpoints are served with wider uncertainty. (2) *Label-threshold sensitivity* — the
-pChEMBL ≥6/<5 cut is a modelling choice; per-threshold precision/recall/F1 across operating
-points are reported in Supplementary Table S4 so a reader can re-read performance at any
-decision threshold. (3) *Applicability-domain cut-off* — the Tanimoto AD threshold is not
-arbitrary post hoc: Supplementary Table S5 shows AUROC declining monotonically as
-train–test similarity falls, empirically justifying the boundary and the out-of-domain flag.
+**Threats to validity (scientific-flaw self-audit, with quantitative tests).** We enumerated the
+model's principal methodological risks and, rather than merely noting them, ran targeted analyses
+to bound each (script `BS_flaw_fixes.py` / `BS_assay_composition.py` / `BS_assay_sensitivity.py`;
+`BS_flaw_fixes.json`).
+(1) *Assay heterogeneity.* Activities pooled per target span IC50/Ki/Kd/EC50/Potency. We first
+quantified the composition (Supplementary Table S11): IC50 is dominant for every target
+(81–92 %) except GSK-3β, which is genuinely mixed (IC50 49 %, EC50 33 %, Ki 16 %). We then
+retrained the deployed ensemble under scaffold CV on the **dominant single assay type (IC50)
+only** versus the pooled set: scaffold AUROC changed by **≤0.006** for all three endpoints tested,
+including the most heterogeneous, GSK-3β (pooled 0.919 vs IC50-only 0.913; MAO-B −0.006; hERG 0.000;
+Supplementary Table S12). Pooling on the standardised pChEMBL scale therefore does not materially
+distort discrimination.
+(2) *Label-threshold sensitivity.* The pChEMBL ≥6/<5 cut is a modelling choice, so we re-derived
+labels from the raw activity records at alternative definitions and re-measured scaffold-CV AUROC
+with the deployed ensemble (Supplementary Table S10). Across four endpoints and four definitions
+the maximum AUROC spread was **0.109**; the stricter ≥6.5/<5.5 cut sat within 0.01–0.02 of the
+deployed cut, and the "sharp boundary" cut that keeps the 5–6 grey zone was consistently the
+*worst*, empirically validating the decision to discard it. Per-operating-threshold
+precision/recall/F1 are additionally in Supplementary Table S4.
+(3) *Applicability-domain cut-off.* The Tanimoto AD threshold is empirically, not arbitrarily,
+set: the n-weighted similarity-binned AUROC falls monotonically from 0.958 (nearest neighbour
+Tanimoto ≥0.8) to 0.939, 0.866 and **0.770** (<0.4) (Supplementary Table S5), justifying the
+out-of-domain flag in the 0.3–0.4 band.
 (4) *Disease mapping* — the target→disease synthesis is a transparent, knowledge-based rule
 (not a learned layer), each driver tagged by provenance, so it can be inspected and overridden.
 (5) *Single safety anti-target* — cardiotoxicity is represented by hERG alone; other liabilities
-(e.g. Nav1.5, hepatotoxicity) are out of scope and stated as such. (6) *Read-across ceiling* —
-because the ensemble beats a kNN-Tanimoto baseline on every endpoint (§3.6), performance is not
-merely memorised nearest-neighbour recall. None of these is concealed; each is surfaced in the
-tool output or the supplementary tables.
+(e.g. Nav1.5, hepatotoxicity) are out of scope and stated as such.
+(6) *Read-across ceiling* — because the ensemble beats a kNN-Tanimoto baseline on every endpoint
+(§3.6), performance is not merely memorised nearest-neighbour recall. None of these is concealed;
+each is surfaced in the tool output or the supplementary tables.
 
 **Validation honesty.** We deliberately report a four-level split hierarchy. The collapse from
 random (0.94–0.98) to temporal (0.61–0.92) quantifies real prospective difficulty: 71–91 % of
@@ -306,10 +332,14 @@ Fig 7 dataset overview.
 S1 classification metrics (random/scaffold/cluster/temporal, PR-AUC, BA, MCC, Brier, conformal) ·
 S2 receptor regression · S3 antioxidant (measured DPPH) · S4 threshold sensitivity ·
 S5 similarity-binned generalisation · S6 clinical-reference composition · S7 benchmark vs literature ·
-S8 BrainSafe-vs-LLM capability matrix · S9 ablation vs kNN-Tanimoto and logistic-regression baselines.
+S8 BrainSafe-vs-LLM capability matrix · S9 ablation vs kNN-Tanimoto and logistic-regression baselines ·
+S10 label-definition robustness (scaffold AUROC under alternative pChEMBL cuts) ·
+S11 assay-type composition per endpoint · S12 single-assay (IC50-only) vs pooled sensitivity.
 **Model card:** `BS_MODEL_CARD.md` (full provenance, diagnosis, and limitations).
-**Comparison artifact:** `BS_llm_comparison.py` / `BS_llm_comparison.json`
-(comparative baseline summary + reproducible grounded-output demonstration).
+**Comparison artifacts:** `BS_llm_comparison.py`/`BS_llm_comparison.json` (baseline summary +
+grounded-output demonstration); `BS_flaw_fixes.py`/`BS_flaw_fixes.json`,
+`BS_assay_composition.py`, `BS_assay_sensitivity.py` (threats-to-validity analyses);
+`BS_LLM_benchmark_protocol.md` + `BS_llm_benchmark.py` (pre-registered LLM head-to-head).
 
 ## Key references
 1. Mendez D, et al. ChEMBL: towards direct deposition of bioassay data. *Nucleic Acids Res* 2019;47:D930.

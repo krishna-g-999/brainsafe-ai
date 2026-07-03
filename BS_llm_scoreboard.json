@@ -1,0 +1,14 @@
+[
+  {
+    "system": "BrainSafe AI",
+    "BBB_accuracy": 0.889,
+    "BBB_scored": 9,
+    "hERG_accuracy": 1.0,
+    "hERG_scored": 6,
+    "Brier": 0.085,
+    "provenance_checked": 0,
+    "provenance_valid": 0,
+    "hallucinations": 0,
+    "novel_honest_uncertainty": true
+  }
+]
