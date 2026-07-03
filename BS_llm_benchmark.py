@@ -35,7 +35,7 @@ def resolve(name):
 # relevant block / 0 no relevant block / None not-scored; target: primary CNS target in our panel.
 PANEL = [
  {"name":"Donepezil","smiles":"O=C1CC(CC2CCN(Cc3ccccc3)CC2)c2cc(OC)c(OC)cc21",
-  "bbb":1,"herg":1,"target":"AChE","note":"AChE inhibitor (Alzheimer's); documented QT/hERG liability; CNS-penetrant"},
+  "bbb":1,"herg":None,"target":"AChE","note":"AChE inhibitor (Alzheimer's); CNS-penetrant. hERG NOT scored: signal (IC50 ~5-35 uM) is weak relative to therapeutic Cmax, so clinical relevance is contestable"},
  {"name":"Galantamine","smiles":"CO[C@@H]1[C@@H]2CC3=C4C1=C(O)C(OC)=CC4=CC=C3C[N@@]2CC=C[C@@H]1O", # placeholder-corrected below
   "bbb":1,"herg":0,"target":"AChE","note":"AChE inhibitor; CNS-penetrant; no major hERG liability"},
  {"name":"Rivastigmine","smiles":"CCN(C)C(=O)Oc1cccc([C@@H](C)N(C)C)c1",

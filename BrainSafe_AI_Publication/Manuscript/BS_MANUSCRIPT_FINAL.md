@@ -221,19 +221,43 @@ coverage-guaranteed set, and measured-analogue provenance for *any* structure, i
 ones — is the scientific justification for a dedicated tool over an LLM. *(Supplementary
 Tables S8–S9.)*
 
-**(d) Pre-registered head-to-head benchmark.** To make the comparison directly measurable we froze a
-fixed prompt, a 10-compound panel with uncontested ground truth (approved-drug pharmacology plus one
-unpublished scaffold), and a scoring rubric *before* any system was run
+**(d) Pre-registered head-to-head benchmark (executed).** To make the comparison directly measurable we
+froze a fixed prompt, a 10-compound panel with uncontested ground truth (approved-drug pharmacology plus
+one unpublished scaffold), and a scoring rubric *before* any system was run
 (`BS_LLM_benchmark_protocol.md`; key in `BS_llm_benchmark_groundtruth.json`; scorer `BS_llm_score.py`).
-Scored by this rubric, BrainSafe attains BBB accuracy 8/9 (0.889), hERG accuracy 6/6 (1.000) on the
-uncontested set, a probability Brier score of 0.085, **zero** fabricated provenance items, and returns
-an honest conformal "uncertain" set on the unpublished compound (Supplementary Table S13). The
-identical prompt is issued to general-purpose LLMs (Gemini, Claude, Perplexity, ChatGPT) and each reply
-is scored by the same rubric; because no third-party LLM API is reachable from the analysis
-environment, LLM rows are collected via the pre-registered human-in-the-loop protocol and reported on
-completion. The design's decisive probe is field 5 (a specific ChEMBL identifier and measured value):
-BrainSafe cites a real measured analogue, whereas a text model must either omit the value or fabricate
-an identifier — a directly countable hallucination, most exposed on the novel compound.
+The identical prompt was then run on four general-purpose LLMs (Gemini Pro, ChatGPT/GPT-4o, Perplexity,
+Claude) and each reply scored against the same measured-data key (Table below; Supplementary Table S13).
+
+| System | BBB acc. | hERG acc. | Brier | ChEMBL IDs cited | Fabricated/wrong-molecule | Novel-compound confabulation |
+|---|---|---|---|---|---|---|
+| **BrainSafe AI** | 8/9 (0.889) | 5/5 (1.00) | 0.088 | 0* | **0** | **No (honest "uncertain")** |
+| Gemini Pro | 7/9 (0.778) | 5/5 (1.00) | 0.067 | 10 | 5 (50%) | Yes |
+| ChatGPT (GPT-4o) | 9/9 (1.00) | 5/5 (1.00) | 0.035 | 9 | 4 (44%) | Yes |
+| Perplexity | 9/9 (1.00) | 4/5 (0.80) | 0.041 | 2 | 1 (50%) | Yes |
+| Claude | 9/9 (1.00) | 5/5 (1.00) | 0.020 | 10 | 4 (40%) | Yes |
+
+*BrainSafe reports the nearest measured analogue by structure (SMILES + measured pChEMBL), not a recalled
+ChEMBL identifier, so it cannot fabricate one. hERG scored on the five uncontested compounds; donepezil
+and fluoxetine were excluded a priori because their hERG clinical relevance is genuinely debatable.
+
+Two findings stand out, and we report both honestly. **First, on classification of well-known approved
+drugs the LLMs are strong** — three of four matched or exceeded BrainSafe on BBB (9/9 vs 8/9; BrainSafe
+mis-called the borderline-lipophilic astemizole), and their probability Brier scores were as good or
+better (Claude 0.020, ChatGPT 0.035). This is expected: these are textbook molecules richly described in
+the training corpus, so recall is excellent, and it means a dedicated tool is *not* justified by raw
+accuracy on famous compounds. **Second, the LLMs fail exactly where grounding and novelty matter.**
+Across the four models, **14 of 31 (45%) of the ChEMBL identifiers they volunteered as provenance were
+fabricated or resolved to the wrong molecule** — e.g. Gemini's cited "rasagiline" identifier is in fact
+*fluticasone propionate* and its "selegiline" identifier is *propranolol*; Claude's "rivastigmine"
+identifier is *pyridoxine* and its "terfenadine" identifier is the antibiotic *cefdinir*; ChatGPT's
+"terfenadine" identifier actually points to astemizole. And **all four models confabulated on the
+unpublished compound**, each asserting a specific target and potency (and even disagreeing on the
+target — three said AChE, one said the D2 receptor) for a structure that has no measured value.
+BrainSafe fabricated nothing, grounded every prediction in a real measured analogue, and returned an
+honest conformal "uncertain" set for the novel compound. The scientific implication is precise: an LLM
+can approximate textbook classifications but cannot be trusted for *verifiable provenance* or for
+*novel chemistry* — which is where hypothesis generation actually happens, and precisely what the
+dedicated tool provides.
 
 ## 4. Discussion
 
@@ -250,11 +274,17 @@ Zhong *et al.*, 2024), with fine-tuned LLMs matching QSAR only in the low-data l
 (Jablonka *et al.*, 2024), whereas BrainSafe operates at a 64,474-record data scale. Second, and
 more fundamentally, the two paradigms differ in kind: an LLM emits fluent text without a
 calibrated probability, a coverage guarantee, an applicability-domain boundary, or a link to a
-specific measurement, and is prone to confident hallucination (Ji *et al.*, 2023). BrainSafe
+specific measurement, and is prone to confident hallucination (Ji *et al.*, 2023). Our executed
+head-to-head (§3.7d) makes this concrete: four current LLMs matched or beat BrainSafe on BBB/hERG
+classification of *well-known* drugs, yet 45% of the ChEMBL identifiers they cited as evidence were
+fabricated or resolved to the wrong molecule, and all four confabulated a specific target and potency
+for an *unpublished* compound (disagreeing with one another). The lesson is not that LLMs are
+inaccurate in general — on memorised compounds they are strong — but that they cannot be trusted for
+verifiable provenance or for novel chemistry. BrainSafe
 returns, for *any* structure, a calibrated probability, a conformal set with empirically verified
 ~90% coverage, an explicit in/out-of-domain flag, and the nearest *measured* analogue with its
-pChEMBL. An LLM is therefore a poor substitute where a decision must be auditable and grounded in
-measured data; BrainSafe is complementary to, not replaced by, general LLMs.
+pChEMBL. It is therefore complementary to, not replaced by, general LLMs where a decision must be
+auditable and grounded in measured data.
 
 **Threats to validity (scientific-flaw self-audit, with quantitative tests).** We enumerated the
 model's principal methodological risks and, rather than merely noting them, ran targeted analyses

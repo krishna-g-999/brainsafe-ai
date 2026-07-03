@@ -510,8 +510,16 @@ Artifacts: `BS_flaw_fixes.py/.json`, `BS_assay_composition.py`, `BS_assay_sensit
 - **(5) single hERG safety anti-target** — other liabilities (Nav1.5, hepatotox) out of scope.
 - **(6) read-across ceiling** — ruled out by §3.2/STable9 (ensemble > kNN on all 8 endpoints).
 
-**Pre-registered LLM head-to-head** (`BS_LLM_benchmark_protocol.md`, `BS_llm_benchmark.py`,
-`BS_llm_score.py`): frozen prompt + 10-compound panel (uncontested truth + 1 unpublished scaffold) +
-fixed rubric. BrainSafe scores BBB 8/9, hERG 6/6, Brier 0.085, 0 fabricated-provenance items, honest
-conformal uncertainty on the novel compound (STable13). LLM rows collected via human-in-the-loop (no
-third-party API reachable) and scored by the identical rubric.
+**Pre-registered LLM head-to-head — EXECUTED** (`BS_LLM_benchmark_protocol.md`, `BS_llm_benchmark.py`,
+`BS_llm_score.py`, `BS_llm_responses.json`): frozen prompt + 10-compound panel (uncontested truth + 1
+unpublished scaffold) + fixed rubric, run on Gemini Pro, ChatGPT/GPT-4o, Perplexity, Claude and scored
+live against ChEMBL (STable13). Honest two-part result:
+- **Well-known drugs:** LLMs are strong — 3/4 hit BBB 9/9 (BrainSafe 8/9, missed astemizole) and Brier
+  as good/better (Claude 0.020). Raw accuracy on famous compounds does NOT justify the tool.
+- **Grounding + novelty:** 14/31 (45%) of ChEMBL IDs the LLMs cited as provenance were fabricated or
+  pointed to the WRONG molecule (e.g. Gemini's "rasagiline" id = fluticasone propionate, "selegiline" =
+  propranolol; Claude's "rivastigmine" = pyridoxine, "terfenadine" = cefdinir; ChatGPT's "terfenadine"
+  id = astemizole). All 4 confabulated a specific target+potency for the unpublished compound and
+  disagreed (3 AChE, 1 D2). BrainSafe: 0 fabricated, grounded in real measured analogues, honest
+  conformal "uncertain" on the novel compound. Conclusion: LLMs approximate textbook classifications but
+  cannot be trusted for verifiable provenance or novel chemistry — the tool's actual value.
