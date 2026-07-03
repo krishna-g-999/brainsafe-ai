@@ -24,10 +24,12 @@ classifiers reach AUROC 0.94–0.98 (at/above published state of the art); under
 scaffold and cluster splits 0.87–0.95; and under true temporal (future-compound) splits
 0.61–0.92, transparently exposing where generalisation is limited. Under an identical protocol the deployed ensemble outperforms both a k-nearest-neighbour
 Tanimoto read-across (mean AUROC 0.912 vs 0.867) and logistic regression (0.808) on every
-endpoint, and — unlike a general-purpose large language model, which underperforms specialised
-models on molecular property prediction and cannot supply calibrated, coverage-guaranteed,
-measurement-grounded output — it returns a calibrated probability, a conformal set, and the
-nearest measured analogue for any structure. The methodological
+endpoint. In a pre-registered head-to-head, four general-purpose large language models matched or
+exceeded BrainSafe on blood–brain-barrier/hERG classification of well-known drugs but fabricated or
+mis-attributed 45% of the measured-data identifiers they cited and confabulated a specific target and
+potency for an unpublished compound, whereas BrainSafe returns, for any structure, a calibrated
+probability, a conformal set, and the nearest measured analogue — grounded, auditable output an LLM
+does not provide. The methodological
 contribution is the **integration** — calibrated, evidence-grounded, BBB-gated,
 safety-aware CNS profiling from measured data — rather than any single new algorithm.
 
@@ -48,7 +50,8 @@ transparent, evidence-grounded tool. BrainSafe AI provides this integration.
   (CHEMBL1914), BACE1 (CHEMBL4822), GSK-3β (CHEMBL262), MAO-A (CHEMBL1951), MAO-B (CHEMBL2039),
   the hERG safety anti-target (CHEMBL240), and receptors D2 (CHEMBL217), A2A (CHEMBL251),
   5-HT2A (CHEMBL224), SERT (CHEMBL228).
-- **Blood–brain barrier** — B3DB classification dataset (7,807 measured compounds).
+- **Blood–brain barrier** — B3DB classification dataset (7,807 measured compounds; 7,805 modelled
+  after InChIKey deduplication).
 - **Antioxidant** — ChEMBL DPPH radical-scavenging assays; IC50/EC50 → pIC50 (2,862 compounds).
 - **Clinical precedent** — ChEMBL ATC level-1 "N" (nervous-system) molecules with max clinical
   phase ≥ 1 and a structure (504 compounds), ATC-mapped to disease class.
@@ -123,8 +126,8 @@ QSAR performance ranges (§3.5), simpler internal baselines under an identical p
 | hERG (5,905) | 0.950 | 0.901 | 0.870 | 0.757 | 0.123 | 0.896 |
 
 AUROC values. Conformal coverage targets 0.90; empirical 0.885–0.905 across endpoints.
-*(Figure 1: validation hierarchy; Figure 2: scaffold-CV ROC curves; Figure 3: calibration
-reliability; Figure 4: conformal coverage; Figure 7: dataset size/balance. Full metrics:
+*(Figure 3: validation hierarchy; Figure 4A: scaffold-CV ROC curves; Figure 4B: calibration
+reliability; Figure 5A: conformal coverage; Figure 2: dataset size/balance. Full metrics:
 Supplementary Table S1; per-threshold precision/recall/F1: S4; similarity-binned generalisation: S5.)*
 
 ### 3.2 Receptor potency regression (scaffold-CV, non-comparative)
@@ -135,7 +138,7 @@ Supplementary Table S1; per-threshold precision/recall/F1: S4; similarity-binned
 | D2 (7,511) | 0.425 | 0.71 | 0.652 | −0.007 |
 | SERT (4,471) | 0.338 | 0.84 | 0.573 | 0.171 |
 
-*(Predicted-vs-measured scatter: Figure 6; Supplementary Table S2.)*
+*(Predicted-vs-measured scatter: Figure 7; Supplementary Table S2.)*
 
 ### 3.3 Antioxidant (measured DPPH) and druggability
 Measured DPPH regression (n=2,862): scaffold-CV **R² = 0.43, RMSE = 0.60, Spearman = 0.636**
@@ -144,17 +147,24 @@ Measured DPPH regression (n=2,862): scaffold-CV **R² = 0.43, RMSE = 0.60, Spear
 deterministic and discriminates CNS drugs from polar non-drugs (donepezil 79, caffeine 86 vs
 sucrose 46, atorvastatin 24).
 
-### 3.4 Prospective sanity (chemistry-only inputs)
-Donepezil → Alzheimer's via AChE (P=0.99) + BBB-penetrant + **hERG high** (matches its QT
-liability); Selegiline → Parkinson's via MAO-B; Terfenadine → **hERG 0.99** (withdrawn for
-cardiotoxicity, correctly flagged); Fluoxetine → Depression via SERT with clinical precedent
-(Fluoxetine, Phase 4, Depression); Quercetin → BBB non-penetrant + high antioxidant. The system
+### 3.4 Prospective sanity (chemistry-only inputs, non-comparative)
+With chemistry-only inputs the integrated system reproduces established pharmacology (values are the
+tool's actual outputs; `BS_llm_benchmark_groundtruth.json`). Donepezil → Alzheimer's disease
+(score 1.00) via AChE (P=1.00), BBB-penetrant (0.997), with clinical precedent (Donepezil, Phase 4,
+Alzheimer's); Rivastigmine → Alzheimer's (0.85) via BChE (the tool identifies the butyrylcholinesterase
+route), BBB-penetrant; Rasagiline → Parkinson's disease (0.95) via MAO-B, clinical precedent
+(Rasagiline, Phase 4, Parkinson's); Fluoxetine → Depression (0.96) via SERT with clinical precedent
+(Fluoxetine, Phase 4, Depression); Terfenadine → **hERG 1.00** (withdrawn for cardiotoxicity, correctly
+flagged) and BBB non-penetrant (0.42); Resveratrol and Quercetin → BBB non-penetrant (0.35 and 0.18)
+with the highest antioxidant scores in the set. Donepezil's hERG is flagged (P=0.78); we note its
+clinical hERG relevance is modest relative to therapeutic exposure and therefore treat it cautiously
+(§3.7d). The system
 reproduces known pharmacology and safety.
 
 ### 3.5 Benchmark vs literature (comparative)
 On random splits, BrainSafe AUROC (0.94–0.98) is at/above published ranges (BBB 0.88–0.96;
 hERG 0.86–0.93). The same models additionally report the stricter scaffold/cluster/temporal
-numbers most studies omit. *(Figure 5; Supplementary Table S7.)*
+numbers most studies omit. *(Figure 6; Supplementary Table S7.)*
 
 ### 3.6 Ablation against simpler baselines (comparative)
 To confirm the ensemble contributes signal beyond structural look-up, we compared it, under an
@@ -210,12 +220,12 @@ Supplementary Table S8.
 
 **(c) Reproducible grounded-output demonstration.** For fixed input structures the deployed
 engine returns verifiable artifacts (script `BS_llm_comparison.py`, output
-`BS_llm_comparison.json`): donepezil → AChE calibrated P = 0.96 with nearest measured analogue
-at Tanimoto 0.71 (measured pChEMBL 7.75) and hERG P = 0.89 (matching its clinical QT liability);
+`BS_llm_comparison.json`): donepezil → AChE calibrated P = 1.00 with the nearest measured analogue
+at Tanimoto 1.00 (donepezil is itself a measured training compound, pChEMBL 7.75) and hERG P = 0.78;
 terfenadine → hERG P = 1.00, correctly flagging the cardiotoxicity for which it was withdrawn,
 while correctly calling it BBB-non-penetrant; and a novel arylpiperazine of an unpublished
-scaffold → an **honest conformal "uncertain" set** for AChE grounded in a measured analogue
-(pChEMBL 4.82), rather than a confident but unverifiable text answer. Every value is traceable
+scaffold → an **honest conformal "uncertain" set** for AChE grounded in the nearest measured analogue
+(Tanimoto 0.35, pChEMBL 4.82), rather than a confident but unverifiable text answer. Every value is traceable
 to a measurement; none is generated from free text. This grounding — calibrated probability,
 coverage-guaranteed set, and measured-analogue provenance for *any* structure, including novel
 ones — is the scientific justification for a dedicated tool over an LLM. *(Supplementary
@@ -355,9 +365,10 @@ and all fetch/train/validation scripts are in the repository. App: `app_v6_final
 
 ## Supplementary materials
 **Figures** (`figures/`, 300 dpi, regenerated from out-of-fold predictions):
-Fig 1 validation hierarchy · Fig 2 ROC curves · Fig 3 calibration reliability ·
-Fig 4 conformal coverage · Fig 5 benchmark vs literature · Fig 6 regression scatter ·
-Fig 7 dataset overview.
+Fig 1 pipeline/workflow · Fig 2 dataset size & class balance · Fig 3 AUROC across validation
+regimes (random/scaffold/cluster/temporal) · Fig 4 (A) scaffold-CV ROC curves, (B) calibration
+reliability · Fig 5 (A) conformal coverage, (B) ensemble vs kNN/logistic baselines ·
+Fig 6 benchmark vs literature · Fig 7 predicted-vs-measured regression scatter (antioxidant + receptors).
 **Supplementary tables** (`supplementary/`, exact values from the validation artifacts):
 S1 classification metrics (random/scaffold/cluster/temporal, PR-AUC, BA, MCC, Brier, conformal) ·
 S2 receptor regression · S3 antioxidant (measured DPPH) · S4 threshold sensitivity ·

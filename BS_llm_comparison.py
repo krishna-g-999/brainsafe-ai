@@ -126,7 +126,7 @@ import BS_brain_predict as B
 
 DEMO = {
     "Donepezil (approved AChE inhibitor, Alzheimer's)":
-        "O=C1CC(CC2CCN(Cc3ccccc3)CC2)c2cc(OC)c(OC)cc21",
+        "COC1=C(C=C2C(=C1)CC(C2=O)CC3CCN(CC3)CC4=CC=CC=C4)OC",
     "Terfenadine (withdrawn, hERG cardiotoxicity)":
         "CC(C)(C)c1ccc(C(O)CCCN2CCC(C(O)(c3ccccc3)c3ccccc3)CC2)cc1",
     "Novel arylpiperazine (hypothetical, unpublished scaffold)":
