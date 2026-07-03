@@ -494,10 +494,24 @@ Beating a pure nearest-neighbour read-across shows the model learns SAR beyond s
   7.75; terfenadine→hERG P=1.00; novel arylpiperazine→honest conformal "uncertain" grounded in a
   measured analogue). Every value is measurement-traceable — the audit guarantee an LLM cannot give.
 
-**Consolidated scientific-flaw self-audit (threats to validity).** (1) assay-type pooling — mitigated by
-pChEMBL standardisation + median aggregation + grey-zone removal; residual variance flagged on receptor/
-DPPH endpoints. (2) label-threshold sensitivity — full per-threshold P/R/F1 in STable4. (3) AD cut-off —
-empirically justified by monotonically declining AUROC with similarity in STable5. (4) disease mapping —
-transparent knowledge-based rule, provenance-tagged, inspectable/overridable. (5) single hERG safety
-anti-target — other liabilities out of scope. (6) read-across ceiling — ruled out by §3.2/STable9. All
-surfaced in tool output or supplementary tables, none concealed.
+**Consolidated scientific-flaw self-audit (threats to validity) — now with quantitative tests.**
+Artifacts: `BS_flaw_fixes.py/.json`, `BS_assay_composition.py`, `BS_assay_sensitivity.py`; STable10-13.
+- **(1) Assay-type pooling — TESTED, not just documented.** Composition quantified (STable11): IC50
+  dominant 81-92% per target except GSK3B (IC50 49%, EC50 33%, Ki 16%). Single-assay (IC50-only) vs
+  pooled scaffold-CV retrain changes AUROC by **≤0.006** (GSK3B 0.919→0.913; MAO_B −0.006; hERG 0.000;
+  STable12) → pChEMBL pooling does not materially distort discrimination.
+- **(2) Label-threshold sensitivity — TESTED.** Re-labelling at {deployed ≥6/<5, strict ≥6.5/<5.5,
+  sharp ≥6/<6, high-potency ≥7/<5} gives max scaffold-AUROC spread **0.109** over 4 endpoints; deployed
+  ≈ strict (within 0.01-0.02); grey-zone-retaining "sharp boundary" is consistently worst, validating
+  the grey-zone drop (STable10). Per-operating-threshold P/R/F1 also in STable4.
+- **(3) AD cut-off — data-driven.** n-weighted similarity-binned AUROC 0.958 (T≥0.8) → 0.939 → 0.866 →
+  **0.770** (T<0.4), justifying the 0.30-0.40 out-of-domain flag (STable5).
+- **(4) disease mapping** — transparent knowledge-based rule, provenance-tagged, inspectable/overridable.
+- **(5) single hERG safety anti-target** — other liabilities (Nav1.5, hepatotox) out of scope.
+- **(6) read-across ceiling** — ruled out by §3.2/STable9 (ensemble > kNN on all 8 endpoints).
+
+**Pre-registered LLM head-to-head** (`BS_LLM_benchmark_protocol.md`, `BS_llm_benchmark.py`,
+`BS_llm_score.py`): frozen prompt + 10-compound panel (uncontested truth + 1 unpublished scaffold) +
+fixed rubric. BrainSafe scores BBB 8/9, hERG 6/6, Brier 0.085, 0 fabricated-provenance items, honest
+conformal uncertainty on the novel compound (STable13). LLM rows collected via human-in-the-loop (no
+third-party API reachable) and scored by the identical rubric.
