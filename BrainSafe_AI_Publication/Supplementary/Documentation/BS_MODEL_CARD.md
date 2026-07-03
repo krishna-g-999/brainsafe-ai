@@ -253,10 +253,13 @@ a transparent decision-support engine (`BS_brain_predict.py`, app
 | antioxidant | oxidative stress | R²=0.27 | — | 339 |
 | druggability/CNS-MPO | developability | deterministic | — | — |
 
-**Prospective sanity (chemistry-only inputs):** Donepezil → Alzheimer's 100% via AChE,
-evidence T=1.0/0.98/0.96 active, **hERG High** (matches its real QT liability);
-Selegiline → Parkinson's 100% via MAO-B, hERG Low; **Terfenadine** (withdrawn for
-cardiotoxicity) → **hERG 0.99 High** (caught); Quercetin → BBB non-penetrant 0.17,
+**Prospective sanity (chemistry-only inputs; verified against current models, structures
+PubChem-resolved):** Donepezil → Alzheimer's disease score 1.00 via AChE (P=1.00), nearest
+measured analogue Tanimoto 1.00 (donepezil itself, pChEMBL 7.75), hERG P=0.78 flagged (its clinical
+hERG relevance is modest relative to exposure, so treated cautiously); Selegiline/Rasagiline →
+Parkinson's via MAO-B (0.95–1.00), hERG low; **Terfenadine** (withdrawn for cardiotoxicity) →
+**hERG 1.00** and BBB non-penetrant 0.42 (caught); Fluoxetine → Depression 0.96 via SERT
+(Fluoxetine Ph4 clinical precedent); Quercetin/Resveratrol → BBB non-penetrant (0.18/0.35),
 analogs flagged as extrapolation. The engine reproduces known pharmacology and safety.
 
 **Honest limitations (unchanged, still apply):** ChEMBL target sets are analog-dense
@@ -490,9 +493,10 @@ Beating a pure nearest-neighbour read-across shows the model learns SAR beyond s
   structure→measured-activity function, no calibrated probability, no coverage guarantee, no
   applicability domain, no measured-analogue provenance. BrainSafe supplies all six.
 - *Reproducible grounded-output demonstration:* for fixed structures the engine returns calibrated P +
-  conformal set + nearest **measured** analogue with pChEMBL (donepezil→AChE P=0.96, analogue pChEMBL
-  7.75; terfenadine→hERG P=1.00; novel arylpiperazine→honest conformal "uncertain" grounded in a
-  measured analogue). Every value is measurement-traceable — the audit guarantee an LLM cannot give.
+  conformal set + nearest **measured** analogue with pChEMBL (donepezil→AChE P=1.00, nearest analogue
+  Tanimoto 1.00 / pChEMBL 7.75; terfenadine→hERG P=1.00; novel arylpiperazine→honest conformal
+  "uncertain" grounded in a measured analogue, Tanimoto 0.35 / pChEMBL 4.82). Every value is
+  measurement-traceable — the audit guarantee an LLM cannot give.
 
 **Consolidated scientific-flaw self-audit (threats to validity) — now with quantitative tests.**
 Artifacts: `BS_flaw_fixes.py/.json`, `BS_assay_composition.py`, `BS_assay_sensitivity.py`; STable10-13.

@@ -218,15 +218,15 @@
   ],
   "grounded_output_demonstration": {
     "Donepezil (approved AChE inhibitor, Alzheimer's)": {
-      "smiles": "O=C1CC(CC2CCN(Cc3ccccc3)CC2)c2cc(OC)c(OC)cc21",
+      "smiles": "COC1=C(C=C2C(=C1)CC(C2=O)CC3CCN(CC3)CC4=CC=CC=C4)OC",
       "grounded_endpoints": [
         {
           "endpoint": "BBB",
-          "calibrated_probability": 0.996,
+          "calibrated_probability": 0.997,
           "call": "Penetrant",
           "in_applicability_domain": true,
           "nearest_measured_analogue_SMILES": "COc1cc2c(cc1OC)C(=O)C(CC1CCN(Cc3ccccc3)CC1)C2",
-          "nearest_analogue_tanimoto": 0.71,
+          "nearest_analogue_tanimoto": 1.0,
           "nearest_analogue_measured_outcome": "active",
           "nearest_analogue_measured_pChEMBL": null,
           "conformal_set": [
@@ -236,11 +236,11 @@
         },
         {
           "endpoint": "AChE",
-          "calibrated_probability": 0.96,
+          "calibrated_probability": 1.0,
           "call": "Active",
           "in_applicability_domain": true,
           "nearest_measured_analogue_SMILES": "COc1cc2c(cc1OC)C(=O)C(CC1CCN(Cc3ccccc3)CC1)C2",
-          "nearest_analogue_tanimoto": 0.71,
+          "nearest_analogue_tanimoto": 1.0,
           "nearest_analogue_measured_outcome": "active",
           "nearest_analogue_measured_pChEMBL": 7.75,
           "conformal_set": [
@@ -250,7 +250,7 @@
         },
         {
           "endpoint": "hERG",
-          "calibrated_probability": 0.891,
+          "calibrated_probability": 0.779,
           "call": "Blocker",
           "in_applicability_domain": true,
           "nearest_measured_analogue_SMILES": "COc1cc(N)c(Cl)cc1C(=O)NC1CCN(Cc2ccccc2)CC1",

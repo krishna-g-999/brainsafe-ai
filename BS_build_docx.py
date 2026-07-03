@@ -88,7 +88,11 @@ P("Background. Predicting whether a small molecule acts on the brain requires se
   "sets (Norinder et al., 2014); each prediction reports its nearest measured analogues and is "
   "combined into BBB-gated per-disease scores. Across random, scaffold, leave-cluster-out and "
   "temporal validation, random-split AUROC was 0.94–0.98, scaffold and cluster AUROC 0.87–0.95, and "
-  "temporal AUROC 0.61–0.92, with conformal coverage of 0.885–0.905. "
+  "temporal AUROC 0.61–0.92, with conformal coverage of 0.885–0.905. In a pre-registered head-to-head, "
+  "four general-purpose large language models matched or exceeded BrainSafe on blood–brain-barrier and "
+  "hERG classification of well-known drugs but fabricated or mis-attributed 45% of the measured-data "
+  "identifiers they cited and confabulated a target and potency for an unpublished compound, whereas "
+  "BrainSafe grounded every prediction in a real measured analogue and reported honest uncertainty. "
   "Conclusion. BrainSafe AI integrates measured-data CNS profiling that is calibrated, "
   "evidence-grounded, BBB-gated and safety-aware. Availability: code, models and data are released; "
   "the tool is for research use and is pending peer review.", align="j")
@@ -304,8 +308,8 @@ P("Table 7. Capability comparison: BrainSafe AI versus a general-purpose large l
 table_from_df(s8); P("")
 P("Reproducible grounded-output demonstration. For fixed input structures the deployed engine "
   "returns verifiable artifacts (script BS_llm_comparison.py; output BS_llm_comparison.json): "
-  "donepezil → AChE calibrated P = 0.96 with the nearest measured analogue at Tanimoto 0.71 "
-  "(measured pChEMBL 7.75) and hERG P = 0.89, matching its clinical QT liability; terfenadine → hERG "
+  "donepezil → AChE calibrated P = 1.00 with the nearest measured analogue at Tanimoto 1.00 "
+  "(donepezil is itself a measured training compound, pChEMBL 7.75) and hERG P = 0.78; terfenadine → hERG "
   "P = 1.00, correctly flagging the cardiotoxicity for which it was withdrawn, while correctly "
   "calling it BBB non-penetrant; and a novel arylpiperazine of an unpublished scaffold → an honest "
   "conformal ‘uncertain’ set for AChE grounded in a measured analogue (pChEMBL 4.82) rather than a "
