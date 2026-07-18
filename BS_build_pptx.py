@@ -121,37 +121,37 @@ def plainbox(s,l,t,w,h,text,color=GREEN):
     _,tf=box(s,l+0.18,t+0.06,w-0.3,h-0.12); tf.vertical_anchor=MSO_ANCHOR.MIDDLE
     runs(tf,[("In plain terms:  ",color,True),(text,INK,False)],size=12.5,first=True,space_after=0)
 
-# ============================================================ SLIDE 1 — COVER
+# ============================================================ SLIDE 1, COVER
 s=slide(); bg(s,NAVY)
 rect(s,0,0,SW.inches,0.12,SKY)
 _,tf=box(s,0.9,0.7,11.5,0.5); runs(tf,[("● ",SKY,True),("BRAINSAFE AI",LIGHT,True)],size=14,font=MONO,first=True)
 _,tf=box(s,0.9,1.15,11.5,0.4); para(tf,"RESEARCH PREVIEW · PENDING PEER REVIEW",size=12,bold=True,color=SKY,font=MONO,first=True)
 _,tf=box(s,0.9,1.9,11.6,2.6)
-para(tf,"Predicting a molecule's effect on the brain —",size=34,bold=True,color=WHITE,font=SERIF,first=True,space_after=2)
+para(tf,"Predicting a molecule's effect on the brain",size=34,bold=True,color=WHITE,font=SERIF,first=True,space_after=2)
 para(tf,"from its chemical structure alone",size=34,bold=True,color=WHITE,font=SERIF,space_after=0)
 _,tf=box(s,0.9,4.15,11.2,1.6)
 para(tf,"An evidence-grounded, calibrated, safety-aware predictor of central-nervous-system "
-        "activity — built entirely on measured laboratory data, not guesswork.",size=17,color=LIGHT,font=SANS,first=True)
+        "activity, built entirely on measured laboratory data, not guesswork.",size=17,color=LIGHT,font=SANS,first=True)
 _,tf=box(s,0.9,6.5,11.5,0.6)
 para(tf,"Sri Sathya Sai Institute of Higher Learning    ·    64,474 measured records    ·    12 endpoints",
      size=12.5,color=SKY,font=MONO,first=True)
 notes(s,
-"SAY: Welcome. In one sentence — BrainSafe AI takes a molecule's chemical structure and predicts "
+"SAY: Welcome. In one sentence, BrainSafe AI takes a molecule's chemical structure and predicts "
 "how it is likely to act on the brain: can it get in, what does it hit, is it safe, and is it drug-like. "
 "Crucially, every prediction is built on real laboratory measurements and comes with an honest confidence "
 "estimate and the evidence behind it.\n\n"
 "TECHNICAL TERMS:\n"
 "- 'Endpoint' = one specific thing we predict (e.g. brain penetration, or activity against one target).\n"
 "- 'Measured data' = results of actual lab experiments, not simulated or assumed values.\n\n"
-"Q&A — GENERAL/COMMERCIAL:\n"
+"Q&A, GENERAL/COMMERCIAL:\n"
 "Q: Is this a finished product / medical device?\nA: No. It is a validated research tool for prioritising and "
 "triaging compounds. It is not for clinical or diagnostic decisions, and we say that clearly throughout.\n"
-"Q: Who would use it?\nA: Medicinal chemists, natural-product and drug-repurposing researchers — anyone deciding "
+"Q: Who would use it?\nA: Medicinal chemists, natural-product and drug-repurposing researchers, anyone deciding "
 "which molecules are worth testing next for brain conditions.\n\n"
-"Q&A — EXPERT:\nQ: Application paper or method paper?\nA: An application/resource paper — the contribution is the "
+"Q&A, EXPERT:\nQ: Application paper or method paper?\nA: An application/resource paper, the contribution is the "
 "integration and honest validation, on measured data, not a new algorithm.")
 
-# ============================================================ SLIDE 2 — PROBLEM
+# ============================================================ SLIDE 2, PROBLEM
 s=slide(); bg(s,PAPER); eyebrow(s,"01 · The problem"); accentbar(s); title(s,"One question that is really five questions at once")
 _,tf=box(s,0.9,2.0,6.2,4.4)
 para(tf,"To judge if a molecule is worth pursuing for a brain condition, you must answer, together:",
@@ -170,29 +170,29 @@ para(tf,"General ADMET tools predict barrier entry and safety but not target act
         "Target-prediction tools predict binding but ignore brain entry, safety, and confidence. "
         "No single public tool unifies all five on measured data.",size=13,color=MUTED,space_after=0)
 plainbox(s,0.9,6.05,11.6,0.9,
-"the blood–brain barrier is the brain's security gate — most molecules can't pass. A compound has to clear "
+"the blood–brain barrier is the brain's security gate, most molecules can't pass. A compound has to clear "
 "that gate AND hit the right target AND be safe. Answering these one-at-a-time, in different tools, is slow and error-prone.",color=BLUE)
 notes(s,
 "SAY: A common misconception is that 'will this help the brain?' is one question. It isn't. A molecule can be a "
-"perfect target-blocker and still be useless because it never reaches the brain — or dangerous because it affects "
+"perfect target-blocker and still be useless because it never reaches the brain, or dangerous because it affects "
 "the heart. You have to answer all of these together. Today those answers are scattered across separate tools that "
 "don't talk to each other.\n\n"
 "TECHNICAL TERMS:\n- Blood–brain barrier (BBB): a tight layer of cells that keeps most substances out of the brain.\n"
 "- Target: the specific protein a drug is meant to act on (e.g. an enzyme involved in Alzheimer's).\n"
-"- ADMET: absorption, distribution, metabolism, excretion, toxicity — the 'developability' properties.\n\n"
-"Q&A — GENERAL/COMMERCIAL:\nQ: Why does this matter commercially?\nA: Most drug candidates fail late and expensively. "
+"- ADMET: absorption, distribution, metabolism, excretion, toxicity, the 'developability' properties.\n\n"
+"Q&A, GENERAL/COMMERCIAL:\nQ: Why does this matter commercially?\nA: Most drug candidates fail late and expensively. "
 "Catching 'won't reach the brain' or 'heart-safety risk' early saves time and money.\n\n"
-"Q&A — EXPERT:\nQ: Aren't SwissADME/ADMETlab enough?\nA: They cover BBB/ADMET well but not measured CNS-target "
-"activity, BBB-gated disease synthesis, calibrated uncertainty, or a linked safety axis — that combination is the gap.")
+"Q&A, EXPERT:\nQ: Aren't SwissADME/ADMETlab enough?\nA: They cover BBB/ADMET well but not measured CNS-target "
+"activity, BBB-gated disease synthesis, calibrated uncertainty, or a linked safety axis, that combination is the gap.")
 
-# ============================================================ SLIDE 3 — INNOVATION
+# ============================================================ SLIDE 3, INNOVATION
 s=slide(); bg(s,NAVY); eyebrow(s,"02 · What we built",color=SKY); rect(s,0.9,0.62,0.5,0.045,SKY)
-title(s,"The innovation is the integration — not a new algorithm",color=WHITE)
+title(s,"The innovation is the integration, not a new algorithm",color=WHITE)
 _,tf=box(s,0.9,1.95,11.4,1.0)
 para(tf,"Each individual piece is well established. Combining them into one transparent, measured-data "
-        "brain profiler — that is the contribution.",size=16,color=LIGHT,first=True)
-cards=[("Calibrated & confident","Every probability is honest — a '90%' really behaves like 9-in-10 — and comes with a guaranteed confidence range.",BLUE),
-       ("Evidence-grounded","Every answer shows the nearest real, measured molecule it is based on — you can check the receipt.",GREEN),
+        "brain profiler, that is the contribution.",size=16,color=LIGHT,first=True)
+cards=[("Calibrated & confident","Every probability is honest, a '90%' really behaves like 9-in-10, and comes with a guaranteed confidence range.",BLUE),
+       ("Evidence-grounded","Every answer shows the nearest real, measured molecule it is based on, you can check the receipt.",GREEN),
        ("Brain-gated disease view","Target activity is combined with brain-entry, so 'engages target' only counts if the molecule can actually get in.",AMBER)]
 x=0.9
 for h,b,c in cards:
@@ -203,22 +203,22 @@ for h,b,c in cards:
     para(tf,b,size=13,color=LIGHT,space_after=0)
     x+=3.94
 notes(s,
-"SAY: We did not invent a new machine-learning algorithm — and that is deliberate. The scientific value here is "
+"SAY: We did not invent a new machine-learning algorithm, and that is deliberate. The scientific value here is "
 "engineering restraint: taking proven, trusted components and integrating them so the whole is honest and auditable. "
 "Three properties make it different from a black box: calibration, evidence-grounding, and brain-gating.\n\n"
 "TECHNICAL TERMS:\n- Calibration: adjusting scores so a stated probability matches real-world frequency.\n"
-"- Confidence range (conformal set): instead of one number, the tool can say 'confidently active' or 'uncertain — "
+"- Confidence range (conformal set): instead of one number, the tool can say 'confidently active' or 'uncertain, "
 "both possible', with a mathematical coverage guarantee.\n- Brain-gating: multiplying target activity by "
 "brain-penetration probability, so a target hit that can't reach the brain is down-weighted.\n\n"
-"Q&A — EXPERT:\nQ: If nothing is novel algorithmically, what's the publishable claim?\nA: The integrated, calibrated, "
-"conformal, BBB-gated, safety-aware, evidence-grounded configuration on measured data — no existing single tool "
-"provides it — plus a rigorous multi-regime validation.\n\n"
-"Q&A — GENERAL/COMMERCIAL:\nQ: What's the moat if the parts are standard?\nA: The integration, the curated measured "
-"dataset, the honesty layer (calibration + provenance), and validated performance — hard to reproduce casually.")
+"Q&A, EXPERT:\nQ: If nothing is novel algorithmically, what's the publishable claim?\nA: The integrated, calibrated, "
+"conformal, BBB-gated, safety-aware, evidence-grounded configuration on measured data, no existing single tool "
+"provides it, plus a rigorous multi-regime validation.\n\n"
+"Q&A, GENERAL/COMMERCIAL:\nQ: What's the moat if the parts are standard?\nA: The integration, the curated measured "
+"dataset, the honesty layer (calibration + provenance), and validated performance, hard to reproduce casually.")
 
-# ============================================================ SLIDE 4 — DATA
+# ============================================================ SLIDE 4, DATA
 s=slide(); bg(s,PAPER); eyebrow(s,"03 · Data sources"); accentbar(s)
-title(s,"64,474 measured records — every one a real experiment")
+title(s,"64,474 measured records, every one a real experiment")
 add_table(s,[
  ["Source","What it provides","Records"],
  ["ChEMBL_37 (pChEMBL)","Activity vs CNS targets + heart-safety","53,301"],
@@ -228,28 +228,28 @@ add_table(s,[
  [("Total",INK,True),("",INK,True),("64,474",BLUE,True)],
 ],0.9,2.05,7.4,[2.1,3.0,1.1])
 _,tf=box(s,8.6,2.05,3.9,3.6)
-for t in [("Public, reproducible sources — ChEMBL and B3DB.",BLUE),
+for t in [("Public, reproducible sources, ChEMBL and B3DB.",BLUE),
           ("Only lab-measured values kept (no guesses/imputation).",GREEN),
           ("Report dates (1976–2025) retained for a 'future' test.",AMBER)]:
     runs(tf,[(t[0],INK,False)],size=13.5,bullet="▪",space_after=10,first=(t[1]==BLUE))
     tf.paragraphs[-1].runs[0].font.color.rgb=t[1]
 plainbox(s,0.9,6.15,11.6,0.85,
 "'measured' means someone physically tested each molecule in a lab and recorded the result. The tool learns from "
-"tens of thousands of these real results — it is not making things up from text on the internet.",color=GREEN)
+"tens of thousands of these real results, it is not making things up from text on the internet.",color=GREEN)
 notes(s,
-"SAY: Everything the tool knows comes from real experiments in public databases — mainly ChEMBL, the standard "
+"SAY: Everything the tool knows comes from real experiments in public databases, mainly ChEMBL, the standard "
 "repository of measured bioactivity, and B3DB for brain penetration. 64,474 measured records in total. This is the "
 "single most important integrity point: the foundation is measured, not scraped text.\n\n"
 "TECHNICAL TERMS:\n- ChEMBL: a large public database of measured drug-target activity.\n"
 "- pChEMBL: a standardised potency value (higher = more potent) that lets different experiments be compared on one scale.\n"
 "- B3DB: a curated database of measured blood–brain-barrier permeability.\n- DPPH: a standard lab test of antioxidant "
 "(free-radical-scavenging) strength.\n\n"
-"Q&A — EXPERT:\nQ: You pool IC50/Ki/Kd/EC50 — doesn't that mix assays?\nA: Yes, on the standardised pChEMBL scale; we "
+"Q&A, EXPERT:\nQ: You pool IC50/Ki/Kd/EC50, doesn't that mix assays?\nA: Yes, on the standardised pChEMBL scale; we "
 "tested this (later slide): retraining on a single assay type changes AUROC by <=0.006, so pooling is safe.\n\n"
-"Q&A — GENERAL/COMMERCIAL:\nQ: Is the data licensed/usable?\nA: ChEMBL and B3DB are public and openly licensed; the "
+"Q&A, GENERAL/COMMERCIAL:\nQ: Is the data licensed/usable?\nA: ChEMBL and B3DB are public and openly licensed; the "
 "pipeline is reproducible from released scripts.")
 
-# ============================================================ SLIDE 5 — ENDPOINTS
+# ============================================================ SLIDE 5, ENDPOINTS
 s=slide(); bg(s,PAPER); eyebrow(s,"04 · What it predicts"); accentbar(s)
 title(s,"Twelve core endpoints, plus supporting layers")
 add_table(s,[
@@ -268,61 +268,61 @@ _,tf=box(s,8.9,2.0,3.6,4.0)
 para(tf,"Two kinds of answer",size=15,bold=True,color=INK,first=True,space_after=5)
 runs(tf,[("Classifier",BLUE,True),(" = yes/no with a probability (e.g. 'active, 0.92').",INK,False)],size=13,space_after=8)
 runs(tf,[("Regression",GREEN,True),(" = a strength number, used to rank compounds.",INK,False)],size=13,space_after=12)
-para(tf,"Why the split? The four receptors were 96–98% actives in the data — too lopsided for a fair yes/no "
-        "model — so the tool ranks their strength instead. A quality gate decides this automatically.",
+para(tf,"Why the split? The four receptors were 96–98% actives in the data, too lopsided for a fair yes/no "
+        "model, so the tool ranks their strength instead. A quality gate decides this automatically.",
      size=12.5,color=MUTED,space_after=0)
 notes(s,
 "SAY: The tool outputs a full brain profile: brain entry, several disease-relevant targets, a heart-safety flag, "
-"receptor strengths, antioxidant capacity, and drug-likeness. Two of these — druggability and CNS-MPO — are "
+"receptor strengths, antioxidant capacity, and drug-likeness. Two of these, druggability and CNS-MPO, are "
 "transparent chemistry rules, not machine learning.\n\n"
 "TECHNICAL TERMS:\n- AChE/BChE/BACE1/GSK-3β/MAO: enzymes implicated in Alzheimer's, Parkinson's and mood disorders.\n"
-"- hERG: a heart ion-channel; blocking it can cause dangerous arrhythmia — a classic safety red flag.\n"
+"- hERG: a heart ion-channel; blocking it can cause dangerous arrhythmia, a classic safety red flag.\n"
 "- Receptor (D2/A2A/5-HT2A/SERT): proteins involved in dopamine/serotonin signalling.\n"
 "- Classifier vs regression: yes/no-with-probability vs a continuous strength score.\n"
 "- CNS-MPO: a published 'is this drug-like for the brain?' scoring rule.\n\n"
-"Q&A — EXPERT:\nQ: Why regression for the receptors?\nA: 96–98% active-only data makes binary classification "
-"degenerate; a pre-set quality gate (MCC>=0.45) routes them to potency regression instead — decided by data, not hand.\n\n"
-"Q&A — GENERAL/COMMERCIAL:\nQ: Can you add more targets later?\nA: Yes — the same pipeline extends to any target with "
+"Q&A, EXPERT:\nQ: Why regression for the receptors?\nA: 96–98% active-only data makes binary classification "
+"degenerate; a pre-set quality gate (MCC>=0.45) routes them to potency regression instead, decided by data, not hand.\n\n"
+"Q&A, GENERAL/COMMERCIAL:\nQ: Can you add more targets later?\nA: Yes, the same pipeline extends to any target with "
 "enough measured data.")
 
-# ============================================================ SLIDE 6 — FEATURES & MODELS
+# ============================================================ SLIDE 6, FEATURES & MODELS
 s=slide(); bg(s,NAVY); eyebrow(s,"05 · How it learns",color=SKY); rect(s,0.9,0.62,0.5,0.045,SKY)
-title(s,"How the computer 'sees' a molecule — and learns",color=WHITE)
+title(s,"How the computer 'sees' a molecule, and learns",color=WHITE)
 rrect(s,0.9,1.95,5.7,4.4,NAVY2,line=RGBColor(0x25,0x40,0x5A))
 _,tf=box(s,1.2,2.2,5.1,4.0)
 para(tf,"Turning a molecule into numbers",size=17,bold=True,color=WHITE,first=True,space_after=8)
-runs(tf,[("Chemical fingerprint (ECFP-4)",SKY,True),(" — a 1,024-bit 'barcode' of the molecule's building blocks.",LIGHT,False)],size=13.5,bullet="▪",space_after=8)
-runs(tf,[("24 physical descriptors",SKY,True),(" — size, greasiness, surface area, flexibility, drug-likeness.",LIGHT,False)],size=13.5,bullet="▪",space_after=8)
+runs(tf,[("Chemical fingerprint (ECFP-4)",SKY,True),(", a 1,024-bit 'barcode' of the molecule's building blocks.",LIGHT,False)],size=13.5,bullet="▪",space_after=8)
+runs(tf,[("24 physical descriptors",SKY,True),(", size, greasiness, surface area, flexibility, drug-likeness.",LIGHT,False)],size=13.5,bullet="▪",space_after=8)
 runs(tf,[("Why this?",AMBER,True),(" interpretable and fast, and the standard other studies are measured against.",LIGHT,False)],size=13.5,bullet="▪",space_after=0)
 rrect(s,6.9,1.95,5.5,4.4,NAVY2,line=RGBColor(0x25,0x40,0x5A))
 _,tf=box(s,7.2,2.2,4.9,4.0)
 para(tf,"A panel of three models that vote",size=17,bold=True,color=WHITE,first=True,space_after=8)
-for t in ["Random Forest — 300 decision trees","Extra Trees — 300 randomised trees","Gradient Boosting — 300 rounds"]:
+for t in ["Random Forest, 300 decision trees","Extra Trees, 300 randomised trees","Gradient Boosting, 300 rounds"]:
     runs(tf,[(t,LIGHT,False)],size=13.5,bullet="▪",space_after=7)
-runs(tf,[("Why a panel?",GREEN,True),(" averaging three different learners is steadier and more accurate than any one — "
+runs(tf,[("Why a panel?",GREEN,True),(" averaging three different learners is steadier and more accurate than any one, "
         "and beats simpler methods (shown next).",LIGHT,False)],size=13.5,space_after=0)
 plainbox(s,0.9,6.55,11.5,0.0,"",color=BLUE)
 notes(s,
 "SAY: Computers can't read a chemical drawing directly, so we convert each molecule into numbers in two ways: a "
 "'fingerprint' that records which small sub-structures are present, and 24 physical properties like size and "
-"greasiness. Then three different model types each make a prediction and we average their votes — like a panel of "
+"greasiness. Then three different model types each make a prediction and we average their votes, like a panel of "
 "experts rather than one opinion.\n\n"
 "TECHNICAL TERMS:\n- ECFP-4 / Morgan fingerprint: a fixed-length binary code of a molecule's local substructures.\n"
 "- Descriptor: a computed physical property (molecular weight, logP/greasiness, polar surface area, etc.).\n"
 "- Random Forest / Extra Trees / Gradient Boosting: standard, robust 'tree ensemble' algorithms.\n"
 "- Ensemble: combining several models to reduce error.\n\n"
-"Q&A — EXPERT:\nQ: Why not a graph neural network?\nA: On datasets this size, tree ensembles on ECFP+descriptors are "
+"Q&A, EXPERT:\nQ: Why not a graph neural network?\nA: On datasets this size, tree ensembles on ECFP+descriptors are "
 "competitive, far more interpretable, cheaper, and match the literature baselines; deep nets were unnecessary for the "
 "claim. Fixed seed 42, RDKit 2026.03, scikit-learn 1.8.\n\n"
-"Q&A — GENERAL/COMMERCIAL:\nQ: Does it need a supercomputer?\nA: No — it runs on a normal machine, which keeps it "
+"Q&A, GENERAL/COMMERCIAL:\nQ: Does it need a supercomputer?\nA: No, it runs on a normal machine, which keeps it "
 "cheap and deployable.")
 
-# ============================================================ SLIDE 7 — TRUST PARAMETERS
+# ============================================================ SLIDE 7, TRUST PARAMETERS
 s=slide(); bg(s,PAPER); eyebrow(s,"06 · Making the answer trustworthy"); accentbar(s)
 title(s,"Every threshold is a stated, defended choice")
 items=[("Labelling","'Active' = potent (pChEMBL ≥ 6, ~1 µM); 'inactive' = weak (< 5). The ambiguous middle is dropped to cut noise.",BLUE),
        ("Deployment gate","A model ships only if it clears a fixed quality bar (MCC ≥ 0.45). Four targets failed as yes/no and were re-cast as ranking.",AMBER),
-       ("Calibration","Scores are adjusted (isotonic) so a '0.9' behaves like a real 90% — not just a ranking.",GREEN),
+       ("Calibration","Scores are adjusted (isotonic) so a '0.9' behaves like a real 90%, not just a ranking.",GREEN),
        ("Confidence + domain","Conformal sets give a ~90%-coverage confidence range; an 'applicability' flag warns when a molecule is unlike anything seen.",VERM)]
 x,y=0.9,2.05
 for i,(h,b,c) in enumerate(items):
@@ -340,18 +340,18 @@ notes(s,
 "score (−1 to 1) robust to class imbalance; 0.45 is our minimum to deploy.\n- Isotonic calibration: a monotonic "
 "adjustment of scores to match observed frequencies.\n- Conformal prediction: a method giving prediction sets with a "
 "guaranteed error rate.\n- Applicability domain: the chemical space where the model is trustworthy.\n\n"
-"Q&A — EXPERT:\nQ: Is the >=6/<5 cut cherry-picked?\nA: No — we re-labelled at several cuts and retrained; max AUROC "
+"Q&A, EXPERT:\nQ: Is the >=6/<5 cut cherry-picked?\nA: No, we re-labelled at several cuts and retrained; max AUROC "
 "spread was 0.109 and the deployed cut ~ the strict cut (robustness slide). The grey-zone drop is empirically justified.\n\n"
-"Q&A — GENERAL/COMMERCIAL:\nQ: What happens with a brand-new molecule type?\nA: The tool flags it as 'out of domain' "
-"instead of pretending confidence — a safety feature, not a bug.")
+"Q&A, GENERAL/COMMERCIAL:\nQ: What happens with a brand-new molecule type?\nA: The tool flags it as 'out of domain' "
+"instead of pretending confidence, a safety feature, not a bug.")
 
-# ============================================================ SLIDE 8 — VALIDATION
+# ============================================================ SLIDE 8, VALIDATION
 s=slide(); bg(s,NAVY); eyebrow(s,"07 · How we tested it",color=SKY); rect(s,0.9,0.62,0.5,0.045,SKY)
 title(s,"Four exams, each harder and more realistic",color=WHITE)
-steps=[("Random","Familiar questions — the easy exam most papers report.",SKY),
+steps=[("Random","Familiar questions, the easy exam most papers report.",SKY),
        ("Scaffold","New molecular skeletons at test time.",BLUE),
        ("Leave-cluster-out","Whole new chemical families held back.",GREEN),
-       ("Temporal","Trained on older compounds, tested on the newest — a true 'future' exam.",AMBER)]
+       ("Temporal","Trained on older compounds, tested on the newest, a true 'future' exam.",AMBER)]
 x=0.9
 for i,(h,b,c) in enumerate(steps):
     rrect(s,x,2.2,2.85,3.0,NAVY2,line=RGBColor(0x25,0x40,0x5A))
@@ -367,19 +367,19 @@ para(tf,"Reporting all four is a deliberate honesty choice: it shows exactly whe
         "it is not. Most published models report only the easy 'random' exam.",size=15,color=LIGHT,first=True)
 notes(s,
 "SAY: Anyone can score well on an easy test. We ran four, each closer to real life. The 'random' test is the easy one "
-"most papers stop at. The toughest — 'temporal' — trains only on older molecules and tests on the newest ones, "
+"most papers stop at. The toughest, 'temporal', trains only on older molecules and tests on the newest ones, "
 "simulating genuine prospective use. We report all four on purpose.\n\n"
 "TECHNICAL TERMS:\n- Scaffold split (Bemis–Murcko): grouping by core molecular skeleton so test molecules are "
 "structurally novel.\n- Leave-cluster-out: entire chemical clusters held out.\n- Temporal split: train on compounds "
 "published up to a cutoff year, test on later ones.\n- AUROC (next slide): the score used.\n\n"
-"Q&A — EXPERT:\nQ: Why does temporal drop so much for some endpoints?\nA: 71–91% of recent test compounds have unseen "
+"Q&A, EXPERT:\nQ: Why does temporal drop so much for some endpoints?\nA: 71–91% of recent test compounds have unseen "
 "scaffolds (covariate shift). Where the recent set is class-balanced (MAO-A) the honest number is 0.61; we surface "
 "this rather than hide it.\n\n"
-"Q&A — GENERAL/COMMERCIAL:\nQ: Why show your weaknesses?\nA: Credibility. A tool that only reports its best number "
+"Q&A, GENERAL/COMMERCIAL:\nQ: Why show your weaknesses?\nA: Credibility. A tool that only reports its best number "
 "can't be trusted; buyers and reviewers value honesty about limits.")
 
-# ============================================================ SLIDE 9 — CLASSIFICATION RESULTS
-s=slide(); bg(s,PAPER); eyebrow(s,"08 · Results — the yes/no models"); accentbar(s)
+# ============================================================ SLIDE 9, CLASSIFICATION RESULTS
+s=slide(); bg(s,PAPER); eyebrow(s,"08 · Results, the yes/no models"); accentbar(s)
 title(s,"Strong on the easy exam, honest on the hard ones")
 add_table(s,[
  ["Endpoint","Random","Scaffold","Cluster","Temporal"],
@@ -406,19 +406,19 @@ plainbox(s,0.9,6.15,11.6,0.85,
 "AUROC scores how well the tool separates 'active' from 'inactive'. 0.5 = a coin flip; 1.0 = perfect. "
 "0.90 means that, given one active and one inactive molecule, it ranks them correctly ~90% of the time.",color=BLUE)
 notes(s,
-"SAY: On the standard 'random' test the models score 0.94–0.98 — at or above published state of the art. On the harder "
-"tests they hold 0.87–0.95, and on the toughest 'future' test they range 0.61–0.92. We show the low numbers too — "
+"SAY: On the standard 'random' test the models score 0.94–0.98, at or above published state of the art. On the harder "
+"tests they hold 0.87–0.95, and on the toughest 'future' test they range 0.61–0.92. We show the low numbers too, "
 "GSK-3β and MAO-A are the hardest and we flag them as lower-confidence.\n\n"
 "TECHNICAL TERMS:\n- AUROC: probability the model ranks a random active above a random inactive; 0.5 chance, 1.0 "
-"perfect.\n- 'Coverage 0.885–0.905': when the tool gives a 90% confidence set, it is right about 90% of the time — the "
+"perfect.\n- 'Coverage 0.885–0.905': when the tool gives a 90% confidence set, it is right about 90% of the time, the "
 "promise is kept.\n\n"
-"Q&A — EXPERT:\nQ: BACE1 temporal 0.92 looks too good.\nA: Its recent test set is ~93% active, which inflates AUROC; we "
+"Q&A, EXPERT:\nQ: BACE1 temporal 0.92 looks too good.\nA: Its recent test set is ~93% active, which inflates AUROC; we "
 "note this. Conversely MAO-A's balanced set gives an honest 0.61.\n\n"
-"Q&A — GENERAL/COMMERCIAL:\nQ: Is 0.90 good?\nA: Yes — for this kind of prediction it's strong; and unlike many tools "
+"Q&A, GENERAL/COMMERCIAL:\nQ: Is 0.90 good?\nA: Yes, for this kind of prediction it's strong; and unlike many tools "
 "we also tell you when to trust it.")
 
-# ============================================================ SLIDE 10 — REGRESSION/ANTIOX/DRUGG
-s=slide(); bg(s,PAPER); eyebrow(s,"09 · Results — strength & drug-likeness"); accentbar(s)
+# ============================================================ SLIDE 10, REGRESSION/ANTIOX/DRUGG
+s=slide(); bg(s,PAPER); eyebrow(s,"09 · Results, strength & drug-likeness"); accentbar(s)
 title(s,"Ranking-grade potency, a measured antioxidant model")
 add_table(s,[
  ["Receptor","R² (fit)","Spearman","Temporal"],
@@ -432,7 +432,7 @@ _,tf=box(s,7.65,2.2,4.7,1.5)
 para(tf,"Antioxidant (measured DPPH)",size=14.5,bold=True,color=INK,first=True,space_after=4)
 runs(tf,[("n = 2,862   ·   R² 0.43   ·   ρ 0.636",INK,False)],size=13,space_after=3); tf.paragraphs[-1].runs[0].font.name=MONO
 para(tf,"Replaces a prior text-based proxy that fit poorly (R² ≈ 0.25).",size=11.5,color=MUTED,space_after=0)
-_,tf=box(s,0.9,4.4,5.6,0.4); para(tf,"Druggability score — CNS drugs vs polar non-drugs",size=13,bold=True,color=INK,first=True)
+_,tf=box(s,0.9,4.4,5.6,0.4); para(tf,"Druggability score, CNS drugs vs polar non-drugs",size=13,bold=True,color=INK,first=True)
 bars=[("Caffeine",86,GREEN),("Donepezil",79,GREEN),("Sucrose",46,VERM),("Atorvastatin",24,VERM)]
 y=4.85
 for name,val,c in bars:
@@ -443,21 +443,21 @@ for name,val,c in bars:
     y+=0.42
 plainbox(s,7.4,4.4,5.1,2.15,
 "R² and Spearman measure how closely predicted strength tracks the real measured strength (1.0 = perfect ordering). "
-"For druggability, higher = more drug-like for the brain — caffeine and donepezil score high; table sugar and a "
+"For druggability, higher = more drug-like for the brain, caffeine and donepezil score high; table sugar and a "
 "cholesterol drug (not brain-aimed) score low, as expected.",color=GREEN)
 notes(s,
-"SAY: For the four receptors we predict strength and use it to rank compounds — useful for prioritisation even when an "
+"SAY: For the four receptors we predict strength and use it to rank compounds, useful for prioritisation even when an "
 "exact value is hard. The antioxidant model is now trained on real DPPH lab measurements and clearly beats the old "
 "text-derived estimate. The druggability score is a transparent rule that correctly separates brain-suitable drugs "
 "from things like table sugar.\n\n"
 "TECHNICAL TERMS:\n- R²: fraction of variation explained (1.0 perfect, 0 none).\n- Spearman (ρ): how well the "
 "predicted ranking matches the true ranking.\n- DPPH: standard antioxidant assay.\n\n"
-"Q&A — EXPERT:\nQ: Temporal R² near zero for some receptors/DPPH?\nA: Correct and disclosed — pooled cross-lab DPPH and "
+"Q&A, EXPERT:\nQ: Temporal R² near zero for some receptors/DPPH?\nA: Correct and disclosed, pooled cross-lab DPPH and "
 "receptor data generalise weakly across time; these are reported as ranking-grade, not absolute predictors.\n\n"
-"Q&A — GENERAL/COMMERCIAL:\nQ: What's druggability good for?\nA: A quick 'is this even worth pursuing as a brain drug?' "
+"Q&A, GENERAL/COMMERCIAL:\nQ: What's druggability good for?\nA: A quick 'is this even worth pursuing as a brain drug?' "
 "filter before expensive work.")
 
-# ============================================================ SLIDE 11 — BASELINES
+# ============================================================ SLIDE 11, BASELINES
 s=slide(); bg(s,NAVY); eyebrow(s,"10 · Does the model earn its keep?",color=SKY); rect(s,0.9,0.62,0.5,0.045,SKY)
 title(s,"It beats 'just find the most similar known molecule'",color=WHITE)
 _,tf=box(s,0.9,1.95,11.4,0.8)
@@ -475,25 +475,25 @@ runs(tf,[("0.50",SKY,False),("        mean AUROC (8 endpoints)        ",MUTED,Fa
 _,tf=box(s,0.9,5.65,11.5,1.4)
 runs(tf,[("The model wins on all 8 endpoints. ",GREEN,True),
  ("Beating a pure 'look up the most similar molecule' method is the key check that it has learned real "
-  "structure–activity patterns — not just memorised look-alikes. This is also why it behaves differently from an "
+  "structure–activity patterns, not just memorised look-alikes. This is also why it behaves differently from an "
   "LLM (next).",LIGHT,False)],size=15,first=True)
 notes(s,
 "SAY: A fair worry: is the model just memorising and returning the closest known molecule? We tested exactly that. A "
-"nearest-neighbour lookup scores 0.867; a simple linear model 0.808; our ensemble 0.912 — and it wins on every single "
+"nearest-neighbour lookup scores 0.867; a simple linear model 0.808; our ensemble 0.912, and it wins on every single "
 "endpoint. So it genuinely learns patterns, not just look-alikes.\n\n"
-"TECHNICAL TERMS:\n- Nearest-neighbour (kNN-Tanimoto): predict from the most chemically similar known compounds — a "
+"TECHNICAL TERMS:\n- Nearest-neighbour (kNN-Tanimoto): predict from the most chemically similar known compounds, a "
 "'read-across' baseline.\n- This baseline is the closest analogy to how an LLM's fuzzy recall works, which sets up the "
 "next slide.\n\n"
-"Q&A — EXPERT:\nQ: Deltas look modest (+0.045 vs kNN).\nA: Modest but consistent — best on 8/8 under scaffold split, "
+"Q&A, EXPERT:\nQ: Deltas look modest (+0.045 vs kNN).\nA: Modest but consistent, best on 8/8 under scaffold split, "
 "and the point is qualitative: it exceeds pure similarity recall, so performance isn't memorisation.\n\n"
-"Q&A — GENERAL/COMMERCIAL:\nQ: So it's smarter than a database search?\nA: Yes — a search only finds look-alikes; the "
+"Q&A, GENERAL/COMMERCIAL:\nQ: So it's smarter than a database search?\nA: Yes, a search only finds look-alikes; the "
 "model generalises to genuinely new structures, with calibrated confidence.")
 
-# ============================================================ SLIDE 12 — ROBUSTNESS
+# ============================================================ SLIDE 12, ROBUSTNESS
 s=slide(); bg(s,PAPER); eyebrow(s,"11 · We tested our own assumptions"); accentbar(s)
-title(s,"Three known risks — measured, not just mentioned")
+title(s,"Three known risks, measured, not just mentioned")
 cols=[("Definition of 'active'","We re-labelled at several cut-offs and retrained. Results barely moved (max AUROC change 0.109); the deployed choice is not cherry-picked.",BLUE),
-      ("Mixing experiment types","Retraining on one experiment type only vs the mix changed scores by ≤ 0.006 — mixing is safe on the common scale.",GREEN),
+      ("Mixing experiment types","Retraining on one experiment type only vs the mix changed scores by ≤ 0.006, mixing is safe on the common scale.",GREEN),
       ("Knowing its own limits","Accuracy falls smoothly as molecules get less similar to training (0.96 → 0.77). That is exactly why the 'out-of-domain' warning exists.",AMBER)]
 x=0.9
 for h,b,c in cols:
@@ -504,22 +504,22 @@ for h,b,c in cols:
     x+=4.05
 plainbox(s,0.9,5.55,11.6,1.1,
 "instead of just listing caveats, we re-ran the whole pipeline to put a number on each risk. All three came back "
-"reassuring — and where the model is weak (very novel molecules), it warns you rather than guessing confidently.",color=GREEN)
+"reassuring, and where the model is weak (very novel molecules), it warns you rather than guessing confidently.",color=GREEN)
 notes(s,
 "SAY: Good science stress-tests its own choices. We asked three sceptical questions and answered each with a re-run, "
 "not an opinion. Does the active/inactive cut-off matter? Barely. Does mixing experiment types distort things? By "
-"under 0.006. Does it know its limits? Yes — accuracy declines predictably with novelty, which is why the warning "
+"under 0.006. Does it know its limits? Yes, accuracy declines predictably with novelty, which is why the warning "
 "flag is calibrated the way it is.\n\n"
 "TECHNICAL TERMS:\n- Assay types (IC50/Ki/Kd/EC50): different ways to measure potency, standardised onto pChEMBL.\n"
 "- 'Out-of-domain': a molecule unlike anything in training, where predictions are less reliable.\n\n"
-"Q&A — EXPERT:\nQ: Which endpoints did you test for assay pooling?\nA: GSK-3β (the most mixed, 49% IC50), MAO-B and "
-"hERG; deltas were +0.006, −0.006 and 0.000 — negligible.\n\n"
-"Q&A — GENERAL/COMMERCIAL:\nQ: How do I know it won't confidently give a wrong answer?\nA: For unfamiliar molecules it "
-"marks the result out-of-domain and widens its confidence — it declines to over-claim.")
+"Q&A, EXPERT:\nQ: Which endpoints did you test for assay pooling?\nA: GSK-3β (the most mixed, 49% IC50), MAO-B and "
+"hERG; deltas were +0.006, −0.006 and 0.000, negligible.\n\n"
+"Q&A, GENERAL/COMMERCIAL:\nQ: How do I know it won't confidently give a wrong answer?\nA: For unfamiliar molecules it "
+"marks the result out-of-domain and widens its confidence, it declines to over-claim.")
 
-# ============================================================ SLIDE 13 — LLM HEAD TO HEAD
+# ============================================================ SLIDE 13, LLM HEAD TO HEAD
 s=slide(); bg(s,NAVY); eyebrow(s,"12 · \"Why not just ask ChatGPT?\"",color=SKY); rect(s,0.9,0.62,0.5,0.045,SKY)
-title(s,"We ran a fair, pre-registered contest — here's what happened",color=WHITE)
+title(s,"We ran a fair, pre-registered contest, here's what happened",color=WHITE)
 add_table(s,[
  ["System","BBB","hERG","Made-up evidence","New molecule"],
  [("BrainSafe",WHITE,True),"8/9","5/5",("0 of 0",GREEN,True),("honest",GREEN,True)],
@@ -529,39 +529,39 @@ add_table(s,[
  ["Claude","9/9","5/5",("4 of 10",VERM,True),("made up",VERM,True)],
 ],0.9,2.0,7.6,[1.7,0.9,0.9,1.6,1.3],rh=0.40,fs=12)
 _,tf=box(s,8.75,2.0,3.75,4.2)
-runs(tf,[("On famous drugs, the LLMs are strong",SKY,True),(" — several match or beat us. We say so plainly.",LIGHT,False)],size=13,first=True,space_after=9)
+runs(tf,[("On famous drugs, the LLMs are strong",SKY,True),(", several match or beat us. We say so plainly.",LIGHT,False)],size=13,first=True,space_after=9)
 runs(tf,[("But 45% of the specific evidence IDs they cited were fake or pointed to the wrong drug",VERM,True),
-         (" — a cited 'rasagiline' ID was actually a steroid; a 'rivastigmine' ID was vitamin B6.",LIGHT,False)],size=13,space_after=9)
-runs(tf,[("All four invented",VERM,True),(" a target and potency for an unpublished molecule — and disagreed.",LIGHT,False)],size=13,space_after=0)
+         (", a cited 'rasagiline' ID was actually a steroid; a 'rivastigmine' ID was vitamin B6.",LIGHT,False)],size=13,space_after=9)
+runs(tf,[("All four invented",VERM,True),(" a target and potency for an unpublished molecule, and disagreed.",LIGHT,False)],size=13,space_after=0)
 _,tf=box(s,0.9,6.35,11.6,0.9)
 runs(tf,[("The point isn't 'LLMs are wrong.' ",WHITE,True),
- ("They can't be trusted for verifiable evidence or for genuinely new molecules — exactly where discovery happens. "
+ ("They can't be trusted for verifiable evidence or for genuinely new molecules, exactly where discovery happens. "
   "BrainSafe grounds every answer in a real measurement.",LIGHT,False)],size=14.5,first=True)
 notes(s,
-"SAY: The obvious question from a commercial audience: why not just use ChatGPT? So we ran a fair contest — same "
+"SAY: The obvious question from a commercial audience: why not just use ChatGPT? So we ran a fair contest, same "
 "questions, scored against real data, decided in advance. Two honest findings. One: on well-known drugs the LLMs are "
-"genuinely good, sometimes better than us. Two: when we checked the specific evidence they cited — database IDs for "
-"the molecules — 45% were fabricated or pointed to a completely different drug (one 'rasagiline' ID was actually a "
+"genuinely good, sometimes better than us. Two: when we checked the specific evidence they cited, database IDs for "
+"the molecules, 45% were fabricated or pointed to a completely different drug (one 'rasagiline' ID was actually a "
 "steroid). And for a brand-new, unpublished molecule, all four confidently made up an answer, and disagreed with each "
 "other. Our tool cited real measurements every time and said 'uncertain' on the new one.\n\n"
 "TECHNICAL TERMS:\n- Pre-registered: prompt, molecules and scoring fixed before running, so it's fair.\n"
 "- 'Made-up evidence': a cited ChEMBL ID that doesn't exist or belongs to a different molecule (we checked each live).\n"
 "- Confabulation/hallucination: a confident but false answer.\n\n"
-"Q&A — EXPERT:\nQ: Isn't this an unfair prompt?\nA: The prompt is identical for every system including ours, and "
+"Q&A, EXPERT:\nQ: Isn't this an unfair prompt?\nA: The prompt is identical for every system including ours, and "
 "scored on the same measured-data key with live ChEMBL verification; we even dropped contestable items (e.g. donepezil "
 "hERG) to be fair to the LLMs.\n\n"
-"Q&A — GENERAL/COMMERCIAL:\nQ: So LLMs are useless here?\nA: No — great for summarising known drugs. But for decisions "
+"Q&A, GENERAL/COMMERCIAL:\nQ: So LLMs are useless here?\nA: No, great for summarising known drugs. But for decisions "
 "needing traceable evidence or novel chemistry, a grounded tool is essential. They're complementary.")
 
-# ============================================================ SLIDE 14 — DIFFERENTIATION
+# ============================================================ SLIDE 14, DIFFERENTIATION
 s=slide(); bg(s,PAPER); eyebrow(s,"13 · How BrainSafe is different"); accentbar(s)
 title(s,"Grounded and auditable, by design")
 add_table(s,[
  ["Capability","BrainSafe AI","General LLM","Typical ADMET tool"],
- ["Trained on measured bioactivity",("yes — 64,474",GREEN,True),"no (text)","partly"],
+ ["Trained on measured bioactivity",("yes, 64,474",GREEN,True),"no (text)","partly"],
  ["Honest, calibrated probability",("yes",GREEN,True),"no","rarely"],
  ["Guaranteed confidence range",("yes",GREEN,True),"no","no"],
- ["Shows the real evidence",("yes",GREEN,True),("no — invents",VERM,True),"no"],
+ ["Shows the real evidence",("yes",GREEN,True),("no, invents",VERM,True),"no"],
  ["Warns when out of its depth",("yes",GREEN,True),"no","sometimes"],
  ["Brain-entry-gated disease view",("yes",GREEN,True),"no","no"],
  ["Same answer every time",("yes",GREEN,True),("no",VERM,True),"yes"],
@@ -571,14 +571,14 @@ notes(s,
 "probabilities with a confidence range, shows the real evidence behind each answer, warns when it's out of its depth, "
 "combines target activity with brain entry, and gives the same answer every time. General LLMs and typical ADMET tools "
 "each miss several of these.\n\n"
-"Q&A — EXPERT:\nQ: Isn't 'shows evidence' just nearest-neighbour retrieval?\nA: Yes — deliberately: it returns the "
+"Q&A, EXPERT:\nQ: Isn't 'shows evidence' just nearest-neighbour retrieval?\nA: Yes, deliberately: it returns the "
 "actual measured analogue and value, which is verifiable, unlike an LLM's fabricated citation.\n\n"
-"Q&A — GENERAL/COMMERCIAL:\nQ: What's the one-line pitch?\nA: 'A brain-drug triage tool you can audit — every answer "
+"Q&A, GENERAL/COMMERCIAL:\nQ: What's the one-line pitch?\nA: 'A brain-drug triage tool you can audit, every answer "
 "backed by a real measurement, with honest confidence.'")
 
-# ============================================================ SLIDE 15 — APPLICATIONS & LIMITS
+# ============================================================ SLIDE 15, APPLICATIONS & LIMITS
 s=slide(); bg(s,PAPER); eyebrow(s,"14 · Uses & honest limits"); accentbar(s)
-title(s,"A research triage engine — not a clinical oracle")
+title(s,"A research triage engine, not a clinical oracle")
 rrect(s,0.9,2.05,5.75,3.9,WHITE,line=LINE); rect(s,0.9,2.05,5.75,0.06,GREEN)
 _,tf=box(s,1.15,2.3,5.3,3.5)
 para(tf,"What it is good for",size=16,bold=True,color=GREEN,first=True,space_after=8)
@@ -589,7 +589,7 @@ for t in ["Prioritising which molecules to test next for brain conditions (natur
 rrect(s,6.85,2.05,5.6,3.9,WHITE,line=LINE); rect(s,6.85,2.05,5.6,0.06,VERM)
 _,tf=box(s,7.1,2.3,5.15,3.5)
 para(tf,"What it does NOT claim",size=16,bold=True,color=VERM,first=True,space_after=8)
-for t in ["Predicts whether a molecule engages a target — not whether it activates or blocks it.",
+for t in ["Predicts whether a molecule engages a target, not whether it activates or blocks it.",
           "Engagement is not the same as clinical benefit; the clinical layer is precedent, not proof.",
           "No wet-lab validation yet; weaker on very novel chemistry (flagged).",
           "One heart-safety target (hERG); other safety risks are out of scope."]:
@@ -600,13 +600,13 @@ notes(s,
 "engagement, not direction or efficacy; it hasn't had wet-lab confirmation yet; and it covers one safety axis.\n\n"
 "TECHNICAL TERMS:\n- Engagement vs direction: binding to a target vs activating (agonist) or blocking (antagonist) it.\n"
 "- Engagement vs efficacy: hitting a target vs actually helping a patient.\n\n"
-"Q&A — GENERAL/COMMERCIAL:\nQ: Can it recommend a treatment?\nA: No — and it never should. It shortlists candidates for "
+"Q&A, GENERAL/COMMERCIAL:\nQ: Can it recommend a treatment?\nA: No, and it never should. It shortlists candidates for "
 "scientists to test.\nQ: Commercial applications?\nA: Compound triage for CNS discovery, natural-product screening, and "
-"drug-repurposing prioritisation — reducing wasted lab spend.\n\n"
-"Q&A — EXPERT:\nQ: Path to efficacy prediction?\nA: Out of scope here; would need target-direction and disease-model "
+"drug-repurposing prioritisation, reducing wasted lab spend.\n\n"
+"Q&A, EXPERT:\nQ: Path to efficacy prediction?\nA: Out of scope here; would need target-direction and disease-model "
 "data. We're explicit that this is engagement + clinical precedent, not efficacy.")
 
-# ============================================================ SLIDE 16 — CLOSE
+# ============================================================ SLIDE 16, CLOSE
 s=slide(); bg(s,NAVY)
 rect(s,0,0,SW.inches,0.12,SKY)
 _,tf=box(s,0.9,0.7,11.5,0.5); runs(tf,[("● ",SKY,True),("WHAT WE ACHIEVED",LIGHT,True)],size=13,font=MONO,first=True)
@@ -621,19 +621,19 @@ for v,l in stats:
     para(tf,l,size=11.5,color=LIGHT,space_after=0)
     x+=3.02
 _,tf=box(s,0.9,4.5,11.4,1.6)
-para(tf,"A calibrated, evidence-grounded, brain-entry-gated predictor built entirely on measured public data — "
+para(tf,"A calibrated, evidence-grounded, brain-entry-gated predictor built entirely on measured public data, "
         "state-of-the-art-grade on like-for-like tests, fully transparent on the hard ones, and every claim "
         "traceable to a real measurement.",size=16,color=LIGHT,first=True)
 _,tf=box(s,0.9,6.4,11.5,0.6)
 para(tf,"No fabrication · no assumption · reproducible from released scripts and data.",size=12.5,bold=True,color=SKY,font=MONO,first=True)
 notes(s,
-"SAY: To close — we built a brain-effect predictor you can trust because you can check it. 64,474 real "
+"SAY: To close, we built a brain-effect predictor you can trust because you can check it. 64,474 real "
 "measurements, four levels of testing, a confidence promise that holds, and zero fabricated evidence. It matches the "
 "best on standard tests, is honest about the hard ones, and every answer traces back to a real experiment. Thank you "
-"— happy to take questions.\n\n"
-"Q&A — EXPERT:\nQ: What's next?\nA: Wet-lab prospective validation, more safety anti-targets, and broader target "
+",  happy to take questions.\n\n"
+"Q&A, EXPERT:\nQ: What's next?\nA: Wet-lab prospective validation, more safety anti-targets, and broader target "
 "coverage.\n\n"
-"Q&A — GENERAL/COMMERCIAL:\nQ: When can we use it?\nA: It runs today as a research tool; wider release follows peer "
+"Q&A, GENERAL/COMMERCIAL:\nQ: When can we use it?\nA: It runs today as a research tool; wider release follows peer "
 "review. We'd welcome collaboration on validation.")
 
 prs.save("BrainSafe_AI_Presentation.pptx")

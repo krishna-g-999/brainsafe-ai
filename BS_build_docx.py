@@ -125,9 +125,9 @@ P("Public resources already cover pieces of this. General ADMET platforms (Daina
   "CNS-target activity. Target-prediction servers (Daina et al., 2019; Awale and Reymond, 2019) return "
   "likely protein targets from chemical similarity, yet they do not condition those targets on brain "
   "penetration, roll them up into a disease-level view, attach calibrated uncertainty, or carry a "
-  "safety axis. Individual endpoints have their own dedicated QSAR models — AChE and BACE1 (Ponzoni et "
+  "safety axis. Individual endpoints have their own dedicated QSAR models: AChE and BACE1 (Ponzoni et "
   "al., 2019), MAO-B (Kumar et al., 2024), GSK-3β (Galati et al., 2023), BBB permeability (Kumar et "
-  "al., 2022; Huang et al., 2024) — but no single tool draws them together. BrainSafe AI does exactly "
+  "al., 2022; Huang et al., 2024). No single tool, though, draws them together. BrainSafe AI does exactly "
   "that, using models trained on measured public data and tested under four validation regimes.", align="j")
 
 # ---- 2 METHODS ----
@@ -213,7 +213,7 @@ P("Models were evaluated under: (i) a random stratified split; (ii) scaffold Gro
 # ---- 3 RESULTS ----
 H("3. Results", 1)
 P("Results are reported in two modes. Non-comparative analysis (Sections 3.1 and 3.3) reports "
-  "each endpoint’s standalone performance against its own held-out measured data — absolute "
+  "each endpoint’s standalone performance against its own held-out measured data: absolute "
   "discrimination, calibration, conformal coverage and behaviour on reference compounds. "
   "Comparative analysis (Sections 3.2, 3.4 and 3.5) benchmarks the same models against external "
   "references: published QSAR performance ranges, simpler internal baselines under an identical "
@@ -246,8 +246,8 @@ H("3.2 Ablation against simpler baselines (comparative)", 2)
 s9 = pd.read_csv("supplementary/STable9_baseline_comparison.csv")
 _ens = s9["Ensemble_AUROC"].mean(); _knn = s9["kNN_Tanimoto_AUROC"].mean(); _lr = s9["LogisticRegression_AUROC"].mean()
 P("Under an identical scaffold-split protocol and feature set, the deployed ensemble was compared "
-  "with a k-nearest-neighbour Tanimoto ‘read-across’ baseline — the closest algorithmic analogue to "
-  "associative structural recall — and with L2-regularised logistic regression. The ensemble attained "
+  "with a k-nearest-neighbour Tanimoto ‘read-across’ baseline (the closest algorithmic analogue to "
+  "associative structural recall) and with L2-regularised logistic regression. The ensemble attained "
   f"a mean scaffold-split AUROC of {_ens:.3f}, versus {_knn:.3f} for k-nearest-neighbour "
   f"(mean Δ = +{_ens-_knn:.3f}) and {_lr:.3f} for logistic regression (mean Δ = +{_ens-_lr:.3f}), "
   "and was best on every one of the eight endpoints (Table 6; Figure 5B). Exceeding a pure "
@@ -290,7 +290,7 @@ P("Because general-purpose large language models (LLMs) can be queried in natura
   "chemical information, we assessed whether a dedicated tool remains warranted, along three lines: "
   "published benchmark evidence, the scientific basis of the difference, and a reproducible "
   "demonstration of grounded output.", align="j")
-P("Benchmark evidence. On molecular property prediction — the task class BrainSafe performs — "
+P("Benchmark evidence. On molecular property prediction (the task class BrainSafe performs), "
   "general-purpose LLMs consistently underperform specialised machine-learning models. In an "
   "eight-task chemistry benchmark, LLMs including GPT-4 lag task-specific models on property "
   "prediction and parse SMILES unreliably (Guo et al., 2023); a dedicated molecule-prediction "
@@ -304,7 +304,7 @@ P("Scientific background. A general LLM is an autoregressive next-token predicto
   "BrainSafe encodes each molecule as an ECFP-4 fingerprint plus 24 physicochemical descriptors, "
   "learns a structure-to-measured-activity mapping from 64,474 records, and returns a calibrated "
   "probability wrapped in a conformal set with empirically verified ~90% coverage, together with the "
-  "nearest measured analogue and its measured pChEMBL — guarantees an LLM cannot provide. Table 7 "
+  "nearest measured analogue and its measured pChEMBL, none of which an LLM can provide. Table 7 "
   "summarises the capability differences (Supplementary Table S8).", align="j")
 s8 = pd.read_csv("supplementary/STable8_llm_capability_comparison.csv")
 s8.columns = ["Dimension","BrainSafe AI","General-purpose LLM"]
@@ -318,8 +318,8 @@ P("Reproducible grounded-output demonstration. For fixed input structures the de
   "calling it BBB non-penetrant; and a novel arylpiperazine of an unpublished scaffold → an honest "
   "conformal ‘uncertain’ set for AChE grounded in a measured analogue (pChEMBL 4.82) rather than a "
   "confident but unverifiable text answer. Every value is traceable to a measurement. This grounding "
-  "— a calibrated probability, a coverage-guaranteed set, and measured-analogue provenance for any "
-  "structure, including novel ones — is the scientific justification for a dedicated tool "
+  "(a calibrated probability, a coverage-guaranteed set, and measured-analogue provenance for any "
+  "structure, including novel ones) is the scientific justification for a dedicated tool "
   "complementary to, not replaced by, general LLMs.", align="j")
 P("Pre-registered head-to-head benchmark (executed). We froze a fixed prompt, a 10-compound panel "
   "with uncontested ground truth (approved-drug pharmacology plus one unpublished scaffold), and a "
@@ -336,22 +336,22 @@ table_from_df(_disp); P("")
 P("Two findings are reported honestly. First, on classification of well-known approved drugs the LLMs "
   "are strong: three of four matched or exceeded BrainSafe on BBB (9/9 vs 8/9; BrainSafe mis-called the "
   "borderline-lipophilic astemizole) and their Brier scores were as good or better (Claude 0.020, "
-  "ChatGPT 0.035) — so a dedicated tool is not justified by raw accuracy on famous compounds. Second, "
+  "ChatGPT 0.035); a dedicated tool is therefore not justified by raw accuracy on famous compounds. Second, "
   "the LLMs fail where grounding and novelty matter: across the four models, 14 of 31 (45%) of the "
-  "ChEMBL identifiers volunteered as provenance were fabricated or resolved to the wrong molecule — for "
+  "ChEMBL identifiers volunteered as provenance were fabricated or resolved to the wrong molecule. For "
   "example, one model's cited ‘rasagiline’ identifier is in fact fluticasone propionate and its "
   "‘selegiline’ identifier is propranolol; another's ‘rivastigmine’ identifier is pyridoxine and its "
-  "‘terfenadine’ identifier is the antibiotic cefdinir — and all four confabulated a specific target "
+  "‘terfenadine’ identifier is the antibiotic cefdinir. All four also confabulated a specific target "
   "and potency for the unpublished compound, disagreeing on the target (three AChE, one D2). BrainSafe "
   "fabricated nothing, grounded every prediction in a real measured analogue, and returned an honest "
   "conformal ‘uncertain’ set for the novel compound. An LLM can thus approximate textbook "
-  "classifications but cannot be trusted for verifiable provenance or for novel chemistry — precisely "
+  "classifications but cannot be trusted for verifiable provenance or for novel chemistry, which is precisely "
   "what the dedicated tool provides.", align="j")
 
 # ---- 4 DISCUSSION ----
 H("4. Discussion", 1)
 P("What BrainSafe AI contributes is the assembly, not the parts. Fingerprint and tree-ensemble QSAR, "
-  "the BBB and hERG models, conformal prediction, the QED and CNS-MPO druggability rules — each is "
+  "the BBB and hERG models, conformal prediction, and the QED and CNS-MPO druggability rules. Each is "
   "well established in its own right (Rogers and Hahn, 2010; Breiman, 2001; Norinder et al., 2014; "
   "Wager et al., 2010). What we have not found elsewhere is all of them working as one measured-data "
   "CNS profiler that is at the same time calibrated, conformal, evidence-grounded, BBB-gated, "
@@ -387,9 +387,9 @@ P("Threats to validity (scientific-flaw self-audit, with quantitative tests). We
   "quantified the composition (Supplementary Table S11), finding IC50 dominant for every target "
   "(81–92%) except GSK-3β, which is genuinely mixed (IC50 49%, EC50 33%, Ki 16%). Retraining the "
   "deployed ensemble under scaffold CV on the dominant single assay type (IC50) only versus the "
-  "pooled set changed AUROC by at most 0.006 across the three endpoints tested — including the most "
+  "pooled set changed AUROC by at most 0.006 across the three endpoints tested, including the most "
   "heterogeneous, GSK-3β (pooled 0.919 vs IC50-only 0.913; MAO-B −0.006; hERG 0.000; Supplementary "
-  "Table S12) — so pooling on the standardised pChEMBL scale does not materially distort "
+  "Table S12). Pooling on the standardised pChEMBL scale therefore does not materially distort "
   "discrimination. (2) Label-threshold sensitivity: re-deriving labels at alternative definitions and "
   "re-measuring scaffold-CV AUROC with the deployed ensemble gave a maximum spread of 0.109 across "
   "four endpoints and four definitions; the stricter ≥6.5/<5.5 cut sat within 0.01–0.02 of the "
@@ -398,7 +398,7 @@ P("Threats to validity (scientific-flaw self-audit, with quantitative tests). We
   "(3) Applicability-domain cut-off: the n-weighted similarity-binned AUROC falls monotonically from "
   "0.958 (nearest-neighbour Tanimoto ≥0.8) to 0.770 (<0.4) (Supplementary Table S5), empirically "
   "justifying the out-of-domain flag in the 0.3–0.4 band. (4) Disease mapping: the target-to-disease "
-  "synthesis is a transparent, knowledge-based rule — not a learned layer — with each driver tagged by "
+  "synthesis is a transparent, knowledge-based rule (not a learned layer), with each driver tagged by "
   "provenance, so it is inspectable and overridable. (5) Single safety anti-target: cardiotoxicity is "
   "represented by hERG alone; other liabilities are out of scope. (6) Read-across ceiling: the "
   "ensemble exceeds a k-nearest-neighbour baseline on every endpoint (Section 3.2), so performance is "

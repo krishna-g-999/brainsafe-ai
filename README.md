@@ -8,11 +8,11 @@ effects: blood–brain-barrier (BBB) penetration; engagement of disease-relevant
 (AChE, BChE, BACE1, GSK-3β, MAO-A, MAO-B; receptor potencies for D2, A2A, 5-HT2A, SERT);
 an hERG cardiotoxicity safety flag; a measured-data antioxidant model; and a deterministic
 druggability/CNS-MPO layer. Every machine-learning endpoint is trained on **measured public
-bioactivity data** (ChEMBL_37 and B3DB — 64,474 measured records). Predictions are
+bioactivity data** (ChEMBL_37 and B3DB, 64,474 measured records). Predictions are
 probability-calibrated, carry conformal prediction sets, are grounded in nearest measured
 analogues, and are integrated into BBB-gated per-disease scores.
 
-> **Research use — pending peer review.** This tool predicts molecular target engagement and
+> **Research use, pending peer review.** This tool predicts molecular target engagement and
 > physicochemical properties, not clinical efficacy, and has not undergone wet-lab or clinical
 > validation. It is not for medical, diagnostic, or treatment decisions.
 

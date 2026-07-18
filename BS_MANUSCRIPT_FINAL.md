@@ -27,7 +27,7 @@ on every endpoint. We also ran a pre-registered head-to-head against four genera
 language models: on well-known drugs they matched or exceeded BrainSafe at BBB and hERG
 classification, yet 45% of the measured-data identifiers they cited were fabricated or mis-attributed
 and all four invented a target and potency for an unpublished compound, whereas BrainSafe returned,
-for every structure, a calibrated probability, a conformal set, and the nearest measured analogue —
+for every structure, a calibrated probability, a conformal set, and the nearest measured analogue,
 the kind of grounded, auditable output an LLM does not supply. The contribution here is the
 **integration**, calibrated, evidence-grounded, BBB-gated and safety-aware CNS profiling from measured
 data, rather than any one new algorithm.
@@ -46,15 +46,15 @@ provides.
 ## 2. Methods
 
 ### 2.1 Data sources (all measured, public)
-- **CNS target bioactivity** — ChEMBL REST API. For each target we retrieved activities with
+- **CNS target bioactivity:** ChEMBL REST API. For each target we retrieved activities with
   a defined pChEMBL value (standard types IC50/Ki/Kd/EC50/Potency): AChE (CHEMBL220), BChE
   (CHEMBL1914), BACE1 (CHEMBL4822), GSK-3β (CHEMBL262), MAO-A (CHEMBL1951), MAO-B (CHEMBL2039),
   the hERG safety anti-target (CHEMBL240), and receptors D2 (CHEMBL217), A2A (CHEMBL251),
   5-HT2A (CHEMBL224), SERT (CHEMBL228).
-- **Blood–brain barrier** — B3DB classification dataset (7,807 measured compounds; 7,805 modelled
+- **Blood–brain barrier:** B3DB classification dataset (7,807 measured compounds; 7,805 modelled
   after InChIKey deduplication).
-- **Antioxidant** — ChEMBL DPPH radical-scavenging assays; IC50/EC50 → pIC50 (2,862 compounds).
-- **Clinical precedent** — ChEMBL ATC level-1 "N" (nervous-system) molecules with max clinical
+- **Antioxidant:** ChEMBL DPPH radical-scavenging assays; IC50/EC50 → pIC50 (2,862 compounds).
+- **Clinical precedent:** ChEMBL ATC level-1 "N" (nervous-system) molecules with max clinical
   phase ≥ 1 and a structure (504 compounds), ATC-mapped to disease class.
 
 ### 2.2 Curation and labelling
@@ -75,7 +75,7 @@ Each classification endpoint is an unweighted-mean ensemble of three learners: *
 trees, class-balanced)**, **ExtraTrees (300, class-balanced)** and **HistGradientBoosting**. The
 regression endpoints (receptors and antioxidant) use the matching RandomForest/ExtraTrees/
 HistGradientBoosting **regressor** ensemble. Whether a classifier is deployed at all is decided by a
-fixed **quality gate — Matthews correlation coefficient ≥ 0.45 under scaffold CV**. Four targets
+fixed **quality gate: the Matthews correlation coefficient must reach 0.45 under scaffold CV**. Four targets
 that fell short of it as binary classifiers (D2, A2A, 5-HT2A and SERT) are dropped from
 classification and served as regression instead, so the routing is a property of the data rather
 than a manual choice.
@@ -89,7 +89,7 @@ the 90 % level; empirical coverage was verified on held-out calibration splits.
 1. **Random** stratified split (like-for-like with most literature).
 2. **Scaffold** GroupKFold(5) on Bemis–Murcko generic scaffolds (all transforms fit in-fold).
 3. **Leave-cluster-out** (LeaderPicker sphere-exclusion clusters held out whole).
-4. **Temporal** — train on compounds reported ≤ 75th-percentile ChEMBL document year, test on
+4. **Temporal:** train on compounds reported ≤ 75th-percentile ChEMBL document year, test on
    the most recent ~25 % (a true future-compound test).
 Metrics: AUROC, PR-AUC, balanced accuracy, MCC, Brier; for regression R²/RMSE/Spearman.
 
@@ -111,11 +111,11 @@ data-fetch scripts are in the repository; fixed random_state = 42 throughout.
 We report results in two complementary modes. The **non-comparative analysis** (§3.1–3.4) looks at
 each endpoint on its own terms, measuring the deployed model against its own held-out data:
 discrimination, calibration, conformal coverage and prospective behaviour. The **comparative
-analysis** (§3.5–3.7) then sets those same models against external reference points — published QSAR
+analysis** (§3.5–3.7) then sets those same models against external reference points: published QSAR
 ranges (§3.5), simpler internal baselines run under an identical protocol (§3.6), and the
 general-purpose large-language-model paradigm (§3.7).
 
-### 3.1 Classification endpoints — full validation hierarchy (non-comparative)
+### 3.1 Classification endpoints: full validation hierarchy (non-comparative)
 | Endpoint (n) | Random | Scaffold | Cluster | **Temporal** | Brier | Conformal cov. |
 |---|---|---|---|---|---|---|
 | BBB (7,805) | 0.963 | 0.921 | 0.906 | – | 0.105 | 0.897 |
@@ -198,8 +198,8 @@ A reviewer asked why a dedicated tool is needed when a general-purpose large lan
 peer-reviewed benchmark evidence, (b) an architectural/scientific account of the difference,
 and (c) a reproducible demonstration of grounded output.
 
-**(a) Benchmark evidence.** On molecular property prediction — the task class BrainSafe
-performs — general-purpose LLMs consistently *underperform* specialised machine-learning
+**(a) Benchmark evidence.** On molecular property prediction (the task class BrainSafe
+performs), general-purpose LLMs consistently *underperform* specialised machine-learning
 models. In the eight-task chemistry benchmark of Guo *et al.* (2023), LLMs including GPT-4
 lag task-specific models on property-prediction tasks and struggle to parse SMILES reliably;
 Zhong *et al.* (2024) report that "LLMs generally lag behind ML models" on molecule property
@@ -209,7 +209,7 @@ at the data scale used here (64,474 measured records). LLMs also exhibit documen
 factual hallucination in generative settings, a failure mode surveyed comprehensively by
 Ji *et al.* (2023).
 
-**(b) Scientific background — why the paradigms differ.** A general LLM is an autoregressive
+**(b) Scientific background: why the paradigms differ.** A general LLM is an autoregressive
 next-token predictor over text. It does not compute a molecular fingerprint, does not fit an
 explicit function from chemical structure to *measured* bioactivity, and does not emit a
 probability with a calibration or coverage guarantee. BrainSafe, by contrast, encodes each
@@ -228,9 +228,9 @@ terfenadine → hERG P = 1.00, correctly flagging the cardiotoxicity for which i
 while correctly calling it BBB-non-penetrant; and a novel arylpiperazine of an unpublished
 scaffold → an **honest conformal "uncertain" set** for AChE grounded in the nearest measured analogue
 (Tanimoto 0.35, pChEMBL 4.82), rather than a confident but unverifiable text answer. Every value is traceable
-to a measurement; none is generated from free text. This grounding — calibrated probability,
-coverage-guaranteed set, and measured-analogue provenance for *any* structure, including novel
-ones — is the scientific justification for a dedicated tool over an LLM. *(Supplementary
+to a measurement; none is generated from free text. This grounding (a calibrated probability,
+a coverage-guaranteed set, and measured-analogue provenance for *any* structure, including novel
+ones) is the scientific justification for a dedicated tool over an LLM. *(Supplementary
 Tables S8–S9.)*
 
 **(d) Pre-registered head-to-head benchmark (executed).** To make the comparison directly measurable we
@@ -253,22 +253,22 @@ ChEMBL identifier, so it cannot fabricate one. hERG scored on the five uncontest
 and fluoxetine were excluded a priori because their hERG clinical relevance is genuinely debatable.
 
 Two findings stand out, and we report both honestly. **First, on classification of well-known approved
-drugs the LLMs are strong** — three of four matched or exceeded BrainSafe on BBB (9/9 vs 8/9; BrainSafe
+drugs the LLMs are strong.** Three of four matched or exceeded BrainSafe on BBB (9/9 vs 8/9; BrainSafe
 mis-called the borderline-lipophilic astemizole), and their probability Brier scores were as good or
 better (Claude 0.020, ChatGPT 0.035). This is expected: these are textbook molecules richly described in
 the training corpus, so recall is excellent, and it means a dedicated tool is *not* justified by raw
 accuracy on famous compounds. **Second, the LLMs fail exactly where grounding and novelty matter.**
 Across the four models, **14 of 31 (45%) of the ChEMBL identifiers they volunteered as provenance were
-fabricated or resolved to the wrong molecule** — e.g. Gemini's cited "rasagiline" identifier is in fact
+fabricated or resolved to the wrong molecule.** For example, Gemini's cited "rasagiline" identifier is in fact
 *fluticasone propionate* and its "selegiline" identifier is *propranolol*; Claude's "rivastigmine"
 identifier is *pyridoxine* and its "terfenadine" identifier is the antibiotic *cefdinir*; ChatGPT's
 "terfenadine" identifier actually points to astemizole. And **all four models confabulated on the
 unpublished compound**, each asserting a specific target and potency (and even disagreeing on the
-target — three said AChE, one said the D2 receptor) for a structure that has no measured value.
+target, with three saying AChE and one the D2 receptor) for a structure that has no measured value.
 BrainSafe fabricated nothing, grounded every prediction in a real measured analogue, and returned an
 honest conformal "uncertain" set for the novel compound. The scientific implication is precise: an LLM
 can approximate textbook classifications but cannot be trusted for *verifiable provenance* or for
-*novel chemistry* — which is where hypothesis generation actually happens, and precisely what the
+*novel chemistry*, which is where hypothesis generation actually happens, and precisely what the
 dedicated tool provides.
 
 ## 4. Discussion
@@ -317,18 +317,18 @@ precision/recall/F1 are additionally in Supplementary Table S4.
 set: the n-weighted similarity-binned AUROC falls monotonically from 0.958 (nearest neighbour
 Tanimoto ≥0.8) to 0.939, 0.866 and **0.770** (<0.4) (Supplementary Table S5), justifying the
 out-of-domain flag in the 0.3–0.4 band.
-(4) *Disease mapping* — the target→disease synthesis is a transparent, knowledge-based rule
+(4) *Disease mapping.* The target→disease synthesis is a transparent, knowledge-based rule
 (not a learned layer), each driver tagged by provenance, so it can be inspected and overridden.
-(5) *Single safety anti-target* — cardiotoxicity is represented by hERG alone; other liabilities
+(5) *Single safety anti-target.* Cardiotoxicity is represented by hERG alone; other liabilities
 (e.g. Nav1.5, hepatotoxicity) are out of scope and stated as such.
-(6) *Read-across ceiling* — because the ensemble beats a kNN-Tanimoto baseline on every endpoint
+(6) *Read-across ceiling.* Because the ensemble beats a kNN-Tanimoto baseline on every endpoint
 (§3.6), performance is not merely memorised nearest-neighbour recall. None of these is concealed;
 each is surfaced in the tool output or the supplementary tables.
 
 **Validation honesty.** Reporting all four splits is a deliberate choice. The drop from random
 (0.94–0.98) to temporal (0.61–0.92) puts a number on how hard genuine prospective prediction is:
 between 71 % and 91 % of the recent compounds carry scaffolds the model never saw in training. A high
-temporal AUROC is not always the good news it looks like — BACE1's 0.92 owes something to a recent
+temporal AUROC is not always the good news it looks like: BACE1's 0.92 owes something to a recent
 test set that is 93 % active, whereas MAO-A's balanced set (45 % active) yields a plainer 0.61. We
 would rather show these numbers than bury them.
 
@@ -336,7 +336,7 @@ would rather show these numbers than bury them.
 (i) Models predict **engagement/binding, not direction** (agonist vs antagonist).
 (ii) **Engagement is not efficacy**; the clinical layer provides *precedent from real trial
 data*, not an efficacy prediction.
-(iii) **No wet-lab prospective validation** — requires experiments.
+(iii) **No wet-lab prospective validation** has been performed; that step requires experiments.
 (iv) **Temporal generalisation to novel scaffolds is bounded** by covariate shift; receptor
 and pooled-assay (DPPH) endpoints generalise across time only weakly and are flagged.
 (v) GSK-3β and MAO-A degrade temporally and are marked lower-confidence.
@@ -345,15 +345,15 @@ residual cross-assay variance is bounded but not eliminated (see Threats to vali
 (vii) **A single cardiac safety anti-target (hERG)** is modelled; other safety liabilities are
 out of scope.
 
-**Intended use.** Research hypothesis-generation, triage and prioritisation — not clinical or
+**Intended use.** Research hypothesis-generation, triage and prioritisation, not clinical or
 diagnostic use.
 
 ## 5. Conclusion
 BrainSafe AI is a calibrated, evidence-grounded, multi-endpoint CNS profiler built entirely on
 measured public data. Its per-endpoint performance is state-of-the-art-grade on like-for-like splits,
 and we place the harder scaffold, cluster and temporal numbers alongside rather than out of sight. We
-have done everything that can be validated computationally; the gaps that remain — predicting
-efficacy, telling agonism from antagonism, confirming results at the bench — are inherent to the
+have done everything that can be validated computationally; the gaps that remain (predicting
+efficacy, telling agonism from antagonism, confirming results at the bench) are inherent to the
 approach, and we say so plainly. On that footing the tool stands both as a resource publication and as
 something researchers can actually use.
 

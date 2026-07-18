@@ -106,8 +106,8 @@ para(box(s,0.9,3.9,11.4,1.4),"Figures and supplementary tables. Every value is r
      "predictions. Nothing is hand-entered.",size=15,color=RGBColor(0xE6,0xEE,0xF5),font=SANS,first=True)
 para(box(s,0.9,6.5,11.5,0.5),"8 figures    ·    14 supplementary tables (S0–S13)",size=12.5,color=SKY,font=MONO,first=True)
 
-# ============================================================ PART A — FIGURES
-divider("Part A — Figures","fig1–fig7 + graphical abstract")
+# ============================================================ PART A, FIGURES
+divider("Part A: Figures","fig1–fig7 + graphical abstract")
 FIGS=[
  ("figures/graphical_abstract.png","Graphical abstract",
   "Graphical abstract. Structure-to-brain-effect prediction from measured data; validation and coverage summarised. The per-compound profile shown is illustrative."),
@@ -129,36 +129,36 @@ FIGS=[
 for p,tag,cap in FIGS:
     if os.path.exists(p): fig_slide(p,tag,cap)
 
-# ============================================================ PART B — TABLES
-divider("Part B — Supplementary Tables","S0–S13, read from the released CSVs")
-add_table("STable S0 — Data provenance","supplementary/STable0_data_provenance.csv",
+# ============================================================ PART B, TABLES
+divider("Part B: Supplementary Tables","S0–S13, read from the released CSVs")
+add_table("STable S0: Data provenance","supplementary/STable0_data_provenance.csv",
           "STable S0. Provenance of every endpoint: role, modality, source database, identifier, measurement type, n, and year range. All measured experimental data.")
-add_table("STable S1 — Classification metrics","supplementary/STable1_classification_metrics.csv",
+add_table("STable S1: Classification metrics","supplementary/STable1_classification_metrics.csv",
           "STable S1. Full classification metrics across regimes (key columns shown; complete 16-column table in the CSV).",
           cols=["endpoint","n","pos_rate","AUROC_random","AUROC_scaffold","AUROC_cluster","AUROC_temporal","PR_AUC","MCC","Brier","conformal_coverage"])
-add_table("STable S2 — Receptor regression","supplementary/STable2_receptor_regression.csv",
+add_table("STable S2: Receptor regression","supplementary/STable2_receptor_regression.csv",
           "STable S2. Receptor potency-regression performance (scaffold CV and temporal split).")
-add_table("STable S3 — Antioxidant (measured DPPH)","supplementary/STable3_antioxidant_measured.csv",
+add_table("STable S3: Antioxidant (measured DPPH)","supplementary/STable3_antioxidant_measured.csv",
           "STable S3. Measured-DPPH antioxidant regression, including cross-check against the prior curated proxy.")
-add_table("STable S4 — Threshold sensitivity","supplementary/STable4_threshold_sensitivity.csv",
+add_table("STable S4: Threshold sensitivity","supplementary/STable4_threshold_sensitivity.csv",
           "STable S4. Per-operating-threshold precision/recall/F1 by endpoint and split (temporal, scaffold-holdout).")
-add_table("STable S5 — Similarity-binned AUROC","supplementary/STable5_similarity_binned_auroc.csv",
-          "STable S5. AUROC binned by nearest-training Tanimoto similarity — the empirical basis of the applicability-domain flag.")
-add_table("STable S6 — Clinical reference composition","supplementary/STable6_clinical_reference_composition.csv",
+add_table("STable S5: Similarity-binned AUROC","supplementary/STable5_similarity_binned_auroc.csv",
+          "STable S5. AUROC binned by nearest-training Tanimoto similarity, the empirical basis of the applicability-domain flag.")
+add_table("STable S6: Clinical reference composition","supplementary/STable6_clinical_reference_composition.csv",
           "STable S6. Composition of the 504-compound clinical-precedent reference set by disease class.")
-add_table("STable S7 — Benchmark vs literature","supplementary/STable7_benchmark_vs_literature.csv",
+add_table("STable S7: Benchmark vs literature","supplementary/STable7_benchmark_vs_literature.csv",
           "STable S7. BrainSafe random-split AUROC versus published random-split ranges per endpoint.")
-add_table("STable S8 — Capability vs LLM","supplementary/STable8_llm_capability_comparison.csv",
+add_table("STable S8: Capability vs LLM","supplementary/STable8_llm_capability_comparison.csv",
           "STable S8. Capability comparison: BrainSafe AI versus a general-purpose large language model.")
-add_table("STable S9 — Ablation vs baselines","supplementary/STable9_baseline_comparison.csv",
+add_table("STable S9: Ablation vs baselines","supplementary/STable9_baseline_comparison.csv",
           "STable S9. Scaffold-split AUROC: deployed ensemble versus kNN-Tanimoto and logistic-regression baselines (ensemble best on all 8 endpoints).")
-add_table("STable S10 — Label-definition robustness","supplementary/STable10_label_threshold_robustness.csv",
+add_table("STable S10: Label-definition robustness","supplementary/STable10_label_threshold_robustness.csv",
           "STable S10. Scaffold-CV AUROC under alternative pChEMBL label cut-offs (deployed / strict / sharp-boundary / high-potency).")
-add_table("STable S11 — Assay-type composition","supplementary/STable11_assay_type_composition.csv",
+add_table("STable S11: Assay-type composition","supplementary/STable11_assay_type_composition.csv",
           "STable S11. Assay-type composition per target (IC50/Ki/Kd/EC50 fractions on the standardised pChEMBL scale).")
-add_table("STable S12 — Assay sensitivity","supplementary/STable12_assay_sensitivity.csv",
+add_table("STable S12: Assay sensitivity","supplementary/STable12_assay_sensitivity.csv",
           "STable S12. Single-assay (IC50-only) versus pooled retraining: AUROC delta <= 0.006 across the three endpoints tested.")
-add_table("STable S13 — LLM head-to-head scoreboard","supplementary/STable13_llm_scoreboard.csv",
+add_table("STable S13: LLM head-to-head scoreboard","supplementary/STable13_llm_scoreboard.csv",
           "STable S13. Pre-registered head-to-head: BrainSafe and four LLMs scored against the frozen measured-data key (live ChEMBL verification of cited identifiers).")
 
 prs.save("BrainSafe_AI_Supplementary.pptx")
