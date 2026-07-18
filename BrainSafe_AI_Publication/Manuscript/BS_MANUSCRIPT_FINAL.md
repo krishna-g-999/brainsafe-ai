@@ -7,31 +7,30 @@ artifacts, not estimated.*
 ---
 
 ## Abstract
-We present BrainSafe AI, an open computational tool that, from a chemical structure alone,
-estimates a compound's profile of effects relevant to the human brain. It integrates eight
-machine-learning endpoints trained on **measured** public bioactivity data (ChEMBL
-pChEMBL and the B3DB blood–brain-barrier database): blood–brain-barrier (BBB) penetration;
-inhibition of AChE, BChE, BACE1, GSK-3β, MAO-A and MAO-B; and the hERG cardiotoxicity
-liability. Four additional receptor targets (D2, A2A, 5-HT2A, SERT) are modelled as
-potency regressions. A deterministic druggability/CNS-MPO layer, a measured-data
-antioxidant (DPPH) model, and a clinical-precedent layer (504 nervous-system compounds with
-real clinical-phase data) complete the system. Predictions are **isotonic-calibrated**, carry
-**Mondrian conformal prediction sets** with empirically verified ~90% coverage, are
-**grounded in the nearest real measured analogues**, and are integrated into **BBB-gated
-per-disease scores**. Validation is reported across a full rigour hierarchy — random,
-scaffold, leave-cluster-out, and temporal splits. On like-for-like random splits the
-classifiers reach AUROC 0.94–0.98 (at/above published state of the art); under strict
-scaffold and cluster splits 0.87–0.95; and under true temporal (future-compound) splits
-0.61–0.92, transparently exposing where generalisation is limited. Under an identical protocol the deployed ensemble outperforms both a k-nearest-neighbour
-Tanimoto read-across (mean AUROC 0.912 vs 0.867) and logistic regression (0.808) on every
-endpoint. In a pre-registered head-to-head, four general-purpose large language models matched or
-exceeded BrainSafe on blood–brain-barrier/hERG classification of well-known drugs but fabricated or
-mis-attributed 45% of the measured-data identifiers they cited and confabulated a specific target and
-potency for an unpublished compound, whereas BrainSafe returns, for any structure, a calibrated
-probability, a conformal set, and the nearest measured analogue — grounded, auditable output an LLM
-does not provide. The methodological
-contribution is the **integration** — calibrated, evidence-grounded, BBB-gated,
-safety-aware CNS profiling from measured data — rather than any single new algorithm.
+BrainSafe AI is an open computational tool that estimates a compound's profile of brain-relevant
+effects from its chemical structure alone. It brings together eight machine-learning endpoints, every
+one trained on **measured** public bioactivity data (ChEMBL pChEMBL values and the B3DB
+blood–brain-barrier database): blood–brain-barrier (BBB) penetration, inhibition of AChE, BChE,
+BACE1, GSK-3β, MAO-A and MAO-B, and the hERG cardiotoxicity liability. Four further receptor targets
+(D2, A2A, 5-HT2A and SERT) are handled instead as potency regressions. A deterministic
+druggability/CNS-MPO layer, a measured-data antioxidant (DPPH) model, and a clinical-precedent layer
+of 504 nervous-system compounds with real clinical-phase data round out the system. Every prediction
+is **isotonic-calibrated**, carries a **Mondrian conformal prediction set** with empirically verified
+~90% coverage, is **grounded in the nearest real measured analogues**, and feeds into **BBB-gated
+per-disease scores**. We validated the models under a hierarchy of increasingly demanding splits:
+random, scaffold, leave-cluster-out and temporal. On like-for-like random splits the classifiers
+reach AUROC 0.94–0.98, at or above published state of the art; under scaffold and cluster splits
+0.87–0.95; and under a true temporal (future-compound) split 0.61–0.92, which shows plainly where
+generalisation runs out. Under an identical protocol the deployed ensemble beats both a
+k-nearest-neighbour Tanimoto read-across (mean AUROC 0.912 vs 0.867) and logistic regression (0.808)
+on every endpoint. We also ran a pre-registered head-to-head against four general-purpose large
+language models: on well-known drugs they matched or exceeded BrainSafe at BBB and hERG
+classification, yet 45% of the measured-data identifiers they cited were fabricated or mis-attributed
+and all four invented a target and potency for an unpublished compound, whereas BrainSafe returned,
+for every structure, a calibrated probability, a conformal set, and the nearest measured analogue —
+the kind of grounded, auditable output an LLM does not supply. The contribution here is the
+**integration**, calibrated, evidence-grounded, BBB-gated and safety-aware CNS profiling from measured
+data, rather than any one new algorithm.
 
 ## 1. Introduction
 Assessing whether a small molecule (drug or natural product/flavonoid) is likely to affect
