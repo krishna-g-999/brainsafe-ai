@@ -1,4 +1,4 @@
-# BrainSafe AI — Benchmark & Competitive Analysis
+# BrainSafe AI: Benchmark & Competitive Analysis
 
 *Our numbers are read straight from the saved validation reports; external numbers come from the
 cited literature. Where a comparison rests on a different split methodology, we say so rather than
@@ -22,15 +22,15 @@ per-endpoint `*_meta.json` files.
 | AChE | 0.915 / **0.912** | comparable ChEMBL RF/SVM studies (n~2.5k) | Strong, on a larger set (n=4,324) and a stricter split. |
 | BACE1 | 0.950 / **0.940** | multi-target Alzheimer's RF models exist | Strong; class-imbalanced (~89% active), so we report AUROC/MCC rather than accuracy. |
 | MAO-B | 0.885 / **0.873** | 0.88–0.96 (small pharmacophore sets, n~126) | Solid on a much larger set (n=3,455); small-set literature numbers tend to be optimistic. |
-| MAO-A | 0.867 / **0.890** | — | Solid. |
-| GSK-3β | 0.920 / **0.915** | — | Strong; imbalanced (MCC 0.47). |
-| antioxidant (measured DPPH) | R² = 0.43 (scaffold-CV) | — | Honest and moderate; it replaces an earlier text-derived proxy that fit far worse (R² ≈ 0.25). |
+| MAO-A | 0.867 / **0.890** | not reported | Solid. |
+| GSK-3β | 0.920 / **0.915** | not reported | Strong; imbalanced (MCC 0.47). |
+| antioxidant (measured DPPH) | R² = 0.43 (scaffold-CV) | not reported | Honest and moderate; it replaces an earlier text-derived proxy that fit far worse (R² ≈ 0.25). |
 | conformal coverage | **0.885–0.905 @ 0.90 target** | valid CP gives ~target coverage | Empirically valid. |
 
 **Takeaway.** On like-for-like random splits our AUROC (0.94–0.98) sits at or above the published
 ranges; under the stricter scaffold and cluster splits it holds at 0.87–0.95. What sets the work apart
-is less any single headline number than the **validation rigour** — leak-free scaffold CV, strict
-leave-cluster-out, and empirically verified conformal coverage — next to a literature that often
+is less any single headline number than the **validation rigour** (leak-free scaffold CV, strict
+leave-cluster-out, and empirically verified conformal coverage) next to a literature that often
 reports only the friendlier random split.
 
 ## 3. Does the ensemble earn its keep? (comparative)
@@ -55,13 +55,13 @@ look-alikes (Supplementary Table S9).
 
 No single existing tool does the thing BrainSafe is built around: unify *measured* CNS-target
 polypharmacology, gate it by BBB penetration, roll it up into disease-level brain-effect scores, and
-carry a safety anti-target, conformal confidence, and measured-analogue evidence alongside — all in one
+carry a safety anti-target, conformal confidence, and measured-analogue evidence alongside, all in one
 transparent tool.
 
 ## 5. Why not just use a general-purpose LLM?
 We ran a pre-registered head-to-head against four LLMs (Gemini Pro, ChatGPT/GPT-4o, Perplexity,
 Claude), scored against a frozen measured-data key with live ChEMBL verification (Supplementary Table
-S13). The result splits cleanly in two. On well-known drugs the LLMs are strong — three of four matched
+S13). The result splits cleanly in two. On well-known drugs the LLMs are strong: three of four matched
 or beat BrainSafe at BBB and hERG classification. But 45% of the ChEMBL identifiers they cited as
 evidence were fabricated or pointed to the wrong molecule, and all four invented a target and potency
 for an unpublished compound. BrainSafe fabricated nothing and reported honest uncertainty on the novel
@@ -72,17 +72,17 @@ provenance or for genuinely new molecules, which is where a grounded tool matter
 The individual methods are standard: ECFP/descriptor features with RF/ExtraTrees/HistGB ensembles, BBB
 and hERG ML, target QSAR, an applicability domain, and conformal prediction (Norinder et al., 2014).
 Multi-target Alzheimer's QSAR has been published before. What we have not seen assembled elsewhere is
-the *combination* — a BBB-gated, evidence-grounded, conformal-calibrated, safety-aware CNS
+the *combination*: a BBB-gated, evidence-grounded, conformal-calibrated, safety-aware CNS
 disease-effect profiler driven entirely by measured public data, released as an open tool. This is an
 application and integration contribution, not a new algorithm, and we frame it that way.
 
 ## 7. Honest gaps a reviewer will (rightly) raise
-1. **No prospective wet-lab validation** — the strongest test of real-world use; it needs experiments
+1. **No prospective wet-lab validation.** This is the strongest test of real-world use; it needs experiments
    and cannot be manufactured on paper. (We do report a temporal split as a proxy for prospective use.)
-2. **Analogue density** — ChEMBL target sets have moderate scaffold-split test-to-train similarity;
+2. **Analogue density.** ChEMBL target sets have moderate scaffold-split test-to-train similarity;
    the cluster split mitigates this, and we state it.
-3. **Engagement ≠ efficacy** — we predict molecular engagement, not clinical outcome.
-4. **Scope** — receptor endpoints are ranking-grade, and safety is represented by hERG alone; other
+3. **Engagement ≠ efficacy.** We predict molecular engagement, not clinical outcome.
+4. **Scope.** Receptor endpoints are ranking-grade, and safety is represented by hERG alone; other
    liabilities are out of scope.
 5. **Imbalanced endpoints** (BACE1, GSK-3β) are reported via AUROC/MCC, with threshold sensitivity in
    Supplementary Table S4.
@@ -90,8 +90,8 @@ application and integration contribution, not a new algorithm, and we frame it t
 ## 8. Bottom line
 BrainSafe is a scientifically valid, rigorously validated and genuinely useful integrative CNS
 profiler. Its per-endpoint performance is competitive-to-strong, its validation is more honest than
-most, and its integration — BBB-gated disease effect plus safety plus conformal confidence plus
-measured-analogue evidence — is not offered as a unit by existing tools. It is well suited to an
+most, and its integration (BBB-gated disease effect plus safety plus conformal confidence plus
+measured-analogue evidence) is not offered as a unit by existing tools. It is well suited to an
 application/resource publication with honest framing, and it is not a methodological breakthrough. The
 route to a flagship predictor paper runs through prospective validation and a broader, more balanced
 target panel.

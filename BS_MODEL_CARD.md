@@ -1,14 +1,14 @@
-# BrainSafe AI — Model Card & Honest Validation Record
+# BrainSafe AI Model Card & Honest Validation Record
 
 *This is a development record, written in the model-card style of Mitchell et al. (2019, FAT* '19).
-It is deliberately chronological, so that the reasoning behind the current models — including the flaw
-we found and corrected — is on the record rather than hidden.*
+It is deliberately chronological, so that the reasoning behind the current models, including the flaw
+we found and corrected, is on the record rather than hidden.*
 
 > **How to read this document.** Sections **1–10** describe the **original prototype** (a seven-dimension
 > "Neuroprotection Score" trained on a 535-compound curated file) and the problem we diagnosed in it:
 > it was learning from annotations rather than from chemistry. That prototype was **superseded**.
-> Sections **11–17** describe the **current deployed system** — eight measured-data classification
-> endpoints, four receptor regressions, a measured antioxidant model, and the integration layer — all
+> Sections **11–17** describe the **current deployed system**, eight measured-data classification
+> endpoints, four receptor regressions, a measured antioxidant model, and the integration layer, all
 > trained on 64,474 measured ChEMBL/B3DB records. **For the model that is actually shipped and reported
 > in the manuscript, read from §11 onward.** Numbers in §1–10 refer to the retired prototype and should
 > not be read as properties of the current tool.
@@ -21,7 +21,7 @@ we found and corrected — is on the record rather than hidden.*
   (7 mechanistic dimensions → an aggregate Neuroprotection Score, NPS) plus a
   deterministic **druggability** score.
 - **Intended users:** researchers screening/prioritising candidate compounds for
-  follow-up — *not* clinicians, *not* patients.
+  follow-up, *not* clinicians, *not* patients.
 - **NOT intended for:** quantitative efficacy prediction, dosing, clinical decisions,
   or de-novo prediction of activity for structurally novel compounds (see §4).
 
@@ -47,21 +47,21 @@ we found and corrected — is on the record rather than hidden.*
 - **Features (93):** ECFP-4 PCA(50) + ChemBERTa-PCA(32) + 4 disease-target counts + 1 BBB
   ordinal + 6 structural descriptors.
 - **NPS:** a fixed weighted sum of the 7 dimensions (`scorer.neuro_score`), computed
-  *after* prediction — not a learned target. (The serialized `nps_*.joblib` models are
+  *after* prediction, not a learned target. (The serialized `nps_*.joblib` models are
   therefore circular and unused at inference.)
 
-## 4. Evaluation — leak-free, scaffold-split GroupKFold (k=5)
+## 4. Evaluation: leak-free scaffold-split GroupKFold (k=5)
 
 **Method:** Bemis–Murcko *generic* scaffold groups; no scaffold shared across folds; all
 transforms (ECFP-PCA, ChemBERTa-PCA, scaler) fit inside the training fold only. Leakage
-audit: test→train median Tanimoto **0.31** (only ~5% of test compounds have a T≥0.7 twin) —
+audit: test→train median Tanimoto **0.31** (only ~5% of test compounds have a T≥0.7 twin) , 
 a genuine novel-chemotype split.
 
 **Performance (NPS):**
 
 | Model | NPS R² | Spearman ρ | MAE |
 |---|---|---|---|
-| Mean predictor (baseline) | −0.01 | — | ~15 |
+| Mean predictor (baseline) | −0.01 | n/a | ~15 |
 | Ridge on 7 descriptors (baseline) | ~0.0 | 0.11 | ~14 |
 | Tanimoto k-NN (baseline) | **−0.17** | 0.10 | ~15 |
 | **93-feature ensemble** | **0.57** | **0.82** | **8.5** |
@@ -71,7 +71,7 @@ The ensemble clearly beats all baselines, and **pseudo-labels do not inflate it*
 addendum that reported negative 5-fold R²; those numbers were from earlier/ablation model
 generations, now disambiguated.*
 
-## 5. ⚠️ Critical caveat — the model predicts from annotations, not chemistry
+## 5. ⚠️ Critical caveat: the model predicts from annotations, not chemistry
 
 A feature ablation (scaffold-CV, full set) is decisive:
 
@@ -83,7 +83,7 @@ A feature ablation (scaffold-CV, full set) is decisive:
 
 **≈ All predictive signal comes from 5 coarse disease-association features; the 82
 structural/ChemBERTa features add ≈ 0.03 R².** This is almost certainly **label–feature
-circularity** — the disease-target counts and the dimension labels were curated from the
+circularity**, the disease-target counts and the dimension labels were curated from the
 same knowledge, so the model reads the answer back out rather than learning structure→activity.
 
 **Consequence for applicability:** for a genuinely novel compound with no known disease
@@ -93,7 +93,7 @@ structural predictor.**
 
 ## 6. Druggability score (separate, deterministic)
 
-`BS_druggability.py` — CNS-weighted composite of **QED** (Bickerton 2012), **Lipinski Ro5**
+`BS_druggability.py`, CNS-weighted composite of **QED** (Bickerton 2012), **Lipinski Ro5**
 (2001), **Veber** (2002), **CNS-MPO** (Wager 2010), with a PAINS flag. Computed analytically
 from SMILES; **no training, no circularity.** Validated qualitatively (CNS drugs high, polar
 non-drugs low). *Caveats:* composite weights are an unvalidated heuristic; QED/Ro5/CNS-MPO
@@ -129,7 +129,7 @@ and pKa omitted in CNS-MPO. **This is the most scientifically defensible, deploy
 
 ---
 
-## 10. Tier-1/2 update — building a *genuine* (non-circular) predictor
+## 10. Tier-1/2 update: building a *genuine* (non-circular) predictor
 
 To test whether neuroprotection is learnable **from chemical structure alone**, we
 re-ran with the circularity removed: **human/literature labels only** (ML pseudo-labels
@@ -152,7 +152,7 @@ audit: median test→train Tanimoto 0.34).
 | **NPS (aggregate)** | −0.08 | [−0.19, 0.00] | no | ❌ |
 
 **Findings:**
-1. **Only `antioxidant` is genuinely structure-predictable** — chemically expected
+1. **Only `antioxidant` is genuinely structure-predictable**, chemically expected
    (radical-scavenging tracks phenolic-OH/catechol motifs). The best model is a
    **parsimonious, interpretable Ridge on 24 RDKit descriptors**, scaffold-CV
    **R² = 0.267 [0.182, 0.346]**, Spearman 0.49, MAE 15. Saved:
@@ -169,7 +169,7 @@ audit: median test→train Tanimoto 0.34).
 model (antioxidant), a deterministic druggability layer, and an honest "not
 structure-predictable" verdict for the remaining endpoints. To make those endpoints
 genuinely predictable requires **independent, measurable, mechanism-specific labels**
-(see §8) — not achievable from the current curation.
+(see §8), not achievable from the current curation.
 
 ---
 
@@ -192,12 +192,12 @@ applicability-domain flag (max Tanimoto to a 2000-compound training sample).
 | **BACE1** | Alzheimer's / amyloid | 6,324 | **0.950** | 0.992 | 0.63 | 0.71 |
 | **MAO-B** | Parkinson's / dopamine | 3,455 | **0.885** | 0.925 | 0.62 | 0.59 |
 | **MAO-A** | mood / depression | 2,141 | **0.867** | 0.815 | 0.58 | 0.57 |
-| antioxidant | oxidative stress | 339 | (R²=0.27, §10) | — | — | 0.34 |
-| druggability/CNS-MPO | developability | — | deterministic (RDKit) | — | — | — |
+| antioxidant | oxidative stress | 339 | (R²=0.27, §10) | n/a |, | 0.34 |
+| druggability/CNS-MPO | developability | n/a | deterministic (RDKit) | n/a |, | n/a |
 
 **External sanity (known drugs, held to chemistry):** Donepezil → AChE active 0.99,
 BBB 0.98; Selegiline → MAO-B active 0.97; Caffeine → BBB 0.86; Quercetin → BBB
-non-penetrant 0.26 + antioxidant 86. (Galantamine AChE 0.60 sits just below threshold —
+non-penetrant 0.26 + antioxidant 86. (Galantamine AChE 0.60 sits just below threshold , 
 a genuinely weak inhibitor near the boundary; honest uncertainty, not error.)
 
 **Honest caveats:**
@@ -216,14 +216,14 @@ a genuinely weak inhibitor near the boundary; honest uncertainty, not error.)
 (`render_brain_profile_panel`). Datasets: `data/endpoints/*.csv`.
 
 **Publication readiness:** this is now a genuine, measured-data, scaffold-validated
-multi-endpoint QSAR tool — a defensible resource/methods paper. To strengthen to a
+multi-endpoint QSAR tool, a defensible resource/methods paper. To strengthen to a
 top-tier predictor paper: add cluster/temporal external validation, calibrated
 (conformal) probabilities, GSK-3β/BACE-style additional targets, and report a strict
 out-of-distribution generalisation analysis.
 
 ---
 
-## 12. The innovation layer — an evidence-grounded, BBB-gated, calibrated CNS profiler
+## 12. The innovation layer: an evidence-grounded, BBB-gated, calibrated CNS profiler
 
 The endpoint models were assembled into something beyond "another QSAR predictor":
 a transparent decision-support engine (`BS_brain_predict.py`, app
@@ -258,8 +258,8 @@ a transparent decision-support engine (`BS_brain_predict.py`, app
 | MAO-B | Parkinson's / dopamine | 0.885 | 0.122 | 3,455 |
 | MAO-A | mood / depression | 0.867 | 0.136 | 2,141 |
 | hERG | SAFETY (cardiotox) | 0.907 | 0.119 | 5,053 |
-| antioxidant | oxidative stress | R²=0.27 | — | 339 |
-| druggability/CNS-MPO | developability | deterministic | — | — |
+| antioxidant | oxidative stress | R²=0.27 | n/a | 339 |
+| druggability/CNS-MPO | developability | deterministic | n/a |, |
 
 **Prospective sanity (chemistry-only inputs; verified against current models, structures
 PubChem-resolved):** Donepezil → Alzheimer's disease score 1.00 via AChE (P=1.00), nearest
@@ -272,7 +272,7 @@ analogs flagged as extrapolation. The engine reproduces known pharmacology and s
 
 **Honest limitations (unchanged, still apply):** ChEMBL target sets are analog-dense
 (median scaffold-split test→train Tanimoto 0.57–0.71 for the target models; BBB 0.48),
-so AUROCs reflect strong predictivity within known-inhibitor space — the AD/evidence
+so AUROCs reflect strong predictivity within known-inhibitor space, the AD/evidence
 flags expose novel-scaffold extrapolation. Predicts target engagement, not clinical
 efficacy. The remaining steps to a flagship paper are a strict cluster/temporal external
 test, full conformal prediction sets, and prospective experimental validation.
@@ -291,7 +291,7 @@ test, full conformal prediction sets, and prospective experimental validation.
 **(a) Strict leave-cluster-out generalisation.** Sphere-exclusion (LeaderPicker,
 Tanimoto-distance 0.4) clusters; whole clusters held out (GroupShuffleSplit) so test
 compounds are structurally novel relative to training. AUROC barely drops vs the
-scaffold-CV number — the models generalise beyond analog series:
+scaffold-CV number, the models generalise beyond analog series:
 
 | Endpoint | scaffold-CV AUROC | **strict cluster-split AUROC** | cluster-split median T | #clusters |
 |---|---|---|---|---|
@@ -304,7 +304,7 @@ scaffold-CV number — the models generalise beyond analog series:
 | hERG | 0.907 | **0.900** | 0.55 | 2,115 |
 
 **(b) Similarity-binned generalisation curve.** AUROC reported in test→train
-max-Tanimoto bins (T<0.4, 0.4–0.6, 0.6–0.8, >0.8) per endpoint (see JSON) — the honest
+max-Tanimoto bins (T<0.4, 0.4–0.6, 0.6–0.8, >0.8) per endpoint (see JSON), the honest
 "performance vs novelty" curve; performance is retained well even into the T<0.6 region.
 
 **(c) Mondrian (class-conditional) inductive conformal prediction.** Calibrated on
@@ -317,8 +317,8 @@ Empirically validated (50/50 calib/test split):
 | BACE1 | 0.90 | 0.893 | 1.06 | high |
 | BBB | 0.90 | 0.897 | 1.14 | high |
 | GSK-3β | 0.90 | 0.885 | 1.16 | high |
-| MAO-A | 0.90 | 0.905 | 1.30 | — |
-| MAO-B | 0.90 | 0.895 | 1.24 | — |
+| MAO-A | 0.90 | 0.905 | 1.30 | n/a |
+| MAO-B | 0.90 | 0.895 | 1.24 | n/a |
 | hERG | 0.90 | 0.889 | 1.17 | high |
 
 Coverage ≈ the 90% target across all endpoints → **trustworthy confidence**. The engine
@@ -328,7 +328,7 @@ shown in the app.
 **What remains (cannot be fabricated, stated honestly):** a true **temporal/prospective
 split** (train on pre-cutoff ChEMBL, test on later depositions) and **wet-lab prospective
 validation**. These require a dedicated temporal data pipeline and experiments,
-respectively — they are the final steps for a flagship predictor paper. Everything
+respectively, they are the final steps for a flagship predictor paper. Everything
 computationally validatable has been done with no compromise: leak-free scaffold CV,
 strict leave-cluster-out, similarity-binned generalisation, calibrated probabilities, and
 conformal prediction with verified coverage.
@@ -341,10 +341,10 @@ The §5/§6 limitations were addressed to the extent computationally possible (t
 are honestly marked as inherent). `BS_fetch_endpoints.py` (now stores `document_year` +
 expanded panel), `BS_temporal_pr.py`, `BS_external_validation.py`.
 
-**(i) Temporal / time-split validation — DONE (this was computational, not impossible).**
+**(i) Temporal / time-split validation, DONE (this was computational, not impossible).**
 Each compound is assigned its earliest ChEMBL `document_year`; train ≤ 75th-percentile
 year, test on the most recent ~25% (a true "future compounds" test). This is the honest
-prospective-use estimate and is **lower than scaffold-CV — as it should be**:
+prospective-use estimate and is **lower than scaffold-CV, as it should be**:
 
 | Endpoint | scaffold-CV | leave-cluster-out | **temporal** | prospective read |
 |---|---|---|---|---|
@@ -355,15 +355,15 @@ prospective-use estimate and is **lower than scaffold-CV — as it should be**:
 | hERG | 0.90 | 0.87 | **0.76** | moderate |
 | GSK-3β | 0.92 | 0.92 | **0.66** | **weak on novel/future chemotypes** |
 | MAO-A | 0.87 | 0.89 | **0.61** | **weak on novel/future chemotypes** |
-| BBB | 0.92 | 0.91 | n/a (B3DB undated) | — |
+| BBB | 0.92 | 0.91 | n/a (B3DB undated) | n/a |
 
 Temporal AUROC is now stored per endpoint (`*_meta.json: temporal_auroc`). GSK-3β and
 MAO-A degrade substantially out-of-time and must be treated as lower-confidence for
-prospective screening — stated plainly rather than hidden behind the CV number.
+prospective screening, stated plainly rather than hidden behind the CV number.
 
-**(ii) Expanded target panel — DONE, fact-gated.** Fetched 5 additional measured CNS
+**(ii) Expanded target panel, DONE, fact-gated.** Fetched 5 additional measured CNS
 targets. Outcome decided by results, not assumption:
-- **BChE (CHEMBL1914) added** — scaffold AUROC 0.94, cluster 0.92, **MCC 0.70** (best in
+- **BChE (CHEMBL1914) added**, scaffold AUROC 0.94, cluster 0.92, **MCC 0.70** (best in
   the panel), 70% active. Genuine addition (Alzheimer's cholinergic, complements AChE).
 - **D2, A2A, 5-HT2A, SERT excluded.** Their ChEMBL data are 96–98% actives (only binders
   reported), so binary active/inactive QSAR is ill-posed → **MCC 0.21–0.44** despite high
@@ -371,17 +371,17 @@ targets. Outcome decided by results, not assumption:
   from deployment. Proper future handling = **potency (pKi) regression**, not classification.
 - Deployed panel: **BBB + AChE, BChE, BACE1, GSK-3β, MAO-A, MAO-B + hERG (safety) = 8**.
 
-**(iii) PR-AUC + threshold sensitivity — DONE** (`BS_temporal_pr_report.json`). For every
+**(iii) PR-AUC + threshold sensitivity, DONE** (`BS_temporal_pr_report.json`). For every
 endpoint we now report precision/recall/F1 at thresholds 0.3/0.5/0.7 and Youden-J, on
-held-out (temporal/scaffold) sets — the correct reporting for imbalanced endpoints. E.g.
+held-out (temporal/scaffold) sets, the correct reporting for imbalanced endpoints. E.g.
 BACE1 (89% active) temporal @0.5: P=0.97/R=0.95/F1=0.96; hERG @youden: P=0.57/R=0.69.
 
-**(iv) Analog density — explicit.** Cluster-split (§13) + similarity-binned curves quantify
+**(iv) Analog density, explicit.** Cluster-split (§13) + similarity-binned curves quantify
 it; temporal split further controls for it. Stated, not assumed.
 
 **Inherent (cannot fix computationally, stated honestly):**
-- **Target engagement ≠ clinical efficacy** — needs clinical-outcome labels we do not have.
-- **Wet-lab prospective validation** — requires experiments.
+- **Target engagement ≠ clinical efficacy**, needs clinical-outcome labels we do not have.
+- **Wet-lab prospective validation**, requires experiments.
 - **Antioxidant** remains a weak (R²0.27) curated-label model; improving it needs measured
   ORAC/DPPH/TEAC assay data (not reliably available as a clean public set here).
 
@@ -396,20 +396,20 @@ are scientifically impossible to fabricate computationally.
 
 Two remaining gaps were addressed with **real measured data**, then validated/cross-checked.
 
-**(A) Antioxidant — replaced curated labels with MEASURED DPPH data.**
+**(A) Antioxidant, replaced curated labels with MEASURED DPPH data.**
 Assembled 2,862 unique compounds from ChEMBL DPPH radical-scavenging assays (measured
 IC50/EC50 → pIC50; `BS_fetch_antioxidant.py`). A RF+ExtraTrees+HistGB regression ensemble
 on Morgan-1024 + 24 descriptors achieved, under scaffold GroupKFold(5):
-- **R² = 0.43, RMSE = 0.60 log-units, Spearman ρ = 0.636** — a genuine improvement over the
+- **R² = 0.43, RMSE = 0.60 log-units, Spearman ρ = 0.636**, a genuine improvement over the
   curated model (R² ≈ 0.25).
 - **Temporal split R² ≈ 0** (honest): pooled cross-lab/protocol DPPH measurements do not
-  generalise across time — the model is reliable in-distribution/for ranking, not as an
+  generalise across time, the model is reliable in-distribution/for ranking, not as an
   absolute cross-era predictor.
 - **Cross-check:** the previous curated 0–100 score correlates only weakly with the measured
   DPPH pIC50 (Spearman ρ = 0.387), confirming the curated model captured only partial signal
   and that the measured model is the better basis. Deployed: `antioxidant_measured_dpph.joblib`.
 
-**(B) Receptor targets — switched from ill-posed binary to POTENCY REGRESSION.**
+**(B) Receptor targets, switched from ill-posed binary to POTENCY REGRESSION.**
 D2/A2A/5-HT2A/SERT were 96–98% actives → binary QSAR was meaningless (MCC 0.21–0.44). Trained
 regression ensembles on measured pChEMBL (`BS_train_regression.py`):
 
@@ -420,8 +420,8 @@ regression ensembles on measured pChEMBL (`BS_train_regression.py`):
 | D2 | 7,511 | 0.425 | 0.71 | 0.652 | −0.007 |
 | SERT | 4,471 | 0.338 | 0.84 | 0.573 | 0.171 |
 
-These are **ranking-grade** potency predictors (Spearman 0.57–0.71) — a correct, useful
-replacement for the dropped classifiers — but **temporal generalisation is weak** (D2 ≈ 0),
+These are **ranking-grade** potency predictors (Spearman 0.57–0.71), a correct, useful
+replacement for the dropped classifiers, but **temporal generalisation is weak** (D2 ≈ 0),
 so they are surfaced for prioritisation/ranking, explicitly **not** as absolute prospective
 potency. Deployed under `models_brain_reg/` and shown as a separate "predicted pKi" panel,
 kept distinct from the calibrated classification probabilities.
@@ -438,27 +438,27 @@ endpoints (antioxidant DPPH, D2/5-HT2A) is reported, not hidden.
 
 Each gap was diagnosed with measured evidence (not assumed) and addressed where scientifically possible.
 
-**(a) "Competitive, not SOTA" — exact cause.** (i) We used only **pChEMBL (potency) records** and
+**(a) "Competitive, not SOTA", exact cause.** (i) We used only **pChEMBL (potency) records** and
 discarded the larger body of qualitative %-inhibition data (e.g. MAO-A: 4,398 pChEMBL vs **19,633
 total** activities). (ii) Representation is standard (Morgan-1024 + 24 descriptors), not graph/deep
 multitask. (iii) Most published "SOTA" AUROCs use **random splits**; ours use scaffold/cluster/temporal,
 which are stricter and lower by construction. *Conclusion:* the gap is largely split-methodology +
 data-type restriction, not a modelling error. **Substantiated:** on like-for-like **random splits**
 (`BS_randomsplit_benchmark.json`) our AUROC is **0.94–0.98** (BBB 0.963, AChE 0.975, BChE 0.976,
-BACE1 0.956, GSK-3β 0.943, MAO-B 0.960, MAO-A 0.950, hERG 0.950) — **at or above the published SOTA
+BACE1 0.956, GSK-3β 0.943, MAO-B 0.960, MAO-A 0.950, hERG 0.950), **at or above the published SOTA
 ranges** (BBB 0.88–0.96; hERG 0.86–0.93). The models are SOTA-grade; we additionally report the
 harder scaffold/cluster/temporal numbers that most papers omit. The full validation hierarchy is:
 random 0.94–0.98 → scaffold 0.87–0.95 → cluster 0.87–0.94 → temporal 0.61–0.92.
 
-**(b) GSK-3β / MAO-A temporal weakness — exact cause (measured).** In the temporal test,
+**(b) GSK-3β / MAO-A temporal weakness, exact cause (measured).** In the temporal test,
 **71–91% of recent compounds carry scaffolds never seen in training** (covariate shift), for *every*
 endpoint. The differing temporal AUROC is explained by **class balance of the recent test set**, not by
 one model being "better": BACE1/GSK-3β recent tests are 93% active (AUROC partly trivial), whereas
-MAO-A's recent test is **balanced (45% active)** — a genuinely harder, more honest test, hence 0.61.
+MAO-A's recent test is **balanced (45% active)**, a genuinely harder, more honest test, hence 0.61.
 *Conclusion:* temporal degradation is driven by irreducible novel-chemotype shift; MAO-A's low number
 is the most honest of the set. More-diverse data narrows but cannot eliminate it. Flagged in metadata.
 
-**(c) Engagement ≠ efficacy — addressed with real clinical data.** Built a **clinical/translational
+**(c) Engagement ≠ efficacy, addressed with real clinical data.** Built a **clinical/translational
 precedent layer** from ChEMBL ATC-N (nervous-system) molecules that reached a clinical phase
 (**504 compounds with phase + structure + ATC-derived disease**; `BS_fetch_clinical.py`,
 `BS_clinical_evidence.py`). For any query the tool returns the nearest clinically-advanced CNS
@@ -471,7 +471,7 @@ disease synthesis, fixing mechanism coverage (e.g. **Fluoxetine now resolves to 
 not Parkinson's). Each disease driver is tagged `calibrated-classifier` or `regression(pKi)` for honesty.
 
 **Remaining inherent limitations (cannot be removed computationally):**
-- Models predict **binding/engagement, not direction** (agonist vs antagonist) — e.g. D2 binding is
+- Models predict **binding/engagement, not direction** (agonist vs antagonist), e.g. D2 binding is
   shown for both anti-Parkinson agonists and antipsychotic antagonists.
 - **Efficacy is shown as clinical precedent, not predicted.**
 - **Wet-lab prospective validation** still requires experiments.
@@ -483,50 +483,50 @@ Added in response to reviewer feedback. Artifacts: `BS_llm_comparison.py`, `BS_l
 `supplementary/STable8_llm_capability_comparison.csv`, `supplementary/STable9_baseline_comparison.csv`.
 
 **Non-comparative (standalone) analysis.** Per-endpoint absolute performance against each endpoint's
-own held-out measured data (AUROC, PR-AUC, MCC, Brier, conformal coverage) — Manuscript §3.1/§3.4;
+own held-out measured data (AUROC, PR-AUC, MCC, Brier, conformal coverage), Manuscript §3.1/§3.4;
 STable1–S3.
 
-**Comparative analysis — internal baselines (measured).** Under an identical scaffold-split protocol
+**Comparative analysis, internal baselines (measured).** Under an identical scaffold-split protocol
 and feature set, the deployed ensemble beats a kNN-Tanimoto "read-across" baseline and logistic
 regression on **every one of the 8 classification endpoints**: mean scaffold AUROC **0.912** (ensemble)
 vs **0.867** (kNN, Δ +0.045) vs **0.808** (logistic, Δ +0.104) (`BS_baseline_comparison.json` → STable9).
 Beating a pure nearest-neighbour read-across shows the model learns SAR beyond structural look-up.
 
-**Comparative analysis — vs general-purpose LLMs (why a dedicated tool?).**
+**Comparative analysis, vs general-purpose LLMs (why a dedicated tool?).**
 - *Benchmark evidence (peer-reviewed):* general LLMs underperform specialised ML on molecular property
   prediction (Guo et al. 2023, NeurIPS D&B; Zhong et al. 2024, arXiv:2403.05075); fine-tuned LLMs match
   QSAR only in the low-data limit (Jablonka et al. 2024, Nat Mach Intell 6:161); LLMs hallucinate in
   generative settings (Ji et al. 2023, ACM Comput Surv 55(12):248).
-- *Scientific background:* an LLM is an autoregressive text predictor — no molecular fingerprint, no
+- *Scientific background:* an LLM is an autoregressive text predictor, no molecular fingerprint, no
   structure→measured-activity function, no calibrated probability, no coverage guarantee, no
   applicability domain, no measured-analogue provenance. BrainSafe supplies all six.
 - *Reproducible grounded-output demonstration:* for fixed structures the engine returns calibrated P +
   conformal set + nearest **measured** analogue with pChEMBL (donepezil→AChE P=1.00, nearest analogue
   Tanimoto 1.00 / pChEMBL 7.75; terfenadine→hERG P=1.00; novel arylpiperazine→honest conformal
   "uncertain" grounded in a measured analogue, Tanimoto 0.35 / pChEMBL 4.82). Every value is
-  measurement-traceable — the audit guarantee an LLM cannot give.
+  measurement-traceable, the audit guarantee an LLM cannot give.
 
-**Consolidated scientific-flaw self-audit (threats to validity) — now with quantitative tests.**
+**Consolidated scientific-flaw self-audit (threats to validity), now with quantitative tests.**
 Artifacts: `BS_flaw_fixes.py/.json`, `BS_assay_composition.py`, `BS_assay_sensitivity.py`; STable10-13.
-- **(1) Assay-type pooling — TESTED, not just documented.** Composition quantified (STable11): IC50
+- **(1) Assay-type pooling, TESTED, not just documented.** Composition quantified (STable11): IC50
   dominant 81-92% per target except GSK3B (IC50 49%, EC50 33%, Ki 16%). Single-assay (IC50-only) vs
   pooled scaffold-CV retrain changes AUROC by **≤0.006** (GSK3B 0.919→0.913; MAO_B −0.006; hERG 0.000;
   STable12) → pChEMBL pooling does not materially distort discrimination.
-- **(2) Label-threshold sensitivity — TESTED.** Re-labelling at {deployed ≥6/<5, strict ≥6.5/<5.5,
+- **(2) Label-threshold sensitivity, TESTED.** Re-labelling at {deployed ≥6/<5, strict ≥6.5/<5.5,
   sharp ≥6/<6, high-potency ≥7/<5} gives max scaffold-AUROC spread **0.109** over 4 endpoints; deployed
   ≈ strict (within 0.01-0.02); grey-zone-retaining "sharp boundary" is consistently worst, validating
   the grey-zone drop (STable10). Per-operating-threshold P/R/F1 also in STable4.
-- **(3) AD cut-off — data-driven.** n-weighted similarity-binned AUROC 0.958 (T≥0.8) → 0.939 → 0.866 →
+- **(3) AD cut-off, data-driven.** n-weighted similarity-binned AUROC 0.958 (T≥0.8) → 0.939 → 0.866 →
   **0.770** (T<0.4), justifying the 0.30-0.40 out-of-domain flag (STable5).
-- **(4) disease mapping** — transparent knowledge-based rule, provenance-tagged, inspectable/overridable.
-- **(5) single hERG safety anti-target** — other liabilities (Nav1.5, hepatotox) out of scope.
-- **(6) read-across ceiling** — ruled out by §3.2/STable9 (ensemble > kNN on all 8 endpoints).
+- **(4) disease mapping**, transparent knowledge-based rule, provenance-tagged, inspectable/overridable.
+- **(5) single hERG safety anti-target**, other liabilities (Nav1.5, hepatotox) out of scope.
+- **(6) read-across ceiling**, ruled out by §3.2/STable9 (ensemble > kNN on all 8 endpoints).
 
-**Pre-registered LLM head-to-head — EXECUTED** (`BS_LLM_benchmark_protocol.md`, `BS_llm_benchmark.py`,
+**Pre-registered LLM head-to-head, EXECUTED** (`BS_LLM_benchmark_protocol.md`, `BS_llm_benchmark.py`,
 `BS_llm_score.py`, `BS_llm_responses.json`): frozen prompt + 10-compound panel (uncontested truth + 1
 unpublished scaffold) + fixed rubric, run on Gemini Pro, ChatGPT/GPT-4o, Perplexity, Claude and scored
 live against ChEMBL (STable13). Honest two-part result:
-- **Well-known drugs:** LLMs are strong — 3/4 hit BBB 9/9 (BrainSafe 8/9, missed astemizole) and Brier
+- **Well-known drugs:** LLMs are strong, 3/4 hit BBB 9/9 (BrainSafe 8/9, missed astemizole) and Brier
   as good/better (Claude 0.020). Raw accuracy on famous compounds does NOT justify the tool.
 - **Grounding + novelty:** 14/31 (45%) of ChEMBL IDs the LLMs cited as provenance were fabricated or
   pointed to the WRONG molecule (e.g. Gemini's "rasagiline" id = fluticasone propionate, "selegiline" =
@@ -534,4 +534,4 @@ live against ChEMBL (STable13). Honest two-part result:
   id = astemizole). All 4 confabulated a specific target+potency for the unpublished compound and
   disagreed (3 AChE, 1 D2). BrainSafe: 0 fabricated, grounded in real measured analogues, honest
   conformal "uncertain" on the novel compound. Conclusion: LLMs approximate textbook classifications but
-  cannot be trusted for verifiable provenance or novel chemistry — the tool's actual value.
+  cannot be trusted for verifiable provenance or novel chemistry, the tool's actual value.

@@ -22,8 +22,8 @@ ChEMBL and B3DB. Under leave-cluster-out validation the deployed endpoints achie
 which we report transparently as the realistic prospective performance. Conformal coverage
 matches the 90% target across all endpoints (0.885–0.905). Candidate receptor targets whose
 ChEMBL data are 96–98% actives were **excluded by a pre-stated MCC ≥ 0.45 quality gate**. We
-position BrainSafe honestly as an integrative, rigorously validated application — not a
-methodological advance — and document all limitations.
+position BrainSafe honestly as an integrative, rigorously validated application, not a
+methodological advance, and document all limitations.
 
 ---
 
@@ -32,9 +32,9 @@ methodological advance — and document all limitations.
 Prioritising small molecules (including dietary flavonoids and natural products) for CNS
 indications requires answering three coupled questions: does the molecule reach the brain;
 does it engage disease-relevant targets; and is it developable and safe? Existing public
-tools answer these in isolation — ADMET platforms predict BBB/ADMET/tox (e.g. ADMETlab,
+tools answer these in isolation, ADMET platforms predict BBB/ADMET/tox (e.g. ADMETlab,
 SwissADME) [1,2]; target-prediction servers predict generic protein targets by similarity
-(SwissTargetPrediction, PPB2) [3,4] — but none integrate measured CNS-target activity,
+(SwissTargetPrediction, PPB2) [3,4], but none integrate measured CNS-target activity,
 BBB gating, safety and calibrated confidence in one transparent read-out. BrainSafe AI
 addresses this integration gap while holding itself to strict, leak-free validation.
 
@@ -71,12 +71,12 @@ yield a prediction **set** at significance ε = 0.10 ({active}/{inactive}/uncert
 out-of-distribution). Coverage was validated on a held-out 50% calibration/test split.
 
 ### 2.5 Validation protocols (three increasingly strict regimes)
-1. **Scaffold cross-validation** — 5-fold GroupKFold on Bemis–Murcko generic scaffolds [12];
+1. **Scaffold cross-validation**, 5-fold GroupKFold on Bemis–Murcko generic scaffolds [12];
    all transforms fit inside each fold (no leakage).
-2. **Leave-cluster-out** — sphere-exclusion (LeaderPicker, Tanimoto distance 0.4) clustering
+2. **Leave-cluster-out**, sphere-exclusion (LeaderPicker, Tanimoto distance 0.4) clustering
    [13]; whole clusters held out (GroupShuffleSplit), testing transfer to structurally novel
    clusters.
-3. **Temporal split** — train on compounds first reported ≤ the 75th-percentile year, test on
+3. **Temporal split**, train on compounds first reported ≤ the 75th-percentile year, test on
    the most recent ~25% (a true "future compounds" / prospective-use estimate).
 A **similarity-binned AUROC curve** (test→train max Tanimoto bins) quantifies analog reliance.
 
@@ -114,7 +114,7 @@ report files are included; predictions are fully reproducible (fixed `random_sta
 | MAO-B | Parkinson's/dopamine | 3,455 | 65 | 1990–2025 |
 | MAO-A | mood/depression | 2,141 | 38 | 1990–2025 |
 | hERG | safety (cardiotox) | 5,905 | 42 | 1995–2025 |
-| *(D2/A2A/5-HT2A/SERT — excluded, §3.4)* | — | 7,511/5,547/5,256/4,471 | 96–98 | — |
+| *(D2/A2A/5-HT2A/SERT, excluded, §3.4)* | n/a | 7,511/5,547/5,256/4,471 | 96–98 | n/a |
 
 ### 3.2 Predictive performance and generalisation (Table 2; Fig. 1)
 | Endpoint | Scaffold-CV AUROC | Leave-cluster-out AUROC | Temporal AUROC | PR-AUC | MCC |
@@ -136,12 +136,12 @@ as low-confidence for prospective screening (Fig. 1).
 
 ### 3.3 Calibration and conformal coverage (Fig. 2)
 Empirical Mondrian-conformal coverage matched the 0.90 target for all deployed endpoints
-(**0.885–0.905**), with mostly singleton prediction sets — i.e. decisive yet statistically valid
+(**0.885–0.905**), with mostly singleton prediction sets, i.e. decisive yet statistically valid
 confidence. Isotonic Brier scores were 0.04–0.14.
 
 ### 3.4 Quality gate and panel composition (Fig. 4)
 The five candidate receptor targets D2, A2A, 5-HT2A and SERT have ChEMBL datasets that are
-**96–98% actives**, yielding high AUROC but **MCC of only 0.21–0.44** — the binary classifiers
+**96–98% actives**, yielding high AUROC but **MCC of only 0.21–0.44**, the binary classifiers
 cannot identify the few inactives. Under the pre-stated MCC ≥ 0.45 gate, these were **excluded**;
 **BChE (MCC 0.70)** met the gate and was added. The deployed panel is therefore **8 endpoints**:
 BBB + AChE, BChE, BACE1, GSK-3β, MAO-A, MAO-B + hERG.
@@ -174,8 +174,8 @@ reported separately as predicted pKi rather than folded into the calibrated clas
 Per-endpoint, BrainSafe is **competitive but not state-of-the-art-beating**: published B3DB BBB
 models report AUROC 0.88–0.96 (often under random splits) [6]; our 0.92 scaffold/0.91 cluster is
 mid-range but obtained under stricter splits. Published hERG models reach AUC 0.86–0.93; our 0.90/
-0.87 is in range. CNS-target QSAR (AChE/MAO/BACE) is well precedented. The component methods —
-ensembles, ECFP, conformal prediction [11], applicability domain — are all **standard**.
+0.87 is in range. CNS-target QSAR (AChE/MAO/BACE) is well precedented. The component methods 
+ensembles, ECFP, conformal prediction [11], applicability domain, are all **standard**.
 
 ### 4.2 Honest statement of novelty
 The contribution is **integrative, not methodological**: to our knowledge no single open tool
@@ -185,15 +185,15 @@ nearest-measured-analog evidence, with three-tier (scaffold/cluster/temporal) va
 an application/resource contribution.
 
 ### 4.3 Limitations
-(i) **Temporal degradation** — GSK-3β and MAO-A generalise poorly to future compounds (AUROC 0.61–
-0.66); these endpoints should be used cautiously. (ii) **Analog density** — ChEMBL target sets have
+(i) **Temporal degradation**, GSK-3β and MAO-A generalise poorly to future compounds (AUROC 0.61–
+0.66); these endpoints should be used cautiously. (ii) **Analog density**, ChEMBL target sets have
 median scaffold-split test→train Tanimoto 0.55–0.71; the cluster-split and AD/conformal flags
 mitigate but do not eliminate this. (iii) **Receptor endpoints** (D2/A2A/5-HT2A/SERT) were
 reinstated as **potency-regression** models (scaffold-CV R² 0.34–0.53, ρ 0.57–0.71); they are
 ranking-grade with weak temporal generalisation and should not be read as absolute potency.
 (iv) **Antioxidant** now uses **measured DPPH data** (R² = 0.43); its temporal R² ≈ 0 reflects
 cross-laboratory protocol heterogeneity. (v) **Target engagement is not clinical efficacy**, and
-(vi) **no wet-lab prospective validation** has been performed — these two are inherent and cannot
+(vi) **no wet-lab prospective validation** has been performed, these two are inherent and cannot
 be addressed computationally. Additionally, GSK-3β and MAO-A retain weak temporal generalisation
 (AUROC 0.66/0.61) and are flagged accordingly; this was not resolved by reframing and reflects a
 genuine data/chemistry limit.
@@ -206,10 +206,10 @@ The path to a flagship predictor paper is potency-regression for receptor target
 antioxidant labels, and prospective experimental validation.
 
 ## Figures
-- **Figure 1** — `figures/fig1_validation_regimes.png`: AUROC under scaffold-CV, leave-cluster-out, and temporal splits.
-- **Figure 2** — `figures/fig2_conformal_coverage.png`: empirical conformal coverage vs 0.90 target.
-- **Figure 3** — `figures/fig3_datasets.png`: training set size and class balance.
-- **Figure 4** — `figures/fig4_mcc_gate.png`: MCC quality gate (deployed vs excluded targets).
+- **Figure 1**, `figures/fig1_validation_regimes.png`: AUROC under scaffold-CV, leave-cluster-out, and temporal splits.
+- **Figure 2**, `figures/fig2_conformal_coverage.png`: empirical conformal coverage vs 0.90 target.
+- **Figure 3**, `figures/fig3_datasets.png`: training set size and class balance.
+- **Figure 4**, `figures/fig4_mcc_gate.png`: MCC quality gate (deployed vs excluded targets).
 
 ## Data and code availability
 Datasets: `data/endpoints/*.csv` (ChEMBL/B3DB-derived). Models: `models_brain/`, `models_genuine/`.

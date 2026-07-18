@@ -1,63 +1,75 @@
-# BrainSafe AI — Submission Package
+# BrainSafe AI
 
-Single folder containing the manuscript and **all** supporting materials for submission.
-Every reported value is computed by the released scripts and stored under `Supplementary/`
-(no manual transcription); figures are regenerated from out-of-fold predictions.
+**An evidence-grounded, calibrated, blood–brain-barrier-gated multi-endpoint predictor of
+small-molecule effects on the human brain.**
 
-**Integrity statement.** All numbers in the manuscript, figures, tables and presentations were
-cross-checked against the deployed model artifacts (`models_brain/*_meta.json`, validation JSON
-reports) on the date of this package. No value is fabricated, estimated, or assumed.
+BrainSafe AI predicts, from chemical structure alone, a compound's profile of brain-relevant
+effects: blood–brain-barrier (BBB) penetration; engagement of disease-relevant CNS targets
+(AChE, BChE, BACE1, GSK-3β, MAO-A, MAO-B; receptor potencies for D2, A2A, 5-HT2A, SERT);
+an hERG cardiotoxicity safety flag; a measured-data antioxidant model; and a deterministic
+druggability/CNS-MPO layer. Every machine-learning endpoint is trained on **measured public
+bioactivity data** (ChEMBL_37 and B3DB, 64,474 measured records). Predictions are
+probability-calibrated, carry conformal prediction sets, are grounded in nearest measured
+analogues, and are integrated into BBB-gated per-disease scores.
 
----
+> **Research use, pending peer review.** This tool predicts molecular target engagement and
+> physicochemical properties, not clinical efficacy, and has not undergone wet-lab or clinical
+> validation. It is not for medical, diagnostic, or treatment decisions.
 
-## Manuscript/
-- **BrainSafe_AI_Manuscript.docx** — submission-standard Word manuscript (continuous line numbering):
-  Highlights, structured Abstract, Abbreviations, Methods (equations, hyperparameter & software
-  tables), Results (non-comparative + comparative, with 95% bootstrap CIs), the executed LLM
-  head-to-head (Table 8), Discussion (including a threats-to-validity self-audit), Conclusion, Ethics,
-  Author contributions, and **44 Harvard references**. Embeds the graphical abstract, Figures 1–7, and
-  Tables 1–8.
-- **BS_MANUSCRIPT_FINAL.md** — Markdown source of the manuscript.
+## Validation (honest, multi-regime)
+| Regime | Classifier AUROC |
+|---|---|
+| Random split | 0.94–0.98 |
+| Scaffold split (GroupKFold) | 0.87–0.95 |
+| Leave-cluster-out | 0.87–0.94 |
+| Temporal (future compounds) | 0.61–0.92 |
 
-## Figures/  (300 dpi · Okabe–Ito colorblind-safe · consistent fonts · panel labels)
-graphical_abstract · fig1 workflow · fig2 dataset size/balance · fig3 AUROC across the four
-validation regimes (scaffold 95% CI error bars) · fig4 ROC + calibration · fig5 conformal coverage +
-ensemble-vs-baselines · fig6 vs published ranges · fig7 predicted-vs-measured (antioxidant + 4 receptors).
+Isotonic-calibrated probabilities (Brier 0.04–0.14); conformal coverage 0.885–0.905 (target 0.90).
+Full metrics, figures and the model card are in `BrainSafe_AI_Publication/`.
 
-## Presentation/
-- **BrainSafe_AI_Presentation.pptx** — 16-slide dual-audience talk (expert + commercial). Every
-  technical term is glossed in plain language on-slide; **full speaker notes** on every slide with
-  narration and anticipated expert and general/commercial Q&A.
-- **BrainSafe_AI_Supplementary.pptx** — supplementary deck: Part A all 8 figures; Part B every
-  supplementary table (S0–S13) rendered from the CSVs.
+## Repository structure
+```
+app_v6_final.py              Streamlit application (the tool)
+BS_brain_predict.py          Unified multi-endpoint inference engine
+BS_druggability.py           Deterministic druggability / CNS-MPO
+BS_predict.py                Genuine antioxidant inference
+BS_fetch_endpoints.py        ChEMBL/B3DB data acquisition (measured)
+BS_train_endpoints.py        Classifier training + calibration + conformal
+BS_train_regression.py       Receptor potency regression
+BS_external_validation.py    Leave-cluster-out + conformal validation
+BS_temporal_pr.py            Temporal validation + PR/threshold analysis
+BS_figures_v3.py             Publication figure set (colorblind, panel-labelled)
+BS_build_docx.py             Manuscript (Word) builder
+data/endpoints/, endpoints_reg/   Measured training labels (SMILES, label, pChEMBL, year)
+supplementary/               Supplementary tables (S0–S7) and validation reports
+figures/                     Publication figures + graphical abstract
+BrainSafe_AI_Publication/    Assembled manuscript + figures + supplementary
+```
 
-## Supplementary/
-- **Tables/** — S0 provenance · S1 classification metrics · S2 receptor regression · S3 antioxidant
-  (DPPH) · S4 threshold sensitivity · S5 similarity-binned AUROC · S6 clinical composition ·
-  S7 benchmark vs literature · S8 BrainSafe-vs-LLM capability matrix · S9 ablation vs baselines ·
-  S10 label-definition robustness · S11 assay-type composition · S12 IC50-only-vs-pooled sensitivity ·
-  S13 LLM head-to-head scoreboard.
-- **Reports/** — raw validation JSON (endpoints; external/cluster + conformal; temporal + PR;
-  regression; random-split benchmark; AUROC 95% CIs; baselines; antioxidant; flaw-fix analyses;
-  LLM benchmark ground truth, responses, scoreboard, capability bundle).
-- **Datasets/** — measured training labels (ChEMBL_37 per-endpoint, B3DB BBB, DPPH, clinical reference).
-- **Documentation/** — model card; benchmark/competitive analysis; pre-registered LLM benchmark protocol.
+## Reproducibility
+Trained-model binaries (~1.3 GB `.joblib`) are **not** stored in git; they are regenerated by the
+released scripts and will be deposited on Zenodo (DOI on publication). To rebuild from scratch:
+```bash
+python BS_fetch_endpoints.py        # fetch measured data from ChEMBL_37 + B3DB
+python BS_train_endpoints.py        # train + calibrate classifiers
+python BS_train_regression.py       # receptor potency regressors
+python BS_external_validation.py    # cluster-split + conformal
+python BS_temporal_pr.py            # temporal validation
+python BS_figures_v3.py             # figures
+```
 
----
+## Environment
+Python 3.13, RDKit 2026.03.2, scikit-learn 1.8.0, NumPy 2.4.6, pandas 3.0.3, SciPy 1.17.1,
+matplotlib 3.10.9. See `requirements.txt`. Random seed 42 throughout.
 
-## Headline verified results
-- **Classification AUROC** — random 0.94–0.98 · scaffold/cluster 0.87–0.95 · temporal 0.61–0.92;
-  Brier 0.04–0.14; conformal coverage 0.885–0.905 (target 0.90).
-- **Comparative** — deployed ensemble mean scaffold AUROC 0.912 vs kNN-Tanimoto 0.867 vs logistic
-  0.808; best on all 8 endpoints.
-- **Robustness** — label-cut spread ≤ 0.109; IC50-only-vs-pooled ΔAUROC ≤ 0.006; AUROC 0.958→0.770
-  as nearest-neighbour similarity falls (justifies the applicability-domain flag).
-- **LLM head-to-head (executed, 4 models)** — LLMs match/beat on famous-drug classification, but 45%
-  (14/31) of the ChEMBL identifiers they cited were fabricated or resolved to the wrong molecule, and
-  all four confabulated on an unpublished compound; BrainSafe: 0 fabricated, grounded, honestly uncertain.
+## Data sources
+ChEMBL_37 (release 2026-05-01; Mendez et al., 2019; Zdrazil et al., 2024), B3DB (Meng et al.,
+2021), and ChEMBL DPPH radical-scavenging assays. Structures for user-entered compounds are
+resolved via PubChem.
 
-## Provenance
-Data: ChEMBL_37 (release 2026-05-01) + B3DB + ChEMBL DPPH + ChEMBL ATC-N; 64,474 measured records
-(53,301 ChEMBL targets + 7,807 B3DB + 2,862 DPPH + 504 clinical). Toolchain: Python 3.13,
-RDKit 2026.03.2, scikit-learn 1.8.0; fixed random seed 42. Research use; pending peer review.
-Full source and regeneration scripts: https://github.com/krishna-g-999/brainsafe-ai
+## Citation
+Manuscript in preparation (Sri Sathya Sai Institute of Higher Learning). See
+`BrainSafe_AI_Publication/Manuscript/`.
+
+## License
+See `LICENSE`.
