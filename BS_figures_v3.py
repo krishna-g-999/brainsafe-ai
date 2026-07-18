@@ -86,15 +86,16 @@ gbox(0.3, 2.6, 2.0, 1.3, "Any compound\n(SMILES / name)\ne.g. flavonoid", OI[0])
 gbox(2.7, 2.6, 2.2, 1.3, "Measured data\nChEMBL_37 + B3DB\n64,474 records", OI[2])
 gbox(5.3, 2.6, 2.3, 1.3, "Calibrated ensemble\n+ conformal\n+ evidence", OI[1], tc="black")
 for x in (2.3, 4.9): ax.add_patch(FancyArrowPatch((x, 3.25), (x + 0.4, 3.25), arrowstyle="-|>", mutation_scale=15, color="#555"))
-ax.add_patch(FancyArrowPatch((7.6, 3.25), (8.0, 3.25), arrowstyle="-|>", mutation_scale=15, color="#555"))
-# example output mini-bars
-ax.text(10.0, 4.05, "Brain-effect profile", ha="center", fontsize=10, fontweight="bold", color=NAVY)
+# illustrative output mini-bars (schematic example profile, not a specific prediction)
+ax.add_patch(FancyArrowPatch((7.7, 3.25), (8.15, 3.25), arrowstyle="-|>", mutation_scale=15, color="#555"))
+ax.text(10.0, 4.05, "Brain-effect profile (example)", ha="center", fontsize=9.5, fontweight="bold", color=NAVY)
 ex = [("BBB", 0.92, OI[0]), ("Alzheimer", 0.84, OI[2]), ("Parkinson", 0.30, OI[5]), ("hERG risk", 0.20, OI[3])]
+BAR_X, BAR_SCALE = 9.15, 1.55
 for i, (lab, v, c) in enumerate(ex):
     yy = 3.5 - i * 0.42
-    ax.add_patch(FancyBboxPatch((8.3, yy), 2.6 * v, 0.3, boxstyle="round,pad=0.01", fc=c, ec="none"))
-    ax.text(8.25, yy + 0.15, lab, ha="right", va="center", fontsize=8)
-    ax.text(8.3 + 2.6 * v + 0.05, yy + 0.15, f"{v:.2f}", va="center", fontsize=7.5)
+    ax.add_patch(FancyBboxPatch((BAR_X, yy), BAR_SCALE * v, 0.3, boxstyle="round,pad=0.01", fc=c, ec="none"))
+    ax.text(BAR_X - 0.22, yy + 0.15, lab, ha="right", va="center", fontsize=8, color=NAVY)
+    ax.text(BAR_X + BAR_SCALE * v + 0.08, yy + 0.15, f"{v:.2f}", va="center", fontsize=7.5)
 gbox(1.4, 0.62, 9.2, 1.0, "Validation:  random AUROC 0.94–0.98   ·   scaffold / cluster 0.87–0.95   ·   "
      "temporal 0.61–0.92   ·   conformal coverage ≈ 0.90", OI[4], fs=8.8)
 ax.text(6, 0.22, "Research use · pending peer review · predicts target engagement, not clinical efficacy", ha="center", fontsize=8, style="italic", color="#777")
@@ -117,7 +118,12 @@ r2 = 1.7
 wbox(1.8, r2, 3.4, 1.4, "Integration\nBBB-gated disease scores,\nnearest-analogue evidence,\ndruggability, clinical precedent", "#CDE6F5")
 wbox(6.0, r2, 3.0, 1.4, "Outputs\ndisease engagement,\nsafety, antioxidant,\nconformal confidence", "#CDEFE0")
 wbox(9.7, r2, 3.0, 1.4, "Validation\nrandom / scaffold /\ncluster / temporal", "#FBE7C2")
-war(11.4, r1, 3.5, r2 + 1.4); war(5.2, r2 + 0.7, 6.0, r2 + 0.7); war(9.0, r2 + 0.7, 9.7, r2 + 0.7)
+# clean orthogonal return connector (Calibration -> down -> left -> down into Integration)
+_ymid = (r1 + (r2 + 1.4)) / 2  # midline of the gap between the two rows
+ax.plot([11.45, 11.45], [r1, _ymid], color="#555", lw=1.3, solid_capstyle="round")
+ax.plot([11.45, 3.5], [_ymid, _ymid], color="#555", lw=1.3, solid_capstyle="round")
+war(3.5, _ymid, 3.5, r2 + 1.4)
+war(5.2, r2 + 0.7, 6.0, r2 + 0.7); war(9.0, r2 + 0.7, 9.7, r2 + 0.7)
 ax.set_title("BrainSafe AI pipeline: data, training, integration and validation", fontsize=12, pad=8)
 plt.tight_layout(); plt.savefig(f"{FIG}/fig1_workflow.png", bbox_inches="tight"); plt.close()
 
