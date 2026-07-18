@@ -33,13 +33,15 @@ the kind of grounded, auditable output an LLM does not supply. The contribution 
 data, rather than any one new algorithm.
 
 ## 1. Introduction
-Assessing whether a small molecule (drug or natural product/flavonoid) is likely to affect
-the brain requires several questions answered together: can it cross the BBB; does it engage
-disease-relevant CNS targets; is it developable; is it safe; and is there clinical precedent?
-Existing web tools answer subsets — general ADMET (SwissADME, ADMETlab, admetSAR, pkCSM) or
-generic target prediction (SwissTargetPrediction, PPB2) — but none unify measured-data CNS
-target activity, BBB gating, calibrated uncertainty, safety, and clinical precedent in one
-transparent, evidence-grounded tool. BrainSafe AI provides this integration.
+Deciding whether a small molecule, whether a drug or a natural product such as a flavonoid, is
+likely to act on the brain means answering several questions at once. Can it cross the BBB? Does
+it engage disease-relevant CNS targets? Is it developable, is it safe, and has anything like it
+reached the clinic? The web tools in common use each answer part of this. General ADMET servers
+(SwissADME, ADMETlab, admetSAR, pkCSM) cover physicochemistry and safety; target-prediction tools
+(SwissTargetPrediction, PPB2) suggest likely protein targets. None of them, though, pulls
+measured-data CNS target activity, BBB gating, calibrated uncertainty, safety and clinical
+precedent into one transparent, evidence-grounded tool. That integration is what BrainSafe AI
+provides.
 
 ## 2. Methods
 
@@ -69,12 +71,14 @@ with **24 interpretable RDKit physicochemical descriptors** (MW, cLogP, TPSA, HB
 rotatable bonds, ring counts, FractionCSP3, QED, phenolic-OH and catechol flags, etc.).
 
 ### 2.4 Models
-Classification endpoints use an unweighted-mean ensemble of **RandomForest (300 trees,
-class-balanced), ExtraTrees (300, class-balanced), and HistGradientBoosting**. Regression
-endpoints (receptors, antioxidant) use the RandomForest/ExtraTrees/HistGradientBoosting
-**regressor** ensemble. A fact-based **quality gate (Matthews correlation coefficient ≥ 0.45
-under scaffold CV)** governs deployment; endpoints failing the gate (D2/A2A/5-HT2A/SERT as
-binary) are excluded from classification and served as regression instead.
+Each classification endpoint is an unweighted-mean ensemble of three learners: **RandomForest (300
+trees, class-balanced)**, **ExtraTrees (300, class-balanced)** and **HistGradientBoosting**. The
+regression endpoints (receptors and antioxidant) use the matching RandomForest/ExtraTrees/
+HistGradientBoosting **regressor** ensemble. Whether a classifier is deployed at all is decided by a
+fixed **quality gate — Matthews correlation coefficient ≥ 0.45 under scaffold CV**. Four targets
+that fell short of it as binary classifiers (D2, A2A, 5-HT2A and SERT) are dropped from
+classification and served as regression instead, so the routing is a property of the data rather
+than a manual choice.
 
 ### 2.5 Calibration and conformal prediction
 Probabilities were **isotonic-calibrated** on scaffold-CV out-of-fold predictions. **Mondrian
@@ -104,13 +108,12 @@ data-fetch scripts are in the repository; fixed random_state = 42 throughout.
 
 ## 3. Results
 
-Results are reported in two complementary modes requested for a rigorous evaluation.
-**Non-comparative analysis** (§3.1–3.4) reports each endpoint's *standalone* performance
-against its own held-out measured data — the absolute discrimination, calibration,
-conformal coverage and prospective behaviour of the deployed models. **Comparative
-analysis** (§3.5–3.7) benchmarks the same models *against external references*: published
-QSAR performance ranges (§3.5), simpler internal baselines under an identical protocol
-(§3.6), and the general-purpose large-language-model paradigm (§3.7).
+We report results in two complementary modes. The **non-comparative analysis** (§3.1–3.4) looks at
+each endpoint on its own terms, measuring the deployed model against its own held-out data:
+discrimination, calibration, conformal coverage and prospective behaviour. The **comparative
+analysis** (§3.5–3.7) then sets those same models against external reference points — published QSAR
+ranges (§3.5), simpler internal baselines run under an identical protocol (§3.6), and the
+general-purpose large-language-model paradigm (§3.7).
 
 ### 3.1 Classification endpoints — full validation hierarchy (non-comparative)
 | Endpoint (n) | Random | Scaffold | Cluster | **Temporal** | Brier | Conformal cov. |
@@ -166,16 +169,16 @@ hERG 0.86–0.93). The same models additionally report the stricter scaffold/clu
 numbers most studies omit. *(Figure 6; Supplementary Table S7.)*
 
 ### 3.6 Ablation against simpler baselines (comparative)
-To confirm the ensemble contributes signal beyond structural look-up, we compared it, under an
-identical scaffold-split protocol and feature set, against (i) a **k-nearest-neighbour Tanimoto
-"read-across" baseline** — the closest algorithmic analogue to associative structure recall —
-and (ii) **L2-regularised logistic regression**. Across the eight deployed classification
-endpoints the deployed ensemble attains a mean scaffold-split AUROC of **0.912**, versus
+Does the ensemble actually add anything beyond looking up similar molecules? To find out, we ran it
+against two simpler methods under the same scaffold-split protocol and the same features: a
+**k-nearest-neighbour Tanimoto "read-across" baseline**, which is about as close as an algorithm gets
+to associative structural recall, and **L2-regularised logistic regression**. Over the eight deployed
+classification endpoints the ensemble reaches a mean scaffold-split AUROC of **0.912**, against
 **0.867** for kNN-Tanimoto (mean Δ = **+0.045**) and **0.808** for logistic regression
-(mean Δ = **+0.104**); the ensemble is best on **every one of the eight endpoints**
-(Table below; Supplementary Table S9). That the ensemble consistently exceeds a pure
-nearest-neighbour read-across shows it captures structure–activity relationships that are
-not reducible to "find the most similar known molecule."
+(mean Δ = **+0.104**), and it wins on **every one of the eight endpoints** (table below;
+Supplementary Table S9). Beating a pure nearest-neighbour read-across on all of them tells us the
+ensemble has learned structure–activity relationships that do not reduce to "find the most similar
+known molecule."
 
 | Endpoint | Ensemble | kNN-Tanimoto | Logistic reg. | Δ vs kNN |
 |---|---|---|---|---|
@@ -270,30 +273,26 @@ dedicated tool provides.
 
 ## 4. Discussion
 
-**Contribution.** Individual components (ECFP/RF ensembles, BBB/hERG/target QSAR, conformal
-prediction, QED/CNS-MPO) are standard and not novel. The contribution is their **integration**
-into a single, transparent, measured-data CNS profiler that is calibrated, conformal,
-evidence-grounded, BBB-gated, safety-aware, and clinically contextualised — a configuration no
-existing single tool provides.
+**Contribution.** The individual pieces here are standard: ECFP/RF ensembles, BBB/hERG/target QSAR,
+conformal prediction, the QED/CNS-MPO rules. What we have not seen assembled elsewhere is all of them
+working as one transparent, measured-data CNS profiler that is at once calibrated, conformal,
+evidence-grounded, BBB-gated, safety-aware and clinically contextualised. The assembly is the point,
+not any single part.
 
-**Why a dedicated tool rather than a general-purpose LLM?** The comparative evidence (§3.7)
-gives a results-backed answer. First, on the exact task class in question — molecular property
-prediction — general LLMs are documented to *underperform* specialised ML (Guo *et al.*, 2023;
-Zhong *et al.*, 2024), with fine-tuned LLMs matching QSAR only in the low-data limit
-(Jablonka *et al.*, 2024), whereas BrainSafe operates at a 64,474-record data scale. Second, and
-more fundamentally, the two paradigms differ in kind: an LLM emits fluent text without a
-calibrated probability, a coverage guarantee, an applicability-domain boundary, or a link to a
-specific measurement, and is prone to confident hallucination (Ji *et al.*, 2023). Our executed
-head-to-head (§3.7d) makes this concrete: four current LLMs matched or beat BrainSafe on BBB/hERG
-classification of *well-known* drugs, yet 45% of the ChEMBL identifiers they cited as evidence were
-fabricated or resolved to the wrong molecule, and all four confabulated a specific target and potency
-for an *unpublished* compound (disagreeing with one another). The lesson is not that LLMs are
-inaccurate in general — on memorised compounds they are strong — but that they cannot be trusted for
-verifiable provenance or for novel chemistry. BrainSafe
-returns, for *any* structure, a calibrated probability, a conformal set with empirically verified
-~90% coverage, an explicit in/out-of-domain flag, and the nearest *measured* analogue with its
-pChEMBL. It is therefore complementary to, not replaced by, general LLMs where a decision must be
-auditable and grounded in measured data.
+**Why a dedicated tool rather than a general-purpose LLM?** The head-to-head in §3.7 answers this with
+results, and the answer has two halves. On the task itself, molecular property prediction, general
+LLMs are known to trail specialised ML (Guo *et al.*, 2023; Zhong *et al.*, 2024); fine-tuning closes
+the gap only when data are scarce (Jablonka *et al.*, 2024), and BrainSafe works from 64,474 measured
+records. That much was expected. The part that matters in practice is what our benchmark exposed: four
+current models matched or beat BrainSafe at classifying *well-known* drugs, yet 45% of the ChEMBL
+identifiers they offered as evidence were fabricated or pointed to the wrong molecule, and every one of
+them invented a target and potency for an *unpublished* compound, disagreeing with each other along the
+way. The deeper reason is architectural. An LLM produces fluent text; it does not compute a fingerprint,
+fit structure to measured activity, or attach a calibrated probability, a coverage guarantee or a domain
+boundary, and it will hallucinate with confidence (Ji *et al.*, 2023). BrainSafe returns, for *any*
+structure, a calibrated probability, a conformal set with roughly 90% empirical coverage, an explicit
+in- or out-of-domain flag, and the nearest *measured* analogue with its pChEMBL. The two are
+complementary, not interchangeable, wherever a decision has to be auditable and grounded in measurement.
 
 **Threats to validity (scientific-flaw self-audit, with quantitative tests).** We enumerated the
 model's principal methodological risks and, rather than merely noting them, ran targeted analyses
@@ -326,11 +325,12 @@ out-of-domain flag in the 0.3–0.4 band.
 (§3.6), performance is not merely memorised nearest-neighbour recall. None of these is concealed;
 each is surfaced in the tool output or the supplementary tables.
 
-**Validation honesty.** We deliberately report a four-level split hierarchy. The collapse from
-random (0.94–0.98) to temporal (0.61–0.92) quantifies real prospective difficulty: 71–91 % of
-recent compounds carry scaffolds unseen in training. Where a temporal AUROC is high (BACE1
-0.92) it is partly because the recent test set is 93 % active; where it is balanced (MAO-A,
-45 % active) the honest number is 0.61. We surface, rather than hide, this.
+**Validation honesty.** Reporting all four splits is a deliberate choice. The drop from random
+(0.94–0.98) to temporal (0.61–0.92) puts a number on how hard genuine prospective prediction is:
+between 71 % and 91 % of the recent compounds carry scaffolds the model never saw in training. A high
+temporal AUROC is not always the good news it looks like — BACE1's 0.92 owes something to a recent
+test set that is 93 % active, whereas MAO-A's balanced set (45 % active) yields a plainer 0.61. We
+would rather show these numbers than bury them.
 
 **Limitations (explicit and, where inherent, unfixable computationally).**
 (i) Models predict **engagement/binding, not direction** (agonist vs antagonist).
@@ -349,12 +349,13 @@ out of scope.
 diagnostic use.
 
 ## 5. Conclusion
-BrainSafe AI is a scientifically validated, calibrated, evidence-grounded multi-endpoint CNS
-profiler built entirely on measured public data, with state-of-the-art-grade per-endpoint
-performance on like-for-like splits and fully transparent harder-split and prospective numbers.
-Everything computationally validatable has been done; the residual gaps (efficacy prediction,
-agonist/antagonist direction, wet-lab confirmation) are inherent and stated plainly. It is
-suitable for an application/resource publication and as a usable research tool.
+BrainSafe AI is a calibrated, evidence-grounded, multi-endpoint CNS profiler built entirely on
+measured public data. Its per-endpoint performance is state-of-the-art-grade on like-for-like splits,
+and we place the harder scaffold, cluster and temporal numbers alongside rather than out of sight. We
+have done everything that can be validated computationally; the gaps that remain — predicting
+efficacy, telling agonism from antagonism, confirming results at the bench — are inherent to the
+approach, and we say so plainly. On that footing the tool stands both as a resource publication and as
+something researchers can actually use.
 
 ## Data and code availability
 All models (`models_brain/`, `models_brain_reg/`, `models_genuine/`), datasets
