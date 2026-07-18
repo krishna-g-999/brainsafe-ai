@@ -49,6 +49,9 @@ def table_from_df(df):
 
 cis = json.load(open("BS_auroc_cis.json")) if os.path.exists("BS_auroc_cis.json") else {}
 
+# display names so every table matches the prose (data files use raw endpoint keys)
+DISP = {"MAO_A": "MAO-A", "MAO_B": "MAO-B", "GSK3B": "GSK-3β", "HT2A": "5-HT2A"}
+
 # ---- TITLE ----
 ti = doc.add_paragraph(); ti.alignment = WD_ALIGN_PARAGRAPH.CENTER
 r = ti.add_run("BrainSafe AI: an evidence-grounded, calibrated, blood–brain-barrier-gated "
@@ -149,8 +152,13 @@ P("Target bioactivities were retrieved from ChEMBL version 37 (release 2026-05-0
   "totalling 64,474 measured compound–endpoint records; ChEMBL document years (1976–2025) were "
   "retained to enable temporal validation (Sheridan, 2013).", align="j")
 s0 = pd.read_csv("supplementary/STable0_data_provenance.csv")
-P("Table 1. Data provenance for each endpoint (all trained on measured experimental data).", italic=True, size=9)
-table_from_df(s0[["Endpoint","Role","Modality","Source","Identifier","Measurement","n","Year range"]])
+s0 = s0[["Endpoint","Role","Modality","Source","Identifier","Measurement","n","Year range"]].copy()
+s0["Endpoint"] = s0["Endpoint"].replace(DISP)
+# B3DB/DPPH/clinical carry no ChEMBL document year; show 'n/a' rather than 'curated' in a year column
+s0["Year range"] = s0["Year range"].replace({"curated": "n/a"})
+P("Table 1. Data provenance for each endpoint (all trained on measured experimental data). "
+  "‘n/a’ in the year column marks sources without per-compound ChEMBL document years.", italic=True, size=9)
+table_from_df(s0)
 P("")
 H("2.2 Curation and labelling", 2)
 P("SMILES were canonicalised and deduplicated by InChIKey (Bento et al., 2020). For classification, "
@@ -212,12 +220,12 @@ P("Models were evaluated under: (i) a random stratified split; (ii) scaffold Gro
 
 # ---- 3 RESULTS ----
 H("3. Results", 1)
-P("Results are reported in two modes. Non-comparative analysis (Sections 3.1 and 3.3) reports "
+P("Results are reported in two modes. Non-comparative analysis (Sections 3.1, 3.4 and 3.5) reports "
   "each endpoint’s standalone performance against its own held-out measured data: absolute "
-  "discrimination, calibration, conformal coverage and behaviour on reference compounds. "
-  "Comparative analysis (Sections 3.2, 3.4 and 3.5) benchmarks the same models against external "
-  "references: published QSAR performance ranges, simpler internal baselines under an identical "
-  "protocol, and the general-purpose large-language-model paradigm.", align="j")
+  "discrimination, calibration, conformal coverage, receptor-potency and antioxidant regression, and "
+  "behaviour on reference compounds. Comparative analysis (Sections 3.2, 3.3 and 3.6) benchmarks the "
+  "same models against external references: simpler internal baselines under an identical protocol, "
+  "published QSAR performance ranges, and the general-purpose large-language-model paradigm.", align="j")
 figure("figures/fig2_dataset.png",
        "Figure 2. Training-set size and class balance for each endpoint.")
 H("3.1 Classification performance (standalone, non-comparative)", 2)
@@ -226,7 +234,8 @@ def ci_str(ep):
     c = cis.get(ep, {}).get("ci95"); return f"[{c[0]}, {c[1]}]" if c else "–"
 t1 = s1[["endpoint","n","pos_rate","AUROC_random","AUROC_scaffold","AUROC_cluster","AUROC_temporal","Brier","MCC","conformal_coverage"]].copy()
 t1.insert(5, "Scaffold 95% CI", [ci_str(e) for e in s1["endpoint"]])
-t1.columns = ["Endpoint","n","Pos.","AUROC rand","AUROC scaf","Scaf 95% CI","AUROC clust","AUROC temp","Brier","MCC","Conf. cov."]
+t1.columns = ["Endpoint","n","Pos. rate","AUROC rand","AUROC scaf","Scaf 95% CI","AUROC clust","AUROC temp","Brier","MCC","Conf. cov."]
+t1["Endpoint"] = t1["Endpoint"].replace(DISP)
 P("Table 4. Classification performance under four validation regimes, with 95% bootstrap CI on the "
   "scaffold-CV AUROC, Brier score, MCC and empirical conformal coverage (target 0.90).", italic=True, size=9)
 table_from_df(t1); P("")
@@ -250,30 +259,34 @@ P("Under an identical scaffold-split protocol and feature set, the deployed ense
   "associative structural recall) and with L2-regularised logistic regression. The ensemble attained "
   f"a mean scaffold-split AUROC of {_ens:.3f}, versus {_knn:.3f} for k-nearest-neighbour "
   f"(mean Δ = +{_ens-_knn:.3f}) and {_lr:.3f} for logistic regression (mean Δ = +{_ens-_lr:.3f}), "
-  "and was best on every one of the eight endpoints (Table 6; Figure 5B). Exceeding a pure "
+  "and was best on every one of the eight endpoints (Table 5; Figure 5B). Exceeding a pure "
   "nearest-neighbour read-across indicates the model captures structure–activity relationships not "
   "reducible to retrieving the most similar known molecule.", align="j")
 t6 = s9[["endpoint","Ensemble_AUROC","kNN_Tanimoto_AUROC","LogisticRegression_AUROC","delta_vs_kNN"]].copy()
 t6.columns = ["Endpoint","Ensemble","kNN-Tanimoto","Logistic reg.","Δ vs kNN"]
-P("Table 6. Scaffold-split AUROC of the deployed ensemble versus baselines (Supplementary Table S9).", italic=True, size=9)
+t6["Endpoint"] = t6["Endpoint"].replace(DISP)
+P("Table 5. Scaffold-split AUROC of the deployed ensemble versus baselines (Supplementary Table S9).", italic=True, size=9)
 table_from_df(t6); P("")
 H("3.3 Comparison with the literature (comparative)", 2)
 figure("figures/fig6_benchmark.png",
        "Figure 6. Per-endpoint random-split AUROC (this work) relative to reported random-split ranges.")
 P("On like-for-like random splits, per-endpoint AUROC was within or above reported ranges, for "
-  "example BBB (0.88–0.96) and hERG (0.86–0.93) (Kumar et al., 2022; Huang et al., 2024; Figure 6).", align="j")
+  "example BBB (0.88–0.96; Kumar et al., 2022; Huang et al., 2024) and hERG (0.86–0.93). The full "
+  "per-endpoint comparison against the collected literature ranges is given in Supplementary Table S7 "
+  "(Figure 6).", align="j")
 H("3.4 Receptor potency regression and antioxidant model (non-comparative)", 2)
 s2 = pd.read_csv("supplementary/STable2_receptor_regression.csv")
 t2 = s2[["receptor","n","scaffold_cv_R2","RMSE","Spearman","temporal_R2"]].copy()
 t2.columns = ["Receptor","n","Scaffold R²","RMSE","Spearman","Temporal R²"]
-P("Table 5. Receptor potency-regression performance (scaffold cross-validation and temporal split).", italic=True, size=9)
+t2["Receptor"] = t2["Receptor"].replace(DISP)
+P("Table 6. Receptor potency-regression performance (scaffold cross-validation and temporal split).", italic=True, size=9)
 table_from_df(t2); P("")
 figure("figures/fig7_regression.png",
        "Figure 7. Predicted versus measured potency (scaffold cross-validation) for the measured "
        "antioxidant (DPPH) model and the four receptor potency-regression endpoints (panels A–E).")
 am = json.load(open("models_genuine/antioxidant_measured_meta.json"))
 P(f"Receptor potency regressions achieved scaffold-CV R² of 0.34–0.53 and Spearman ρ of 0.57–0.71; "
-  f"temporal R² was lower (Table 5), and these endpoints are reported as ranking-grade. The "
+  f"temporal R² was lower (Table 6), and these endpoints are reported as ranking-grade. The "
   f"antioxidant model trained on measured DPPH data (n = {am['n']}) achieved scaffold-CV R² = "
   f"{am['scaffold_cv_r2']}, RMSE = {am['rmse']} and Spearman = {am['spearman']} (Figure 7); the "
   f"earlier curated score correlated only weakly with measured DPPH (Spearman = "
@@ -350,9 +363,10 @@ P("Two findings are reported honestly. First, on classification of well-known ap
 
 # ---- 4 DISCUSSION ----
 H("4. Discussion", 1)
-P("What BrainSafe AI contributes is the assembly, not the parts. Fingerprint and tree-ensemble QSAR, "
-  "the BBB and hERG models, conformal prediction, and the QED and CNS-MPO druggability rules. Each is "
-  "well established in its own right (Rogers and Hahn, 2010; Breiman, 2001; Norinder et al., 2014; "
+P("What BrainSafe AI contributes is the assembly, not the parts. Its components are individually "
+  "familiar: fingerprint and tree-ensemble QSAR, the BBB and hERG models, conformal prediction, and "
+  "the QED and CNS-MPO druggability rules, each well established in its own right (Rogers and Hahn, "
+  "2010; Breiman, 2001; Norinder et al., 2014; "
   "Wager et al., 2010). What we have not found elsewhere is all of them working as one measured-data "
   "CNS profiler that is at the same time calibrated, conformal, evidence-grounded, BBB-gated, "
   "safety-aware and clinically contextualised (Daina et al., 2017, 2019; Fu et al., 2024; Awale and "
