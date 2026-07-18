@@ -1,9 +1,17 @@
 # BrainSafe AI — Model Card & Honest Validation Record
 
-*Prepared as part of a scientific re-validation. Follows the model-card framework
-(Mitchell et al., 2019, FAT* '19). All numbers below are from leak-free,
-scaffold-split cross-validation (`BS_scientific_validation.py`,
-`BS_validation_report.json`).*
+*This is a development record, written in the model-card style of Mitchell et al. (2019, FAT* '19).
+It is deliberately chronological, so that the reasoning behind the current models — including the flaw
+we found and corrected — is on the record rather than hidden.*
+
+> **How to read this document.** Sections **1–10** describe the **original prototype** (a seven-dimension
+> "Neuroprotection Score" trained on a 535-compound curated file) and the problem we diagnosed in it:
+> it was learning from annotations rather than from chemistry. That prototype was **superseded**.
+> Sections **11–17** describe the **current deployed system** — eight measured-data classification
+> endpoints, four receptor regressions, a measured antioxidant model, and the integration layer — all
+> trained on 64,474 measured ChEMBL/B3DB records. **For the model that is actually shipped and reported
+> in the manuscript, read from §11 onward.** Numbers in §1–10 refer to the retired prototype and should
+> not be read as properties of the current tool.
 
 ---
 
