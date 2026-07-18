@@ -73,29 +73,31 @@ for h in [
 
 # ---- ABSTRACT ----
 H("Abstract", 1)
-P("Background. Predicting whether a small molecule acts on the brain requires several properties to "
-  "be assessed jointly: blood–brain-barrier (BBB) penetration, engagement of disease-relevant "
-  "central-nervous-system (CNS) targets, developability, safety and clinical precedent; existing "
-  "public tools address only subsets of these (Daina et al., 2017; Fu et al., 2024). "
-  "Results. We present BrainSafe AI, an open tool that, from chemical structure alone, integrates "
-  "eight machine-learning endpoints trained on measured public bioactivity data (ChEMBL_37 pChEMBL "
-  "values and the B3DB database; Mendez et al., 2019; Meng et al., 2021): BBB penetration; inhibition "
-  "of AChE, BChE, BACE1, GSK-3β, MAO-A and MAO-B; and the hERG cardiotoxicity liability. Four "
-  "receptor targets (D2, A2A, 5-HT2A, SERT) are modelled by potency regression, a deterministic "
-  "druggability/CNS-MPO layer (Wager et al., 2010) is added, and a clinical-precedent layer of 504 "
-  "nervous-system compounds with clinical-phase annotations contextualises predictions. Probabilities "
-  "are isotonic-calibrated (Niculescu-Mizil and Caruana, 2005) with Mondrian conformal prediction "
-  "sets (Norinder et al., 2014); each prediction reports its nearest measured analogues and is "
-  "combined into BBB-gated per-disease scores. Across random, scaffold, leave-cluster-out and "
-  "temporal validation, random-split AUROC was 0.94–0.98, scaffold and cluster AUROC 0.87–0.95, and "
-  "temporal AUROC 0.61–0.92, with conformal coverage of 0.885–0.905. In a pre-registered head-to-head, "
-  "four general-purpose large language models matched or exceeded BrainSafe on blood–brain-barrier and "
-  "hERG classification of well-known drugs but fabricated or mis-attributed 45% of the measured-data "
-  "identifiers they cited and confabulated a target and potency for an unpublished compound, whereas "
-  "BrainSafe grounded every prediction in a real measured analogue and reported honest uncertainty. "
-  "Conclusion. BrainSafe AI integrates measured-data CNS profiling that is calibrated, "
-  "evidence-grounded, BBB-gated and safety-aware. Availability: code, models and data are released; "
-  "the tool is for research use and is pending peer review.", align="j")
+P("Background. Whether a small molecule will act on the brain cannot be read off any single property. "
+  "It turns at once on passage across the blood–brain barrier (BBB), engagement of disease-relevant "
+  "central-nervous-system (CNS) targets, developability, safety and clinical precedent, and the public "
+  "tools in common use each cover only part of that picture (Daina et al., 2017; Fu et al., 2024). "
+  "Results. We present BrainSafe AI, an open tool that works from chemical structure alone. It brings "
+  "together eight machine-learning endpoints, every one trained on measured public bioactivity data "
+  "(ChEMBL_37 pChEMBL values and the B3DB database; Mendez et al., 2019; Meng et al., 2021): BBB "
+  "penetration, inhibition of AChE, BChE, BACE1, GSK-3β, MAO-A and MAO-B, and the hERG cardiotoxicity "
+  "liability. Four receptor targets (D2, A2A, 5-HT2A and SERT) are handled instead by potency "
+  "regression. A deterministic druggability/CNS-MPO layer (Wager et al., 2010) and a clinical-precedent "
+  "layer of 504 nervous-system compounds with clinical-phase annotations place each prediction in "
+  "context. Every probability is isotonic-calibrated (Niculescu-Mizil and Caruana, 2005) and carries a "
+  "Mondrian conformal prediction set (Norinder et al., 2014); each call also returns its nearest "
+  "measured analogues, and the target scores are folded into BBB-gated per-disease estimates. We "
+  "assessed the models under four splits of increasing difficulty: random, scaffold, leave-cluster-out "
+  "and temporal. Random-split AUROC ran from 0.94 to 0.98, scaffold and cluster AUROC from 0.87 to "
+  "0.95, and temporal AUROC from 0.61 to 0.92, with conformal coverage between 0.885 and 0.905. We also "
+  "ran a pre-registered head-to-head against four general-purpose large language models. On well-known "
+  "drugs they matched or beat BrainSafe at BBB and hERG classification; even so, 45% of the "
+  "measured-data identifiers they cited proved fabricated or mis-attributed, and all four invented a "
+  "target and potency for an unpublished compound. BrainSafe tied every prediction to a real measured "
+  "analogue and reported honest uncertainty. "
+  "Conclusion. BrainSafe AI delivers calibrated, evidence-grounded, BBB-gated and safety-aware CNS "
+  "profiling built entirely on measured data. Code, models and data are released; the tool is for "
+  "research use and remains pending peer review.", align="j")
 P("Keywords: QSAR; blood–brain barrier; neurodegeneration; conformal prediction; applicability "
   "domain; cheminformatics; ChEMBL.", italic=True, size=10)
 
@@ -110,22 +112,23 @@ P("AUROC, area under the receiver-operating-characteristic curve; BBB, blood–b
 
 # ---- 1 INTRODUCTION ----
 H("1. Introduction", 1)
-P("Disorders of the nervous system are a leading and rising cause of global disability (GBD 2021 "
-  "Nervous System Disorders Collaborators, 2024), and the discovery of safe, brain-penetrant "
-  "modulators remains slow. Natural products and flavonoids are widely studied for neuroprotective "
-  "and antioxidant activity, but integrated CNS profiles for individual compounds are dispersed "
-  "across the literature (Hasan et al., 2023). A compound’s likely brain effect depends jointly on "
-  "BBB penetration, engagement of disease-relevant CNS targets, developability, safety, and clinical "
-  "precedent.", align="j")
-P("Existing public resources address parts of this problem. General ADMET platforms (Daina et al., "
-  "2017; Xiong et al., 2021; Fu et al., 2024; Cheng et al., 2012) predict BBB and hERG but not "
-  "CNS-target activity; generic target-prediction tools (Daina et al., 2019; Awale and Reymond, "
-  "2019) predict protein targets by similarity but do not condition on brain penetration, synthesise "
-  "disease-level effects, provide calibrated uncertainty, or integrate a safety axis. "
-  "Endpoint-specific QSAR models have been reported for AChE/BACE1 (Ponzoni et al., 2019), MAO-B "
-  "(Kumar et al., 2024), GSK-3β (Galati et al., 2023) and BBB permeability (Kumar et al., 2022; "
-  "Huang et al., 2024) but are not combined in a single tool. BrainSafe AI integrates these "
-  "endpoints, trained on measured public data and evaluated under four validation regimes.", align="j")
+P("Disorders of the nervous system are now a leading and still-rising cause of global disability (GBD "
+  "2021 Nervous System Disorders Collaborators, 2024), yet the discovery of safe, brain-penetrant "
+  "modulators remains slow. Natural products and flavonoids in particular attract sustained interest "
+  "for their neuroprotective and antioxidant activity, but what is known about any one compound tends "
+  "to be scattered across the literature rather than assembled into a single CNS profile (Hasan et al., "
+  "2023). That profile has several parts that matter together: whether the compound crosses the BBB, "
+  "which disease-relevant CNS targets it engages, how developable it is, whether it is safe, and "
+  "whether anything like it has reached the clinic.", align="j")
+P("Public resources already cover pieces of this. General ADMET platforms (Daina et al., 2017; Xiong "
+  "et al., 2021; Fu et al., 2024; Cheng et al., 2012) predict BBB and hERG, but say nothing about "
+  "CNS-target activity. Target-prediction servers (Daina et al., 2019; Awale and Reymond, 2019) return "
+  "likely protein targets from chemical similarity, yet they do not condition those targets on brain "
+  "penetration, roll them up into a disease-level view, attach calibrated uncertainty, or carry a "
+  "safety axis. Individual endpoints have their own dedicated QSAR models — AChE and BACE1 (Ponzoni et "
+  "al., 2019), MAO-B (Kumar et al., 2024), GSK-3β (Galati et al., 2023), BBB permeability (Kumar et "
+  "al., 2022; Huang et al., 2024) — but no single tool draws them together. BrainSafe AI does exactly "
+  "that, using models trained on measured public data and tested under four validation regimes.", align="j")
 
 # ---- 2 METHODS ----
 H("2. Materials and methods", 1)
@@ -157,7 +160,8 @@ P("SMILES were canonicalised and deduplicated by InChIKey (Bento et al., 2020). 
   "potency regression on median pChEMBL rather than binary classification.", align="j")
 H("2.3 Molecular representation, models and hyperparameters", 2)
 P("Molecules were represented by a 1,024-bit Morgan (ECFP, radius 2) fingerprint (Rogers and Hahn, "
-  "2010) concatenated with 24 RDKit physicochemical descriptors. Classification used an "
+  "2010), computed with RDKit (RDKit, 2024), concatenated with 24 RDKit physicochemical descriptors. "
+  "Classification used an "
   "unweighted-mean ensemble of random forest (Breiman, 2001), extremely randomised trees (Geurts et "
   "al., 2006) and histogram gradient boosting (Friedman, 2001; Ke et al., 2017) in scikit-learn "
   "(Pedregosa et al., 2011); regression used the corresponding regressor ensemble. Hyperparameters "
@@ -346,31 +350,36 @@ P("Two findings are reported honestly. First, on classification of well-known ap
 
 # ---- 4 DISCUSSION ----
 H("4. Discussion", 1)
-P("The contribution of BrainSafe AI is integrative. Its components — fingerprint and tree-ensemble "
-  "QSAR, BBB and hERG models, conformal prediction and the QED/CNS-MPO druggability rules — are "
-  "individually established (Rogers and Hahn, 2010; Breiman, 2001; Norinder et al., 2014; Wager et "
-  "al., 2010). Their combination into a single measured-data CNS profiler that is calibrated, "
-  "conformal, evidence-grounded, BBB-gated, safety-aware and clinically contextualised is not, to our "
-  "knowledge, available as a unit in existing tools (Daina et al., 2017, 2019; Fu et al., 2024; Awale "
-  "and Reymond, 2019).", align="j")
-P("AUROC decreased from random (0.94–0.98) to temporal (0.61–0.92) splits, consistent with the "
-  "proportion of novel chemotypes in each test set: 71–91% of recent test compounds carried "
-  "Bemis–Murcko scaffolds absent from training. Where temporal AUROC remained high (BACE1, 0.92) the "
-  "recent test set was 93% active; where it was class-balanced (MAO-A, 45% active) the value was "
-  "0.61. Reporting all four regimes characterises generalisation across chemical space and time "
+P("What BrainSafe AI contributes is the assembly, not the parts. Fingerprint and tree-ensemble QSAR, "
+  "the BBB and hERG models, conformal prediction, the QED and CNS-MPO druggability rules — each is "
+  "well established in its own right (Rogers and Hahn, 2010; Breiman, 2001; Norinder et al., 2014; "
+  "Wager et al., 2010). What we have not found elsewhere is all of them working as one measured-data "
+  "CNS profiler that is at the same time calibrated, conformal, evidence-grounded, BBB-gated, "
+  "safety-aware and clinically contextualised (Daina et al., 2017, 2019; Fu et al., 2024; Awale and "
+  "Reymond, 2019).", align="j")
+P("AUROC fell from the random split (0.94–0.98) to the temporal one (0.61–0.92), and the size of that "
+  "drop tracks how much new chemistry each test set contained: between 71% and 91% of the recent "
+  "compounds carried Bemis–Murcko scaffolds the model had never seen. The two extremes are "
+  "instructive. BACE1 held up at 0.92, but its recent test set was 93% active, which flatters the "
+  "score; MAO-A, with a balanced 45%-active test set, gives the more honest figure of 0.61. Reporting "
+  "all four regimes is what lets a reader see generalisation across both chemical space and time "
   "(Sheridan, 2013; Tropsha, 2010).", align="j")
-P("Why a dedicated tool rather than a general-purpose LLM? The comparative evidence (Section 3.6) "
-  "supports a results-backed answer. On the exact task class in question — molecular property "
-  "prediction — general LLMs are documented to underperform specialised machine learning "
-  "(Guo et al., 2023; Zhong et al., 2024), with fine-tuned LLMs matching QSAR only in the low-data "
-  "limit (Jablonka et al., 2024), whereas BrainSafe operates at a 64,474-record scale. More "
-  "fundamentally, the paradigms differ in kind: an LLM emits fluent text without a calibrated "
-  "probability, a coverage guarantee, an applicability-domain boundary, or a link to a specific "
-  "measurement, and is prone to confident hallucination (Ji et al., 2023). BrainSafe returns, for any "
-  "structure, a calibrated probability, a conformal set with empirically verified ~90% coverage, an "
-  "explicit in/out-of-domain flag, and the nearest measured analogue with its pChEMBL. The two are "
-  "therefore complementary rather than interchangeable where a decision must be auditable and "
-  "grounded in measured data.", align="j")
+P("Why build a dedicated tool when a general-purpose LLM can be asked the same questions in plain "
+  "language? Our head-to-head (Section 3.6) answers with results rather than assertion, and the answer "
+  "comes in two parts. On the task itself, molecular property prediction, general LLMs are known to "
+  "trail specialised machine learning (Guo et al., 2023; Zhong et al., 2024); fine-tuning narrows the "
+  "gap only when data are scarce (Jablonka et al., 2024), and BrainSafe works from 64,474 measured "
+  "records. That much was expected. What the benchmark adds is the failure mode that matters in "
+  "practice. Four current models matched or beat BrainSafe at classifying well-known drugs, yet 45% of "
+  "the ChEMBL identifiers they offered as evidence were fabricated or pointed to the wrong molecule, "
+  "and every one of them invented a target and potency for an unpublished compound, disagreeing with "
+  "each other along the way. The deeper reason is architectural. An LLM generates fluent text; it does "
+  "not compute a fingerprint, fit structure to measured activity, or attach a calibrated probability, a "
+  "coverage guarantee or a domain boundary, and it will hallucinate with confidence (Ji et al., 2023). "
+  "BrainSafe returns, for any structure, a calibrated probability, a conformal set with roughly 90% "
+  "empirical coverage, an explicit in- or out-of-domain flag, and the nearest measured analogue with "
+  "its pChEMBL. The two are complementary, not interchangeable, wherever a decision has to be auditable "
+  "and anchored in measurement.", align="j")
 P("Threats to validity (scientific-flaw self-audit, with quantitative tests). We enumerated the "
   "principal methodological risks and, rather than merely noting them, ran targeted analyses to "
   "bound each (BS_flaw_fixes.py / BS_assay_composition.py / BS_assay_sensitivity.py). "
@@ -395,31 +404,22 @@ P("Threats to validity (scientific-flaw self-audit, with quantitative tests). We
   "ensemble exceeds a k-nearest-neighbour baseline on every endpoint (Section 3.2), so performance is "
   "not merely memorised nearest-neighbour recall. Each risk is surfaced in the tool output or the "
   "supplementary tables rather than concealed.", align="j")
-P("Why a dedicated tool rather than a general-purpose LLM — empirical answer. Our executed head-to-head "
-  "(Section 3.6, Table 8) is decisive: four current LLMs matched or beat BrainSafe on BBB/hERG "
-  "classification of well-known drugs, yet 45% of the ChEMBL identifiers they cited as evidence were "
-  "fabricated or resolved to the wrong molecule, and all four confabulated a specific target and "
-  "potency for an unpublished compound (disagreeing with one another), whereas BrainSafe grounded every "
-  "call in a real measured analogue and reported honest uncertainty. The lesson is not that LLMs are "
-  "inaccurate in general — on memorised compounds they are strong — but that they cannot be trusted for "
-  "verifiable provenance or for novel chemistry, which is where hypothesis generation actually happens. "
-  "BrainSafe is therefore complementary to, not replaced by, general LLMs where a decision must be "
-  "auditable and grounded in measured data.", align="j")
-P("Several further limitations apply. The models predict target engagement, not the direction of "
-  "modulation (agonism versus antagonism); engagement is distinct from clinical efficacy, and the "
-  "clinical-precedent layer reports structural similarity to compounds with documented clinical "
-  "phases rather than predicting efficacy; no prospective experimental validation has been performed; "
-  "and GSK-3β and MAO-A generalise less well under temporal validation and are flagged as "
-  "lower-confidence, while pooled DPPH antioxidant data show weak temporal transfer. Intended use is "
-  "research hypothesis generation and prioritisation, not clinical or diagnostic application.", align="j")
+P("Some limitations remain, and they bound how the tool should be read. It predicts that a molecule "
+  "engages a target, not whether it activates or blocks it (agonism versus antagonism), and engagement "
+  "is not the same thing as clinical benefit; the clinical-precedent layer reports structural "
+  "similarity to compounds that reached documented trial phases, which is context, not a prediction of "
+  "efficacy. No prospective wet-lab validation has yet been done. GSK-3β and MAO-A generalise less well "
+  "over time and are flagged as lower-confidence, and the pooled DPPH antioxidant data transfer only "
+  "weakly across time. The tool is meant for research hypothesis generation and prioritisation, not for "
+  "clinical or diagnostic use.", align="j")
 
 # ---- 5 CONCLUSION ----
 H("5. Conclusion", 1)
-P("BrainSafe AI is a calibrated, evidence-grounded multi-endpoint CNS profiler built on measured "
-  "public data, with per-endpoint performance within or above reported ranges on like-for-like "
-  "splits and scaffold, cluster and temporal metrics reported alongside. Its limitations are "
-  "documented, and it is suitable for an application/resource publication and for research "
-  "prioritisation.", align="j")
+P("BrainSafe AI is a calibrated, evidence-grounded, multi-endpoint CNS profiler built entirely on "
+  "measured public data. On like-for-like splits its per-endpoint performance sits within or above "
+  "published ranges, and we report the harder scaffold, cluster and temporal numbers next to those "
+  "rather than in place of them. The limitations are stated plainly. On that basis the tool is ready "
+  "to serve both as a resource publication and as a practical aid to research prioritisation.", align="j")
 
 # ---- BACK MATTER ----
 H("Data and code availability", 2)
