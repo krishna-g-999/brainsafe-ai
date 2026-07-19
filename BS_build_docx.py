@@ -77,8 +77,8 @@ for h in [
 # ---- ABSTRACT ----
 H("Abstract", 1)
 P("Background. Whether a small molecule will act on the brain cannot be read off any single property. "
-  "It turns at once on passage across the blood–brain barrier (BBB), engagement of disease-relevant "
-  "central-nervous-system (CNS) targets, developability, safety and clinical precedent, and the public "
+  "It depends at once on passage across the blood–brain barrier (BBB), engagement of disease-relevant "
+  "central-nervous-system (CNS) targets, developability, safety and clinical precedent. The public "
   "tools in common use each cover only part of that picture (Daina et al., 2017; Fu et al., 2024). "
   "Results. We present BrainSafe AI, an open tool that works from chemical structure alone. It brings "
   "together eight machine-learning endpoints, every one trained on measured public bioactivity data "
@@ -89,7 +89,7 @@ P("Background. Whether a small molecule will act on the brain cannot be read off
   "layer of 504 nervous-system compounds with clinical-phase annotations place each prediction in "
   "context. Every probability is isotonic-calibrated (Niculescu-Mizil and Caruana, 2005) and carries a "
   "Mondrian conformal prediction set (Norinder et al., 2014); each call also returns its nearest "
-  "measured analogues, and the target scores are folded into BBB-gated per-disease estimates. We "
+  "measured analogues, and the target scores are combined into BBB-gated per-disease estimates. We "
   "assessed the models under four splits of increasing difficulty: random, scaffold, leave-cluster-out "
   "and temporal. Random-split AUROC ran from 0.94 to 0.98, scaffold and cluster AUROC from 0.87 to "
   "0.95, and temporal AUROC from 0.61 to 0.92, with conformal coverage between 0.885 and 0.905. We also "
@@ -129,7 +129,7 @@ P("Public resources already cover pieces of this. General ADMET platforms (Daina
   "likely protein targets from chemical similarity, yet they do not condition those targets on brain "
   "penetration, roll them up into a disease-level view, attach calibrated uncertainty, or carry a "
   "safety axis. Individual endpoints have their own dedicated QSAR models: AChE and BACE1 (Ponzoni et "
-  "al., 2019), MAO-B (Kumar et al., 2024), GSK-3β (Galati et al., 2023), BBB permeability (Kumar et "
+  "al., 2019), MAO-B (Kumar et al., 2024), GSK-3β (Galati et al., 2023), and BBB permeability (Kumar et "
   "al., 2022; Huang et al., 2024). No single tool, though, draws them together. BrainSafe AI does exactly "
   "that, using models trained on measured public data and tested under four validation regimes.", align="j")
 
@@ -174,8 +174,8 @@ P("Molecules were represented by a 1,024-bit Morgan (ECFP, radius 2) fingerprint
   "al., 2006) and histogram gradient boosting (Friedman, 2001; Ke et al., 2017) in scikit-learn "
   "(Pedregosa et al., 2011); regression used the corresponding regressor ensemble. Hyperparameters "
   "are listed in Table 2. A pre-specified quality gate (MCC ≥ 0.45 under scaffold CV) governed "
-  "deployment; endpoints failing the gate as classifiers (D2, A2A, 5-HT2A, SERT) were served as "
-  "regressions.", align="j")
+  "deployment; endpoints failing the gate as classifiers (D2, A2A, 5-HT2A, SERT) were modelled as "
+  "regressions instead.", align="j")
 P("Table 2. Model architecture and hyperparameters.", italic=True, size=9)
 hp = pd.DataFrame([
     ["Random forest (classifier/regressor)", "n_estimators=300; min_samples_leaf=2; class_weight=balanced_subsample (clf)"],
@@ -260,7 +260,7 @@ P("Under an identical scaffold-split protocol and feature set, the deployed ense
   f"a mean scaffold-split AUROC of {_ens:.3f}, versus {_knn:.3f} for k-nearest-neighbour "
   f"(mean Δ = +{_ens-_knn:.3f}) and {_lr:.3f} for logistic regression (mean Δ = +{_ens-_lr:.3f}), "
   "and was best on every one of the eight endpoints (Table 5; Figure 5B). Exceeding a pure "
-  "nearest-neighbour read-across indicates the model captures structure–activity relationships not "
+  "nearest-neighbour read-across indicates that the model captures structure–activity relationships not "
   "reducible to retrieving the most similar known molecule.", align="j")
 t6 = s9[["endpoint","Ensemble_AUROC","kNN_Tanimoto_AUROC","LogisticRegression_AUROC","delta_vs_kNN"]].copy()
 t6.columns = ["Endpoint","Ensemble","kNN-Tanimoto","Logistic reg.","Δ vs kNN"]
@@ -327,8 +327,8 @@ P("Reproducible grounded-output demonstration. For fixed input structures the de
   "returns verifiable artifacts (script BS_llm_comparison.py; output BS_llm_comparison.json): "
   "donepezil → AChE calibrated P = 1.00 with the nearest measured analogue at Tanimoto 1.00 "
   "(donepezil is itself a measured training compound, pChEMBL 7.75) and hERG P = 0.78; terfenadine → hERG "
-  "P = 1.00, correctly flagging the cardiotoxicity for which it was withdrawn, while correctly "
-  "calling it BBB non-penetrant; and a novel arylpiperazine of an unpublished scaffold → an honest "
+  "P = 1.00, correctly flagging the cardiotoxicity for which it was withdrawn while also calling it "
+  "BBB non-penetrant; and a novel arylpiperazine of an unpublished scaffold → an honest "
   "conformal ‘uncertain’ set for AChE grounded in a measured analogue (pChEMBL 4.82) rather than a "
   "confident but unverifiable text answer. Every value is traceable to a measurement. This grounding "
   "(a calibrated probability, a coverage-guaranteed set, and measured-analogue provenance for any "
@@ -346,7 +346,7 @@ P("Table 8. Pre-registered LLM head-to-head, scored against the frozen measured-
   "on five uncontested compounds; BrainSafe cites measured analogues by structure, not ChEMBL IDs.",
   italic=True, size=9)
 table_from_df(_disp); P("")
-P("Two findings are reported honestly. First, on classification of well-known approved drugs the LLMs "
+P("Two findings stand out. First, on classification of well-known approved drugs the LLMs "
   "are strong: three of four matched or exceeded BrainSafe on BBB (9/9 vs 8/9; BrainSafe mis-called the "
   "borderline-lipophilic astemizole) and their Brier scores were as good or better (Claude 0.020, "
   "ChatGPT 0.035); a dedicated tool is therefore not justified by raw accuracy on famous compounds. Second, "
@@ -356,7 +356,7 @@ P("Two findings are reported honestly. First, on classification of well-known ap
   "‘selegiline’ identifier is propranolol; another's ‘rivastigmine’ identifier is pyridoxine and its "
   "‘terfenadine’ identifier is the antibiotic cefdinir. All four also confabulated a specific target "
   "and potency for the unpublished compound, disagreeing on the target (three AChE, one D2). BrainSafe "
-  "fabricated nothing, grounded every prediction in a real measured analogue, and returned an honest "
+  "fabricated nothing, grounded every prediction in a real measured analogue, and returned a "
   "conformal ‘uncertain’ set for the novel compound. An LLM can thus approximate textbook "
   "classifications but cannot be trusted for verifiable provenance or for novel chemistry, which is precisely "
   "what the dedicated tool provides.", align="j")
@@ -375,7 +375,7 @@ P("AUROC fell from the random split (0.94–0.98) to the temporal one (0.61–0.
   "drop tracks how much new chemistry each test set contained: between 71% and 91% of the recent "
   "compounds carried Bemis–Murcko scaffolds the model had never seen. The two extremes are "
   "instructive. BACE1 held up at 0.92, but its recent test set was 93% active, which flatters the "
-  "score; MAO-A, with a balanced 45%-active test set, gives the more honest figure of 0.61. Reporting "
+  "score; MAO-A, with a balanced 45%-active test set, gives the more representative figure of 0.61. Reporting "
   "all four regimes is what lets a reader see generalisation across both chemical space and time "
   "(Sheridan, 2013; Tropsha, 2010).", align="j")
 P("Why build a dedicated tool when a general-purpose LLM can be asked the same questions in plain "

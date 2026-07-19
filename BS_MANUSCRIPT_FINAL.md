@@ -224,8 +224,8 @@ Supplementary Table S8.
 engine returns verifiable artifacts (script `BS_llm_comparison.py`, output
 `BS_llm_comparison.json`): donepezil → AChE calibrated P = 1.00 with the nearest measured analogue
 at Tanimoto 1.00 (donepezil is itself a measured training compound, pChEMBL 7.75) and hERG P = 0.78;
-terfenadine → hERG P = 1.00, correctly flagging the cardiotoxicity for which it was withdrawn,
-while correctly calling it BBB-non-penetrant; and a novel arylpiperazine of an unpublished
+terfenadine → hERG P = 1.00, correctly flagging the cardiotoxicity for which it was withdrawn
+while also calling it BBB-non-penetrant; and a novel arylpiperazine of an unpublished
 scaffold → an **honest conformal "uncertain" set** for AChE grounded in the nearest measured analogue
 (Tanimoto 0.35, pChEMBL 4.82), rather than a confident but unverifiable text answer. Every value is traceable
 to a measurement; none is generated from free text. This grounding (a calibrated probability,
