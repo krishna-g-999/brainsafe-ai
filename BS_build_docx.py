@@ -76,31 +76,26 @@ for h in [
 
 # ---- ABSTRACT ----
 H("Abstract", 1)
-P("Background. Whether a small molecule will act on the brain cannot be read off any single property. "
-  "It depends at once on passage across the blood–brain barrier (BBB), engagement of disease-relevant "
-  "central-nervous-system (CNS) targets, developability, safety and clinical precedent. The public "
-  "tools in common use each cover only part of that picture (Daina et al., 2017; Fu et al., 2024). "
-  "Results. We present BrainSafe AI, an open tool that works from chemical structure alone. It brings "
-  "together eight machine-learning endpoints, every one trained on measured public bioactivity data "
-  "(ChEMBL_37 pChEMBL values and the B3DB database; Mendez et al., 2019; Meng et al., 2021): BBB "
-  "penetration, inhibition of AChE, BChE, BACE1, GSK-3β, MAO-A and MAO-B, and the hERG cardiotoxicity "
-  "liability. Four receptor targets (D2, A2A, 5-HT2A and SERT) are handled instead by potency "
-  "regression. A deterministic druggability/CNS-MPO layer (Wager et al., 2010) and a clinical-precedent "
-  "layer of 504 nervous-system compounds with clinical-phase annotations place each prediction in "
-  "context. Every probability is isotonic-calibrated (Niculescu-Mizil and Caruana, 2005) and carries a "
-  "Mondrian conformal prediction set (Norinder et al., 2014); each call also returns its nearest "
-  "measured analogues, and the target scores are combined into BBB-gated per-disease estimates. We "
-  "assessed the models under four splits of increasing difficulty: random, scaffold, leave-cluster-out "
-  "and temporal. Random-split AUROC ran from 0.94 to 0.98, scaffold and cluster AUROC from 0.87 to "
-  "0.95, and temporal AUROC from 0.61 to 0.92, with conformal coverage between 0.885 and 0.905. We also "
-  "ran a pre-registered head-to-head against four general-purpose large language models. On well-known "
-  "drugs they matched or beat BrainSafe at BBB and hERG classification; even so, 45% of the "
-  "measured-data identifiers they cited proved fabricated or mis-attributed, and all four invented a "
-  "target and potency for an unpublished compound. BrainSafe tied every prediction to a real measured "
-  "analogue and reported honest uncertainty. "
-  "Conclusion. BrainSafe AI delivers calibrated, evidence-grounded, BBB-gated and safety-aware CNS "
-  "profiling built entirely on measured data. Code, models and data are released; the tool is for "
-  "research use and remains pending peer review.", align="j")
+P("Background. Judging whether a small molecule acts on the brain means answering several questions "
+  "together: blood–brain-barrier (BBB) penetration, engagement of disease-relevant central-nervous-"
+  "system (CNS) targets, developability, safety and clinical precedent. Public tools address these only "
+  "in part (Daina et al., 2017; Fu et al., 2024). "
+  "Results. BrainSafe AI is an open tool that predicts this profile from chemical structure alone. It "
+  "integrates eight classification endpoints trained on measured public data (ChEMBL_37 and B3DB; "
+  "64,474 records; Mendez et al., 2019; Meng et al., 2021): BBB, AChE, BChE, BACE1, GSK-3β, MAO-A, MAO-B "
+  "and the hERG safety liability, together with four receptor potency regressions, a measured-DPPH "
+  "antioxidant model and a deterministic druggability/CNS-MPO layer. Predictions are isotonic-"
+  "calibrated, carry Mondrian conformal sets (empirical coverage 0.885–0.905; Norinder et al., 2014), "
+  "and are grounded in nearest measured analogues and BBB-gated per-disease scores. Discrimination is "
+  "strong within populated chemical space (random-split AUROC 0.94–0.98; scaffold and cluster 0.87–0.95) "
+  "but degrades on genuinely novel scaffolds, which we report explicitly: where a query’s nearest "
+  "training neighbour is below Tanimoto 0.4, the mean AUROC falls to 0.77 (range 0.60–0.85). The "
+  "ensemble outperforms a Tanimoto read-across baseline on all eight endpoints (DeLong p < 0.05; MAO-A "
+  "only marginally). A pre-registered case study shows that, unlike a general large language model, "
+  "every prediction is traceable to a specific measurement. "
+  "Conclusion. BrainSafe AI offers calibrated, evidence-grounded, safety-aware CNS profiling from "
+  "measured data, with quantified and honest limits on novel chemistry. Code, models and data are "
+  "released for research use, pending peer review.", align="j")
 P("Keywords: QSAR; blood–brain barrier; neurodegeneration; conformal prediction; applicability "
   "domain; cheminformatics; ChEMBL.", italic=True, size=10)
 
@@ -202,7 +197,16 @@ eq("p_c = (#{α in A_c : α ≥ α_query} + 1) / (|A_c| + 1),   α_active = 1 �
 P("and a prediction set comprising classes with p_c > ε (ε = 0.10). Effective CNS engagement combines "
   "target activity with brain penetration,", align="j")
 eq("Engagement(target) = P(active | target) × P(BBB-penetrant)")
-P("and per-disease scores take the maximum engagement over the targets mapped to each disease. "
+P("and per-disease scores take the maximum engagement over the targets mapped to each disease. This "
+  "product is used deliberately as a monotone priority index for ranking, not as a calibrated "
+  "probability of a clinical event: it multiplies two calibrated probabilities under a working "
+  "independence assumption that does not strictly hold, since lipophilicity influences both barrier "
+  "penetration and target binding. Because both factors are monotone in ‘desirable’, the product still "
+  "orders candidates sensibly (a compound must both reach the brain and engage the target to score "
+  "highly) and it down-weights potent binders that are predicted not to penetrate. We therefore treat "
+  "the per-disease scores as heuristic priority indices, and the target and BBB probabilities that "
+  "compose them are reported separately so a user can inspect each. The assumption and how the index "
+  "could be validated are discussed in Section 4. "
   "Druggability is a deterministic composite of QED (Bickerton et al., 2012), Lipinski (Lipinski et "
   "al., 2001) and Veber (Veber et al., 2002) compliance, the CNS-MPO desirability score (Wager et "
   "al., 2010) and PAINS alerts (Baell and Holloway, 2010). Each prediction returns the nearest "
@@ -247,10 +251,26 @@ figure("figures/fig4_roc_calibration.png",
 figure("figures/fig5_conformal_comparison.png",
        "Figure 5. (A) Empirical coverage of 90%-level conformal prediction sets. (B) Scaffold-CV AUROC "
        "of the deployed ensemble versus Tanimoto k-nearest-neighbour and logistic-regression baselines.")
-P("Random-split AUROC was 0.94–0.98 across endpoints; scaffold and leave-cluster-out AUROC were "
-  "0.87–0.95; and temporal-split AUROC was 0.61–0.92 (Figure 3; Table 4). Isotonic calibration gave "
-  "Brier scores of 0.04–0.14 (Figure 4B) and empirical conformal coverage of 0.885–0.905 against the "
-  "0.90 target (Figure 5A).", align="j")
+P("Within populated chemical space, random-split AUROC was 0.94–0.98 across endpoints; scaffold and "
+  "leave-cluster-out AUROC were 0.87–0.95; and temporal-split AUROC was 0.61–0.92 (Figure 3; Table 4). "
+  "Isotonic calibration gave Brier scores of 0.04–0.14 (Figure 4B) and empirical conformal coverage of "
+  "0.885–0.905 against the 0.90 target (Figure 5A).", align="j")
+figure("figures/fig8_generalisation.png",
+       "Figure 6. Generalisation versus chemical novelty. For each held-out compound, AUROC is binned by "
+       "its nearest-neighbour Tanimoto to the training set; the dashed line is the n-weighted mean over "
+       "the eight classification endpoints.")
+P("A random-split headline overstates prospective utility, because ChEMBL target sets are "
+  "analogue-dense and most published models report only that split. We therefore quantify "
+  "generalisation as an explicit function of chemical novelty (Figure 6; Supplementary Table S5): for "
+  "each held-out compound we bin its nearest-neighbour Tanimoto to the training set and measure AUROC "
+  "within each bin. Discrimination is retained where a query resembles training chemistry (n-weighted "
+  "mean AUROC 0.973 at Tanimoto ≥ 0.8 and 0.942 at 0.6–0.8) but falls steadily as novelty rises, to "
+  "0.874 at 0.4–0.6 and 0.774 below 0.4; in that most-novel bin the per-endpoint values span 0.60 "
+  "(BChE) to 0.85 (BBB). This is the honest measure of behaviour on genuinely new scaffolds, and it is "
+  "why the applicability-domain flag (Section 2.4) marks queries below Tanimoto 0.3–0.4 as "
+  "low-confidence. Taken with the random-split numbers, the claim is state-of-the-art discrimination "
+  "within populated chemical space, with quantified degradation on novel chemistry rather than a single "
+  "inflated headline.", align="j")
 H("3.2 Ablation against simpler baselines (comparative)", 2)
 s9 = pd.read_csv("supplementary/STable9_baseline_comparison.csv")
 _ens = s9["Ensemble_AUROC"].mean(); _knn = s9["kNN_Tanimoto_AUROC"].mean(); _lr = s9["LogisticRegression_AUROC"].mean()
@@ -267,13 +287,26 @@ t6.columns = ["Endpoint","Ensemble","kNN-Tanimoto","Logistic reg.","Δ vs kNN"]
 t6["Endpoint"] = t6["Endpoint"].replace(DISP)
 P("Table 5. Scaffold-split AUROC of the deployed ensemble versus baselines (Supplementary Table S9).", italic=True, size=9)
 table_from_df(t6); P("")
+sig = json.load(open("BS_significance_report.json"))
+_ma = sig["MAO_A"]; _ci = _ma["boot_delta95_vs_kNN"]
+P("To test whether these margins exceed sampling noise, we applied DeLong’s test for two correlated ROC "
+  "curves to each ensemble-versus-kNN comparison, paired on identical held-out compounds, and "
+  "corroborated it with a paired bootstrap (2,000 resamples; Supplementary Table S14). The paired test "
+  "is more powerful than a per-AUROC confidence interval because the two ROC curves are strongly "
+  "correlated on the same samples. The ensemble’s advantage is significant at all eight endpoints "
+  "(DeLong p < 0.05): decisively so for seven (p < 0.001) and marginally for MAO-A, where the gain is "
+  f"smallest (Δ = +{_ma['delta_vs_kNN']:.3f}, DeLong p = {_ma['delong_p_vs_kNN']:.3f}, bootstrap 95% CI "
+  f"[{_ci[0]:+.3f}, {_ci[1]:+.3f}]). We therefore report a statistically significant improvement over "
+  "read-across on every endpoint, with MAO-A flagged as the borderline case.", align="j")
 H("3.3 Comparison with the literature (comparative)", 2)
 figure("figures/fig6_benchmark.png",
-       "Figure 6. Per-endpoint random-split AUROC (this work) relative to reported random-split ranges.")
+       "Figure 7. Per-endpoint random-split AUROC (this work) relative to reported random-split ranges.")
 P("On like-for-like random splits, per-endpoint AUROC was within or above reported ranges, for "
   "example BBB (0.88–0.96; Kumar et al., 2022; Huang et al., 2024) and hERG (0.86–0.93). The full "
   "per-endpoint comparison against the collected literature ranges is given in Supplementary Table S7 "
-  "(Figure 6).", align="j")
+  "(Figure 7). We stress that this is a cross-study comparison over different test sets and is therefore "
+  "weaker than a same-test-set benchmark; a direct comparison against a public server on identical "
+  "held-out compounds is a planned addition (Section 4).", align="j")
 H("3.4 Receptor potency regression and antioxidant model (non-comparative)", 2)
 s2 = pd.read_csv("supplementary/STable2_receptor_regression.csv")
 t2 = s2[["receptor","n","scaffold_cv_R2","RMSE","Spearman","temporal_R2"]].copy()
@@ -282,13 +315,13 @@ t2["Receptor"] = t2["Receptor"].replace(DISP)
 P("Table 6. Receptor potency-regression performance (scaffold cross-validation and temporal split).", italic=True, size=9)
 table_from_df(t2); P("")
 figure("figures/fig7_regression.png",
-       "Figure 7. Predicted versus measured potency (scaffold cross-validation) for the measured "
+       "Figure 8. Predicted versus measured potency (scaffold cross-validation) for the measured "
        "antioxidant (DPPH) model and the four receptor potency-regression endpoints (panels A–E).")
 am = json.load(open("models_genuine/antioxidant_measured_meta.json"))
 P(f"Receptor potency regressions achieved scaffold-CV R² of 0.34–0.53 and Spearman ρ of 0.57–0.71; "
   f"temporal R² was lower (Table 6), and these endpoints are reported as ranking-grade. The "
   f"antioxidant model trained on measured DPPH data (n = {am['n']}) achieved scaffold-CV R² = "
-  f"{am['scaffold_cv_r2']}, RMSE = {am['rmse']} and Spearman = {am['spearman']} (Figure 7); the "
+  f"{am['scaffold_cv_r2']}, RMSE = {am['rmse']} and Spearman = {am['spearman']} (Figure 8); the "
   f"earlier curated score correlated only weakly with measured DPPH (Spearman = "
   f"{am['crosscheck_curated_vs_measured_spearman']}).", align="j")
 H("3.5 Behaviour on reference compounds (non-comparative)", 2)
@@ -298,11 +331,14 @@ P("With chemistry-only inputs the integrated system reproduced established pharm
   "cardiotoxicity, was predicted positive at hERG; and resveratrol was predicted BBB non-penetrant, "
   "consistent with reported flavonoid CNS bioavailability (Hasan et al., 2023).", align="j")
 
-H("3.6 Comparison with general-purpose large language models (comparative)", 2)
-P("Because general-purpose large language models (LLMs) can be queried in natural language for "
-  "chemical information, we assessed whether a dedicated tool remains warranted, along three lines: "
-  "published benchmark evidence, the scientific basis of the difference, and a reproducible "
-  "demonstration of grounded output.", align="j")
+H("3.6 Illustrative case study: general-purpose LLMs (comparative)", 2)
+P("A common question is whether a dedicated tool is needed when a general-purpose large language model "
+  "(LLM) can be queried in natural language. We address this as an illustrative case study, not a "
+  "benchmark: the panel below is small (ten compounds), single-shot, and the models are versioned "
+  "snapshots that will change, so the numbers should be read as a qualitative demonstration rather than "
+  "a rigorous performance comparison. Our contribution is the QSAR and its integration; this section is "
+  "context, not a load-bearing result. We consider three lines: published benchmark evidence, the "
+  "architectural basis of the difference, and a grounded-output demonstration.", align="j")
 P("Benchmark evidence. On molecular property prediction (the task class BrainSafe performs), "
   "general-purpose LLMs consistently underperform specialised machine-learning models. In an "
   "eight-task chemistry benchmark, LLMs including GPT-4 lag task-specific models on property "
@@ -334,32 +370,32 @@ P("Reproducible grounded-output demonstration. For fixed input structures the de
   "(a calibrated probability, a coverage-guaranteed set, and measured-analogue provenance for any "
   "structure, including novel ones) is the scientific justification for a dedicated tool "
   "complementary to, not replaced by, general LLMs.", align="j")
-P("Pre-registered head-to-head benchmark (executed). We froze a fixed prompt, a 10-compound panel "
-  "with uncontested ground truth (approved-drug pharmacology plus one unpublished scaffold), and a "
-  "scoring rubric before any system was run (protocol and key released with the code), then ran the "
-  "identical prompt on four general-purpose LLMs (Gemini Pro, ChatGPT/GPT-4o, Perplexity, Claude) and "
-  "scored every reply against the same measured-data key (Table 8; Supplementary Table S13).", align="j")
+P("Grounded-output case study. Using a prompt, a ten-compound panel (approved-drug pharmacology plus "
+  "one unpublished scaffold) and a scoring rubric all fixed in advance (protocol and key released with "
+  "the code), we queried four general-purpose LLMs once each (Gemini Pro, ChatGPT/GPT-4o, Perplexity, "
+  "Claude; specific dated snapshots) and scored the replies against the measured-data key (Table 8; "
+  "Supplementary Table S13). These are single-shot results on a small panel and are illustrative only.", align="j")
 sb = pd.read_csv("supplementary/STable13_llm_scoreboard.csv")
-_disp = sb[["system","BBB_acc","hERG_acc","Brier","chembl_ids_given","fabricated_ids","wrong_structure_ids","novel_confabulation"]].copy()
-_disp.columns = ["System","BBB acc","hERG acc","Brier","IDs cited","Fabricated","Wrong-molecule","Novel confabulation"]
-P("Table 8. Pre-registered LLM head-to-head, scored against the frozen measured-data key. hERG scored "
-  "on five uncontested compounds; BrainSafe cites measured analogues by structure, not ChEMBL IDs.",
+_disp = sb[["system","BBB_acc","hERG_acc","chembl_ids_given","fabricated_ids","wrong_structure_ids","novel_confabulation"]].copy()
+_disp.columns = ["System","BBB (of 9)","hERG (of 5)","IDs cited","Fabricated","Wrong-molecule","Novel confab."]
+P("Table 8. Illustrative LLM case study (single-shot, ten-compound panel), scored against the frozen "
+  "measured-data key. hERG scored on five uncontested compounds. Note the asymmetry: BrainSafe cites "
+  "measured analogues by structure and never emits a ChEMBL identifier, so by construction it cannot "
+  "fabricate one; the identifier columns therefore describe the LLMs’ behaviour, not a like-for-like score.",
   italic=True, size=9)
 table_from_df(_disp); P("")
-P("Two findings stand out. First, on classification of well-known approved drugs the LLMs "
-  "are strong: three of four matched or exceeded BrainSafe on BBB (9/9 vs 8/9; BrainSafe mis-called the "
-  "borderline-lipophilic astemizole) and their Brier scores were as good or better (Claude 0.020, "
-  "ChatGPT 0.035); a dedicated tool is therefore not justified by raw accuracy on famous compounds. Second, "
-  "the LLMs fail where grounding and novelty matter: across the four models, 14 of 31 (45%) of the "
-  "ChEMBL identifiers volunteered as provenance were fabricated or resolved to the wrong molecule. For "
-  "example, one model's cited ‘rasagiline’ identifier is in fact fluticasone propionate and its "
-  "‘selegiline’ identifier is propranolol; another's ‘rivastigmine’ identifier is pyridoxine and its "
-  "‘terfenadine’ identifier is the antibiotic cefdinir. All four also confabulated a specific target "
-  "and potency for the unpublished compound, disagreeing on the target (three AChE, one D2). BrainSafe "
-  "fabricated nothing, grounded every prediction in a real measured analogue, and returned a "
-  "conformal ‘uncertain’ set for the novel compound. An LLM can thus approximate textbook "
-  "classifications but cannot be trusted for verifiable provenance or for novel chemistry, which is precisely "
-  "what the dedicated tool provides.", align="j")
+P("Two patterns emerge, with the caveats above. First, on well-known approved drugs the LLMs are "
+  "strong: three of four matched or exceeded BrainSafe on BBB (9/9 vs 8/9; BrainSafe mis-called the "
+  "borderline-lipophilic astemizole), so a dedicated tool is not justified by accuracy on famous "
+  "compounds. Second, when the LLMs volunteered a specific ChEMBL identifier as provenance, 14 of the "
+  "31 identifiers cited (45%) were fabricated or resolved to the wrong molecule. For example, one "
+  "model’s cited ‘rasagiline’ identifier is in fact fluticasone propionate, and another’s "
+  "‘rivastigmine’ identifier is pyridoxine. On the single unpublished compound, all four asserted a "
+  "specific target and potency and disagreed with one another (three AChE, one D2), where BrainSafe "
+  "returned a conformal ‘uncertain’ set grounded in a measured analogue. We read this narrowly: on a "
+  "small panel, a text model can reproduce textbook classifications but its volunteered evidence is "
+  "unreliable and it does not abstain on genuinely novel chemistry, whereas the grounded tool cites a "
+  "real measurement or flags uncertainty.", align="j")
 
 # ---- 4 DISCUSSION ----
 H("4. Discussion", 1)
@@ -418,6 +454,23 @@ P("Threats to validity (scientific-flaw self-audit, with quantitative tests). We
   "ensemble exceeds a k-nearest-neighbour baseline on every endpoint (Section 3.2), so performance is "
   "not merely memorised nearest-neighbour recall. Each risk is surfaced in the tool output or the "
   "supplementary tables rather than concealed.", align="j")
+P("The BBB-gated disease score is the closest thing here to a new method, and we are deliberately "
+  "modest about it. It is a heuristic priority index: a product of two calibrated probabilities under a "
+  "working independence assumption that does not strictly hold, since lipophilicity drives both barrier "
+  "penetration and target binding, so the product is not itself a calibrated probability of any "
+  "measurable event. It remains useful for ranking, because a candidate must both reach the brain and "
+  "engage the target to score highly, and a potent binder predicted not to penetrate is down-weighted. "
+  "A full quantitative validation of the index would need an outcome set in which brain penetration "
+  "genuinely varies; our clinical-precedent set is unsuitable, being composed almost entirely of "
+  "BBB-penetrant nervous-system drugs, so gating is close to neutral within it. Building a mixed "
+  "penetrant/non-penetrant benchmark and showing that gating improves disease-level ranking on it is a "
+  "clear next step that would turn the heuristic into a validated result.", align="j")
+P("Two further comparisons would strengthen the claims and are planned. First, a same-test-set "
+  "benchmark: running our held-out BBB and hERG compounds through a public server such as ADMETlab 3.0 "
+  "and reporting AUROC on identical molecules, which is more informative than the cross-study range "
+  "comparison in Section 3.3. Second, prospective validation, either a strict external test set drawn "
+  "from a source other than ChEMBL or B3DB, or modest wet-lab confirmation; either would support a "
+  "claim of generalisation beyond the retrospective splits reported here.", align="j")
 P("Some limitations remain, and they bound how the tool should be read. It predicts that a molecule "
   "engages a target, not whether it activates or blocks it (agonism versus antagonism), and engagement "
   "is not the same thing as clinical benefit; the clinical-precedent layer reports structural "
@@ -430,18 +483,25 @@ P("Some limitations remain, and they bound how the tool should be read. It predi
 # ---- 5 CONCLUSION ----
 H("5. Conclusion", 1)
 P("BrainSafe AI is a calibrated, evidence-grounded, multi-endpoint CNS profiler built entirely on "
-  "measured public data. On like-for-like splits its per-endpoint performance sits within or above "
-  "published ranges, and we report the harder scaffold, cluster and temporal numbers next to those "
-  "rather than in place of them. The limitations are stated plainly. On that basis the tool is ready "
-  "to serve both as a resource publication and as a practical aid to research prioritisation.", align="j")
+  "measured public data. Within populated chemical space its per-endpoint discrimination is "
+  "state-of-the-art-grade, and it improves significantly on read-across at every endpoint; we place the "
+  "harder scaffold, cluster and temporal numbers, and the explicit degradation on novel scaffolds, "
+  "alongside that headline rather than in place of it. The limitations are stated plainly, and the two "
+  "clearest routes to a stronger contribution, a validated BBB-gating index and a prospective external "
+  "test, are identified. On that basis the tool is suited to a resource publication and to practical "
+  "research prioritisation.", align="j")
 
 # ---- BACK MATTER ----
 H("Data and code availability", 2)
-P("All trained models, datasets, validation reports (random, scaffold, cluster, temporal, conformal), "
-  "supplementary tables and figures, and the fetch/train/validation scripts are provided in the "
-  "project repository [URL/DOI to be added on acceptance], under an open licence. Source data derive "
-  "from ChEMBL_37 (Mendez et al., 2019; Zdrazil et al., 2024) and B3DB (Meng et al., 2021). The "
-  "interactive application is provided as app_v6_final.py.", align="j")
+P("All code, the per-endpoint measured training data (data/endpoints/*.csv), trained-model metadata, "
+  "and every validation report, supplementary table and figure script are released in a public, "
+  "version-tagged repository (release v1.0.0; https://github.com/krishna-g-999/brainsafe-ai) under the "
+  "MIT licence, and archived on Zenodo (DOI: [inserted at submission]). Trained-model binaries (~1.3 GB) "
+  "are regenerated deterministically (fixed random seed 42) by the released scripts and are also "
+  "deposited in the Zenodo archive. Source data derive from ChEMBL version 37 (release 2026-05-01; "
+  "Gaulton et al., 2012; Mendez et al., 2019; Zdrazil et al., 2024) and B3DB (Meng et al., 2021); the "
+  "exact retrieval queries are in BS_fetch_endpoints.py. The interactive Streamlit application "
+  "(app_v6_final.py) is available at [public URL inserted at submission].", align="j")
 H("Ethics statement", 2)
 P("This study used only publicly available molecular and bioactivity data and did not involve human "
   "participants, human tissue, or animals; no ethical approval was required.", align="j")
