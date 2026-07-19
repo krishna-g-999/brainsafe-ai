@@ -175,6 +175,8 @@ genuinely predictable requires **independent, measurable, mechanism-specific lab
 
 ## 11. GENUINE multi-endpoint brain predictor (measured-data models)
 
+> **Authoritative current numbers (supersede any inline snapshot below).** The deployed panel is eight measured-data classification endpoints plus four receptor regressions and a measured antioxidant model, matching Manuscript Table 4 and `endpoints_report.json`: BBB n=7,805 AUROC 0.921; AChE 4,324 / 0.915; BChE 2,580 / 0.937; BACE1 8,067 / 0.950; GSK-3β 4,044 / 0.920; MAO-A 2,141 / 0.867; MAO-B 3,455 / 0.885; hERG 5,905 / 0.901; antioxidant (DPPH) n=2,862, R²=0.43. Total measured records 64,474 (= 61,108 across the twelve endpoint sets + 2,862 antioxidant + 504 clinical). The tables in §11–§15 are chronological build snapshots; where they differ, these deployed numbers are correct.
+
 The §10 conclusion was acted on: instead of holistic curated scores, we trained
 models on **measured public bioactivity data** for endpoints that are real,
 mechanistically meaningful, and structure-predictable.
@@ -188,11 +190,11 @@ applicability-domain flag (max Tanimoto to a 2000-compound training sample).
 | Endpoint | Brain meaning | n | AUROC | PR-AUC | MCC | median test→train T |
 |---|---|---|---|---|---|---|
 | **BBB** | reaches the brain? | 7,805 | **0.921** | 0.951 | 0.66 | 0.48 |
-| **AChE** | Alzheimer's / cognition | 4,324 | **0.916** | 0.964 | 0.63 | 0.68 |
-| **BACE1** | Alzheimer's / amyloid | 6,324 | **0.950** | 0.992 | 0.63 | 0.71 |
+| **AChE** | Alzheimer's / cognition | 4,324 | **0.915** | 0.964 | 0.63 | 0.68 |
+| **BACE1** | Alzheimer's / amyloid | 8,067 | **0.950** | 0.992 | 0.63 | 0.71 |
 | **MAO-B** | Parkinson's / dopamine | 3,455 | **0.885** | 0.925 | 0.62 | 0.59 |
 | **MAO-A** | mood / depression | 2,141 | **0.867** | 0.815 | 0.58 | 0.57 |
-| antioxidant | oxidative stress | 339 | (R²=0.27, §10) | n/a |, | 0.34 |
+| antioxidant | oxidative stress | 2,862 | R²=0.43 (measured DPPH, §15) | n/a | n/a | 0.34 |
 | druggability/CNS-MPO | developability | n/a | deterministic (RDKit) | n/a |, | n/a |
 
 **External sanity (known drugs, held to chemistry):** Donepezil → AChE active 0.99,
@@ -247,18 +249,18 @@ a transparent decision-support engine (`BS_brain_predict.py`, app
 4. **Benefit ⇄ risk.** A measured **hERG** cardiotoxicity model (AUROC 0.91) adds a
    safety axis, turning the tool from "is it active?" into "is it a viable CNS lead?".
 
-**Seven measured-data endpoints (scaffold-CV, isotonic-calibrated):**
+**Deployed measured-data classification endpoints (scaffold-CV, isotonic-calibrated).** The eight deployed endpoints are BBB, AChE, BChE, BACE1, GSK-3β, MAO-A, MAO-B and hERG; the snapshot table below omits BChE and predates the final data pull, so use the authoritative numbers noted in §11:
 
 | Endpoint | Role | AUROC | Brier | n |
 |---|---|---|---|---|
 | BBB | brain access (gate) | 0.921 | 0.105 | 7,805 |
 | AChE | Alzheimer's / cognition | 0.915 | 0.099 | 4,324 |
-| BACE1 | Alzheimer's / amyloid | 0.950 | 0.042 | 6,324 |
+| BACE1 | Alzheimer's / amyloid | 0.950 | 0.042 | 8,067 |
 | GSK-3β | tau / neuroprotection | 0.920 | 0.044 | 4,044 |
 | MAO-B | Parkinson's / dopamine | 0.885 | 0.122 | 3,455 |
 | MAO-A | mood / depression | 0.867 | 0.136 | 2,141 |
-| hERG | SAFETY (cardiotox) | 0.907 | 0.119 | 5,053 |
-| antioxidant | oxidative stress | R²=0.27 | n/a | 339 |
+| hERG | SAFETY (cardiotox) | 0.901 | 0.123 | 5,905 |
+| antioxidant | oxidative stress | R²=0.43 (§15) | n/a | 2,862 |
 | druggability/CNS-MPO | developability | deterministic | n/a |, |
 
 **Prospective sanity (chemistry-only inputs; verified against current models, structures
@@ -382,7 +384,7 @@ it; temporal split further controls for it. Stated, not assumed.
 **Inherent (cannot fix computationally, stated honestly):**
 - **Target engagement ≠ clinical efficacy**, needs clinical-outcome labels we do not have.
 - **Wet-lab prospective validation**, requires experiments.
-- **Antioxidant** remains a weak (R²0.27) curated-label model; improving it needs measured
+- **Antioxidant** was a weak (R²≈0.27) curated-label model *at this stage*; §15 replaces it with a measured-DPPH regression (R²=0.43). Improving it further would need additional measured
   ORAC/DPPH/TEAC assay data (not reliably available as a clean public set here).
 
 **Net:** of the five named limitations, three are now genuinely fixed (temporal validation,

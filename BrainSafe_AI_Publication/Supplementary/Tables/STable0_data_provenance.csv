@@ -13,3 +13,4 @@ SERT,Depression,Regression,ChEMBL (measured),CHEMBL228,pChEMBL (IC50/Ki/Kd/EC50)
 hERG,Safety (cardiotox),Classification,ChEMBL (measured),CHEMBL240,pChEMBL (IC50/Ki/Kd/EC50),5905,1995-2025
 Antioxidant,Oxidative stress,Regression,ChEMBL DPPH (measured),DPPH assays,pIC50 (radical scavenging),2862,curated
 Clinical precedent,Translational,Reference (k-NN),ChEMBL ATC-N (measured),ATC level-1 N,max clinical phase 1-4,504,curated
+TOTAL,,,,,sum of all endpoint sets,64474,
