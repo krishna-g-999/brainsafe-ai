@@ -1,0 +1,82 @@
+{
+  "per_endpoint": [
+    {
+      "endpoint": "BBB",
+      "n": 7805,
+      "scaffold5_ensemble": 0.921,
+      "random10_ensemble": 0.961,
+      "random10_RFonly": 0.96,
+      "random5_ensemble": 0.96,
+      "inflation_random10_minus_scaffold": 0.04
+    },
+    {
+      "endpoint": "AChE",
+      "n": 4324,
+      "scaffold5_ensemble": 0.915,
+      "random10_ensemble": 0.966,
+      "random10_RFonly": 0.962,
+      "random5_ensemble": 0.963,
+      "inflation_random10_minus_scaffold": 0.051
+    },
+    {
+      "endpoint": "BChE",
+      "n": 2580,
+      "scaffold5_ensemble": 0.937,
+      "random10_ensemble": 0.973,
+      "random10_RFonly": 0.969,
+      "random5_ensemble": 0.971,
+      "inflation_random10_minus_scaffold": 0.036
+    },
+    {
+      "endpoint": "BACE1",
+      "n": 8067,
+      "scaffold5_ensemble": 0.95,
+      "random10_ensemble": 0.968,
+      "random10_RFonly": 0.966,
+      "random5_ensemble": 0.965,
+      "inflation_random10_minus_scaffold": 0.018
+    },
+    {
+      "endpoint": "GSK-3\u03b2",
+      "n": 4044,
+      "scaffold5_ensemble": 0.92,
+      "random10_ensemble": 0.97,
+      "random10_RFonly": 0.965,
+      "random5_ensemble": 0.968,
+      "inflation_random10_minus_scaffold": 0.05
+    },
+    {
+      "endpoint": "MAO-B",
+      "n": 3455,
+      "scaffold5_ensemble": 0.885,
+      "random10_ensemble": 0.959,
+      "random10_RFonly": 0.953,
+      "random5_ensemble": 0.956,
+      "inflation_random10_minus_scaffold": 0.074
+    },
+    {
+      "endpoint": "MAO-A",
+      "n": 2141,
+      "scaffold5_ensemble": 0.867,
+      "random10_ensemble": 0.952,
+      "random10_RFonly": 0.946,
+      "random5_ensemble": 0.948,
+      "inflation_random10_minus_scaffold": 0.085
+    },
+    {
+      "endpoint": "hERG",
+      "n": 5905,
+      "scaffold5_ensemble": 0.901,
+      "random10_ensemble": 0.96,
+      "random10_RFonly": 0.955,
+      "random5_ensemble": 0.957,
+      "inflation_random10_minus_scaffold": 0.059
+    }
+  ],
+  "summary": {
+    "mean_scaffold5_ensemble": 0.912,
+    "mean_random10_ensemble": 0.964,
+    "mean_random10_RFonly": 0.96,
+    "mean_inflation_random10_vs_scaffold": 0.052
+  }
+}

@@ -219,6 +219,12 @@ P("Models were evaluated under: (i) a random stratified split; (ii) scaffold Gro
   "75th-percentile ChEMBL document year and testing on the most recent ~25% (Sheridan, 2013). "
   "Classification metrics were AUROC (with 95% bootstrap confidence intervals, 1,000 resamples), "
   "PR-AUC, balanced accuracy, MCC and Brier score; regression metrics were R², RMSE and Spearman ρ. "
+  "We report scaffold rather than plain random cross-validation deliberately: a random 10-fold split "
+  "raises the mean classification AUROC to 0.96, but almost all of that +0.05 gain over the scaffold "
+  "number is an artifact of analogue leakage between random folds, since the fold count itself barely "
+  "matters (random 5-fold 0.96, random 10-fold 0.96) whereas the split type does (Supplementary Table "
+  "S15). Random forest alone reaches 0.96 under the same random split, confirming it as a strong member "
+  "of the three-model ensemble rather than a bottleneck. "
   "Code, models and data-fetch scripts are released; a Streamlit application provides the interface.",
   align="j")
 
