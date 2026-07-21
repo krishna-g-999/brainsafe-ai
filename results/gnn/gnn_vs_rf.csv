@@ -1,0 +1,5 @@
+endpoint,task,metric,n_test,GIN,RandomForest,winner
+BBB,classification,roc_auc,1269,0.8868,0.9235,RandomForest
+BACE1,classification,roc_auc,1825,0.9243,0.9571,RandomForest
+MAO_A,classification,roc_auc,443,0.7363,0.81,RandomForest
+A2A,regression,r2,1259,0.4673,0.5485,RandomForest
