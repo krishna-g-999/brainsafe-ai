@@ -1,0 +1,39 @@
+{
+  "endpoint": "D2",
+  "task": "regression",
+  "n_compounds": 7734,
+  "n_features": 1036,
+  "feature_layout": "ecfp4_1024 + 12 descriptors",
+  "n_scaffolds": 3329,
+  "positives": null,
+  "hyperparameters": {
+    "n_estimators": 300,
+    "min_samples_leaf": 2,
+    "n_jobs": -1,
+    "random_state": 42,
+    "class_weight": null
+  },
+  "cv_folds": 10,
+  "cv_summary": {
+    "random": {
+      "r2_mean": 0.6012,
+      "r2_sd": 0.0177,
+      "rmse_mean": 0.595,
+      "rmse_sd": 0.0146,
+      "mae_mean": 0.4253,
+      "mae_sd": 0.0118,
+      "spearman_mean": 0.7772,
+      "spearman_sd": 0.0111
+    },
+    "scaffold": {
+      "r2_mean": 0.4829,
+      "r2_sd": 0.0515,
+      "rmse_mean": 0.6728,
+      "rmse_sd": 0.0446,
+      "mae_mean": 0.4849,
+      "mae_sd": 0.0297,
+      "spearman_mean": 0.6919,
+      "spearman_sd": 0.0271
+    }
+  }
+}

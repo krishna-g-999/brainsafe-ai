@@ -1,0 +1,2 @@
+set,n,n_permeable,auroc,accuracy,balanced_accuracy,sensitivity,specificity
+FDA-curated novel (not in B3DB),306,203,0.7741,0.7386,0.7097,0.798,0.6214

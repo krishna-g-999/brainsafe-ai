@@ -1,0 +1,6 @@
+source,role,unique_structures,flavonoid_core
+DrugBank,evaluation,11723,84.0
+BBB_FDA_curated,evaluation,1683,
+flavonoid_panel,coverage,37647,37647.0
+COCONUT_CNS,coverage,214740,7323.0
+ChEMBL34_pool,coverage_pool,1673554,

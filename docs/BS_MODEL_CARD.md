@@ -15,6 +15,39 @@ we found and corrected, is on the record rather than hidden.*
 
 ---
 
+## 0. 2026-07-21 update — current primary model: Random Forest + 10-fold on expanded data
+
+This is the committee-requested model and supersedes the ensemble figures below for headline
+reporting. Full detail: `docs/RF_CV_RESULTS.md`, `docs/METHODOLOGY_AUDIT.md`, `docs/DATA_MANIFEST.md`.
+
+- **Data (measured only):** two independent public sources pooled for the eleven protein targets,
+  **ChEMBL 37 + BindingDB** (18,573 compounds measured by both; 4,246 from BindingDB alone), plus
+  **B3DB** (BBB) and **ChEMBL DPPH** (antioxidant). Master table: **61,317 unique compounds,
+  67,982 measured compound-endpoint records** (`data/processed/compound_library.csv`).
+- **Model:** RandomForest per endpoint (300 trees, min_samples_leaf 2, balanced weights),
+  1024-bit ECFP-4 + 12 descriptors. Eight classifiers, four receptor regressors, one antioxidant
+  regressor.
+- **Validation:** random and scaffold-grouped **10-fold**. Mean classifier AUROC **0.960 random /
+  0.919 scaffold**; regressor R² 0.60-0.68 random / 0.39-0.58 scaffold. All fold predictions saved
+  (`data/processed/cv_predictions/`).
+- **Data expansion audited:** adding BindingDB moved the scaffold headline by a mean of **-0.0002**
+  (no inflation; `results/tables/expansion_audit.csv`).
+- **Calibration:** isotonic per endpoint; mean expected calibration error **0.072 → 0.012**
+  (`results/tables/calibration.csv`). Calibrated models: `models_rf/<endpoint>_calibrated.joblib`.
+- **Applicability domain:** nearest-neighbour Tanimoto (flag at T<0.30). DrugBank is 72% in-domain
+  for BBB but only 20-37% for the enzyme targets, so library-wide predictions are largely
+  extrapolation and are flagged (`results/tables/applicability_coverage.csv`).
+- **External validation:** BBB model on 306 FDA-curated approved drugs absent from training,
+  **AUROC 0.774** (`results/tables/external_bbb_validation.csv`).
+
+Per-endpoint scaffold AUROC (classifiers): BBB 0.920, AChE 0.921, BChE 0.937, BACE1 0.956,
+GSK-3β 0.937, MAO-A 0.868, MAO-B 0.890, hERG 0.921. All exceed the deployment gate (scaffold MCC
+0.56-0.69). Note: several target sets are active-skewed in the public data (e.g. GSK-3β ~93%
+active), so predicted-active *base rates* are high; read probabilities through the calibration layer
+and the applicability-domain flag.
+
+---
+
 ## 1. Intended use
 
 - **What it is:** a decision-support / triage explorer for neuroprotective potential
@@ -175,7 +208,11 @@ genuinely predictable requires **independent, measurable, mechanism-specific lab
 
 ## 11. GENUINE multi-endpoint brain predictor (measured-data models)
 
-> **Authoritative current numbers (supersede any inline snapshot below).** The deployed panel is eight measured-data classification endpoints plus four receptor regressions and a measured antioxidant model, matching Manuscript Table 4 and `endpoints_report.json`: BBB n=7,805 AUROC 0.921; AChE 4,324 / 0.915; BChE 2,580 / 0.937; BACE1 8,067 / 0.950; GSK-3β 4,044 / 0.920; MAO-A 2,141 / 0.867; MAO-B 3,455 / 0.885; hERG 5,905 / 0.901; antioxidant (DPPH) n=2,862, R²=0.43. Total measured records 64,474 (= 61,108 across the twelve endpoint sets + 2,862 antioxidant + 504 clinical). The tables in §11–§15 are chronological build snapshots; where they differ, these deployed numbers are correct.
+> **Note (2026-07-21):** the current headline model is the Random Forest + 10-fold pipeline on the
+> expanded ChEMBL+BindingDB data described in **§0**; the block below records the earlier ensemble
+> deployment on ChEMBL-only data and is retained for provenance.
+>
+> **Authoritative ensemble numbers (ChEMBL-only deployment).** The deployed panel is eight measured-data classification endpoints plus four receptor regressions and a measured antioxidant model, matching Manuscript Table 4 and `endpoints_report.json`: BBB n=7,805 AUROC 0.921; AChE 4,324 / 0.915; BChE 2,580 / 0.937; BACE1 8,067 / 0.950; GSK-3β 4,044 / 0.920; MAO-A 2,141 / 0.867; MAO-B 3,455 / 0.885; hERG 5,905 / 0.901; antioxidant (DPPH) n=2,862, R²=0.43. Total measured records 64,474 (= 61,108 across the twelve endpoint sets + 2,862 antioxidant + 504 clinical). The tables in §11–§15 are chronological build snapshots; where they differ, these deployed numbers are correct.
 
 The §10 conclusion was acted on: instead of holistic curated scores, we trained
 models on **measured public bioactivity data** for endpoints that are real,

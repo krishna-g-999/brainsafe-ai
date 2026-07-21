@@ -32,6 +32,23 @@ the kind of grounded, auditable output an LLM does not supply. The contribution 
 **integration**, calibrated, evidence-grounded, BBB-gated and safety-aware CNS profiling from measured
 data, rather than any one new algorithm.
 
+### Note added in revision (2026-07-21): data expansion and a Random-forest, ten-fold model
+In response to review we (i) added a second independent measured source, **BindingDB**, to the eleven
+protein-target endpoints, pooling it with ChEMBL at the compound level. The training corpus grew to
+**61,317 unique compounds across 67,982 measured records** (18,573 compounds are measured by both
+databases; 4,246 are contributed by BindingDB alone). (ii) We report a **Random forest trained under
+ten-fold cross-validation** for every endpoint, under both random and scaffold-grouped splits; mean
+classifier AUROC is **0.960 (random)** and **0.919 (scaffold)**, and receptor-regression R² is
+0.60–0.68 (random) and 0.39–0.58 (scaffold). (iii) Because the BindingDB export contributes actives,
+we audited the addition against the ChEMBL-only baseline: the scaffold-split headline changed by a
+mean of **−0.0002**, i.e. the added data neither inflates nor degrades performance. (iv) We
+strengthened two methodology points — isotonic **probability calibration** (mean expected calibration
+error 0.072 → 0.012) and an explicit **applicability-domain** flag (nearest-neighbour Tanimoto), which
+shows that arbitrary drug libraries are largely outside the target-specific models' domain and must be
+flagged as extrapolation. (v) An **external test** of the BBB model on 306 FDA-curated approved drugs
+absent from training gives AUROC **0.774**. Full detail and every supporting table are in
+`docs/RF_CV_RESULTS.md`, `docs/METHODOLOGY_AUDIT.md` and `docs/DATA_MANIFEST.md`.
+
 ## 1. Introduction
 Deciding whether a small molecule, whether a drug or a natural product such as a flavonoid, is
 likely to act on the brain means answering several questions at once. Can it cross the BBB? Does

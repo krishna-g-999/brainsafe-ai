@@ -1,0 +1,39 @@
+{
+  "endpoint": "antioxidant_DPPH",
+  "task": "regression",
+  "n_compounds": 2862,
+  "n_features": 1036,
+  "feature_layout": "ecfp4_1024 + 12 descriptors",
+  "n_scaffolds": 919,
+  "positives": null,
+  "hyperparameters": {
+    "n_estimators": 300,
+    "min_samples_leaf": 2,
+    "n_jobs": -1,
+    "random_state": 42,
+    "class_weight": null
+  },
+  "cv_folds": 10,
+  "cv_summary": {
+    "random": {
+      "r2_mean": 0.6689,
+      "r2_sd": 0.0648,
+      "rmse_mean": 0.4523,
+      "rmse_sd": 0.0551,
+      "mae_mean": 0.3037,
+      "mae_sd": 0.0327,
+      "spearman_mean": 0.8071,
+      "spearman_sd": 0.0378
+    },
+    "scaffold": {
+      "r2_mean": 0.4337,
+      "r2_sd": 0.0995,
+      "rmse_mean": 0.5867,
+      "rmse_sd": 0.0652,
+      "mae_mean": 0.4177,
+      "mae_sd": 0.0477,
+      "spearman_mean": 0.6502,
+      "spearman_sd": 0.1014
+    }
+  }
+}
