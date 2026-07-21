@@ -1,0 +1,43 @@
+{
+  "endpoint": "MAO_A",
+  "task": "classification",
+  "n_compounds": 2228,
+  "n_features": 1036,
+  "feature_layout": "ecfp4_1024 + 12 descriptors",
+  "n_scaffolds": 827,
+  "positives": 907,
+  "hyperparameters": {
+    "n_estimators": 300,
+    "min_samples_leaf": 2,
+    "n_jobs": -1,
+    "random_state": 42,
+    "class_weight": "balanced"
+  },
+  "cv_folds": 10,
+  "cv_summary": {
+    "random": {
+      "roc_auc_mean": 0.9467,
+      "roc_auc_sd": 0.0169,
+      "pr_auc_mean": 0.9323,
+      "pr_auc_sd": 0.0227,
+      "mcc_mean": 0.7415,
+      "mcc_sd": 0.0656,
+      "f1_mean": 0.8419,
+      "f1_sd": 0.0393,
+      "balanced_acc_mean": 0.8659,
+      "balanced_acc_sd": 0.0327
+    },
+    "scaffold": {
+      "roc_auc_mean": 0.8678,
+      "roc_auc_sd": 0.0464,
+      "pr_auc_mean": 0.8363,
+      "pr_auc_sd": 0.0549,
+      "mcc_mean": 0.5638,
+      "mcc_sd": 0.0942,
+      "f1_mean": 0.7225,
+      "f1_sd": 0.0734,
+      "balanced_acc_mean": 0.7732,
+      "balanced_acc_sd": 0.0475
+    }
+  }
+}

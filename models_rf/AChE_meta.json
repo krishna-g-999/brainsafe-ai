@@ -1,0 +1,43 @@
+{
+  "endpoint": "AChE",
+  "task": "classification",
+  "n_compounds": 4387,
+  "n_features": 1036,
+  "feature_layout": "ecfp4_1024 + 12 descriptors",
+  "n_scaffolds": 2116,
+  "positives": 3176,
+  "hyperparameters": {
+    "n_estimators": 300,
+    "min_samples_leaf": 2,
+    "n_jobs": -1,
+    "random_state": 42,
+    "class_weight": "balanced"
+  },
+  "cv_folds": 10,
+  "cv_summary": {
+    "random": {
+      "roc_auc_mean": 0.9626,
+      "roc_auc_sd": 0.0083,
+      "pr_auc_mean": 0.9838,
+      "pr_auc_sd": 0.0054,
+      "mcc_mean": 0.7814,
+      "mcc_sd": 0.0389,
+      "f1_mean": 0.9409,
+      "f1_sd": 0.0106,
+      "balanced_acc_mean": 0.8844,
+      "balanced_acc_sd": 0.0184
+    },
+    "scaffold": {
+      "roc_auc_mean": 0.9212,
+      "roc_auc_sd": 0.0206,
+      "pr_auc_mean": 0.9671,
+      "pr_auc_sd": 0.0092,
+      "mcc_mean": 0.6562,
+      "mcc_sd": 0.0931,
+      "f1_mean": 0.9059,
+      "f1_sd": 0.0288,
+      "balanced_acc_mean": 0.8182,
+      "balanced_acc_sd": 0.0483
+    }
+  }
+}

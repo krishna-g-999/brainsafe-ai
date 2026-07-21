@@ -118,11 +118,12 @@ def collect_measurements() -> pd.DataFrame:
             csmi, ik = standardise(r["smiles"])
             if ik is None:
                 continue
+            src = r.get("source") if pd.notna(r.get("source")) else ("B3DB" if ep == "BBB" else "ChEMBL_37")
             records.append({
                 "inchikey": ik, "canonical_smiles": csmi, "endpoint": ep,
                 "label": int(r["label"]) if pd.notna(r.get("label")) else None,
                 "value_pchembl": float(r["pchembl"]) if pd.notna(r.get("pchembl")) else None,
-                "year": r.get("year"), "source": "ChEMBL_37" if ep != "BBB" else "B3DB",
+                "year": r.get("year"), "source": src,
                 "role": "training_label",
             })
     anti = ROOT / "data" / "endpoints_reg" / "antioxidant_dpph.csv"

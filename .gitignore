@@ -5,12 +5,17 @@ __pycache__/
 *.pyo
 
 # ---- Large trained-model binaries (regenerable from released scripts; host on Zenodo) ----
-models_brain/*.joblib
-models_brain_reg/*.joblib
-models_v5/*.joblib
-models_genuine/*.joblib
+# All model binaries anywhere in the tree (RF pipeline ~1.2 GB, legacy models, etc.)
+*.joblib
 figures/_oof_cache.npz
 *.npz
+
+# ---- Large external structure libraries (regenerable from cluster + integrate_external.py) ----
+# All .tsv structure dumps (DrugBank/COCONUT/ChEMBL34/natural); our modelling tables are .csv
+*.tsv
+*.sdf
+data/external/processed/natural_products_coverage.csv
+data/_bindingdb_cache/
 
 # keep the small metadata / reports that document the models
 !models_brain/*_meta.json
