@@ -1,6 +1,6 @@
 smiles,label,pchembl,year,source
 CCNC(=O)C[C@@H]1N=C(c2ccc(Cl)cc2)c2cc(OC)ccc2-n2c(C)nnc21,0,4.2,2011.0,ChEMBL
-Cc1c([C@@H](O)CN2CCC3(CC2)CC(=O)N(c2ccc(S(C)(=O)=O)cn2)C3)ccc2c1COC2=O,0,4.69,2017.0,ChEMBL
+Cc1c([C@@H](O)CN2CCC3(CC2)CC(=O)N(c2ccc(S(C)(=O)=O)cn2)C3)ccc2c1COC2=O,0,4.6899999999999995,2017.0,ChEMBL
 Cc1cc(C)n(-c2cc(NC(=O)CCN(C)C)nc(-c3ccc(C)o3)n2)n1,1,6.19,2008.0,ChEMBL
 O=C(NCCN1CCC[C@@H]1Cn1nc(Cc2ccc(Cl)cc2)c2ccccc2c1=O)C1CCOCC1,1,6.1,2017.0,ChEMBL
 CN1C(=O)CN=C(c2ccccc2)c2cc(Cl)ccc21,0,4.45,2024.0,ChEMBL
@@ -310,7 +310,7 @@ COc1cc2nccc(CCC34CCC(NCc5ccc6c(n5)NC(=O)CO6)(CC3)CO4)c2nc1C#N,1,8.71,2015.0,ChEM
 N#Cc1ccc(C(=O)N2CCN(c3ccc(OCCCN4CCCCCC4)cc3)C(=O)C2)cc1,0,4.9,2007.0,ChEMBL
 COCC(F)(F)CN1[C@H](c2ccc(NC3CN(CCCF)C3)cn2)c2ccc3[nH]ncc3c2C[C@H]1C,1,8.55,2020.0,ChEMBL
 COc1ccc2c(c1C)C(=O)N(Cc1ccccc1-c1ccccc1)C2C(=O)NC(C)(C)C,0,4.62,2016.0,ChEMBL
-Cn1c(SCCCN2CC[C@]3(C[C@@H]3c3ccc(C(F)(F)F)cc3)C2)nnc1-c1ccccn1,1,6.69,2016.0,ChEMBL
+Cn1c(SCCCN2CC[C@]3(C[C@@H]3c3ccc(C(F)(F)F)cc3)C2)nnc1-c1ccccn1,1,6.6899999999999995,2016.0,ChEMBL
 CC(C)Oc1cc([C@@](Cc2ccccc2)(NC(=O)C(N)C(O)(C(F)(F)F)C(F)(F)F)c2cc(F)cc(OC(F)(F)C(F)F)c2)ccc1F,0,4.36,2019.0,ChEMBL
 CCCCN(C1CCNCC1)S(=O)(=O)c1ccc2ccccc2c1,1,6.14,2009.0,ChEMBL
 COc1ccc2ncc(F)c(CCC34CCC(NCc5ccc6c(n5)N(C)C(=O)CO6)(CC3)CO4)c2n1,1,6.1,2015.0,ChEMBL
@@ -1417,7 +1417,7 @@ COc1ccc(OC(F)(F)F)cc1CNC1CCC2CCC1(c1ccccc1)N2,1,6.62,2006.0,ChEMBL
 O=C(c1ccc(F)cc1)N1CCN(c2ccc(OCCCN3CCCCC3)cc2)C(=O)C1,0,4.3,2007.0,ChEMBL
 Cc1ccc2nc(-c3ccc(F)cc3)c(CC(=O)N3CCSCC3)n2c1,0,4.72,2024.0,ChEMBL
 O=C(O)CC1COC2(CCN(c3ccc(-c4nc5cc(C(F)(F)F)ccc5[nH]4)cn3)CC2)C1,0,4.71,2017.0,ChEMBL
-COc1ccc([C@H]2CN(CCc3ccc(OC)c(OC)c3)C[C@@H]2CC(=O)Nc2cccc(Cl)c2)cc1,1,7.939999999999999,2011.0,ChEMBL
+COc1ccc([C@H]2CN(CCc3ccc(OC)c(OC)c3)C[C@@H]2CC(=O)Nc2cccc(Cl)c2)cc1,1,7.9399999999999995,2011.0,ChEMBL
 Cc1c([C@@H](O)CN2CCC3(CC2)CN(c2ccc(C#N)cn2)C3)ccc2c1COC2=O,0,4.98,2017.0,ChEMBL
 CC[C@H]1OC(=O)[C@H](C)[C@@H](O[C@H]2C[C@@](C)(OC)[C@@H](O)[C@H](C)O2)[C@H](C)[C@@H](O[C@@H]2O[C@H](C)C[C@H](N(C)C(C)C)[C@H]2O)[C@](C)(O)C[C@@H](C)[C@H](OCC(=O)NC)[C@H](C)[C@@H](O)[C@]1(C)O,1,6.39,2009.0,ChEMBL
 O=C1OCc2cc(C3CN4CCN(C(=O)Cc5ccc(-n6cnnn6)cc5)CC4CO3)ccc21,0,4.68,2019.0,ChEMBL
@@ -1999,7 +1999,7 @@ Cn1nccc1[C@H]1CCCC[C@@H]1Oc1cc(F)c(S(=O)(=O)Nc2cscn2)cc1F,0,4.03,2020.0,ChEMBL
 C[C@H]1COCCN1c1c(NC(=O)Nc2cnc(OC3CCN(C)CC3)c(Cl)c2)cnc2ccc(F)cc12,0,4.8,2020.0,ChEMBL
 CCC[C@@H](CCO)Nc1nc(N)nc2cnn(Cc3ncc(C4CCN(C5CCNCC5)CC4)cc3OC)c12,0,4.49,2024.0,ChEMBL
 CN1C[C@@H]2C[C@H]1CN2c1ccc(-c2ccc3cc[nH]c3c2)cn1,1,8.54,2010.0,ChEMBL
-Cc1c(-c2ccc3cc(CCN4CCC[C@H]4C)ccc3n2)sc2nc3ccccc3n12,1,6.065,2010.0,ChEMBL
+Cc1c(-c2ccc3cc(CCN4CCC[C@H]4C)ccc3n2)sc2nc3ccccc3n12,1,6.0649999999999995,2010.0,ChEMBL
 COc1c(N2CC[C@@H](CN)C2)ccc2c(=O)c(C(=O)O)cn(C3CC3)c12,0,4.19,2007.0,ChEMBL
 Cc1ccc(C(=O)CC(=O)COc2ccc(Cl)cc2C)cc1,1,6.09,,ChEMBL
 N#Cc1ccc2ncc(C#N)c(CCC34CCC(NCc5ccc6c(n5)NC(=O)CO6)(CC3)CO4)c2n1,1,8.78,2015.0,ChEMBL
@@ -2013,7 +2013,7 @@ CNC[C@H](c1ccc2ccccc2c1)[C@H](OCC(=O)N1CCC1)c1ccccc1,0,4.54,2018.0,ChEMBL
 Cc1nc2ccccc2n1C1CC2CCC(C1)N2CCC1(c2cccc(F)c2)CCN(C(=O)c2cc(NS(C)(=O)=O)c(F)cc2F)CC1,0,4.0,2011.0,ChEMBL
 O=C(c1ccc(Cl)cc1)C1CCN(CCc2ccc(Cl)c(Cl)c2)CC1,1,7.355,2015.0,ChEMBL
 COc1nc2c(CCC34CCC(NCc5ccc6c(n5)NC(=O)CO6)(CC3)CO4)ccnc2cc1C#N,1,8.8,2015.0,ChEMBL
-CN1CCC(=C2c3ccccc3C=Cc3ccccc32)CC1,0,4.815,,ChEMBL
+CN1CCC(=C2c3ccccc3C=Cc3ccccc32)CC1,0,4.8149999999999995,,ChEMBL
 COc1cc([C@](O)(CCN(C)C)[C@@H](c2cc3cc(Br)ccc3nc2OC)c2cccc(OC)c2F)cc(OC)n1,0,4.89,2019.0,ChEMBL
 Cc1nccnc1C(O)c1ccc(F)c(-c2ncnc3cc(N4CCOCC4)cnc23)c1,0,4.9,2017.0,ChEMBL
 COCCCC(=O)NCCN1CCC[C@@H]1Cn1nc(Cc2ccc(Cl)cc2)c2ccccc2c1=O,1,6.4,2017.0,ChEMBL
@@ -2330,7 +2330,7 @@ O=C1NC(=O)C(c2nn(CCCN3CCOCC3)c3ccccc23)=C1c1cn(-c2ccc3ccccc3c2)c2ccccc12,1,6.07,
 N#Cc1cc(-c2cnc3nc(N4CCC(N5CCCCC5)CC4)sc3c2)ccc1F,1,7.0,2011.0,ChEMBL
 Clc1cccc(N2CCN(CCCCCOc3cc4ccccc4cn3)CC2)c1Cl,1,6.68,2009.0,ChEMBL
 Nc1ccccc1NC(=O)c1ccc(N2CCC3(CCN(S(=O)(=O)c4ccccc4)C3)C2)nc1,0,4.54,2008.0,ChEMBL
-C[C@@H]1Cc2c(ccc3[nH]nc(F)c23)[C@@H](c2ccc(NC3CN(CCCF)C3)c(F)n2)N1CC(F)(F)F,1,6.94,2018.0,ChEMBL
+C[C@@H]1Cc2c(ccc3[nH]nc(F)c23)[C@@H](c2ccc(NC3CN(CCCF)C3)c(F)n2)N1CC(F)(F)F,1,6.9399999999999995,2018.0,ChEMBL
 CCCN(C(=O)c1ccc2ccccc2c1)C1CCNCC1,0,4.9,2009.0,ChEMBL
 Cn1c(SCCCN2C[C@@H]3C[C@]3(c3ccc(C(F)(F)F)cc3)C2)nnc1-c1ccccc1,1,6.2,2010.0,ChEMBL
 C=C[C@]1(C)C[C@@H](OC(=O)CS[C@@H]2CC[C@@H](N)C[C@H]2O)[C@]2(C)[C@H](C)CC[C@]3(CCC(=O)[C@H]32)[C@@H](C)[C@@H]1O,0,4.11,2024.0,ChEMBL
@@ -4004,7 +4004,7 @@ CCNS(=O)(=O)c1cc(C(=O)N2CCC(CCN3C4CCC3CC(n3c(C)nc5ccccc53)C4)(c3cccc(F)c3)CC2)c(
 O=C(O)c1cccnc1N1CCC(CN2CCC(Oc3ccc(Cl)c(Cl)c3)CC2)CC1,0,4.5,2012.0,ChEMBL
 Cc1cccnc1CN1CCC2(CC1)C(=O)N(c1ccc(-c3ccc(C(=O)O)cc3)cc1)C(=O)N2c1ccncn1,0,4.51,2012.0,ChEMBL
 COC(=O)C1(CNC(=O)c2cc(Cl)cc(Cl)c2)CCN(Cc2cccc(OC)c2)CC1,1,6.44,2011.0,ChEMBL
-Cc1ccc(-c2ccc(C#Cc3cccc(C#Cc4ccc(-c5ccc(C)cc5)cc4)[n+]3C)cc2)cc1,1,6.44,2015.0,ChEMBL
+Cc1ccc(-c2ccc(C#Cc3cccc(C#Cc4ccc(-c5ccc(C)cc5)cc4)[n+]3C)cc2)cc1,1,6.4399999999999995,2015.0,ChEMBL
 CCn1nc(C(O)c2cc(-c3ncnc4cc(N5CCOCC5)ccc34)c(F)cc2Cl)ccc1=O,0,4.9,2017.0,ChEMBL
 Cn1c(SCCCN2CC3CCN(c4ccc(C(F)(F)F)cc4)C3C2)nnc1-c1cccnn1,1,6.9,2016.0,ChEMBL
 COc1cc2ncc(F)c(CCC34CCC(NCc5ccc6c(n5)NC(=O)CO6)(CC3)CO4)c2nc1OC,1,7.86,2015.0,ChEMBL
@@ -4648,7 +4648,7 @@ C[C@H]1COc2c(N3CC[C@@H](C4(N)CC4)C3)cc(Cl)c3cc(C(=O)O)c(=O)n1c23,0,4.38,2021.0,C
 CC(C(O)c1ccc(O)cc1)N1CCC(Cc2ccccc2)CC1,1,7.0,2011.0,ChEMBL
 O=C1NC(=O)/C(=C\c2ccccc2OCc2nnc(-c3ccccc3)o2)S1,0,4.39,2014.0,ChEMBL
 CN1C[C@@H]2C[C@H]1CN2c1ccc(-c2ccc3occc3c2)cn1,1,8.57,2010.0,ChEMBL
-COC(=O)N[C@H]1CC[C@@H](n2cc(-c3ccc(Cl)c(N)c3)c3c(N)ncnc32)CC1,0,4.94,2021.0,ChEMBL
+COC(=O)N[C@H]1CC[C@@H](n2cc(-c3ccc(Cl)c(N)c3)c3c(N)ncnc32)CC1,0,4.9399999999999995,2021.0,ChEMBL
 C[C@H]1OC(=O)[C@]2(C(N)=O)CC(F)(F)[C@@H](C)[C@H](/C=C/c3ccc(-c4cccnc4C#N)cn3)[C@H]12,0,4.22,2017.0,ChEMBL
 Cc1ccc(-n2cc(Cn3ccnc3C3CC3)nn2)cc1F,1,7.06,2018.0,ChEMBL
 Nc1ncc(-c2cn(C34CC(N5CCOCC5)(C3)C4)c(C3CC3)n2)cc1OC(F)(F)F,0,4.75,2023.0,ChEMBL
@@ -5096,7 +5096,7 @@ OCC1CCCN(CCCC2CCCc3ccc(OCc4ccc(-c5ccccc5F)cn4)cc32)C1,1,6.39,2007.0,ChEMBL
 CN1CCN(C(=O)c2ccc3cc(Oc4ccccn4)ccc3n2)CC1,0,4.78,2022.0,ChEMBL
 NC[C@]1(c2ccccc2)[C@@H]2CCN(c3cnc4c(-c5cccc(Cl)c5Cl)n[nH]c4n3)C[C@@H]21,1,6.41,2023.0,ChEMBL
 COc1ccccc1Oc1cccc(CN2CCC3(CC2)CCN(C(=O)c2ccc(Cl)cc2)CC3)c1,1,7.0,2008.0,ChEMBL
-Nc1nccc(-c2c(-c3ccc(F)cc3)ncn2C2CCCCC2)n1,0,4.565,2013.0,ChEMBL
+Nc1nccc(-c2c(-c3ccc(F)cc3)ncn2C2CCCCC2)n1,0,4.5649999999999995,2013.0,ChEMBL
 COc1cnccc1[C@H]1CC[C@@H](N2CC(NC(=O)CNc3ncnc4ccc(C(F)(F)F)cc34)C2)CC1,0,4.7,2013.0,ChEMBL
 CO[C@@H]1COCC[C@@H]1N[C@@H]1CC[C@@](C(=O)N2CCN(c3cc(C(F)(F)F)ncn3)CC2)(C(C)C)C1,0,4.37,2011.0,ChEMBL
 COc1cnc(C(O)c2ccc(F)c(-c3ncnc4cc(N5CCOCC5)ccc34)c2)c(Cl)c1,0,4.9,2017.0,ChEMBL
@@ -5137,7 +5137,7 @@ C[C@H](Oc1cc2cc(C(N)=O)ccc2nc1N)c1ncc(F)cc1-n1cccn1,0,4.47,2021.0,ChEMBL
 CN1CCC(C)(C(O)(c2ccccc2)c2ccc(OC(F)(F)F)cc2)C1,1,6.57,2024.0,ChEMBL
 Cc1nc(CN[C@H]2CC[C@@H](F)C2)c(C(C)C)n1-c1cc(F)cc(F)c1,0,4.47,2009.0,ChEMBL
 Nc1ccc(F)cc1NC(=O)c1ccc(CNC(=O)/C=C/c2cccnc2)cc1,0,4.5,2017.0,ChEMBL
-FC(F)Oc1cc(-c2cnn(Cc3cc[nH]n3)c2)ccc1Cl,1,6.65,2016.0,ChEMBL
+FC(F)Oc1cc(-c2cnn(Cc3cc[nH]n3)c2)ccc1Cl,1,6.6499999999999995,2016.0,ChEMBL
 CCn1cc(CCn2cc(-c3ccc(Cl)c(OC(F)F)c3)cn2)cn1,1,6.6,2018.0,ChEMBL
 CN(C)c1ccc(CNC(=O)[C@H]2CNC[C@@H]2c2ccc(C(F)(F)F)nc2)cc1,0,4.66,2019.0,ChEMBL
 Cc1ccn(CC(=O)N2CCN(c3sc(C(F)(F)F)nc3-c3cnc(C(F)(F)F)nc3)C[C@H]2C)n1,1,8.29,2023.0,ChEMBL
@@ -5274,7 +5274,7 @@ CN1CCN(CCCN(C(=O)Nc2ccc(F)c(C(F)(F)F)c2)[C@@H]2CC[C@]3(c4ccc5c(N)noc5c4)C[C@H]23
 Cc1cccc(N2CCC3CN(CCCSc4nnc(-c5cnccn5)n4C)CC32)c1,1,6.5,2016.0,ChEMBL
 COc1cccc(-n2cc3nc(-c4ccccc4C)n(CC4CCCN(C(C)C)C4)c(=O)c3n2)c1,0,4.82,2013.0,ChEMBL
 COc1cc(F)ccc1-c1cnc2sc(N3CC[C@H](O)[C@@H](N)C3)nn12,0,4.54,2022.0,ChEMBL
-COc1cc(F)ccc1-c1cnc2sc(N3CC[C@@H](O)[C@@H](N)C3)nn12,0,4.94,2022.0,ChEMBL
+COc1cc(F)ccc1-c1cnc2sc(N3CC[C@@H](O)[C@@H](N)C3)nn12,0,4.9399999999999995,2022.0,ChEMBL
 CCOC(=O)N1CCN(Cc2noc(-c3cc(Cl)ccc3F)n2)CC1,0,4.51,2012.0,ChEMBL
 C=CC(=O)N1CCC[C@@H](n2nc(-c3ccc(NC(=O)c4ccc(N(C)C)cc4)c4c3OCO4)c3c(N)ncnc32)C1,0,4.83,2023.0,ChEMBL
 O=C(O)C[C@H]1CC[C@H](OC2CCN(c3ccc(-c4nc5cc(C(F)(F)F)cnc5[nH]4)cn3)CC2)CC1,0,4.92,2019.0,ChEMBL

@@ -3,6 +3,16 @@
 A dated record of methodological decisions and their rationale. Newest first. Every entry states the
 decision, the reason, and where the supporting evidence lives.
 
+## 2026-07-21 — Measured inactives (PubChem) tested and reverted from the primary model
+Decision: do not add bulk PubChem high-throughput inactives to the classifiers. Reason: on GSK-3-beta
+(the worst-skewed endpoint, 93% active) adding 4,276 measured inactives corrected the DrugBank base
+rate (71.6% -> 16.4% predicted active, genuine) but inflated scaffold AUROC 0.937 -> 0.989 because the
+added negatives are chemically unlike inhibitors (median Tanimoto to actives 0.29) — an easy-negative /
+decoy artefact, not real discrimination. The honest discrimination estimate stays 0.937; the base-rate
+skew is handled by calibration and the applicability-domain flag and disclosed as a data limitation.
+Correct future approach: similarity-matched hard negatives only. Evidence:
+`docs/INACTIVES_EXPERIMENT.md`, `results/tables/inactives_audit.csv`.
+
 ## 2026-07-21 — Measured data expanded with BindingDB (audited, no inflation)
 Decision: pool a second independent measured source (BindingDB) with ChEMBL for the eleven protein
 targets, keeping labels measured-only and retraining the random forests. Reason: the review asked for

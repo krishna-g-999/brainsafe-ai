@@ -49,3 +49,4 @@ BrainSafe_Supplementary/
 # Claude Code local settings
 .claude/
 archive/legacy/_bulky/
+data/_pubchem_cache/
