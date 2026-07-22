@@ -16,6 +16,7 @@ MoleculeNet), standardised identically to the rest of the project (`data/adme/`,
 | P-gp inhibition | classification | 1,212 | AUROC 0.955 | **AUROC 0.937** | high |
 | P-gp substrate (efflux ratio >= 2) | classification | 1,371 | AUROC 0.858 | **AUROC 0.808** | good |
 | Aqueous solubility | regression | 9,573 | R2 0.804 | **R2 0.763** | high |
+| logBB (total brain/plasma) | regression | 1,058 | R2 0.577 | R2 0.455 | moderate |
 | Caco-2 permeability | regression | 897 | R2 0.734 | R2 0.593 | moderate |
 | Lipophilicity (logD) | regression | 4,200 | R2 0.639 | R2 0.564 | moderate |
 | Plasma-protein binding | regression | 1,797 | R2 0.434 | R2 0.374 | low |
@@ -61,8 +62,25 @@ thresholded at ratio >= 2 (the standard substrate cut); 1,371 compounds, 840 sub
 substrate (`src/brainsafe/adme/fetch_pgp_substrate.py`). Efflux-ratio cut-offs are assay-dependent, so
 this is a defensible but approximate label.
 
-## Next step (B, continued)
+## K_p,uu: what is and is not available
 
-The efflux gap is now closed. Remaining: larger measured sets for plasma-protein binding and
-hepatocyte clearance (the two weakest), and a dedicated measured **K_p,uu** dataset to replace the
-heuristic exposure proxy with a directly trained unbound-brain-exposure model.
+We searched for a dedicated measured **K_p,uu** (unbound brain-to-plasma) dataset. There is **no clean,
+sizable public benchmark** - K_p,uu is expensive to measure (it needs brain-homogenate binding, plasma
+binding and total brain/plasma together) and exists only as small tables of ~50-300 compounds in
+individual papers, not as a downloadable dataset. So K_p,uu itself remains a **proxy**.
+
+What we added instead is **logBB** (log of *total* brain-to-plasma concentration), 1,058 measured
+compounds from B3DB, as a regression endpoint. This is real and useful, but it is important to state
+what it is not: logBB is *total* distribution, inflated by lipophilicity and tissue binding, and can be
+high while *free* brain exposure is low. The demo makes this concrete - **loperamide has logBB 0.41
+(looks brain-penetrant) yet is correctly called efflux-limited** by the P-gp substrate model. This is
+exactly why K_p,uu was invented and why the mechanistic readout (permeability + efflux + free fraction)
+is a better free-exposure proxy than logBB alone.
+
+## Where B stands
+
+The exposure layer now models the full mechanistic chain: BBB penetration -> logBB (total distribution)
+-> passive permeability (Caco-2) -> **active efflux (P-gp substrate)** -> free fraction (plasma-protein
+binding), combined into a qualitative free-brain-exposure call. Remaining honest gaps: a directly
+measured K_p,uu model (data-limited, as above), and larger sets for plasma-protein binding and
+hepatocyte clearance (the two weakest endpoints).

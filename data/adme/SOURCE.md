@@ -14,3 +14,7 @@ Downloaded 2026-07-21 from TDC / Harvard Dataverse and MoleculeNet; standardised
 ## P-gp substrate (added separately)
 - Source: ChEMBL target CHEMBL4302 (ABCB1), standard_type Ratio (efflux ratio); substrate if ratio >= 2.
 - Script: src/brainsafe/adme/fetch_pgp_substrate.py; 1,371 compounds (840 substrate / 531 non-substrate).
+
+## logBB (added separately)
+- Source: B3DB regression subset (theochem/B3DB, B3DB_regression.tsv); measured log(total brain/plasma), 1,058 compounds.
+- Note: total distribution, NOT unbound Kp,uu.
