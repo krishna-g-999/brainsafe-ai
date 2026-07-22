@@ -81,6 +81,20 @@ feature matrix (`src/brainsafe/features/{featurize,encodings}.py`).
   receptors are still improving, quantifying where more data would help
   (`src/brainsafe/evaluation/learning_curve.py`).
 
+## ADME / exposure layer (ladder B)
+
+Beyond target engagement, six measured ADME endpoints govern whether an achievable dose delivers free
+drug to a brain target: aqueous solubility (AqSolDB, 9,573), lipophilicity (logD, 4,200), Caco-2
+passive permeability (897), P-glycoprotein inhibition (1,212), plasma-protein binding (1,797) and
+hepatocyte clearance (1,020); 18,699 measured compounds from TDC / Harvard Dataverse and MoleculeNet.
+Each is modelled with the same random-forest, 10-fold protocol (`src/brainsafe/adme/`). Scaffold
+performance ranges from strong (P-gp inhibition AUROC 0.937, solubility R2 0.763) to weak and
+disclosed (hepatocyte clearance R2 0.19). A combined readout (`cns_exposure.py`) chains BBB
+penetration, permeability, free fraction and a P-gp flag into a qualitative free-brain-exposure call, a
+heuristic proxy for K_p,uu; it correctly ranks central versus peripheral drugs but, as documented,
+misses P-gp-effluxed compounds (loperamide) because the available P-gp dataset is inhibition rather
+than substrate. Detail: `docs/ADME_RESULTS.md`.
+
 ## Reproducibility
 
 Random seed 42 throughout. Environment: Python 3.13, RDKit 2026.03.2, scikit-learn 1.8, XGBoost 3.3,

@@ -1,0 +1,13 @@
+endpoint,task,split,n,roc_auc_mean,roc_auc_sd,pr_auc_mean,pr_auc_sd,mcc_mean,mcc_sd,f1_mean,f1_sd,balanced_acc_mean,balanced_acc_sd,r2_mean,r2_sd,rmse_mean,rmse_sd,mae_mean,mae_sd,spearman_mean,spearman_sd
+pgp_inhibition,classification,random,1212,0.9549,0.018,0.9692,0.0109,0.8021,0.0541,0.902,0.0287,0.9014,0.0271,,,,,,,,
+pgp_inhibition,classification,scaffold,1212,0.9372,0.024,0.9483,0.0371,0.7354,0.0779,0.8618,0.0504,0.8693,0.0403,,,,,,,,
+solubility,regression,random,9573,,,,,,,,,,,0.8036,0.0172,1.0348,0.0453,0.6907,0.0235,0.8914,0.0124
+solubility,regression,scaffold,9573,,,,,,,,,,,0.7634,0.0656,1.1106,0.0882,0.7751,0.0543,0.8718,0.0486
+lipophilicity,regression,random,4200,,,,,,,,,,,0.6389,0.0283,0.7206,0.0261,0.5357,0.02,0.7959,0.0149
+lipophilicity,regression,scaffold,4200,,,,,,,,,,,0.5643,0.0539,0.787,0.0563,0.6064,0.0449,0.7472,0.0369
+caco2_permeability,regression,random,897,,,,,,,,,,,0.7342,0.0509,0.3941,0.0363,0.307,0.0308,0.8308,0.036
+caco2_permeability,regression,scaffold,897,,,,,,,,,,,0.5927,0.1261,0.4725,0.0484,0.3729,0.0459,0.7402,0.0889
+plasma_protein_binding,regression,random,1797,,,,,,,,,,,0.4336,0.0903,13.5105,1.0172,8.7369,0.6396,0.6893,0.028
+plasma_protein_binding,regression,scaffold,1797,,,,,,,,,,,0.374,0.1045,14.0777,1.8735,9.4265,1.1391,0.6389,0.0499
+clearance_hepatocyte,regression,random,1020,,,,,,,,,,,0.2302,0.1038,43.7641,5.9013,33.1312,4.56,0.5085,0.0905
+clearance_hepatocyte,regression,scaffold,1020,,,,,,,,,,,0.1933,0.0477,45.2801,3.2844,35.0281,2.9995,0.4305,0.0431
