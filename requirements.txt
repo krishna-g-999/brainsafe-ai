@@ -9,3 +9,5 @@ requests
 joblib
 streamlit
 python-docx==1.2.0
+pypandoc_binary
+xgboost>=3.3
