@@ -83,17 +83,19 @@ feature matrix (`src/brainsafe/features/{featurize,encodings}.py`).
 
 ## ADME / exposure layer (ladder B)
 
-Beyond target engagement, six measured ADME endpoints govern whether an achievable dose delivers free
-drug to a brain target: aqueous solubility (AqSolDB, 9,573), lipophilicity (logD, 4,200), Caco-2
-passive permeability (897), P-glycoprotein inhibition (1,212), plasma-protein binding (1,797) and
-hepatocyte clearance (1,020); 18,699 measured compounds from TDC / Harvard Dataverse and MoleculeNet.
-Each is modelled with the same random-forest, 10-fold protocol (`src/brainsafe/adme/`). Scaffold
-performance ranges from strong (P-gp inhibition AUROC 0.937, solubility R2 0.763) to weak and
-disclosed (hepatocyte clearance R2 0.19). A combined readout (`cns_exposure.py`) chains BBB
-penetration, permeability, free fraction and a P-gp flag into a qualitative free-brain-exposure call, a
-heuristic proxy for K_p,uu; it correctly ranks central versus peripheral drugs but, as documented,
-misses P-gp-effluxed compounds (loperamide) because the available P-gp dataset is inhibition rather
-than substrate. Detail: `docs/ADME_RESULTS.md`.
+Beyond target engagement, nine measured ADME / exposure endpoints govern whether an achievable dose
+delivers free drug to a brain target: aqueous solubility (AqSolDB, 9,573), lipophilicity (logD, 4,200),
+Caco-2 passive permeability (897), P-glycoprotein inhibition (1,212) and substrate/efflux (ChEMBL
+efflux ratio, 1,371), plasma-protein binding (1,797), hepatocyte clearance (1,020), logBB (B3DB, 1,058)
+and, directly, **K_p,uu** (unbound brain-to-plasma; ChEMBL `K(p,uu,brain)`, 566). Sources: TDC / Harvard
+Dataverse, MoleculeNet, B3DB and ChEMBL; ~23,000 measured compounds. Each is modelled with the same
+random-forest, 10-fold protocol (`src/brainsafe/adme/`). Scaffold performance ranges from strong (P-gp
+inhibition AUROC 0.937, solubility R2 0.763) through moderate (K_p,uu R2 0.35, logBB 0.46, Caco-2 0.59)
+to weak and disclosed (hepatocyte clearance R2 0.19). A combined readout (`cns_exposure.py`) uses the
+directly-modelled K_p,uu (>= 0.3 = meaningful free brain exposure) as the primary free-brain-exposure
+call, supported by BBB penetration, logBB, permeability, P-gp substrate and free fraction; on known
+drugs it correctly ranks central (diazepam, donepezil) versus peripheral / effluxed (atenolol,
+loperamide) compounds. Detail: `docs/ADME_RESULTS.md`.
 
 ## Reproducibility
 

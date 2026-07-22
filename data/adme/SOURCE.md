@@ -18,3 +18,7 @@ Downloaded 2026-07-21 from TDC / Harvard Dataverse and MoleculeNet; standardised
 ## logBB (added separately)
 - Source: B3DB regression subset (theochem/B3DB, B3DB_regression.tsv); measured log(total brain/plasma), 1,058 compounds.
 - Note: total distribution, NOT unbound Kp,uu.
+
+## Kp,uu (unbound brain/plasma) — added separately
+- Source: ChEMBL 'unbound brain' assays, standard_type K(p,uu,brain); 566 compounds, median 0.40.
+- Modelled as regression on log10(Kp,uu). Directly measured, not a proxy.

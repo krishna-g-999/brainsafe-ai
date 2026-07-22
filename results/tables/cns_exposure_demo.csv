@@ -1,6 +1,6 @@
-compound,bbb_prob,logBB_total,caco2_logPapp,logD,logS,percent_bound,free_fraction,pgp_substrate_prob,pgp_inhibition_prob,free_brain_exposure
-"Diazepam (CNS, high penetration)",0.98,0.47,-4.4,2.74,-3.7,89.4,0.106,0.31,0.17,favourable
-"Donepezil (CNS, AD drug)",0.96,0.62,-4.96,2.59,-4.38,61.4,0.386,0.59,0.7,limited (P-gp efflux)
-Caffeine (CNS stimulant),0.84,-0.16,-4.48,-0.1,-0.96,26.9,0.731,0.19,0.14,favourable
-Atenolol (peripheral beta-blocker),0.37,-0.96,-5.35,-0.05,-1.45,35.1,0.649,0.21,0.11,limited
-Loperamide (peripheral; P-gp substrate),0.87,0.41,-5.02,3.07,-5.0,93.9,0.061,0.59,0.77,limited (P-gp efflux)
+compound,kpuu_pred,bbb_prob,logBB_total,caco2_logPapp,logD,percent_bound,free_fraction,pgp_substrate_prob,free_brain_exposure
+"Diazepam (CNS, high penetration)",0.943,0.98,0.47,-4.4,2.74,89.4,0.106,0.31,favourable
+"Donepezil (CNS, AD drug)",0.836,0.96,0.62,-4.96,2.59,61.4,0.386,0.59,favourable
+Caffeine (CNS stimulant),0.157,0.84,-0.16,-4.48,-0.1,26.9,0.731,0.19,borderline
+Atenolol (peripheral beta-blocker),0.066,0.37,-0.96,-5.35,-0.05,35.1,0.649,0.21,limited (low free brain exposure)
+Loperamide (peripheral; P-gp substrate),0.04,0.87,0.41,-5.02,3.07,93.9,0.061,0.59,limited (low free brain exposure)

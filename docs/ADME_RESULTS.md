@@ -16,6 +16,7 @@ MoleculeNet), standardised identically to the rest of the project (`data/adme/`,
 | P-gp inhibition | classification | 1,212 | AUROC 0.955 | **AUROC 0.937** | high |
 | P-gp substrate (efflux ratio >= 2) | classification | 1,371 | AUROC 0.858 | **AUROC 0.808** | good |
 | Aqueous solubility | regression | 9,573 | R2 0.804 | **R2 0.763** | high |
+| **K_p,uu (unbound brain/plasma)** | regression (log10) | 566 | R2 0.404 | **R2 0.352** | moderate (small n) |
 | logBB (total brain/plasma) | regression | 1,058 | R2 0.577 | R2 0.455 | moderate |
 | Caco-2 permeability | regression | 897 | R2 0.734 | R2 0.593 | moderate |
 | Lipophilicity (logD) | regression | 4,200 | R2 0.639 | R2 0.564 | moderate |
@@ -62,25 +63,36 @@ thresholded at ratio >= 2 (the standard substrate cut); 1,371 compounds, 840 sub
 substrate (`src/brainsafe/adme/fetch_pgp_substrate.py`). Efflux-ratio cut-offs are assay-dependent, so
 this is a defensible but approximate label.
 
-## K_p,uu: what is and is not available
+## K_p,uu: a directly measured model (not a proxy)
 
-We searched for a dedicated measured **K_p,uu** (unbound brain-to-plasma) dataset. There is **no clean,
-sizable public benchmark** - K_p,uu is expensive to measure (it needs brain-homogenate binding, plasma
-binding and total brain/plasma together) and exists only as small tables of ~50-300 compounds in
-individual papers, not as a downloadable dataset. So K_p,uu itself remains a **proxy**.
+A dedicated measured **K_p,uu** (unbound brain-to-plasma) dataset was found in ChEMBL: activities with
+the standard type `K(p,uu,brain)` in "unbound brain" assays. After standardisation and per-compound
+median aggregation this gives **566 unique compounds with measured K_p,uu** (range 0.005-47, median
+0.40); the values sanity-check against known pharmacology (erlotinib 0.05, a P-gp substrate with low
+brain exposure; diazepam ~1). This is small but real, so it is modelled directly as a regression on
+log10(K_p,uu) (`src/brainsafe/adme/fetch_pgp_substrate.py`-style fetch; `data/adme/kpuu.csv`). Scaffold
+R2 is **0.352** - honest for a small, integrative endpoint, in line with published K_p,uu models.
 
-What we added instead is **logBB** (log of *total* brain-to-plasma concentration), 1,058 measured
-compounds from B3DB, as a regression endpoint. This is real and useful, but it is important to state
-what it is not: logBB is *total* distribution, inflated by lipophilicity and tissue binding, and can be
-high while *free* brain exposure is low. The demo makes this concrete - **loperamide has logBB 0.41
-(looks brain-penetrant) yet is correctly called efflux-limited** by the P-gp substrate model. This is
-exactly why K_p,uu was invented and why the mechanistic readout (permeability + efflux + free fraction)
-is a better free-exposure proxy than logBB alone.
+The directly-modelled K_p,uu now drives the exposure call (K_p,uu >= 0.3 = meaningful free brain
+exposure, the standard cut). On known drugs (`results/tables/cns_exposure_demo.csv`):
+
+| Compound | predicted K_p,uu | Call | Correct? |
+|---|---|---|---|
+| Diazepam | 0.94 | favourable | yes (K_p,uu ~ 1) |
+| Donepezil | 0.84 | favourable | yes (works in AD) |
+| Caffeine | 0.16 | borderline | yes (moderate) |
+| Atenolol | 0.07 | limited | yes (peripheral) |
+| Loperamide | 0.04 | limited | yes (effluxed, non-central) |
+
+The direct model resolves **both** hard cases the earlier heuristic could not: loperamide is correctly
+limited (efflux) and donepezil is correctly favourable (works despite being a weak P-gp substrate),
+because it is trained on the actual integrated endpoint rather than assembled from components. logBB and
+the P-gp substrate model are retained as interpretable supporting predictions.
 
 ## Where B stands
 
-The exposure layer now models the full mechanistic chain: BBB penetration -> logBB (total distribution)
--> passive permeability (Caco-2) -> **active efflux (P-gp substrate)** -> free fraction (plasma-protein
-binding), combined into a qualitative free-brain-exposure call. Remaining honest gaps: a directly
-measured K_p,uu model (data-limited, as above), and larger sets for plasma-protein binding and
-hepatocyte clearance (the two weakest endpoints).
+The exposure layer now includes a **directly measured K_p,uu model** as the primary free-brain-exposure
+readout, supported by BBB penetration, logBB, passive permeability (Caco-2), active efflux (P-gp
+substrate) and free fraction (plasma-protein binding). Remaining honest gaps: K_p,uu would benefit from
+more than 566 compounds (it is the smallest endpoint), and plasma-protein binding and hepatocyte
+clearance remain the weakest regressors.

@@ -49,6 +49,20 @@ flagged as extrapolation. (v) An **external test** of the BBB model on 306 FDA-c
 absent from training gives AUROC **0.774**. Full detail and every supporting table are in
 `docs/RF_CV_RESULTS.md`, `docs/METHODOLOGY_AUDIT.md` and `docs/DATA_MANIFEST.md`.
 
+### Note added in revision (2026-07-22): an ADME / exposure layer toward K_p,uu
+Target engagement and BBB penetration do not, on their own, say whether an achievable dose delivers
+*free* drug to a brain target. We therefore added nine measured ADME / exposure endpoints, trained with
+the identical random-forest, scaffold-10-fold protocol (~23,000 measured compounds from TDC / Harvard
+Dataverse, MoleculeNet, B3DB and ChEMBL): aqueous solubility, lipophilicity, Caco-2 permeability,
+P-glycoprotein inhibition and substrate (efflux), plasma-protein binding, hepatocyte clearance, logBB,
+and, directly, the unbound brain-to-plasma partition coefficient **K_p,uu** (566 measured compounds,
+ChEMBL `K(p,uu,brain)`; scaffold R² 0.35). Scaffold performance ranges from strong (P-gp inhibition
+AUROC 0.937, solubility R² 0.76) to weak and disclosed (clearance R² 0.19). The directly-modelled
+K_p,uu drives a combined free-brain-exposure readout (K_p,uu ≥ 0.3 taken as meaningful exposure) that,
+on known drugs, correctly separates central compounds (diazepam K_p,uu 0.94, donepezil 0.84) from
+peripheral or P-gp-effluxed ones (atenolol 0.07, loperamide 0.04). This moves the tool from *"does it
+bind"* toward *"does an achievable dose reach the target in the brain"*. Detail: `docs/ADME_RESULTS.md`.
+
 ## 1. Introduction
 Deciding whether a small molecule, whether a drug or a natural product such as a flavonoid, is
 likely to act on the brain means answering several questions at once. Can it cross the BBB? Does

@@ -37,7 +37,7 @@ FREE_FRACTION_FLOOR = 0.05
 def _load():
     m = {"BBB": joblib.load(MODELS / "BBB.joblib")}
     for ep in ("caco2_permeability", "lipophilicity", "solubility",
-               "plasma_protein_binding", "pgp_inhibition", "pgp_substrate", "logbb"):
+               "plasma_protein_binding", "pgp_inhibition", "pgp_substrate", "logbb", "kpuu"):
         m[ep] = joblib.load(MODELS / "adme" / f"{ep}.joblib")
     return m
 
@@ -55,18 +55,18 @@ def predict(smiles, m):
     pgp_inhib = float(m["pgp_inhibition"].predict_proba(x)[0, 1])
     pgp_sub = float(m["pgp_substrate"].predict_proba(x)[0, 1])
     logbb = float(m["logbb"].predict(x)[0])  # total brain/plasma (NOT free exposure)
+    kpuu = float(10 ** m["kpuu"].predict(x)[0])  # directly-modelled unbound brain/plasma
     free_frac = max(0.0, min(1.0, (100.0 - ppb) / 100.0))
-    base_ok = (bbb >= 0.5) and (caco2 >= CACO2_HIGH) and (free_frac >= FREE_FRACTION_FLOOR)
-    if not base_ok:
-        call = "limited"
-    elif pgp_sub >= 0.5:  # crosses passively but is actively effluxed by P-gp
-        call = "limited (P-gp efflux)"
-    else:
+    # Primary call from the directly-measured Kp,uu model (>=0.3 = meaningful free brain exposure).
+    if kpuu >= 0.3:
         call = "favourable"
-    return {"bbb_prob": round(bbb, 2), "logBB_total": round(logbb, 2),
-            "caco2_logPapp": round(caco2, 2), "logD": round(logd, 2), "logS": round(logs, 2),
-            "percent_bound": round(ppb, 1), "free_fraction": round(free_frac, 3),
-            "pgp_substrate_prob": round(pgp_sub, 2), "pgp_inhibition_prob": round(pgp_inhib, 2),
+    elif kpuu >= 0.1:
+        call = "borderline"
+    else:
+        call = "limited (low free brain exposure)"
+    return {"kpuu_pred": round(kpuu, 3), "bbb_prob": round(bbb, 2), "logBB_total": round(logbb, 2),
+            "caco2_logPapp": round(caco2, 2), "logD": round(logd, 2), "percent_bound": round(ppb, 1),
+            "free_fraction": round(free_frac, 3), "pgp_substrate_prob": round(pgp_sub, 2),
             "free_brain_exposure": call}
 
 
