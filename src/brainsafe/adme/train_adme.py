@@ -34,7 +34,7 @@ ADME = ROOT / "data" / "adme"
 
 CLASSIFICATION = ["pgp_inhibition", "pgp_substrate"]
 REGRESSION = ["solubility", "lipophilicity", "caco2_permeability",
-              "plasma_protein_binding", "clearance_hepatocyte", "logbb"]
+              "plasma_protein_binding", "clearance_hepatocyte", "logbb", "kpuu"]
 
 
 def _cv(task, X, y, groups, smiles):
