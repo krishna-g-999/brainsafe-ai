@@ -182,10 +182,61 @@ def fig_applicability():
     _save(fig, "fig_applicability_coverage.png")
 
 
+def fig_adme():
+    f = TAB / "adme_cv_summary.csv"
+    if not f.exists():
+        print("  skip adme: adme_cv_summary.csv missing")
+        return
+    s = pd.read_csv(f)
+    s = s[s.split == "scaffold"].copy()
+    order = ["pgp_inhibition", "solubility", "pgp_substrate", "caco2_permeability",
+             "lipophilicity", "logbb", "plasma_protein_binding", "kpuu", "clearance_hepatocyte"]
+    s = s.set_index("endpoint").reindex([e for e in order if e in set(s.endpoint)]).reset_index()
+    s["score"] = s.apply(lambda r: r.roc_auc_mean if r.task == "classification" else r.r2_mean, axis=1)
+    s["label"] = s.apply(lambda r: f"{r.endpoint}\n(AUROC)" if r.task == "classification"
+                         else f"{r.endpoint}\n(R2)", axis=1)
+    colours = [OKABE["blue"] if t == "classification" else OKABE["green"] for t in s.task]
+    fig, ax = plt.subplots(figsize=(10, 5))
+    ax.barh(range(len(s)), s.score, color=colours)
+    ax.set_yticks(range(len(s))); ax.set_yticklabels(s.label, fontsize=8)
+    ax.invert_yaxis()
+    for i, v in enumerate(s.score):
+        ax.text(v + 0.01, i, f"{v:.2f}", va="center", fontsize=8)
+    ax.set_xlim(0, 1); ax.set_xlabel("Scaffold 10-fold performance (AUROC or R-squared)")
+    ax.set_title("ADME / exposure models")
+    handles = [plt.Rectangle((0, 0), 1, 1, color=OKABE["blue"]),
+               plt.Rectangle((0, 0), 1, 1, color=OKABE["green"])]
+    ax.legend(handles, ["classification (AUROC)", "regression (R-squared)"], frameon=False,
+              loc="lower right")
+    _save(fig, "fig_adme_performance.png")
+
+
+def fig_kpuu_exposure():
+    f = TAB / "cns_exposure_demo.csv"
+    if not f.exists():
+        print("  skip kpuu: cns_exposure_demo.csv missing")
+        return
+    d = pd.read_csv(f)
+    names = [c.split(" (")[0] for c in d["compound"]]
+    colour = [OKABE["green"] if v >= 0.3 else (OKABE["orange"] if v >= 0.1 else OKABE["vermilion"])
+              for v in d["kpuu_pred"]]
+    fig, ax = plt.subplots(figsize=(8, 4.6))
+    ax.bar(range(len(d)), d["kpuu_pred"], color=colour)
+    ax.axhline(0.3, color=OKABE["grey"], ls="--", lw=1)
+    ax.text(len(d) - 0.5, 0.32, "Kp,uu = 0.3 (meaningful free exposure)", ha="right", fontsize=8,
+            color=OKABE["grey"])
+    ax.set_xticks(range(len(d))); ax.set_xticklabels(names, rotation=20, ha="right")
+    for i, v in enumerate(d["kpuu_pred"]):
+        ax.text(i, v + 0.02, f"{v:.2f}", ha="center", fontsize=8)
+    ax.set_ylabel("Predicted Kp,uu (unbound brain/plasma)")
+    ax.set_title("Predicted free brain exposure on known drugs")
+    _save(fig, "fig_kpuu_exposure.png")
+
+
 def main():
     print("rendering figures:")
     for fn in (fig_classification, fig_regression, fig_counts, fig_ablation, fig_importance,
-               fig_calibration, fig_applicability):
+               fig_calibration, fig_applicability, fig_adme, fig_kpuu_exposure):
         fn()
 
 

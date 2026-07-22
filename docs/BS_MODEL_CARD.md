@@ -15,7 +15,7 @@ we found and corrected, is on the record rather than hidden.*
 
 ---
 
-## 0. 2026-07-21 update — current primary model: Random Forest + 10-fold on expanded data
+## 0. 2026-07-21 update, current primary model: Random Forest + 10-fold on expanded data
 
 This is the committee-requested model and supersedes the ensemble figures below for headline
 reporting. Full detail: `docs/RF_CV_RESULTS.md`, `docs/METHODOLOGY_AUDIT.md`, `docs/DATA_MANIFEST.md`.
@@ -232,7 +232,7 @@ applicability-domain flag (max Tanimoto to a 2000-compound training sample).
 | **MAO-B** | Parkinson's / dopamine | 3,455 | **0.885** | 0.925 | 0.62 | 0.59 |
 | **MAO-A** | mood / depression | 2,141 | **0.867** | 0.815 | 0.58 | 0.57 |
 | antioxidant | oxidative stress | 2,862 | R²=0.43 (measured DPPH, §15) | n/a | n/a | 0.34 |
-| druggability/CNS-MPO | developability | n/a | deterministic (RDKit) | n/a |, | n/a |
+| druggability/CNS-MPO | developability | n/a | deterministic (RDKit) | n/a | n/a | n/a |
 
 **External sanity (known drugs, held to chemistry):** Donepezil → AChE active 0.99,
 BBB 0.98; Selegiline → MAO-B active 0.97; Caffeine → BBB 0.86; Quercetin → BBB
@@ -298,7 +298,7 @@ a transparent decision-support engine (`BS_brain_predict.py`, app
 | MAO-A | mood / depression | 0.867 | 0.136 | 2,141 |
 | hERG | SAFETY (cardiotox) | 0.901 | 0.123 | 5,905 |
 | antioxidant | oxidative stress | R²=0.43 (§15) | n/a | 2,862 |
-| druggability/CNS-MPO | developability | deterministic | n/a |, |
+| druggability/CNS-MPO | developability | deterministic | n/a | n/a |
 
 **Prospective sanity (chemistry-only inputs; verified against current models, structures
 PubChem-resolved):** Donepezil → Alzheimer's disease score 1.00 via AChE (P=1.00), nearest

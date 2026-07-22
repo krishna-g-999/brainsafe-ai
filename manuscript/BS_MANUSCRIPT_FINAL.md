@@ -42,7 +42,7 @@ classifier AUROC is **0.960 (random)** and **0.919 (scaffold)**, and receptor-re
 0.60–0.68 (random) and 0.39–0.58 (scaffold). (iii) Because the BindingDB export contributes actives,
 we audited the addition against the ChEMBL-only baseline: the scaffold-split headline changed by a
 mean of **−0.0002**, i.e. the added data neither inflates nor degrades performance. (iv) We
-strengthened two methodology points — isotonic **probability calibration** (mean expected calibration
+strengthened two methodology points: isotonic **probability calibration** (mean expected calibration
 error 0.072 → 0.012) and an explicit **applicability-domain** flag (nearest-neighbour Tanimoto), which
 shows that arbitrary drug libraries are largely outside the target-specific models' domain and must be
 flagged as extrapolation. (v) An **external test** of the BBB model on 306 FDA-curated approved drugs

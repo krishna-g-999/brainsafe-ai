@@ -72,10 +72,10 @@ thin data.
 
 ## 4. Additional layers (not counted among the twelve)
 
-- **Antioxidant (DPPH)** — regression, 2,862 measured compounds; a neuroprotection-relevant
+- **Antioxidant (DPPH)**, regression, 2,862 measured compounds; a neuroprotection-relevant
   property with a genuine measured assay, kept separate because it is a chemical property rather
   than a target-engagement call.
-- **Druggability / CNS-MPO** — a deterministic, rule-based physicochemical layer (no training); it
+- **Druggability / CNS-MPO**, a deterministic, rule-based physicochemical layer (no training); it
   is a transparent scoring formula, not a machine-learning endpoint.
 
 ## 5. How the train/test values are obtained (per endpoint)
@@ -99,9 +99,9 @@ source, standardised identically before use.
   (-log10 molar) as the regression target.
 
 **Train/test discipline.** For every endpoint the same compound never appears in both train and
-test. Performance is reported under four increasingly strict regimes — random split, scaffold-
+test. Performance is reported under four increasingly strict regimes, random split, scaffold-
 grouped cross-validation (Bemis-Murcko), leave-cluster-out, and temporal (train on older ChEMBL
-records, test on newer) — so the number quoted is honest about how the model behaves on genuinely
+records, test on newer), so the number quoted is honest about how the model behaves on genuinely
 novel chemistry, not just on close analogues of the training set.
 
 ## 6. Standardisation (applied identically to all endpoints)

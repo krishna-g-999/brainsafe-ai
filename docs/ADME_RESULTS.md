@@ -1,13 +1,14 @@
-# Ladder B: measured ADME / exposure layer — results
+# Ladder B: measured ADME / exposure layer: results
 
 Ladder B adds the properties that decide whether an achievable dose puts *free* drug on a brain
-target, i.e. what connects target binding to a real brain effect. Six measured endpoints, trained with
+target, i.e. what connects target binding to a real brain effect. Nine measured endpoints, trained with
 the same random-forest + 10-fold protocol as the target panel. Date: 2026-07-22.
 
 ## Data
 
-18,699 measured compounds from established public benchmarks (TDC / Harvard Dataverse and
-MoleculeNet), standardised identically to the rest of the project (`data/adme/`, `data/adme/SOURCE.md`).
+About 21,700 measured compounds from established public sources (TDC / Harvard Dataverse, MoleculeNet,
+B3DB and ChEMBL), standardised identically to the rest of the project (`data/adme/`,
+`data/adme/SOURCE.md`).
 
 ## Cross-validation (10-fold)
 
@@ -28,33 +29,16 @@ fold predictions in `data/processed/cv_predictions/adme/`.
 
 **Honest reading.** P-gp inhibition and solubility are strong; permeability and logD are usable;
 plasma-protein binding is modest and hepatocyte clearance is weak (R2 ~0.19). The clearance result is
-expected — structure-only metabolic-clearance prediction is a known hard problem — and it is reported
+expected, structure-only metabolic-clearance prediction is a known hard problem, and it is reported
 as low-confidence rather than presented as equal to the others.
 
-## The combined CNS free-exposure readout (a K_p,uu proxy)
+## The combined CNS free-exposure readout
 
-`cns_exposure.py` chains BBB penetration, passive permeability (Caco-2), free fraction (plasma-protein
-binding) and a P-gp flag into a qualitative free-brain-exposure call. It is a heuristic proxy for
-K_p,uu (unbound brain-to-plasma), not a measured K_p,uu — no large public K_p,uu dataset exists to
-train on directly. On known drugs (`results/tables/cns_exposure_demo.csv`):
-
-Now includes a measured **P-gp substrate** model (efflux) so the readout accounts for active efflux,
-not just passive crossing:
-
-| Compound | BBB | Caco-2 | P-gp substrate | Call | Correct? |
-|---|---|---|---|---|---|
-| Diazepam (CNS) | 0.98 | -4.40 | 0.31 | favourable | yes |
-| Caffeine (CNS) | 0.84 | -4.48 | 0.19 | favourable | yes |
-| Atenolol (peripheral) | 0.37 | -5.35 | 0.21 | limited | yes |
-| Loperamide (peripheral) | 0.87 | -5.02 | 0.59 | limited (P-gp efflux) | **yes** |
-| Donepezil (CNS) | 0.96 | -4.96 | 0.59 | limited (P-gp efflux) | borderline |
-
-Adding the substrate model **fixes the loperamide case** — it is now correctly called efflux-limited,
-the reason it is peripheral despite crossing passively. Donepezil sits right at the 0.5 boundary
-(substrate probability 0.59) and is flagged too; this is honest rather than wrong, because donepezil
-is a documented weak P-gp substrate that still reaches therapeutic brain levels. It illustrates the
-correct interpretation: **P-gp substrate status is a graded risk flag, not an absolute veto** — the
-strength of efflux, and the dose, decide the outcome.
+`cns_exposure.py` combines the measured models into a single free-brain-exposure call. The primary
+signal is the directly modelled **K_p,uu** (described in the next section); BBB penetration, logBB,
+passive permeability (Caco-2), the P-gp substrate (efflux) model and free fraction (plasma-protein
+binding) are reported alongside as interpretable supporting predictions. The P-gp substrate model is
+what lets the readout distinguish a compound that crosses passively but is actively pumped back out.
 
 ## Data note
 
