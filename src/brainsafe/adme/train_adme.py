@@ -32,7 +32,7 @@ RDLogger.DisableLog("rdApp.*")
 ROOT = Path(__file__).resolve().parents[3]
 ADME = ROOT / "data" / "adme"
 
-CLASSIFICATION = ["pgp_inhibition"]
+CLASSIFICATION = ["pgp_inhibition", "pgp_substrate"]
 REGRESSION = ["solubility", "lipophilicity", "caco2_permeability",
               "plasma_protein_binding", "clearance_hepatocyte"]
 
@@ -61,12 +61,12 @@ def _cv(task, X, y, groups, smiles):
     return rows, oof
 
 
-def run():
+def run(endpoints=None):
     (ROOT / "models_rf" / "adme").mkdir(parents=True, exist_ok=True)
     oof_dir = ROOT / "data" / "processed" / "cv_predictions" / "adme"
     oof_dir.mkdir(parents=True, exist_ok=True)
     fold_rows, summary_rows = [], []
-    for ep in CLASSIFICATION + REGRESSION:
+    for ep in (endpoints or (CLASSIFICATION + REGRESSION)):
         task = "classification" if ep in CLASSIFICATION else "regression"
         target = "label" if task == "classification" else "y"
         df = pd.read_csv(ADME / f"{ep}.csv").dropna(subset=["smiles", target]).reset_index(drop=True)
@@ -103,10 +103,18 @@ def run():
             {"endpoint": ep, "task": task, "n_compounds": int(X.shape[0]), "n_features": int(N_FEATURES),
              "hyperparameters": RF_COMMON, "cv_folds": N_SPLITS}, indent=2), encoding="utf-8")
 
-    pd.DataFrame(fold_rows).to_csv(ROOT / "results" / "tables" / "adme_cv_folds.csv", index=False)
-    pd.DataFrame(summary_rows).to_csv(ROOT / "results" / "tables" / "adme_cv_summary.csv", index=False)
+    # merge into existing tables so running a subset does not drop the other endpoints
+    fold_new = pd.DataFrame(fold_rows); summ_new = pd.DataFrame(summary_rows)
+    ft = ROOT / "results" / "tables" / "adme_cv_folds.csv"
+    st = ROOT / "results" / "tables" / "adme_cv_summary.csv"
+    if endpoints and ft.exists():
+        done = set(summ_new.endpoint)
+        fold_new = pd.concat([pd.read_csv(ft).query("endpoint not in @done"), fold_new], ignore_index=True)
+        summ_new = pd.concat([pd.read_csv(st).query("endpoint not in @done"), summ_new], ignore_index=True)
+    fold_new.to_csv(ft, index=False)
+    summ_new.to_csv(st, index=False)
     print("\nwrote results/tables/adme_cv_summary.csv and models_rf/adme/*.joblib")
 
 
 if __name__ == "__main__":
-    run()
+    run(sys.argv[1:] or None)

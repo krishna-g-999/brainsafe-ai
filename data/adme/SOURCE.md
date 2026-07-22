@@ -11,3 +11,6 @@ Downloaded 2026-07-21 from TDC / Harvard Dataverse and MoleculeNet; standardised
 | plasma_protein_binding | regression | 1797 | percent bound, AstraZeneca |
 | clearance_hepatocyte | regression | 1020 | uL/min/1e6 cells, AstraZeneca |
 | lipophilicity | regression | 4200 | logD7.4, AstraZeneca (MoleculeNet) |
+## P-gp substrate (added separately)
+- Source: ChEMBL target CHEMBL4302 (ABCB1), standard_type Ratio (efflux ratio); substrate if ratio >= 2.
+- Script: src/brainsafe/adme/fetch_pgp_substrate.py; 1,371 compounds (840 substrate / 531 non-substrate).

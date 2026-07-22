@@ -11,3 +11,5 @@ plasma_protein_binding,regression,random,1797,,,,,,,,,,,0.4336,0.0903,13.5105,1.
 plasma_protein_binding,regression,scaffold,1797,,,,,,,,,,,0.374,0.1045,14.0777,1.8735,9.4265,1.1391,0.6389,0.0499
 clearance_hepatocyte,regression,random,1020,,,,,,,,,,,0.2302,0.1038,43.7641,5.9013,33.1312,4.56,0.5085,0.0905
 clearance_hepatocyte,regression,scaffold,1020,,,,,,,,,,,0.1933,0.0477,45.2801,3.2844,35.0281,2.9995,0.4305,0.0431
+pgp_substrate,classification,random,1371,0.8576,0.0315,0.9078,0.0272,0.5143,0.0665,0.811,0.0301,0.7562,0.0327,,,,,,,,
+pgp_substrate,classification,scaffold,1371,0.8084,0.0543,0.8708,0.0461,0.4507,0.1142,0.7882,0.0498,0.7218,0.0554,,,,,,,,
