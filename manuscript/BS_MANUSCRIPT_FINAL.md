@@ -358,7 +358,18 @@ dedicated tool provides.
 
 ## 4. Discussion
 
-**Contribution.** The individual pieces here are standard: ECFP/RF ensembles, BBB/hERG/target QSAR,
+**Adversarial validation.** Beyond the cross-validation above, the tool was validated by inversion,
+that is, by trying to make it wrong. Six failure modes were tested directly: scaffold leakage (none;
+no scaffold is shared between train and test), duplicate inflation (none; 61,317 rows, 61,317 unique
+InChIKeys), non-reproducibility (none; retraining reproduces the reported score exactly at seed 42),
+degenerate constant prediction (absent; BBB probabilities span 0.00–1.00), misranking of known
+chemistry (absent; BBB and K_p,uu both rank central drugs above peripheral ones), and confident
+extrapolation on alien chemistry (guarded; a fluorosurfactant is flagged out of domain at Tanimoto
+0.20). All six pass; the procedure and outputs are in `docs/VALIDATION.md` and
+`results/tables/inversion_validation.csv`. Together with the audited data additions and the honestly
+reported temporal decline, this is the basis for treating the numbers as fair rather than flattering.
+
+**Contribution.** The individual pieces here are standard: ECFP/RF models, BBB/hERG/target QSAR,
 conformal prediction, the QED/CNS-MPO rules. What we have not seen assembled elsewhere is all of them
 working as one transparent, measured-data CNS profiler that is at once calibrated, conformal,
 evidence-grounded, BBB-gated, safety-aware and clinically contextualised. The assembly is the point,

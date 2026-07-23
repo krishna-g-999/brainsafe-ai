@@ -1,0 +1,7 @@
+check,result,detail
+"No scaffold leakage (MAO_A, 10 folds)",PASS,0 folds with a shared scaffold (want 0)
+No duplicate compounds in master library,PASS,"61,317 rows, 61,317 unique InChIKeys (0 duplicates)"
+Reproducible retrain (MAO_A scaffold AUROC),PASS,retrained 0.868 vs reported 0.868
+Predictions are not constant (BBB over 200 drugs),PASS,"probability std 0.316, range 0.00-1.00"
+BBB ranks CNS drugs above polar peripheral molecules,PASS,mean CNS 0.97 vs peripheral 0.25
+Out-of-domain molecule is flagged (max Tanimoto < 0.30),PASS,max Tanimoto of PFOA to BBB training 0.20 (flagged out-of-domain)
