@@ -1,0 +1,4 @@
+endpoint,added_inactives,median_sim_to_active,frac_similar_ge_0.5,auroc_before,auroc_after,mcc_before,mcc_after,verdict
+BACE1,6,0.35,0.0,0.9556,0.9545,0.6718,0.6683,interpret with care (some easy negatives)
+GSK3B,4276,0.288,0.017,0.9369,0.9891,0.5593,0.9013,interpret with care (some easy negatives)
+MAO_B,1,0.394,0.0,0.8895,0.8858,0.6262,0.6073,interpret with care (some easy negatives)

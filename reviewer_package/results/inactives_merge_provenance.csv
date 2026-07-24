@@ -1,0 +1,8 @@
+endpoint,active,inactive,added_inactive,active_frac_before,active_frac_after
+AChE,3176,1211,0,0.724,0.724
+BChE,1846,775,0,0.704,0.704
+BACE1,7739,768,6,0.91,0.91
+GSK3B,4617,4617,4276,0.931,0.5
+MAO_A,907,1321,0,0.407,0.407
+MAO_B,2474,1192,1,0.675,0.675
+hERG,2428,3447,0,0.413,0.413
