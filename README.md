@@ -1,5 +1,7 @@
 # BrainSafe AI
 
+**Repository:** https://github.com/krishna-g-999/brainsafe-ai
+
 **An evidence-grounded, calibrated, blood–brain-barrier-gated multi-endpoint predictor of
 small-molecule effects on the human brain.**
 
