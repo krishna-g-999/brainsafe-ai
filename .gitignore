@@ -51,3 +51,17 @@ BrainSafe_Supplementary/
 archive/legacy/_bulky/
 data/_pubchem_cache/
 .ipynb_checkpoints/
+
+# Derived artifacts, regenerable from source scripts (large)
+models_rf/ad_reference.pkl
+models_rf/ad_per_endpoint.pkl
+models_rf/holdout/
+
+# Staged copies for the archived legacy app, not part of the deployed tool
+archive/legacy/app/BS_compounds_full.json
+archive/legacy/app/BS_compounds_ml_merged.json
+archive/legacy/app/erc_ml.json
+
+# Generated HTML previews (regenerable, large)
+docs/app_preview.html
+docs/about_preview.html
