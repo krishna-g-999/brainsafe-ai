@@ -1,0 +1,14 @@
+endpoint,target,task,compounds,scaffolds,active_fraction,train_per_fold,test_per_fold,metric,random_10fold,scaffold_10fold,rationale
+BBB,Blood-brain barrier penetration,classification,"7,805","2,439",0.64,"7,024",780,AUROC,0.961 ± 0.007,0.920 ± 0.037,Gate: no CNS effect without brain entry
+AChE,Acetylcholinesterase,classification,"4,387","2,116",0.72,"3,948",439,AUROC,0.963 ± 0.008,0.921 ± 0.021,Symptomatic Alzheimer therapy (donepezil class)
+BChE,Butyrylcholinesterase,classification,"2,621","1,345",0.70,"2,359",262,AUROC,0.968 ± 0.012,0.937 ± 0.021,Rises as Alzheimer progresses; selective-inhibitor target
+BACE1,Beta-secretase 1,classification,"8,501","3,088",0.91,"7,651",850,AUROC,0.967 ± 0.010,0.956 ± 0.021,Rate-limiting step of amyloid-beta generation
+GSK3B,Glycogen synthase kinase-3 beta,classification,"4,958","2,118",0.93,"4,462",496,AUROC,0.969 ± 0.013,0.937 ± 0.030,Tau hyperphosphorylation; neuroprotection
+MAO_A,Monoamine oxidase A,classification,"2,228",827,0.41,"2,005",223,AUROC,0.947 ± 0.017,0.868 ± 0.046,Serotonin/noradrenaline catabolism; depression
+MAO_B,Monoamine oxidase B,classification,"3,665","1,196",0.68,"3,298",366,AUROC,0.955 ± 0.007,0.889 ± 0.033,Dopamine catabolism; Parkinson therapy (selegiline)
+hERG,hERG potassium channel,classification,"5,875","3,377",0.41,"5,287",587,AUROC,0.954 ± 0.007,0.921 ± 0.035,Cardiotoxicity liability; principal safety filter
+D2,Dopamine D2 receptor,regression,"7,734","3,329",n/a,"6,961",773,R2,0.601 ± 0.018,0.483 ± 0.051,Antipsychotic efficacy; motor control
+A2A,Adenosine A2A receptor,regression,"6,785","2,654",n/a,"6,106",678,R2,0.682 ± 0.023,0.576 ± 0.066,Non-dopaminergic Parkinson target (istradefylline)
+HT2A,Serotonin 5-HT2A receptor,regression,"5,989","2,254",n/a,"5,390",599,R2,0.636 ± 0.028,0.490 ± 0.054,Atypical antipsychotics; psychedelics
+SERT,Serotonin transporter,regression,"4,572","1,459",n/a,"4,115",457,R2,0.602 ± 0.038,0.389 ± 0.124,SSRI antidepressant target
+antioxidant_DPPH,Radical-scavenging capacity,regression,"2,862",919,n/a,"2,576",286,R2,0.669 ± 0.065,0.434 ± 0.100,Oxidative stress in neurodegeneration

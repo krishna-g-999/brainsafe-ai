@@ -1,0 +1,39 @@
+Target,Training negatives,Held-out inactives,AUROC (held-out measured inactives),Threshold,FPR,Sensitivity,Reliable call
+mTOR,decoys + measured inactives,188,0.997,0.768,0.101,0.992,yes
+CSF1R,decoys + measured inactives,18,0.993,0.226,0.111,0.988,yes
+NLRP3,decoys + measured inactives,30,0.993,0.14,0.1,0.995,yes
+PDE4B,decoys + measured inactives,113,0.992,0.3,0.106,0.988,yes
+H3,decoys + measured inactives,88,0.99,0.919,0.102,0.964,yes
+NET,decoys + measured inactives,133,0.99,0.715,0.105,0.971,yes
+HT1A,decoys + measured inactives,97,0.989,0.758,0.103,0.971,yes
+DAT,decoys + measured inactives,156,0.986,0.531,0.103,0.984,yes
+SERT,decoys + measured inactives,73,0.983,0.768,0.11,0.97,yes
+Nav1_5,measured inactives,296,0.982,0.301,0.101,0.95,yes
+a7nAChR,decoys + measured inactives,91,0.982,0.642,0.11,0.932,yes
+OPRM1,decoys + measured inactives,183,0.981,0.874,0.104,0.969,yes
+Nav1_1,measured inactives,180,0.979,0.263,0.1,0.923,yes
+D3,decoys + measured inactives,93,0.978,0.96,0.108,0.938,yes
+HT6,decoys + measured inactives,29,0.977,0.947,0.103,0.942,yes
+PDE10A,decoys + measured inactives,30,0.973,0.992,0.1,0.93,yes
+GBA1,decoys + measured inactives,131,0.973,0.499,0.107,0.925,yes
+OPRK1,decoys + measured inactives,155,0.968,0.991,0.103,0.903,yes
+OX1,decoys + measured inactives,57,0.968,0.997,0.105,0.925,yes
+HDAC6,decoys + measured inactives,123,0.965,0.986,0.106,0.895,yes
+Nav1_7,decoys + measured inactives,169,0.965,0.986,0.101,0.899,yes
+CB1,decoys + measured inactives,105,0.965,0.988,0.105,0.878,yes
+KEAP1,decoys + measured inactives,54,0.962,0.765,0.111,0.828,yes
+HT7,decoys + measured inactives,58,0.96,0.921,0.103,0.913,yes
+A2A,decoys + measured inactives,116,0.96,0.994,0.103,0.861,yes
+P2X7,decoys + measured inactives,22,0.96,0.998,0.136,0.906,yes
+HDAC1,decoys + measured inactives,286,0.958,0.971,0.105,0.897,yes
+A1,decoys + measured inactives,110,0.954,0.978,0.1,0.847,yes
+HT2A,decoys + measured inactives,41,0.953,0.983,0.122,0.85,yes
+Sigma1,decoys + measured inactives,23,0.94,0.955,0.13,0.856,yes
+D2,decoys + measured inactives,133,0.938,0.986,0.105,0.785,yes
+COX2,decoys + measured inactives,347,0.923,0.921,0.101,0.734,yes
+SIRT1,measured inactives,177,0.922,0.705,0.102,0.716,yes
+GluN2B,decoys + measured inactives,16,0.904,0.999,0.25,0.848,yes
+MT1,decoys + measured inactives,15,0.896,0.988,0.133,0.776,yes
+mGluR5,decoys + measured inactives,30,0.878,0.997,0.1,0.654,yes
+GluA2,measured inactives,43,0.863,0.855,0.116,0.577,no
+TAAR1,measured inactives,33,0.799,0.939,0.121,0.542,no

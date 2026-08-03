@@ -1,0 +1,19 @@
+endpoint,target,n_binders,n_training_negatives,auroc_heldout_measured_inactives,threshold,sensitivity,rationale
+D2,Dopamine D2 receptor,"3,676","10,895",0.938,0.986,0.785,Antipsychotic efficacy
+A2A,Adenosine A2A receptor,"4,352","12,941",0.960,0.994,0.861,Non-dopaminergic Parkinson target
+HT2A,Serotonin 5-HT2A receptor,"3,951","11,813",0.953,0.983,0.850,Atypical antipsychotic profile
+SERT,Serotonin transporter,"3,028","9,012",0.983,0.768,0.970,SSRI antidepressant target
+HT1A,5-HT1A receptor,"3,703","11,012",0.989,0.758,0.971,"Anxiety, depression (buspirone)"
+HT6,5-HT6 receptor,"2,741","8,195",0.977,0.947,0.942,Cognition enhancement in Alzheimer
+HT7,5-HT7 receptor,"1,478","4,377",0.960,0.921,0.913,"Mood, circadian rhythm, sleep"
+H3,Histamine H3 receptor,"3,212","9,548",0.990,0.919,0.964,"Wakefulness (pitolisant), cognition"
+DAT,Dopamine transporter,"1,337","3,855",0.986,0.531,0.984,"ADHD, addiction, stimulant liability"
+NET,Noradrenaline transporter,"1,572","4,583",0.990,0.715,0.971,"Depression, ADHD (atomoxetine)"
+Sigma1,Sigma-1 receptor,"1,928","5,762",0.940,0.955,0.856,"Neuroprotection, ER-stress chaperone"
+CB1,Cannabinoid CB1 receptor,"2,680","7,936",0.965,0.988,0.878,"Pain, appetite, mood"
+OPRK1,Kappa-opioid receptor,"3,059","9,022",0.968,0.991,0.903,"Analgesia, dysphoria, mood"
+OPRM1,Mu-opioid receptor,"3,718","10,971",0.981,0.874,0.969,"Analgesia, addiction liability"
+D3,Dopamine D3 receptor,"4,127","12,289",0.978,0.960,0.938,"Addiction, Parkinson motor complications"
+A1,Adenosine A1 receptor,"1,943","5,720",0.954,0.978,0.847,"Neuroprotection, epilepsy, sedation"
+a7nAChR,Alpha-7 nicotinic receptor,337,921,0.982,0.642,0.932,"Cognition, neuroinflammation in Alzheimer"
+LRRK2,LRRK2 kinase,"1,173","3,510",n/a,0.400,n/a,Most common genetic cause of Parkinson disease

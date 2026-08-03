@@ -1,0 +1,2 @@
+target,chembl_actives,chembl_inactives,pubchem_candidates,passed_similarity_filter,median_sim_of_kept,pubchem_added,total_inactives_after
+OX1,5159,81,2964,33,0.424,33,114

@@ -1,0 +1,239 @@
+{
+  "papers": {
+    "chembl": {
+      "title": "The ChEMBL Database in 2023: a drug discovery platform spanning multiple bioactivity data types and time periods",
+      "authors": "Zdrazil B, Felix E, Hunter F et al.",
+      "journal": "Nucleic Acids Research",
+      "year": "2024",
+      "doi": "10.1093/nar/gkad1004",
+      "source": "CrossRef",
+      "match_score": 1.0,
+      "requested_title": "The ChEMBL Database in 2023: a drug discovery platform spanning multiple bioactivity data types and time periods"
+    },
+    "bindingdb": {
+      "title": "BindingDB in 2015: A public database for medicinal chemistry, computational chemistry and systems pharmacology",
+      "authors": "Gilson M, Liu T, Baitaluk M et al.",
+      "journal": "Nucleic Acids Research",
+      "year": "2016",
+      "doi": "10.1093/nar/gkv1072",
+      "source": "CrossRef",
+      "match_score": 1.0,
+      "requested_title": "BindingDB in 2015: A public database for medicinal chemistry, computational chemistry and systems pharmacology"
+    },
+    "ecfp": {
+      "title": "extended connectivity fingerprints",
+      "authors": "",
+      "journal": "The IUPAC Compendium of Chemical Terminology",
+      "year": "2025",
+      "doi": "10.1351/goldbook.11443",
+      "source": "CrossRef",
+      "match_score": 1.0,
+      "requested_title": "Extended-Connectivity Fingerprints"
+    },
+    "random_forest": {
+      "title": "Random Forests",
+      "authors": "Genuer R, Poggi J",
+      "journal": "Use R!",
+      "year": "2020",
+      "doi": "10.1007/978-3-030-56485-8_3",
+      "source": "CrossRef",
+      "match_score": 1.0,
+      "requested_title": "Random Forests"
+    },
+    "moleculenet": {
+      "title": "MoleculeNet: a benchmark for molecular machine learning",
+      "authors": "Wu Z, Ramsundar B, Feinberg E et al.",
+      "journal": "Chemical Science",
+      "year": "2018",
+      "doi": "10.1039/c7sc02664a",
+      "source": "CrossRef",
+      "match_score": 1.0,
+      "requested_title": "MoleculeNet: a benchmark for molecular machine learning"
+    },
+    "kegg": {
+      "title": "KEGG: kyoto encyclopedia of genes and genomes",
+      "authors": "Kanehisa M, Goto S.",
+      "journal": "Nucleic acids research",
+      "year": "2000",
+      "doi": "10.1093/nar/28.1.27",
+      "pmid": "10592173",
+      "source": "EuropePMC",
+      "match_score": 1.0,
+      "requested_title": "KEGG: kyoto encyclopedia of genes and genomes"
+    },
+    "reactome": {
+      "title": "The Reactome Pathway Knowledgebase 2024",
+      "authors": "Milacic M, Beavers D, Conley P, Gong C, Gillespie M, Griss J, Haw R, Jassal B, Matthews L, May B, Petryszak R, Ragueneau E, Rothfels K, Sevilla C, Shamovsky V, Stephan R, Tiwari K, Varusai T, Weiser J, Wright A, Wu G, Stein L, Hermjakob H, D'Eustachio P.",
+      "journal": "Nucleic acids research",
+      "year": "2024",
+      "doi": "10.1093/nar/gkad1025",
+      "pmid": "37941124",
+      "source": "EuropePMC",
+      "match_score": 1.0,
+      "requested_title": "The Reactome Pathway Knowledgebase 2024"
+    },
+    "iuphar": {
+      "title": "The IUPHAR/BPS Guide to PHARMACOLOGY in 2024",
+      "authors": "Harding SD, Armstrong JF, Faccenda E, Southan C, Alexander SPH, Davenport AP, Spedding M, Davies JA.",
+      "journal": "Nucleic acids research",
+      "year": "2024",
+      "doi": "10.1093/nar/gkad944",
+      "pmid": "37897341",
+      "source": "EuropePMC",
+      "match_score": 1.0,
+      "requested_title": "The IUPHAR/BPS Guide to PHARMACOLOGY in 2024"
+    },
+    "bemis_murcko": {
+      "title": "The Properties of Known Drugs. 1. Molecular Frameworks",
+      "authors": "Bemis G, Murcko M",
+      "journal": "Journal of Medicinal Chemistry",
+      "year": "1996",
+      "doi": "10.1021/jm9602928",
+      "source": "CrossRef",
+      "match_score": 1.0,
+      "requested_title": "The properties of known drugs. 1. Molecular frameworks"
+    },
+    "dude": {
+      "title": "Directory of Useful Decoys, Enhanced (DUD-E): Better Ligands and Decoys for Better Benchmarking",
+      "authors": "Mysinger M, Carchia M, Irwin J et al.",
+      "journal": "Journal of Medicinal Chemistry",
+      "year": "2012",
+      "doi": "10.1021/jm300687e",
+      "source": "CrossRef",
+      "match_score": 1.0,
+      "requested_title": "Directory of useful decoys, enhanced (DUD-E): better ligands and decoys for better benchmarking"
+    },
+    "cns_mpo": {
+      "title": "Moving beyond Rules: The Development of a Central Nervous System Multiparameter Optimization (CNS MPO) Approach To Enable Alignment of Druglike Properties",
+      "authors": "Wager T, Hou X, Verhoest P et al.",
+      "journal": "ACS Chemical Neuroscience",
+      "year": "2010",
+      "doi": "10.1021/cn100008c",
+      "source": "CrossRef",
+      "match_score": 1.0,
+      "requested_title": "Moving beyond rules: the development of a central nervous system multiparameter optimization (CNS MPO) approach to enable alignment of druglike properties"
+    },
+    "calibration": {
+      "title": "Predicting good probabilities with supervised learning",
+      "authors": "Niculescu-Mizil A, Caruana R",
+      "journal": "Proceedings of the 22nd international conference on Machine learning  - ICML '05",
+      "year": "2005",
+      "doi": "10.1145/1102351.1102430",
+      "source": "CrossRef",
+      "match_score": 1.0,
+      "requested_title": "Predicting good probabilities with supervised learning"
+    },
+    "ad_qsar": {
+      "title": "QSAR Applicability Domain Estimation by Projection of the Training Set in Descriptor Space: A Review",
+      "authors": "Jaworska J, Nikolova-Jeliazkova N, Aldenberg T",
+      "journal": "Alternatives to Laboratory Animals",
+      "year": "2005",
+      "doi": "10.1177/026119290503300508",
+      "source": "CrossRef",
+      "match_score": 1.0,
+      "requested_title": "QSAR applicability domain estimation by projection of the training set in descriptor space: a review"
+    },
+    "delong": {
+      "title": "Comparing the Areas under Two or More Correlated Receiver Operating Characteristic Curves: A Nonparametric Approach",
+      "authors": "DeLong E, DeLong D, Clarke-Pearson D",
+      "journal": "Biometrics",
+      "year": "1988",
+      "doi": "10.2307/2531595",
+      "source": "CrossRef",
+      "match_score": 1.0,
+      "requested_title": "Comparing the areas under two or more correlated receiver operating characteristic curves: a nonparametric approach"
+    },
+    "wilson_ci": {
+      "title": "Probable Inference, the Law of Succession, and Statistical Inference",
+      "authors": "Wilson E",
+      "journal": "Journal of the American Statistical Association",
+      "year": "1927",
+      "doi": "10.1080/01621459.1927.10502953",
+      "source": "CrossRef",
+      "match_score": 1.0,
+      "requested_title": "Probable Inference, the Law of Succession, and Statistical Inference"
+    },
+    "ache_ad": {
+      "title": "Role of Acetylcholinesterase Inhibitors and Alzheimer Disease",
+      "authors": "Saify Z, Sultana N",
+      "journal": "Drug Design and Discovery in Alzheimer's Disease",
+      "year": "2014",
+      "doi": "10.1016/b978-0-12-803959-5.50007-6",
+      "source": "CrossRef",
+      "match_score": 0.862,
+      "requested_title": "Acetylcholinesterase inhibitors for Alzheimer's disease"
+    },
+    "bace1_fail": {
+      "title": "BACE1 Inhibitors: Attractive Therapeutics for Alzheimer\u2019s Disease",
+      "authors": "Decourt B, Macias M, Sabbagh M et al.",
+      "journal": "Drug Design and Discovery in Alzheimer's Disease",
+      "year": "2014",
+      "doi": "10.1016/b978-0-12-803959-5.50010-6",
+      "source": "CrossRef",
+      "match_score": 1.0,
+      "requested_title": "BACE1 inhibitors: attractive therapeutics for Alzheimer's disease"
+    },
+    "mao_b_pd": {
+      "title": "Monoamine Oxidase B Inhibitors in Parkinson's Disease",
+      "authors": "Dezsi L, Vecsei L.",
+      "journal": "CNS & neurological disorders drug targets",
+      "year": "2017",
+      "doi": "10.2174/1871527316666170124165222",
+      "pmid": "28124620",
+      "source": "EuropePMC",
+      "match_score": 1.0,
+      "requested_title": "Monoamine oxidase B inhibitors in Parkinson's disease"
+    },
+    "orexin_insomnia": {
+      "title": "Orexin receptor antagonists: a new treatment for insomnia?",
+      "authors": "Riemann D, Spiegelhalder K",
+      "journal": "The Lancet Neurology",
+      "year": "2014",
+      "doi": "10.1016/s1474-4422(13)70311-9",
+      "source": "CrossRef",
+      "match_score": 0.903,
+      "requested_title": "Orexin receptor antagonists for the treatment of insomnia"
+    },
+    "nrf2_neuro": {
+      "title": "Role of the Keap1/Nrf2 pathway in neurodegenerative diseases",
+      "authors": "Yamazaki H, Tanji K, Wakabayashi K, Matsuura S, Itoh K.",
+      "journal": "Pathology international",
+      "year": "2015",
+      "doi": "10.1111/pin.12261",
+      "pmid": "25707882",
+      "source": "EuropePMC",
+      "match_score": 0.929,
+      "requested_title": "The Keap1-Nrf2 pathway in neurodegenerative diseases"
+    }
+  },
+  "software": {
+    "rdkit": {
+      "kind": "software",
+      "text": "RDKit: Open-source cheminformatics",
+      "url": "https://www.rdkit.org"
+    },
+    "streamlit": {
+      "kind": "software",
+      "text": "Streamlit: an open-source app framework",
+      "url": "https://streamlit.io"
+    }
+  },
+  "unresolved": [
+    "b3db",
+    "sklearn",
+    "tdc",
+    "kpuu",
+    "xgboost",
+    "gin_gnn",
+    "platt",
+    "conformal",
+    "herg_pred",
+    "bbb_ml",
+    "cns_attrition",
+    "lrrk2_pd",
+    "nlrp3_neuro",
+    "hdac_hd",
+    "riluzole_als"
+  ],
+  "accept_threshold": 0.82
+}

@@ -1,0 +1,6 @@
+test,statistic,k,n,estimate,ci95_low,ci95_high,design
+Prospective sensitivity (scaffold-held-out),recall,12325,15609,0.7896,0.7831,0.7959,20% of Bemis-Murcko scaffolds withheld per target; 39 targets retrained; held-out compounds share no scaffold with training
+Specificity (non-CNS compounds),true-negative rate,875,1000,0.875,0.8531,0.8941,"1000 library compounds with no measured activity at any modelled target; presumed inactive, so a lower bound. Replicated on an independently drawn sample: 12.3% and 12.5% false-positive rate."
+Balanced accuracy,(sensitivity+specificity)/2,,16609,0.8323,,,combines the two tests above
+Targets reaching >=0.80 prospective recall,count,19,36,0.5278,,,"per-target, excluding 3 targets whose threshold collapsed (OX2, LRRK2, NLRP3)"
+Targets below 0.50 prospective recall,count,5,36,0.1389,,,"SIRT1, mGluR5, MT1, KEAP1, GluA2"

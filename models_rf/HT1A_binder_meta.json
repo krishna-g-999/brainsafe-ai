@@ -1,0 +1,16 @@
+{
+  "endpoint": "HT1A",
+  "training_negatives": "property-matched decoys plus half of the measured inactives",
+  "n_positive": 3703,
+  "n_decoy": 11012,
+  "n_measured_inactive_train": 97,
+  "n_measured_inactive_holdout": 97,
+  "scaffold_cv_auroc": 0.996,
+  "auroc_vs_heldout_measured_inactives": 0.989,
+  "decision_threshold": 0.7578,
+  "threshold_basis": "held_out_measured_inactives",
+  "fpr_at_threshold": 0.103,
+  "sensitivity_at_threshold": 0.971,
+  "reliable_call": true,
+  "note": "Headline metric is AUROC against experimentally measured inactives held out from training. Earlier decoy-only AUROC values are superseded and were optimistic."
+}

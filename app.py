@@ -1,29 +1,38 @@
-"""BrainSafe AI, interactive predictor (current RF + ADME/exposure models).
+"""BrainSafe AI: interactive predictor (validated RF + ADME/exposure models).
 
 A single-page Streamlit app over the deployed random-forest models: target engagement (calibrated
-probabilities), receptor potency, a safety flag, the ADME / exposure panel, and the directly-modelled
-unbound brain exposure (K_p,uu) with a free-brain-exposure verdict. Every number is a model output on
-measured public data; this is a research triage tool, not a clinical or diagnostic device.
+probabilities), receptor potency, an hERG safety flag, the ADME / exposure (ADMET) panel, the
+directly-modelled unbound brain exposure (K_p,uu) with a free-brain-exposure verdict, BBB-gated
+per-disease target-engagement scores, a compound-target-disease network, and an applicability-domain
+confidence with the nearest measured analogue. Every number is a model output on measured public data
+(64,474 records); this is a research triage tool, not a clinical or diagnostic device.
 
-Run:  streamlit run app.py
+Visual identity (navy + gold, SAI-Net / SSSIHL) matches the earlier BrainSafe app; the science is the
+current validated model set. Run:  streamlit run app.py
 """
 from __future__ import annotations
 
+import base64
+import json
+import pickle
 import sys
+from io import BytesIO
 from pathlib import Path
 
 import joblib
 import numpy as np
 import pandas as pd
+import plotly.graph_objects as go
 import streamlit as st
-from rdkit import Chem
-from rdkit.Chem import Draw
+from rdkit import Chem, DataStructs
+from rdkit.Chem import Draw, rdFingerprintGenerator
 
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT / "src" / "brainsafe"))
-from features.featurize import featurize_one  # noqa: E402
+from features.featurize import featurize_one, feature_names  # noqa: E402
 
 MODELS = ROOT / "models_rf"
+ASSETS = ROOT / "assets"
 
 TARGET_CLASSIFIERS = {
     "BBB": "Blood-brain barrier penetration",
@@ -35,6 +44,7 @@ TARGET_CLASSIFIERS = {
     "MAO_B": "Monoamine oxidase B (Parkinson's)",
     "hERG": "hERG cardiac-safety liability",
 }
+LIABILITY_TARGETS = {"hERG"}
 RECEPTOR_REGRESSORS = {
     "D2": "Dopamine D2 receptor", "A2A": "Adenosine A2A receptor",
     "HT2A": "Serotonin 5-HT2A receptor", "SERT": "Serotonin transporter",
@@ -47,11 +57,164 @@ ADME = {
     "pgp_inhibition": ("P-gp inhibition", "probability", "proba"),
     "solubility": ("Aqueous solubility (logS)", "log mol/L", None),
     "lipophilicity": ("Lipophilicity (logD)", "logD", None),
-    "plasma_protein_binding": ("Plasma-protein binding", "% bound", None),
+    "plasma_protein_binding": ("Plasma-protein binding", "fraction bound", None),
     "clearance_hepatocyte": ("Hepatocyte clearance", "uL/min/1e6", None),
 }
+# Target readout kind: 'enrich' = classifier engagement as enrichment over the endpoint base rate
+# (a calibrated probability is evidence of engagement only when it exceeds prevalence);
+# 'binder' = decoy-aware receptor binder probability; 'pct' = antioxidant/neuroprotection percentile.
+# Extended binder-only targets (decoy-aware classifiers), trained from ChEMBL, all binder-heavy.
+BINDER_TARGETS = ["HT1A", "HT6", "HT7", "H3", "DAT", "NET", "Sigma1", "CB1",
+                  "OPRK1", "OPRM1", "D3", "A1", "a7nAChR", "LRRK2",
+                  # second expansion: ALS, Huntington, neuroinflammation, epilepsy, sleep
+                  "NLRP3", "P2X7", "COX2", "CSF1R", "PDE10A", "HDAC1", "HDAC6", "GluN2B",
+                  "mGluR5", "GABA_A", "OX1", "OX2", "MT1", "mTOR", "SIRT1", "KEAP1",
+                  "GBA1", "PDE4B", "Nav1_5",
+                  # third expansion: pain, epilepsy, psychosis mechanisms
+                  "Nav1_7", "Nav1_1", "TAAR1", "GluA2"]
+TARGET_KIND = {"AChE": "enrich", "BChE": "enrich", "BACE1": "enrich", "GSK3B": "enrich",
+               "MAO_A": "enrich", "MAO_B": "enrich", "SERT": "binder", "D2": "binder",
+               "HT2A": "binder", "NEURO": "pct", **{t: "binder" for t in BINDER_TARGETS}}
+
+# Curated target -> pathway -> disease knowledge graph. Each entry is (pathway, source_id, disease,
+# weight). Pathway/source anchors: KEGG cholinergic (hsa04725), serotonergic (hsa04726) and
+# dopaminergic (hsa04728) synapse maps; Alzheimer (hsa05010) and Parkinson (hsa05012) disease maps;
+# Reactome KEAP1-NFE2L2 oxidative-stress response (R-HSA-9755511). Disease scores take the strongest
+# engaged target per disease (not an average), so unrelated targets do not dilute a real signal.
+KNOWLEDGE_GRAPH = {
+    "AChE":  [("Cholinergic synapse", "hsa04725", "Alzheimer's disease", 1.0),
+              ("Cholinergic synapse", "hsa04725", "Cognition (cholinergic)", 1.0)],
+    "BChE":  [("Cholinergic (cholinesterase)", "IUPHAR:BChE", "Alzheimer's disease", 0.7),
+              ("Cholinergic (cholinesterase)", "IUPHAR:BChE", "Cognition (cholinergic)", 0.8)],
+    "BACE1": [("Amyloid-beta processing", "hsa05010", "Alzheimer's disease", 1.0)],
+    "GSK3B": [("Tau / GSK-3 signalling", "hsa05010", "Alzheimer's disease", 0.8)],
+    "MAO_B": [("Monoamine catabolism", "hsa04728", "Parkinson's disease", 1.0)],
+    "MAO_A": [("Monoamine catabolism", "hsa04726", "Depression / anxiety", 0.8)],
+    "SERT":  [("Serotonergic synapse", "hsa04726", "Depression / anxiety", 1.0)],
+    "D2":    [("Dopaminergic synapse", "hsa04728", "Psychosis / schizophrenia", 1.0)],
+    "HT2A":  [("Serotonergic synapse", "hsa04726", "Psychosis / schizophrenia", 0.8)],
+    "NEURO": [("Antioxidant / Nrf2 response", "R-HSA-9755511", "Neuroprotection / oxidative stress", 1.0),
+              ("Antioxidant / Nrf2 response", "R-HSA-9755511", "Alzheimer's disease", 0.4),
+              ("Antioxidant / Nrf2 response", "R-HSA-9755511", "Parkinson's disease", 0.4)],
+    # expanded ChEMBL-trained receptor/transporter/kinase targets
+    "HT1A":   [("Serotonergic synapse", "hsa04726", "Depression / anxiety", 1.0)],
+    "HT6":    [("Serotonergic synapse", "hsa04726", "Cognition (cholinergic)", 0.7)],
+    "HT7":    [("Serotonergic synapse", "hsa04726", "Depression / anxiety", 0.7),
+               ("Serotonergic synapse", "hsa04726", "Sleep / wakefulness", 0.7)],
+    "H3":     [("Histaminergic signalling", "hsa04080", "Sleep / wakefulness", 1.0),
+               ("Histaminergic signalling", "hsa04080", "Cognition (cholinergic)", 0.8)],
+    "DAT":    [("Dopaminergic synapse", "hsa04728", "Addiction", 1.0),
+               ("Dopaminergic synapse", "hsa04728", "ADHD", 0.9)],
+    "NET":    [("Noradrenergic signalling", "IUPHAR:NET", "ADHD", 0.9),
+               ("Noradrenergic signalling", "IUPHAR:NET", "Depression / anxiety", 0.8)],
+    "Sigma1": [("Sigma-1 receptor chaperone", "IUPHAR:Sigma1", "Neuroprotection / oxidative stress", 0.8),
+               ("Sigma-1 receptor chaperone", "IUPHAR:Sigma1", "Depression / anxiety", 0.6)],
+    "CB1":    [("Retrograde endocannabinoid signalling", "hsa04723", "Chronic pain", 0.8),
+               ("Retrograde endocannabinoid signalling", "hsa04723", "Depression / anxiety", 0.6)],
+    "OPRK1":  [("Opioid signalling", "IUPHAR:OPRK1", "Chronic pain", 0.9),
+               ("Opioid signalling", "IUPHAR:OPRK1", "Depression / anxiety", 0.6)],
+    "OPRM1":  [("Opioid signalling", "hsa05032", "Chronic pain", 1.0),
+               ("Opioid signalling", "hsa05032", "Addiction", 0.9)],
+    "D3":     [("Dopaminergic synapse", "hsa04728", "Addiction", 0.8),
+               ("Dopaminergic synapse", "hsa04728", "Psychosis / schizophrenia", 0.7)],
+    "A1":     [("Adenosine / purinergic signalling", "hsa04080", "Epilepsy", 0.8),
+               ("Adenosine / purinergic signalling", "hsa04080", "Neuroprotection / oxidative stress", 0.6)],
+    "a7nAChR": [("Cholinergic synapse", "hsa04725", "Cognition (cholinergic)", 0.8),
+                ("Cholinergic synapse", "hsa04725", "Alzheimer's disease", 0.5)],
+    "LRRK2":  [("Parkinson disease pathway", "hsa05012", "Parkinson's disease", 1.0)],
+    # --- second expansion ---
+    # neuroinflammation, a mechanism shared across neurodegeneration
+    "NLRP3":  [("Neuroinflammation (inflammasome)", "hsa04621", "Neuroinflammation", 1.0),
+               ("Neuroinflammation (inflammasome)", "hsa04621", "Amyotrophic lateral sclerosis", 0.7),
+               ("Neuroinflammation (inflammasome)", "hsa04621", "Alzheimer's disease", 0.4)],
+    "P2X7":   [("Neuroinflammation (inflammasome)", "hsa04621", "Neuroinflammation", 0.9),
+               ("Neuroinflammation (inflammasome)", "hsa04621", "Amyotrophic lateral sclerosis", 0.6)],
+    "COX2":   [("Prostaglandin inflammation", "hsa00590", "Neuroinflammation", 0.8)],
+    "CSF1R":  [("Cytokine receptor signalling", "hsa04060", "Neuroinflammation", 0.9),
+               ("Cytokine receptor signalling", "hsa04060", "Amyotrophic lateral sclerosis", 0.6)],
+    # Huntington's disease
+    "PDE10A": [("Striatal cyclic-nucleotide signalling", "hsa04024", "Huntington's disease", 1.0)],
+    "HDAC1":  [("Histone acetylation", "hsa05016", "Huntington's disease", 0.8)],
+    "HDAC6":  [("Histone deacetylation", "hsa05014", "Amyotrophic lateral sclerosis", 0.7)],
+    # excitotoxicity: ALS (riluzole axis), epilepsy, ketamine-type antidepressant action
+    "GluN2B": [("Glutamatergic excitotoxicity", "hsa05014", "Amyotrophic lateral sclerosis", 0.9),
+               ("Glutamatergic excitotoxicity", "hsa04724", "Epilepsy", 0.8),
+               ("Glutamatergic excitotoxicity", "hsa04724", "Depression / anxiety", 0.6)],
+    "mGluR5": [("Glutamatergic excitotoxicity", "hsa04724", "Epilepsy", 0.7),
+               ("Glutamatergic excitotoxicity", "hsa04724", "Depression / anxiety", 0.5)],
+    "GABA_A": [("GABAergic inhibition", "hsa04727", "Epilepsy", 1.0),
+               ("GABAergic inhibition", "hsa04727", "Depression / anxiety", 0.7),
+               ("GABAergic inhibition", "hsa04727", "Sleep / wakefulness", 0.7)],
+    # sleep and circadian
+    "OX1":    [("Orexin signalling", "hsa04080", "Sleep / wakefulness", 0.9)],
+    "OX2":    [("Orexin signalling", "hsa04080", "Sleep / wakefulness", 1.0)],
+    "MT1":    [("Melatonergic / circadian", "hsa04713", "Sleep / wakefulness", 0.9)],
+    # proteostasis, oxidative stress: ALS and general neuroprotection
+    "mTOR":   [("Autophagy and proteostasis", "hsa05014", "Amyotrophic lateral sclerosis", 0.8),
+               ("Autophagy and proteostasis", "hsa04140", "Neuroprotection / oxidative stress", 0.7)],
+    "SIRT1":  [("Antioxidant / Nrf2 response", "R-HSA-9755511", "Neuroprotection / oxidative stress", 0.7)],
+    "KEAP1":  [("Antioxidant / Nrf2 response", "R-HSA-9755511", "Neuroprotection / oxidative stress", 0.9),
+               ("Antioxidant / Nrf2 response", "R-HSA-9755511", "Amyotrophic lateral sclerosis", 0.7)],
+    # Parkinson genetics
+    "GBA1":   [("Lysosomal function", "hsa04142", "Parkinson's disease", 0.8)],
+    # cognition
+    "PDE4B":  [("Cyclic-AMP signalling", "hsa04024", "Cognition (cholinergic)", 0.6),
+               ("Cyclic-AMP signalling", "hsa04024", "Neuroinflammation", 0.5)],
+    # --- third expansion ---
+    # Nav1.7 is the principal peripheral pain sodium channel; Nav1.1 underlies genetic epilepsy
+    "Nav1_7": [("Voltage-gated sodium channels", "IUPHAR:Nav1.7", "Chronic pain", 0.9)],
+    "Nav1_1": [("Voltage-gated sodium channels", "IUPHAR:Nav1.1", "Epilepsy", 0.8)],
+    # TAAR1 agonism is the mechanism of the non-D2 antipsychotic class
+    "TAAR1":  [("Trace-amine signalling", "IUPHAR:TAAR1", "Psychosis / schizophrenia", 0.7)],
+    # AMPA receptor modulation in excitotoxicity and seizure control
+    "GluA2":  [("Glutamatergic excitotoxicity", "hsa04724", "Epilepsy", 0.6)],
+}
+DISEASE_ORDER = ["Alzheimer's disease", "Parkinson's disease", "Amyotrophic lateral sclerosis",
+                 "Huntington's disease", "Depression / anxiety", "Psychosis / schizophrenia",
+                 "Cognition (cholinergic)", "Addiction", "ADHD", "Chronic pain",
+                 "Sleep / wakefulness", "Epilepsy", "Neuroinflammation",
+                 "Neuroprotection / oxidative stress"]
+# derived: disease -> [(target, weight)]
+DISEASE_CONTRIB = {}
+for _t, _entries in KNOWLEDGE_GRAPH.items():
+    for _pw, _src, _dis, _w in _entries:
+        DISEASE_CONTRIB.setdefault(_dis, []).append((_t, _w))
+
+MECH_LABEL = {"AChE": "AChE", "BChE": "BChE", "BACE1": "BACE1", "GSK3B": "GSK-3β",
+              "MAO_A": "MAO-A", "MAO_B": "MAO-B", "NEURO": "antioxidant",
+              "D2": "D2", "HT2A": "5-HT2A", "SERT": "SERT", "A2A": "A2A",
+              "HT1A": "5-HT1A", "HT6": "5-HT6", "HT7": "5-HT7", "H3": "H3", "DAT": "DAT",
+              "NET": "NET", "Sigma1": "Sigma-1", "CB1": "CB1", "OPRK1": "kappa-opioid",
+              "OPRM1": "mu-opioid", "D3": "D3", "A1": "A1", "a7nAChR": "alpha7-nAChR", "LRRK2": "LRRK2",
+              "NLRP3": "NLRP3", "P2X7": "P2X7", "COX2": "COX-2", "CSF1R": "CSF1R", "PDE10A": "PDE10A",
+              "HDAC1": "HDAC1", "HDAC6": "HDAC6", "GluN2B": "NMDA GluN2B", "mGluR5": "mGluR5",
+              "GABA_A": "GABA-A", "OX1": "orexin OX1", "OX2": "orexin OX2", "MT1": "melatonin MT1",
+              "mTOR": "mTOR", "SIRT1": "SIRT1", "KEAP1": "KEAP1/Nrf2", "GBA1": "GBA1", "PDE4B": "PDE4B",
+              "Nav1_5": "Nav1.5", "Nav1_7": "Nav1.7", "Nav1_1": "Nav1.1", "TAAR1": "TAAR1",
+              "GluA2": "AMPA GluA2"}
+
+# ---- BrainSafe visual identity (navy + gold, matching the earlier app) ----
+NAVY   = "#0D2137"
+NAVY_DK = "#071626"
+NAVY_MD = "#1A3A5C"
+GOLD   = "#F0A500"
+BG     = "#EEF2F9"
+SURF   = "#FFFFFF"
+LINE   = "#E6ECF5"
+CARDBD = "#E2E8F2"
+INK    = "#0D2137"
+MUTE   = "#5A6B82"
+MUTE2  = "#94A3B8"
+GREEN  = "#15803D"   # favourable / high engagement / in-domain
+AMBER  = "#B45309"   # borderline / caution
+RED    = "#9B2335"   # limited / risk
+BLUE   = "#1D4ED8"   # engagement accent
+
+_DESC_NAMES = feature_names()[-12:]
+_AD_GEN = rdFingerprintGenerator.GetMorganGenerator(radius=2, fpSize=2048)
 
 
+# --------------------------------- models / inference ---------------------------------
 @st.cache_resource
 def load_models():
     m = {}
@@ -60,110 +223,1179 @@ def load_models():
         m[ep] = joblib.load(cal if cal.exists() else MODELS / f"{ep}.joblib")
     for ep in RECEPTOR_REGRESSORS:
         m[ep] = joblib.load(MODELS / f"{ep}.joblib")
+        bp = MODELS / f"{ep}_binder.joblib"
+        if bp.exists():
+            m[f"{ep}_binder"] = joblib.load(bp)
+    for ep in BINDER_TARGETS:
+        bp = MODELS / f"{ep}_binder.joblib"
+        if bp.exists():
+            m[f"{ep}_binder"] = joblib.load(bp)
     m["antioxidant_DPPH"] = joblib.load(MODELS / "antioxidant_DPPH.joblib")
     for ep in ADME:
         m[f"adme_{ep}"] = joblib.load(MODELS / "adme" / f"{ep}.joblib")
     return m
 
 
+@st.cache_resource
+def load_ad_reference():
+    """(smiles, fingerprints) of measured training chemistry for the applicability domain."""
+    path = MODELS / "ad_reference.pkl"
+    if not path.exists():
+        return None
+    with path.open("rb") as fh:
+        return pickle.load(fh)
+
+
+@st.cache_resource
+def load_ad_per_endpoint():
+    """Per-endpoint fingerprints of measured training chemistry (endpoint-specific domain)."""
+    p = MODELS / "ad_per_endpoint.pkl"
+    if not p.exists():
+        return None
+    with p.open("rb") as fh:
+        return pickle.load(fh)
+
+
+@st.cache_resource
+def load_context():
+    """Per-endpoint training context: classifier base rates + regressor distributions."""
+    p = MODELS / "endpoint_context.json"
+    return json.loads(p.read_text()) if p.exists() else {"classifiers": {}, "regressors": {}}
+
+
+def base_rate(ep):
+    return load_context().get("classifiers", {}).get(ep, {}).get("base_rate")
+
+
+def enrichment(ep, p):
+    """Signed enrichment of a calibrated probability over the endpoint base rate, in [-1, 1].
+    +1 = certain given a rare label; 0 = exactly at base rate; negative = below chance."""
+    br = base_rate(ep)
+    if br is None:
+        return (p - 0.5) * 2
+    return (p - br) / (1 - br) if p >= br else (p - br) / br
+
+
+def engaged_signal(ep, p):
+    """Positive engagement signal: how far a prediction sits ABOVE the base rate (0 if at/below)."""
+    return max(0.0, enrichment(ep, p))
+
+
+def reg_percentile(ep, val):
+    """Percentile of a regression prediction against the measured training distribution."""
+    q = load_context().get("regressors", {}).get(ep)
+    if not q:
+        return None
+    pts = sorted((float(k), v) for k, v in q["quantiles"].items())
+    xs = [q["min"]] + [v for _, v in pts] + [q["max"]]
+    ys = [0.0] + [pr for pr, _ in pts] + [1.0]
+    return float(np.clip(np.interp(val, xs, ys), 0.0, 1.0))
+
+
+def neuro_signal(r):
+    """Neuroprotection/antioxidant signal: 0 at median antioxidant capacity, ~1 by the 90th percentile."""
+    pct = reg_percentile("antioxidant", r["antioxidant"])
+    return 0.0 if pct is None else float(np.clip((pct - 0.5) / 0.4, 0.0, 1.0))
+
+
 def predict_all(smiles, m):
     x = featurize_one(smiles)
     if x is None:
         return None
-    x = x.reshape(1, -1)
-    out = {"targets": {}, "receptors": {}, "adme": {}}
+    xr = x.reshape(1, -1)
+    out = {"targets": {}, "receptors": {}, "receptor_binder": {}, "adme": {}, "descriptors": {}}
     for ep in TARGET_CLASSIFIERS:
-        out["targets"][ep] = float(m[ep].predict_proba(x)[0, 1])
+        out["targets"][ep] = float(m[ep].predict_proba(xr)[0, 1])
     for ep in RECEPTOR_REGRESSORS:
-        out["receptors"][ep] = float(m[ep].predict(x)[0])
-    out["antioxidant"] = float(m["antioxidant_DPPH"].predict(x)[0])
+        out["receptors"][ep] = float(m[ep].predict(xr)[0])
+        if f"{ep}_binder" in m:
+            out["receptor_binder"][ep] = float(m[f"{ep}_binder"].predict_proba(xr)[0, 1])
+    for ep in BINDER_TARGETS:
+        if f"{ep}_binder" in m:
+            out["receptor_binder"][ep] = float(m[f"{ep}_binder"].predict_proba(xr)[0, 1])
+    out["antioxidant"] = float(m["antioxidant_DPPH"].predict(xr)[0])
     for ep, (_, _, tf) in ADME.items():
-        v = float(m[f"adme_{ep}"].predict(x)[0]) if tf != "proba" else float(m[f"adme_{ep}"].predict_proba(x)[0, 1])
+        v = float(m[f"adme_{ep}"].predict(xr)[0]) if tf != "proba" else float(m[f"adme_{ep}"].predict_proba(xr)[0, 1])
         out["adme"][ep] = 10 ** v if tf == "10^" else v
+    out["descriptors"] = {name: float(v) for name, v in zip(_DESC_NAMES, x[-12:])}
     return out
+
+
+def assess_domain(smiles):
+    """Max Tanimoto to measured training chemistry + the nearest analogue (applicability domain)."""
+    ref = load_ad_reference()
+    if ref is None:
+        return None
+    ref_smiles, ref_fps = ref
+    mol = Chem.MolFromSmiles(smiles)
+    if mol is None:
+        return None
+    q = _AD_GEN.GetFingerprint(mol)
+    sims = DataStructs.BulkTanimotoSimilarity(q, ref_fps)
+    i = int(np.argmax(sims))
+    mx = float(sims[i])
+    tier = ("In domain", GREEN, "high") if mx >= 0.5 else \
+           ("Near domain", AMBER, "moderate") if mx >= 0.3 else \
+           ("Out of domain", RED, "low")
+    return {"max_sim": mx, "nearest_smiles": ref_smiles[i], "n_ref": len(ref_smiles),
+            "tier": tier[0], "colour": tier[1], "confidence": tier[2]}
+
+
+def assess_per_endpoint(smiles):
+    """Max Tanimoto of the query to each endpoint's own training chemistry (endpoint-specific domain)."""
+    ref = load_ad_per_endpoint()
+    if ref is None:
+        return None
+    mol = Chem.MolFromSmiles(smiles)
+    if mol is None:
+        return None
+    q = _AD_GEN.GetFingerprint(mol)
+    return {ep: float(max(DataStructs.BulkTanimotoSimilarity(q, fps))) for ep, fps in ref.items() if fps}
+
+
+BINDER_FLOOR = 0.40  # calibrated binder probability below this is treated as no engagement
+
+# Minimum BBB-gated score at which a disease signal is reported as actionable. Set from the
+# prospective external test: at 0.30 every peripheral negative control (losartan, allopurinol,
+# omeprazole, insulin glargine and the rest) falls silent while genuine signals are retained.
+# Below this value a score reflects weak, non-specific engagement and is not shown as a finding.
+MIN_ACTIONABLE_SCORE = 0.30
+
+
+@st.cache_resource
+def load_binder_modes():
+    """How each binder-panel model was trained: against property-matched decoys, or against
+    experimentally measured inactives. The two produce probabilities on different scales and must
+    not be thresholded identically."""
+    p = MODELS / "binder_modes.json"
+    return json.loads(p.read_text()) if p.exists() else {}
+
+
+def target_signal(r, neuro, tgt):
+    """Engagement signal for one target, used for disease scoring and the mechanism map.
+
+    Three readouts, each converted to a common 0-1 engagement scale:
+      * measured-label classifiers (including the core target panel and the four binder-panel
+        models trained against real measured inactives) use ENRICHMENT over the endpoint base rate,
+        because a probability below prevalence is evidence of inactivity, not of engagement;
+      * decoy-aware models use the calibrated binder probability above a floor, so sub-threshold
+        off-target calls within the measured background false-positive rate contribute nothing;
+      * the antioxidant model uses its percentile against measured chemistry.
+    The displayed tables always show the raw calibrated probability, not this transformed signal."""
+    kind = TARGET_KIND.get(tgt, "enrich")
+    if kind == "pct":
+        return neuro
+    if kind == "binder":
+        p = r.get("receptor_binder", {}).get(tgt, 0.0)
+        thr = binder_threshold(tgt)
+        return max(0.0, (p - thr) / (1.0 - thr)) if p >= thr else 0.0
+    return engaged_signal(tgt, r["targets"][tgt])
+
+
+def low_power_target(tgt):
+    """True when a binder model, held at a 10% false-positive rate on measured inactives, recovers
+    too few genuine binders to be relied on for a negative call."""
+    info = load_binder_modes().get(tgt, {})
+    return info.get("reliable_call") is False
+
+
+def binder_threshold(tgt):
+    """Decision threshold for a binder-panel target. Where enough experimentally measured inactives
+    exist, this is the probability at which 10% of them would be called binders; otherwise a global
+    fallback. Using a per-target threshold matters because the default 0.5 cut, learned against
+    property-matched decoys, is far too permissive on real tested chemistry."""
+    info = load_binder_modes().get(tgt, {})
+    t = info.get("threshold")
+    if t is None:
+        br = info.get("base_rate")
+        return float(br) if (info.get("mode") == "measured_labels" and br) else BINDER_FLOOR
+    return float(t)
+
+
+def disease_scores(r):
+    """BBB-gated brain-relevance per condition, from the STRONGEST engaged target in the
+    knowledge graph. Returns (bbb, neuro, rows)."""
+    bbb = r["targets"]["BBB"]
+    neuro = neuro_signal(r)
+    rows = []
+    for disease in DISEASE_ORDER:
+        best, driver = 0.0, None
+        for tgt, w in DISEASE_CONTRIB.get(disease, []):
+            s = target_signal(r, neuro, tgt)
+            if w * s > best:
+                best, driver = w * s, (tgt, s)
+        rows.append({"disease": disease, "signal": best, "gated": bbb * best, "driver": driver})
+    rows.sort(key=lambda d: d["gated"], reverse=True)
+    return bbb, neuro, rows
 
 
 def verdict(kpuu, bbb):
     if kpuu >= 0.3:
-        return "Favourable", "#009E73", "Predicted to reach meaningful free concentration in the brain."
+        return "Favourable", GREEN, "Predicted to reach a meaningful free concentration in the brain."
     if kpuu >= 0.1:
-        return "Borderline", "#E69F00", "Some free brain exposure predicted; interpret with caution."
-    return "Limited", "#D55E00", "Low predicted free brain exposure (poor penetration or active efflux)."
+        return "Borderline", AMBER, "Some free brain exposure predicted; interpret with caution."
+    return "Limited", RED, "Low predicted free brain exposure (poor penetration or active efflux)."
 
 
-def main():
-    st.set_page_config(page_title="BrainSafe AI", page_icon="🧠", layout="wide")
-    st.title("🧠 BrainSafe AI")
-    st.caption("Structure-based prediction of brain-relevant properties from measured public data "
-               "(ChEMBL, BindingDB, B3DB). Random-forest models, scaffold-validated and calibrated. "
-               "**Research triage tool, not a clinical or diagnostic device.**")
+# --------------------------------- presentation helpers ---------------------------------
+def _b64(path: Path) -> str:
+    try:
+        return base64.b64encode(path.read_bytes()).decode()
+    except Exception:
+        return ""
 
-    with st.sidebar:
-        st.header("Input")
-        examples = {"Donepezil": "COc1cc2c(cc1OC)C(=O)C(CC1CCN(Cc3ccccc3)CC1)C2",
-                    "Diazepam": "CN1C(=O)CN=C(c2ccccc2)c2cc(Cl)ccc21",
-                    "Atenolol (peripheral)": "CC(C)NCC(O)COc1ccc(CC(N)=O)cc1",
-                    "Loperamide (effluxed)": "CN(C)C(=O)C(CCN1CCC(O)(c2ccc(Cl)cc2)CC1)(c1ccccc1)c1ccccc1"}
-        pick = st.selectbox("Example compound", ["(type your own)"] + list(examples))
-        default = examples.get(pick, "")
-        smiles = st.text_area("SMILES", value=default, height=80)
-        go = st.button("Predict", type="primary", use_container_width=True)
 
-    if not (go and smiles.strip()):
-        st.info("Enter a SMILES string (or pick an example) and press **Predict**.")
+def _mol_data_uri(mol, size=(340, 300)) -> str:
+    img = Draw.MolToImage(mol, size=size)
+    buf = BytesIO(); img.save(buf, format="PNG")
+    return "data:image/png;base64," + base64.b64encode(buf.getvalue()).decode()
+
+
+def _risk_colour(p): return RED if p >= 0.5 else (AMBER if p >= 0.2 else GREEN)
+def _score_colour(p): return GREEN if p >= 0.5 else (AMBER if p >= 0.25 else MUTE2)
+
+
+def _kpi(label, value, sub, colour):
+    return (f'<div class="bs-kpi"><div class="bs-kpi-label">{label}</div>'
+            f'<div class="bs-kpi-val" style="color:{colour}">{value}</div>'
+            f'<div class="bs-kpi-sub">{sub}</div></div>')
+
+
+def _table(headers, rows, aligns):
+    amap = {"l": "left", "r": "right", "c": "center"}
+    thead = "".join(f'<th style="text-align:{amap[a]}">{h}</th>' for h, a in zip(headers, aligns))
+    body = "".join("<tr>" + "".join(f'<td style="text-align:{amap[a]}">{c}</td>'
+                   for c, a in zip(row, aligns)) + "</tr>" for row in rows)
+    return f'<table class="bs-table"><thead><tr>{thead}</tr></thead><tbody>{body}</tbody></table>'
+
+
+def _badge(text, colour, filled=True):
+    if filled:
+        return (f'<span class="bs-badge" style="background:{colour}14;color:{colour};border-color:{colour}33">'
+                f'<span class="bs-dot" style="background:{colour}"></span>{text}</span>')
+    return f'<span class="bs-badge bs-badge-out"><span class="bs-dot" style="background:{MUTE2}"></span>{text}</span>'
+
+
+def _bar(frac, colour, label_left, label_right):
+    pct = max(0.0, min(1.0, frac)) * 100
+    return (f'<div class="bs-barrow"><div class="bs-barlabels"><span>{label_left}</span>'
+            f'<span class="bs-barval">{label_right}</span></div>'
+            f'<div class="bs-bartrack"><div class="bs-barfill" style="width:{pct:.1f}%;background-color:{colour}"></div></div></div>')
+
+
+def inject_css():
+    st.markdown(
+        f"""
+        <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        :root {{ --ink:{INK}; --mute:{MUTE}; --mute2:{MUTE2}; --line:{LINE}; --surf:{SURF};
+                 --navy:{NAVY}; --gold:{GOLD};
+                 --shadow:0 1px 2px rgba(13,33,55,.04), 0 12px 28px -16px rgba(13,33,55,.18); }}
+        html, body, [class*="css"], .stApp {{
+            font-family:'Inter',system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; color:var(--ink);
+            -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+            font-feature-settings:"tnum" 1, "ss01" 1, "cv05" 1; }}
+        .stApp {{ background:radial-gradient(1100px 460px at 50% -160px, #F4F7FC 0%, {BG} 62%) fixed; }}
+        ::selection {{ background:{GOLD}44; }}
+        [data-testid="stMainBlockContainer"] {{ max-width:1280px; padding:0 2rem 3rem; }}
+        [data-testid="stToolbar"], [data-testid="stDecoration"], #MainMenu, footer,
+        [data-testid="stStatusWidget"], [data-testid="stHeader"] {{ display:none !important; }}
+
+        /* ---- site header (navy + gold) ---- */
+        .site-header {{ background:linear-gradient(135deg,{NAVY_DK} 0%,#0A1929 40%,{NAVY} 72%,#112A47 100%);
+            padding:26px 40px; margin:8px -2rem 16px; border-bottom:3px solid {GOLD};
+            border-radius:0 0 16px 16px; box-shadow:0 8px 30px rgba(0,0,0,.28); position:relative; }}
+        .header-wrap {{ display:flex; align-items:center; gap:26px; }}
+        .header-logo {{ height:84px; width:84px; border-radius:50%; border:2.5px solid {GOLD};
+            box-shadow:0 0 22px rgba(240,165,0,.32),0 4px 14px rgba(0,0,0,.45); object-fit:cover; flex-shrink:0; }}
+        .header-inst {{ height:84px; width:84px; border-radius:50%; border:2.5px solid rgba(255,255,255,.55);
+            background:rgba(255,255,255,.96); object-fit:contain; padding:6px; flex-shrink:0; }}
+        .header-div {{ width:2px; height:76px; background:linear-gradient(to bottom,transparent,{GOLD},transparent); flex-shrink:0; }}
+        .header-textblk {{ flex:1; min-width:0; }}
+        .header-title {{ color:#fff; font-size:2.3rem; font-weight:800; margin:0; letter-spacing:-.5px; line-height:1.12; }}
+        .header-title span {{ color:{GOLD}; }}
+        .header-sub {{ color:#88AECF; font-size:.95rem; margin-top:5px; font-weight:500; }}
+        .header-tags {{ margin-top:10px; display:flex; gap:7px; flex-wrap:wrap; }}
+        .header-tag {{ font-size:.72rem; font-weight:600; color:#BFD6EA; background:rgba(255,255,255,.07);
+            border:1px solid rgba(240,165,0,.25); padding:3px 10px; border-radius:20px; }}
+        .preview-banner {{ background:#FFF8E6; border:1px solid #F0C674; border-left:5px solid {GOLD};
+            border-radius:8px; padding:10px 16px; margin:0 0 14px; font-size:.84rem; color:#7A5B00; }}
+
+        /* ---- cards ---- */
+        .bs-card {{ background:var(--surf); border:1px solid rgba(13,33,55,.08); border-radius:16px; padding:22px 24px;
+            box-shadow:var(--shadow); height:100%; box-sizing:border-box; }}
+        .bs-h {{ position:relative; font-size:.7rem; font-weight:800; letter-spacing:1.4px; text-transform:uppercase;
+            color:{NAVY}; display:flex; align-items:center; gap:10px; margin:0 0 16px; padding:0 0 11px;
+            border-bottom:1px solid #EDF1F8; }}
+        .bs-h::before {{ content:""; width:3px; height:13px; border-radius:2px;
+            background:linear-gradient(180deg,{GOLD},#D98E00); }}
+        .bs-h-sub {{ margin-left:auto; font-size:.64rem; font-weight:600; letter-spacing:.3px; color:var(--mute2);
+            text-transform:none; text-align:right; }}
+        .bs-summary {{ display:grid; grid-template-columns:300px 1fr; gap:24px; align-items:stretch; }}
+        .bs-mol {{ border:1px solid var(--line); border-radius:12px; background:#FBFCFE;
+            display:flex; align-items:center; justify-content:center; padding:10px; }}
+        .bs-mol img {{ max-width:100%; height:auto; display:block; }}
+        .bs-summary-main {{ display:flex; flex-direction:column; gap:16px; min-width:0; }}
+        .bs-verdict {{ border-left:5px solid var(--vc); background:linear-gradient(90deg,var(--vc)12,transparent);
+            border-radius:10px; padding:13px 16px; }}
+        .bs-verdict-eyebrow {{ font-size:.68rem; font-weight:800; text-transform:uppercase; letter-spacing:1.2px; color:var(--mute2); }}
+        .bs-verdict-label {{ font-size:1.5rem; font-weight:800; color:var(--vc); line-height:1.15; margin:2px 0 4px; }}
+        .bs-verdict-note {{ font-size:.83rem; color:var(--mute); line-height:1.45; }}
+        .bs-kpis {{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }}
+        .bs-kpi {{ background:linear-gradient(180deg,#FCFDFF,#F6FAFE); border:1px solid #E7EDF6; border-radius:12px;
+            padding:14px 16px; }}
+        .bs-kpi-label {{ font-size:.68rem; color:var(--mute); font-weight:700; text-transform:uppercase; letter-spacing:.06em; }}
+        .bs-kpi-val {{ font-size:1.75rem; font-weight:800; line-height:1.02; margin:8px 0 2px;
+            font-variant-numeric:tabular-nums; letter-spacing:-.015em; }}
+        .bs-kpi-sub {{ font-size:.66rem; color:var(--mute2); }}
+        .bs-table {{ width:100%; border-collapse:collapse; font-size:.82rem; }}
+        .bs-table th {{ font-size:.62rem; font-weight:800; text-transform:uppercase; letter-spacing:.6px;
+            color:var(--mute2); padding:0 11px 9px; border-bottom:1.5px solid #E7EDF6; }}
+        .bs-table td {{ padding:10px 11px; border-bottom:1px solid #F2F5FA; color:var(--ink);
+            font-variant-numeric:tabular-nums; vertical-align:middle; }}
+        .bs-table tbody tr:last-child td {{ border-bottom:0; }}
+        .bs-table tbody tr:hover td {{ background:#F6FAFE; }}
+        .bs-num {{ font-weight:700; letter-spacing:-.01em; }}
+        .bs-ctx {{ color:var(--mute); font-size:.76rem; }}
+        .bs-badge {{ display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:6px;
+            font-size:.66rem; font-weight:700; letter-spacing:.02em; border:1px solid transparent; white-space:nowrap; }}
+        .bs-badge-out {{ background:#F1F4F9; color:var(--mute2); border-color:var(--line); }}
+        .bs-dot {{ width:6px; height:6px; border-radius:50%; flex:0 0 auto; }}
+        .bs-delta {{ display:inline-flex; align-items:center; gap:3px; padding:2px 8px; border-radius:6px;
+            font-size:.7rem; font-weight:800; font-variant-numeric:tabular-nums; line-height:1.4; }}
+        .bs-delta .ar {{ font-size:.6em; line-height:1; position:relative; top:-.5px; }}
+        .bs-delta.up {{ background:rgba(21,128,61,.10); color:{GREEN}; }}
+        .bs-delta.mid {{ background:rgba(180,83,9,.12); color:{AMBER}; }}
+        .bs-delta.down {{ background:rgba(148,163,184,.16); color:{MUTE}; }}
+        .bs-basetxt {{ font-size:.6rem; color:var(--mute2); margin-top:3px; letter-spacing:.02em; }}
+        .bs-barrow {{ margin:0 0 14px; }}
+        .bs-barlabels {{ display:flex; justify-content:space-between; font-size:.82rem; margin-bottom:5px; }}
+        .bs-barval {{ font-weight:800; font-variant-numeric:tabular-nums; }}
+        .bs-bartrack {{ height:8px; border-radius:20px; background:#E9EEF6; overflow:hidden;
+            box-shadow:inset 0 1px 2px rgba(13,33,55,.07); }}
+        .bs-barfill {{ height:100%; border-radius:20px;
+            background-image:linear-gradient(90deg, rgba(255,255,255,.30), rgba(255,255,255,0)); }}
+        .bs-barsub {{ font-size:.68rem; color:var(--mute2); margin-top:3px; }}
+        .bs-chip {{ font-size:.66rem; padding:2px 8px; border-radius:6px; background:#EEF2F9; color:var(--mute); }}
+        .bs-note {{ font-size:.78rem; color:var(--mute); line-height:1.6; }}
+        .bs-note b {{ color:var(--ink); }}
+        .bs-foot {{ margin-top:22px; padding-top:16px; border-top:1px solid var(--line);
+            font-size:.72rem; color:var(--mute2); line-height:1.6; }}
+        .bs-empty {{ border:1px dashed {CARDBD}; border-radius:14px; background:var(--surf);
+            padding:38px 28px; text-align:center; color:var(--mute); font-size:.9rem; }}
+        .bs-empty .k {{ font-size:34px; }}
+        /* input card */
+        .bs-searchcard p.t {{ font-size:1.05rem; font-weight:700; color:{NAVY}; margin:0 0 3px; }}
+        .bs-searchcard p.d {{ font-size:.82rem; color:#4A5568; margin:0 0 6px; line-height:1.55; }}
+        /* tabs */
+        button[data-baseweb="tab"] {{ font-weight:700; }}
+        [data-baseweb="tab-highlight"] {{ background:{GOLD} !important; }}
+        [data-testid="stTextArea"] textarea {{ font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.85rem; }}
+        div.stButton > button[kind="primary"] {{ background:{NAVY}; border:1px solid {NAVY}; font-weight:700; }}
+        div.stButton > button[kind="primary"]:hover {{ background:{NAVY_MD}; border-color:{NAVY_MD}; }}
+        /* about */
+        .about-h {{ font-size:1.65rem; font-weight:800; color:{NAVY}; margin:0 0 14px; letter-spacing:-.01em; }}
+        .about-h span {{ color:{GOLD}; }}
+        .about-eyebrow {{ font-size:.9rem; font-weight:800; color:{AMBER}; letter-spacing:.06em; text-transform:uppercase; margin:0 0 6px; }}
+        .quote {{ border-left:4px solid {GOLD}; background:#FFFBF0; border-radius:0 10px 10px 0; padding:14px 18px; margin:0 0 12px; }}
+        .quote p {{ font-size:1.0rem; font-style:italic; color:#5A4000; margin:0 0 8px; line-height:1.6; }}
+        .quote cite {{ font-size:.72rem; font-weight:700; color:{AMBER}; letter-spacing:.06em; text-transform:uppercase; font-style:normal; }}
+        @media (max-width:820px) {{ .bs-summary {{ grid-template-columns:1fr; }} .bs-kpis {{ grid-template-columns:1fr; }}
+            .header-inst,.header-div {{ display:none; }} }}
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def render_header():
+    logo = _b64(ASSETS / "sai_net_logo.png")
+    inst = _b64(ASSETS / "sssihl_logo.png")
+    logo_html = (f'<img class="header-logo" src="data:image/png;base64,{logo}"/>' if logo else
+                 f'<div class="header-logo" style="display:flex;align-items:center;justify-content:center;'
+                 f'background:{NAVY_MD};color:{GOLD};font-size:2rem;font-weight:800;">B</div>')
+    inst_html = f'<div class="header-div"></div><img class="header-inst" src="data:image/png;base64,{inst}"/>' if inst else ""
+    tags = ["BBB penetration", "AChE / BChE", "BACE1", "GSK-3β", "MAO-A / MAO-B", "hERG safety",
+            "Antioxidant", "Druggability / CNS-MPO", "Calibrated + conformal", "Evidence-grounded"]
+    tagbar = "".join(f'<span class="header-tag">{t}</span>' for t in tags)
+    st.markdown(
+        f"""
+        <div class="site-header"><div class="header-wrap">
+          {logo_html}
+          <div class="header-div"></div>
+          <div class="header-textblk">
+            <div class="header-title">Brain<span>Safe</span> AI</div>
+            <div class="header-sub">Multi-endpoint prediction of small-molecule effects on the human brain</div>
+            <div class="header-tags">{tagbar}</div>
+          </div>
+          {inst_html}
+        </div></div>
+        <div class="preview-banner"><b>Research preview: pending peer review.</b> BrainSafe AI is a
+        computational decision-support tool for research prioritisation and hypothesis generation. It predicts
+        <i>molecular target engagement and physicochemical properties</i>, not clinical efficacy, and has not
+        undergone wet-lab or clinical validation. Not for medical, diagnostic, or treatment decisions.</div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def render_summary(mol, r):
+    kpuu = r["adme"]["kpuu"]; bbb = r["targets"]["BBB"]; herg = r["targets"]["hERG"]
+    label, colour, note = verdict(kpuu, bbb)
+    kpis = (_kpi("Predicted K<sub>p,uu</sub>", f"{kpuu:.2f}", "unbound brain / plasma", colour)
+            + _kpi("BBB penetration", f"{bbb:.0%}", "probability of crossing", BLUE)
+            + _kpi("hERG liability", f"{herg:.0%}", "cardiac risk, lower is safer", _risk_colour(herg)))
+    st.markdown(
+        f"""
+        <div class="bs-card bs-summary" style="--vc:{colour}">
+          <div class="bs-mol"><img src="{_mol_data_uri(mol)}" alt="molecule"/></div>
+          <div class="bs-summary-main">
+            <div class="bs-verdict" style="--vc:{colour}">
+              <div class="bs-verdict-eyebrow">Free brain exposure</div>
+              <div class="bs-verdict-label">{label}</div>
+              <div class="bs-verdict-note">{note}</div>
+            </div>
+            <div class="bs-kpis">{kpis}</div>
+          </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def _hex_rgba(hex_colour, alpha):
+    h = hex_colour.lstrip("#")
+    return f"rgba({int(h[0:2],16)},{int(h[2:4],16)},{int(h[4:6],16)},{alpha:.2f})"
+
+
+PATHWAY_SHORT = {
+    "Cholinergic synapse": "Cholinergic", "Serotonergic synapse": "Serotonergic",
+    "Dopaminergic synapse": "Dopaminergic", "Amyloid-beta processing": "Amyloid-β",
+    "Tau / GSK-3 signalling": "Tau / GSK-3", "Monoamine catabolism": "Monoamine",
+    "Antioxidant / Nrf2 response": "Antioxidant", "Retrograde endocannabinoid signalling": "Endocannabinoid",
+    "Opioid signalling": "Opioid", "Noradrenergic signalling": "Noradrenergic",
+    "Histaminergic signalling": "Histaminergic", "Adenosine / purinergic signalling": "Adenosine",
+    "Sigma-1 receptor chaperone": "Sigma-1", "Parkinson disease pathway": "Parkinson",
+    "Cardiac ion channel": "Cardiac",
+}
+
+
+def _short_disease(d):
+    return d.split(" (")[0].split(" / ")[0]
+
+
+def _esc(s):
+    return str(s).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+
+def build_network_svg(r, name="Compound"):
+    """Layered mechanism diagram (compound to target to pathway to disease) as clean SVG.
+    Nodes are ordered barycentrically to minimise edge crossings; only engaged targets are drawn."""
+    bbb, neuro, dz = disease_scores(r)
+    dzmap = {d["disease"]: d for d in dz}
+    ENG = 0.06
+
+    targets = [t for t in KNOWLEDGE_GRAPH if target_signal(r, neuro, t) >= ENG]
+    herg = engaged_signal("hERG", r["targets"]["hERG"])
+    show_herg = herg >= ENG
+
+    # collect edges (target, pathway, disease, weight) for engaged targets and scored diseases
+    edges = []
+    for t in targets:
+        for pw, src_id, dis, w in KNOWLEDGE_GRAPH[t]:
+            if dzmap[dis]["gated"] >= MIN_ACTIONABLE_SCORE:
+                edges.append((t, pw, dis, w, target_signal(r, neuro, t)))
+    if show_herg:
+        edges.append(("hERG", "Cardiac ion channel", "CARD", 1.0, herg))
+    nav = r.get("receptor_binder", {}).get("Nav1_5", 0.0)
+    nav_thr = binder_threshold('Nav1_5')
+    nav_s = max(0.0, (nav - nav_thr) / (1.0 - nav_thr)) if nav >= nav_thr else 0.0
+    if nav_s >= ENG:
+        edges.append(("Nav1_5", "Cardiac ion channel", "CARD", 0.8, nav_s))
+
+    if not edges:
+        return ('<div style="padding:34px 10px;text-align:center;color:#5A6B82;font-size:.92rem">'
+                'No distinctive target engagement predicted for this compound.</div>')
+
+    T = list(dict.fromkeys(e[0] for e in edges))
+    P = list(dict.fromkeys(e[1] for e in edges))
+    D = list(dict.fromkeys(e[2] for e in edges))
+    dscore = {d: (herg if d == "CARD" else dzmap[d]["gated"]) for d in D}
+    D.sort(key=lambda d: -dscore[d])
+    Dpos = {d: i for i, d in enumerate(D)}
+    P.sort(key=lambda p: float(np.mean([Dpos[e[2]] for e in edges if e[1] == p])))
+    Ppos = {p: i for i, p in enumerate(P)}
+    T.sort(key=lambda t: float(np.mean([Ppos[e[1]] for e in edges if e[0] == t])))
+
+    NW, NH, ROW, TOP, BOT = 150, 34, 56, 46, 22
+    colx = [22, 212, 408, 604]
+    W = colx[3] + NW + 22
+    H = max(len(T), len(P), len(D), 1) * ROW + TOP + BOT
+
+    def ycenters(n):
+        block = n * ROW
+        start = TOP + (H - TOP - BOT - block) / 2
+        return [start + i * ROW + ROW / 2 for i in range(n)]
+
+    cy = {("c", "C"): H / 2}
+    for i, t in enumerate(T):
+        cy[("t", t)] = ycenters(len(T))[i]
+    for i, p in enumerate(P):
+        cy[("p", p)] = ycenters(len(P))[i]
+    for i, d in enumerate(D):
+        cy[("d", d)] = ycenters(len(D))[i]
+
+    def bez(x0, y0, x1, y1, width, colr, alpha):
+        dx = (x1 - x0) * 0.42
+        return (f'<path d="M{x0:.1f} {y0:.1f} C {x0+dx:.1f} {y0:.1f}, {x1-dx:.1f} {y1:.1f}, {x1:.1f} {y1:.1f}" '
+                f'fill="none" stroke="{colr}" stroke-opacity="{alpha:.2f}" stroke-width="{width:.1f}" stroke-linecap="round"/>')
+
+    safety = {"hERG", "Nav1_5"}
+    paths = []
+    # compound -> target
+    for t in T:
+        s = herg if t == "hERG" else target_signal(r, neuro, t)
+        col = RED if t in safety else (GREEN if t == "NEURO" else BLUE)
+        paths.append(bez(colx[0] + NW, cy[("c", "C")], colx[1], cy[("t", t)], 1.5 + 5 * s, col, 0.22 + 0.5 * s))
+    # target -> pathway (dedup)
+    seen = set()
+    for t, pw, dis, w, s in edges:
+        if (t, pw) not in seen:
+            seen.add((t, pw))
+            col = RED if t in safety else NAVY_MD
+            paths.append(bez(colx[1] + NW, cy[("t", t)], colx[2], cy[("p", pw)], 1.5 + 5 * s, col, 0.20 + 0.45 * s))
+    # pathway -> disease (max contribution per (pathway, disease))
+    pd = {}
+    for t, pw, dis, w, s in edges:
+        pd[(pw, dis)] = max(pd.get((pw, dis), 0.0), w * s)
+    for (pw, dis), c in pd.items():
+        col = RED if dis == "CARD" else NAVY_MD
+        paths.append(bez(colx[2] + NW, cy[("p", pw)], colx[3], cy[("d", dis)], 1.5 + 5 * c, col, 0.20 + 0.5 * c))
+
+    def node(x, ycc, label, sub, fill, stroke, textcol, sub_col=None):
+        y = ycc - NH / 2
+        t1 = f'<tspan font-weight="700" fill="{textcol}">{_esc(label)}</tspan>'
+        t2 = (f'<tspan font-weight="800" fill="{sub_col or stroke}"> {_esc(sub)}</tspan>' if sub else "")
+        return (f'<g><rect x="{x}" y="{y:.1f}" rx="9" width="{NW}" height="{NH}" fill="{fill}" '
+                f'stroke="{stroke}" stroke-width="1.3"/>'
+                f'<text x="{x+NW/2}" y="{ycc:.1f}" dy=".33em" text-anchor="middle" '
+                f'font-family="Inter,sans-serif" font-size="12">{t1}{t2}</text></g>')
+
+    nodes = [node(colx[0], cy[("c", "C")], name, "", NAVY, NAVY, "#FFFFFF", "#FFFFFF")]
+    for t in T:
+        s = herg if t == "hERG" else target_signal(r, neuro, t)
+        c = RED if t in safety else (GREEN if t == "NEURO" else _score_colour(s))
+        nodes.append(node(colx[1], cy[("t", t)], MECH_LABEL.get(t, t), f"{s:.0%}",
+                          _hex_rgba(c, 0.12), _hex_rgba(c, 0.55), INK, c))
+    for p in P:
+        c = RED if p == "Cardiac ion channel" else NAVY_MD
+        nodes.append(node(colx[2], cy[("p", p)], PATHWAY_SHORT.get(p, p), "",
+                          _hex_rgba(c, 0.08), _hex_rgba(c, 0.45), INK))
+    for d in D:
+        g = dscore[d]
+        c = RED if d == "CARD" else _score_colour(g)
+        lab = "Cardiac liability" if d == "CARD" else _short_disease(d)
+        nodes.append(node(colx[3], cy[("d", d)], lab, f"{g:.0%}",
+                          _hex_rgba(c, 0.12), _hex_rgba(c, 0.55), INK, c))
+
+    heads = ["Compound", "Target", "Pathway", "Disease"]
+    headers = "".join(
+        f'<text x="{colx[i]+NW/2}" y="22" text-anchor="middle" font-family="Inter,sans-serif" '
+        f'font-size="10.5" font-weight="800" letter-spacing="1.2" fill="{MUTE2}">{h.upper()}</text>'
+        for i, h in enumerate(heads))
+
+    return (f'<div style="width:100%;overflow-x:auto"><svg viewBox="0 0 {W} {H:.0f}" width="100%" '
+            f'style="min-width:660px;max-width:{W}px;display:block;margin:0 auto" '
+            f'xmlns="http://www.w3.org/2000/svg">{headers}{"".join(paths)}{"".join(nodes)}</svg></div>')
+
+
+def render_network(r, name="Compound"):
+    st.markdown(
+        '<div class="bs-card"><div class="bs-h">Compound, target, pathway and disease'
+        '<span class="bs-h-sub">mechanistic map; line weight shows engagement</span></div>'
+        + build_network_svg(r, name)
+        + '<div class="bs-note" style="margin-top:10px">Pathway anchors: KEGG cholinergic (hsa04725), '
+        'serotonergic (hsa04726), dopaminergic (hsa04728), glutamatergic (hsa04724), GABAergic (hsa04727), '
+        'endocannabinoid (hsa04723) and opioid (hsa05032) maps, neuroactive ligand-receptor interaction '
+        '(hsa04080), and the Alzheimer (hsa05010), Parkinson (hsa05012), Huntington (hsa05016) and '
+        'amyotrophic lateral sclerosis (hsa05014) disease maps; Reactome KEAP1-NFE2L2 pathway '
+        '(R-HSA-9755511); IUPHAR Guide to Pharmacology. Every target-to-pathway assignment was verified '
+        'against the source database gene annotation. Assignments not supported by pathway membership are '
+        'cited to the target annotation instead. Weights are curated and versioned in the repository.'
+        '</div></div>',
+        unsafe_allow_html=True)
+
+
+def interpret_profile(r, bbb, neuro, rows):
+    """One honest sentence describing the compound's predicted brain profile."""
+    top = rows[0] if rows else None
+    enriched = [ep for ep in TARGET_CLASSIFIERS if ep not in ("BBB",) and enrichment(ep, r["targets"][ep]) >= 0.2]
+    gate = "and is predicted to reach the brain" if bbb >= 0.5 else f"but predicted BBB penetration is low ({bbb:.0%})"
+    if top and top["gated"] >= 0.4:
+        return f'Strong predicted signal for <b>{top["disease"]}</b> (via {MECH_LABEL.get(top["driver"][0], top["driver"][0])}).'
+    if enriched:
+        extra = "; also a neuroprotective/antioxidant signal" if neuro >= 0.35 else ""
+        return f'Engages <b>{", ".join(MECH_LABEL.get(e, e) for e in enriched)}</b> above base rate{extra}.'
+    if neuro >= 0.35:
+        return f'Predominantly a <b>neuroprotective / antioxidant</b> profile, {gate}.'
+    if neuro >= 0.2:
+        return f'Modest <b>neuroprotective / antioxidant</b> signal, {gate}; no distinctive target engagement.'
+    return ('No distinctive engagement among the <b>currently modelled</b> mechanisms. This compound sits '
+            'near the training base rates for every endpoint. Absence of signal is not proof of inactivity; '
+            'its real target may not yet be modelled (see the Coverage panel in About).')
+
+
+def render_disease(r):
+    bbb, neuro, rows = disease_scores(r)
+    bars = ""
+    for d in rows:
+        c = _score_colour(d["gated"])
+        drv = d["driver"]
+        sub = (f'strongest mechanism: {MECH_LABEL.get(drv[0], drv[0])} ({drv[1]:.0%}) × BBB {bbb:.0%}'
+               if drv and d["signal"] > 0 else f'no engaged mechanism · BBB {bbb:.0%}')
+        if drv and d["signal"] > 0 and low_power_target(drv[0]):
+            sub += (f' &middot; <span style="color:{AMBER};font-weight:700">the '
+                    f'{MECH_LABEL.get(drv[0], drv[0])} model has low sensitivity, so this may be '
+                    f'under-called</span>')
+        if d["gated"] < MIN_ACTIONABLE_SCORE:
+            sub += (f' &middot; <span style="color:{MUTE2}">below the actionable threshold of '
+                    f'{MIN_ACTIONABLE_SCORE:.0%}, treat as no finding</span>')
+            c = MUTE2
+        bars += _bar(d["gated"], c, d["disease"], f'{d["gated"]:.0%}')
+        bars += f'<div class="bs-barsub">{sub}</div>'
+    profile = interpret_profile(r, bbb, neuro, rows)
+    st.markdown(f'<div class="bs-card"><div class="bs-h">Brain-relevance signal'
+                f'<span class="bs-h-sub">strongest engaged mechanism × BBB penetration</span></div>'
+                f'<div class="bs-note" style="margin:-4px 0 12px;padding:9px 12px;background:#F7FAFE;'
+                f'border-left:3px solid {NAVY_MD};border-radius:0 8px 8px 0">{profile}</div>{bars}'
+                f'<div class="bs-note" style="margin-top:6px">Signal = enrichment of each mechanism <i>over its '
+                f'training base rate</i> (raw probability alone is not engagement), gated by predicted BBB '
+                f'penetration. Research prioritisation only, not clinical efficacy.</div></div>',
+                unsafe_allow_html=True)
+
+
+def render_targets(r):
+    rows = []
+    for ep, ctx in TARGET_CLASSIFIERS.items():
+        p = r["targets"][ep]; br = base_rate(ep); e = enrichment(ep, p)
+        engaged = e >= 0.2
+        if ep in LIABILITY_TARGETS:
+            call = _badge("liability", RED) if engaged else _badge("clear", GREEN)
+        elif engaged:
+            call = _badge("engaged", BLUE)
+        elif e >= 0.05:
+            call = _badge("weak", AMBER, filled=False)
+        else:
+            call = _badge("inactive", MUTE2, filled=False)
+        base_txt = f"{br:.0%}" if br is not None else "n/a"
+        dcls = "up" if e >= 0.2 else ("mid" if e >= 0 else "down")
+        ar = "▲" if e >= 0 else "▼"
+        vs = (f'<span class="bs-delta {dcls}"><span class="ar">{ar}</span>{e:+.0%}</span>'
+              f'<div class="bs-basetxt">base rate {base_txt}</div>')
+        rows.append([f'<b>{ep}</b>', f'<span class="bs-ctx">{ctx}</span>',
+                     f'<span class="bs-num">{p:.0%}</span>', vs, call])
+    html = _table(["Endpoint", "Context", "P(active)", "vs base rate", "Call"], rows, ["l", "l", "r", "r", "c"])
+    st.markdown(f'<div class="bs-card"><div class="bs-h">Target engagement'
+                f'<span class="bs-h-sub">enrichment over base rate</span></div>{html}'
+                f'<div class="bs-note" style="margin-top:8px"><b>Call</b> reflects enrichment over each endpoint\'s '
+                f'measured base rate rather than the raw probability. Where the active fraction is high '
+                f'(BACE1 91%, GSK-3β 93%), only a substantial exceedance is counted as engagement.</div></div>',
+                unsafe_allow_html=True)
+
+
+def render_adme(r):
+    rows = []
+    for ep, (name, unit, tf) in ADME.items():
+        v = r["adme"][ep]; val = f"{v:.0%}" if tf == "proba" else f"{v:.2f}"
+        rows.append([name, f'<span class="bs-num">{val}</span>', f'<span class="bs-ctx">{unit}</span>'])
+    html = _table(["Property", "Value", "Units"], rows, ["l", "r", "l"])
+    st.markdown(f'<div class="bs-card"><div class="bs-h">ADME / exposure (ADMET)'
+                f'<span class="bs-h-sub">absorption, distribution, clearance</span></div>{html}</div>', unsafe_allow_html=True)
+
+
+def render_receptors(r):
+    has_binder = bool(r.get("receptor_binder"))
+    rows = []
+    for ep in RECEPTOR_REGRESSORS:
+        v = r["receptors"][ep]; bp = r.get("receptor_binder", {}).get(ep)
+        if bp is not None:
+            thr = binder_threshold(ep)
+            call = _badge("binder", BLUE) if bp >= thr else _badge("non-binder", MUTE2, filled=False)
+            bpc = f'<span class="bs-num">{bp:.0%}</span>'
+            pki = f'<span class="bs-ctx">{v:.1f}</span>' if bp >= thr else '<span class="bs-ctx">n/a</span>'
+        else:
+            call = _badge("n/a", MUTE2, filled=False)
+            pct = reg_percentile(ep, v)
+            bpc = "n/a"; pki = f'<span class="bs-ctx">{v:.2f} (p{pct:.0%})</span>' if pct is not None else f"{v:.2f}"
+        rows.append([RECEPTOR_REGRESSORS[ep], bpc, pki, call])
+    apct = reg_percentile("antioxidant", r["antioxidant"])
+    rows.append(["Antioxidant (DPPH)", "n/a", f'<span class="bs-num">{r["antioxidant"]:.2f}</span>',
+                 f'<span class="bs-ctx">p{apct:.0%}</span>' if apct is not None else "n/a"])
+    html = _table(["Target / assay", "Binder P", "pKi / value", "Call"], rows, ["l", "r", "r", "c"])
+    note = ("<b>Binder probability</b> is a classifier trained to distinguish measured binders "
+            "(pChEMBL &ge; 7) from property-matched non-binders. It is validated against compounds "
+            "experimentally tested on the same target and found inactive, which were never used in "
+            "training: mean AUROC 0.96 across 34 targets. Each model is fitted on property-matched "
+            "decoys together with half of the measured inactives and is validated and thresholded on "
+            "the held-out half, so no compound used for fitting is used to judge it. Thresholds hold "
+            "the false-positive rate near 10%, giving a mean sensitivity of 0.90; the conventional 0.5 "
+            "cut would be far too permissive. Predicted "
+            "pK<sub>i</sub> is shown only for compounds called binders, as potency among binders. "
+            "The numeric pK<sub>i</sub> and the antioxidant value are weak priors rather than affinity "
+            "predictions: on a temporal (future-compound) split these regressions reach only R&sup2; 0.01 "
+            "to 0.34, so read them qualitatively."
+            if has_binder else
+            "Receptor potency models are trained on binder-only assays; interpret the value as a weak prior "
+            "rather than a definitive binding call.")
+    st.markdown(f'<div class="bs-card"><div class="bs-h">Receptor binding and antioxidant'
+                f'<span class="bs-h-sub">binder classification</span></div>{html}'
+                f'<div class="bs-note" style="margin-top:8px">{note}</div></div>', unsafe_allow_html=True)
+
+
+def render_physchem(r):
+    d = r["descriptors"]
+    show = [("MW", d.get("mw"), "{:.0f}"), ("clogP", d.get("clogp"), "{:.2f}"), ("TPSA", d.get("tpsa"), "{:.0f}"),
+            ("HBD", d.get("hbd"), "{:.0f}"), ("HBA", d.get("hba"), "{:.0f}"),
+            ("Rot. bonds", d.get("rotatable_bonds"), "{:.0f}"), ("Arom. rings", d.get("aromatic_rings"), "{:.0f}"),
+            ("QED", d.get("qed"), "{:.2f}")]
+    rows = [[k, f'<span class="bs-num">{fmt.format(v)}</span>'] for k, v, fmt in show if v is not None]
+    html = _table(["Descriptor", "Value"], rows, ["l", "r"])
+    st.markdown(f'<div class="bs-card"><div class="bs-h">Physicochemical profile'
+                f'<span class="bs-h-sub">RDKit descriptors</span></div>{html}</div>', unsafe_allow_html=True)
+
+
+def render_reliability_banner(smiles):
+    """Prospective-reliability statement based on the query's applicability domain.
+
+    Temporal validation (train on past compounds, test on future ones) shows that predictive power
+    is retained inside the domain and lost outside it: classifier AUROC 0.83 in-domain, 0.74
+    near-domain and 0.57 out-of-domain; potency rank correlation 0.56, 0.30 and 0.06 respectively.
+    The banner tells the user which regime their compound falls into."""
+    ad = assess_domain(smiles)
+    if ad is None:
         return
+    s = ad["max_sim"]
+    if s >= 0.5:
+        col, head = GREEN, "Inside the applicability domain"
+        body = ("This compound resembles measured training chemistry (max Tanimoto "
+                f"{s:.2f}). On future compounds in this regime the classifiers hold an AUROC of about "
+                "0.83 and the potency models a rank correlation of about 0.56.")
+    elif s >= 0.3:
+        col, head = AMBER, "Near the edge of the applicability domain"
+        body = (f"This compound is only moderately similar to training chemistry (max Tanimoto {s:.2f}). "
+                "On future compounds in this regime the classifiers fall to about 0.74 AUROC and the "
+                "potency models to about 0.30 rank correlation. Treat the profile as indicative.")
+    else:
+        col, head = RED, "Outside the applicability domain"
+        body = (f"This compound is structurally unlike the measured training data (max Tanimoto {s:.2f}). "
+                "On future compounds in this regime the classifiers approach chance (about 0.57 AUROC) and "
+                "the potency models carry no rank information. Use the qualitative direction only, and "
+                "confirm experimentally.")
+    st.markdown(
+        f'<div class="bs-card" style="border-left:5px solid {col};margin-bottom:16px">'
+        f'<div style="display:flex;align-items:center;gap:9px;margin-bottom:5px">'
+        f'<span class="bs-dot" style="background:{col};width:9px;height:9px"></span>'
+        f'<span style="font-weight:800;color:{col};font-size:.95rem">{head}</span></div>'
+        f'<div class="bs-note" style="margin:0">{body}</div></div>', unsafe_allow_html=True)
 
+
+def render_confidence(smiles):
+    ad = assess_domain(smiles)
+    if ad is None:
+        st.markdown('<div class="bs-card"><div class="bs-h">Applicability &amp; confidence</div>'
+                    '<div class="bs-note">Reference library unavailable.</div></div>', unsafe_allow_html=True)
+        return
+    nn_mol = Chem.MolFromSmiles(ad["nearest_smiles"])
+    nn_img = _mol_data_uri(nn_mol, size=(220, 150)) if nn_mol else ""
+
+    # per-endpoint domain grid
+    pe = assess_per_endpoint(smiles)
+    grid = ""
+    if pe:
+        labels = {**{e: e for e in TARGET_CLASSIFIERS},
+                  **{e: MECH_LABEL.get(e, e) for e in list(RECEPTOR_REGRESSORS) + BINDER_TARGETS},
+                  "antioxidant": "antiox"}
+        order = list(TARGET_CLASSIFIERS) + list(RECEPTOR_REGRESSORS) + BINDER_TARGETS + ["antioxidant"]
+        chips = ""
+        for ep in order:
+            s = pe.get(ep)
+            if s is None:
+                continue
+            col = GREEN if s >= 0.5 else (AMBER if s >= 0.3 else MUTE2)
+            chips += (f'<span class="bs-badge" style="background:{col}1a;color:{col};border-color:{col}55;'
+                      f'margin:2px" title="max Tanimoto {s:.2f}">{labels.get(ep, ep)} {s:.2f}</span>')
+        grid = (f'<div style="margin-top:12px;padding-top:12px;border-top:1px solid {LINE}">'
+                f'<div class="bs-note" style="font-weight:700;color:{NAVY};margin-bottom:6px">'
+                f'Per-endpoint applicability (max Tanimoto to that endpoint\'s chemistry)</div>'
+                f'<div class="bs-chips" style="line-height:2">{chips}</div>'
+                f'<div class="bs-note" style="margin-top:6px">Green in-domain (&ge;0.5), amber near-domain '
+                f'(0.3 to 0.5), grey out-of-domain (&lt;0.3). Read an endpoint\'s prediction with more caution '
+                f'when its chip is grey.</div></div>')
+
+    st.markdown(
+        f"""
+        <div class="bs-card"><div class="bs-h">Applicability and confidence
+          <span class="bs-h-sub">distance to measured training chemistry</span></div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+            <span class="bs-badge" style="background:{ad['colour']}1a;color:{ad['colour']};border-color:{ad['colour']}55">
+              {ad['tier']} · {ad['confidence']} confidence</span>
+            <span class="bs-ctx">global max Tanimoto {ad['max_sim']:.2f} to {ad['n_ref']:,} measured compounds</span>
+          </div>
+          <div style="display:flex;gap:14px;align-items:center">
+            <img src="{nn_img}" style="border:1px solid {LINE};border-radius:8px;background:#fff"/>
+            <div class="bs-note"><b>Nearest measured analogue</b><br>
+              Tanimoto {ad['max_sim']:.2f}. Predictions are most reliable when this is high (&ge;0.5).<br>
+              <span class="bs-ctx" style="word-break:break-all">{ad['nearest_smiles']}</span></div>
+          </div>{grid}
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+COVERAGE_YES = [
+    ("BBB penetration", "B3DB"), ("Cholinesterases AChE, BChE", "ChEMBL"),
+    ("Amyloid BACE1, tau GSK-3β", "ChEMBL"), ("Monoamine oxidase MAO-A, MAO-B", "ChEMBL"),
+    ("Serotonin 5-HT1A, 5-HT2A, 5-HT6, 5-HT7", "ChEMBL"),
+    ("Dopamine D2, D3; transporters DAT, NET, SERT", "ChEMBL"),
+    ("Opioid mu, kappa; cannabinoid CB1; sigma-1", "ChEMBL"),
+    ("Histamine H3; adenosine A1, A2A; alpha7-nAChR", "ChEMBL"),
+    ("Glutamate NMDA GluN2B, mGluR5; GABA-A", "ChEMBL"),
+    ("Orexin OX1, OX2; melatonin MT1", "ChEMBL"),
+    ("Neuroinflammation NLRP3, P2X7, COX-2, CSF1R", "ChEMBL"),
+    ("Epigenetic and proteostasis HDAC1, HDAC6, SIRT1, mTOR, KEAP1", "ChEMBL"),
+    ("Parkinson's LRRK2, GBA1; Huntington's PDE10A; cognition PDE4B", "ChEMBL"),
+    ("Sodium channels Nav1.7 (pain), Nav1.1 (epilepsy), Nav1.5 (cardiac safety)", "ChEMBL"),
+    ("Safety hERG; measured antioxidant (DPPH)", "ChEMBL"),
+    ("ADMET: Kp,uu, logBB, Caco-2, P-gp, solubility, logD, PPB, clearance", "measured"),
+]
+COVERAGE_LOW = [
+    ("TAAR1 (non-D2 antipsychotic mechanism)", "sensitivity 0.54"),
+    ("AMPA GluA2", "sensitivity 0.58"),
+]
+COVERAGE_NO = [
+    "Kainate receptors; nicotinic subtypes other than alpha7",
+    "The NMDA channel-blocker (PCP) site used by ketamine; GluN2B here is the allosteric site",
+    "Vesicular monoamine transporter VMAT2 (for example tetrabenazine): no usable ChEMBL target set",
+    "Calcium channel subtypes, and neuronal sodium subtypes other than Nav1.1 and Nav1.7",
+    "alpha-synuclein, tau and huntingtin aggregation (phenotypic, not ligand-binding assays)",
+    "ALS genetics: SOD1, TDP-43, C9orf72 (too few measured ligands in ChEMBL to train)",
+    "Diseases not directly modelled: stroke and ischaemia, multiple sclerosis, migraine",
+]
+
+
+RESULTS = ROOT / "results" / "tables"
+CLF_ORDER = ["BBB", "AChE", "BChE", "BACE1", "GSK3B", "MAO_A", "MAO_B", "hERG"]
+
+
+@st.cache_resource
+def load_results():
+    def _read(p):
+        return pd.read_csv(p) if p.exists() else None
+    return {"cv": _read(RESULTS / "rf_cv_summary.csv"),
+            "cmp": _read(RESULTS / "model_comparison.csv"),
+            "gnn": _read(ROOT / "results" / "gnn" / "gnn_vs_rf.csv")}
+
+
+def build_validation_chart():
+    cv = load_results()["cv"]
+    if cv is None:
+        return None
+    d = cv[(cv["split"] == "scaffold") & (cv["endpoint"].isin(CLF_ORDER))].set_index("endpoint")
+    eps = [e for e in CLF_ORDER if e in d.index][::-1]
+    auroc = [float(d.loc[e, "roc_auc_mean"]) for e in eps]
+    sd = [float(d.loc[e, "roc_auc_sd"]) for e in eps]
+    fig = go.Figure(go.Bar(
+        x=auroc, y=eps, orientation="h",
+        error_x=dict(type="data", array=sd, color="rgba(13,33,55,0.45)", thickness=1.2, width=4),
+        marker=dict(color=_hex_rgba(NAVY, 0.88), line=dict(color=GOLD, width=1.2)),
+        text=[f"{a:.3f}" for a in auroc], textposition="outside",
+        textfont=dict(size=11, color=INK), hovertemplate="%{y}: AUROC %{x:.3f}<extra></extra>"))
+    fig.update_layout(height=300, margin=dict(l=10, r=30, t=10, b=24),
+        paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+        xaxis=dict(range=[0.5, 1.0], title="Scaffold 10-fold AUROC", gridcolor="#E6ECF5", zeroline=False),
+        yaxis=dict(tickfont=dict(size=12, color=INK)))
+    return fig
+
+
+def render_model_comparison():
+    res = load_results()
+    cmp, gnn = res["cmp"], res["gnn"]
+    st.markdown('<div class="bs-card"><div class="bs-h">Model selection and validation'
+                '<span class="bs-h-sub">why random forest is the deployed model</span></div>'
+                '<div class="bs-note" style="margin-bottom:10px">Every endpoint was trained under random and '
+                'scaffold (grouped) 10-fold cross-validation and benchmarked across four model families. '
+                'Random forest matched or exceeded gradient boosting and a graph neural network on the '
+                'scaffold split, and was selected for deployment. All results below are on held-out folds.</div>',
+                unsafe_allow_html=True)
+    fig = build_validation_chart()
+    if fig is not None:
+        st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
+
+    if cmp is not None:
+        c = cmp[(cmp["task"] == "classification") & (cmp["split"] == "scaffold") & (cmp["metric"] == "roc_auc")]
+        piv = c.pivot_table(index="endpoint", columns="model", values="mean")
+        models = [m for m in ["RandomForest", "XGBoost", "HistGradientBoosting"] if m in piv.columns]
+        rows = []
+        for ep in CLF_ORDER:
+            if ep not in piv.index:
+                continue
+            best = max(piv.loc[ep, m] for m in models)
+            cells = []
+            for m in models:
+                v = piv.loc[ep, m]
+                strong = abs(v - best) < 1e-9
+                cells.append(f'<span class="bs-num" style="color:{GREEN if strong else INK}">{v:.3f}</span>'
+                             if strong else f'{v:.3f}')
+            rows.append([f"<b>{ep}</b>"] + cells)
+        head = ["Endpoint"] + [{"RandomForest": "Random forest", "XGBoost": "XGBoost",
+                                "HistGradientBoosting": "Hist-GBM"}[m] for m in models]
+        html = _table(head, rows, ["l"] + ["r"] * len(models))
+        st.markdown(f'<div class="bs-note" style="margin:14px 0 4px;font-weight:700;color:{NAVY}">'
+                    f'Algorithm comparison, classifier endpoints (scaffold 10-fold AUROC; best in green)</div>{html}',
+                    unsafe_allow_html=True)
+
+    if gnn is not None:
+        rows = []
+        for _, x in gnn.iterrows():
+            win = str(x["winner"]) == "RandomForest"
+            rows.append([f'<b>{x["endpoint"]}</b>', str(x["metric"]).replace("roc_auc", "AUROC").replace("r2", "R2"),
+                         f'{float(x["GIN"]):.3f}',
+                         f'<span class="bs-num" style="color:{GREEN}">{float(x["RandomForest"]):.3f}</span>',
+                         _badge("RF", GREEN) if win else _badge("GIN", BLUE)])
+        html = _table(["Endpoint", "Metric", "Graph NN (GIN)", "Random forest", "Winner"],
+                      rows, ["l", "l", "r", "r", "c"])
+        st.markdown(f'<div class="bs-note" style="margin:16px 0 4px;font-weight:700;color:{NAVY}">'
+                    f'Deep learning benchmark: graph neural network (GIN) vs random forest (held-out test)</div>{html}'
+                    f'<div class="bs-note" style="margin-top:8px">The graph neural network did not outperform '
+                    f'the random forest on any tested endpoint, consistent with the fingerprint-plus-descriptor '
+                    f'representation being sufficient at this data scale.</div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+
+def render_coverage_card():
+    yes = "".join(f'<li><b>{t}</b> <span class="bs-ctx">· {src}</span></li>' for t, src in COVERAGE_YES)
+    no = "".join(f"<li>{t}</li>" for t in COVERAGE_NO)
+    low = "".join(f'<li><b>{t}</b> <span class="bs-ctx">· {why}</span></li>' for t, why in COVERAGE_LOW)
+    st.markdown(
+        f"""
+        <div class="bs-card"><div class="bs-h">Coverage: what this tool can and cannot assess
+          <span class="bs-h-sub">a null result means "no signal among modelled mechanisms", not "inert"</span></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+            <div><div class="about-eyebrow" style="color:{GREEN}">✓ Validated &amp; modelled</div>
+              <ul class="bs-note" style="margin:6px 0 0;padding-left:18px;line-height:1.7">{yes}</ul></div>
+            <div><div class="about-eyebrow" style="color:{AMBER}">◯ Not yet modelled</div>
+              <ul class="bs-note" style="margin:6px 0 0;padding-left:18px;line-height:1.7">{no}</ul>
+              <div class="about-eyebrow" style="color:{AMBER};margin-top:12px">△ Modelled but low sensitivity</div>
+              <ul class="bs-note" style="margin:6px 0 0;padding-left:18px;line-height:1.7">{low}</ul>
+              <div class="bs-note" style="margin-top:6px">For these, a positive call carries information but a
+              negative one does not rule engagement out.</div></div>
+          </div>
+          <div class="bs-note" style="margin-top:12px">Because the tool can only "see" mechanisms it has a
+          validated model for, a compound whose real target is in the right-hand column will correctly show
+          "no distinctive engagement". That is a genuine <i>unknown</i>, not evidence of inactivity. Expanding
+          the left column (new validated endpoints) is the active development roadmap.</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def render_about():
+    render_coverage_card()
+    st.write("")
+    render_model_comparison()
+    st.write("")
+    st.markdown('<div class="about-h">About Brain<span>Safe</span> AI</div>'
+                '<p class="bs-note" style="font-size:.92rem;margin:-6px 0 16px">Trained on measured ChEMBL and '
+                'B3DB bioactivity data (64,474 records; 61,317 unique compounds).</p>', unsafe_allow_html=True)
+    st.markdown('<div class="about-eyebrow">Science for Society</div>'
+                '<p class="bs-note" style="font-style:italic;font-size:.95rem">Bridging neuroscience with '
+                'public-health education.</p>', unsafe_allow_html=True)
+    with st.container(border=True):
+        st.markdown("""
+        ### What BrainSafe AI does
+        From chemical structure alone, BrainSafe AI estimates a compound's likely profile of brain-relevant effects:
+        - **Blood-brain-barrier penetration**: can it reach the brain?
+        - **Disease-relevant target activity**: AChE & BChE (Alzheimer's/cognition), BACE1 (amyloid),
+          GSK-3β (tau), MAO-B (Parkinson's), MAO-A (mood), and receptor potencies (D2, A2A, 5-HT2A, SERT).
+        - **Safety**: hERG cardiotoxicity liability.
+        - **Antioxidant** capacity (measured DPPH model) and a **physicochemical / druggability** profile.
+        - **ADME / exposure (ADMET)** including the directly-modelled unbound brain exposure (K<sub>p,uu</sub>).
+        - **BBB-gated per-disease engagement**, a **compound→target→disease network**, and an
+          **applicability-domain confidence** with the **nearest real measured compound** behind each prediction.
+        """, unsafe_allow_html=True)
+    with st.container(border=True):
+        st.markdown("""
+        ### Methods & data (transparent by design)
+        Every endpoint is trained on **measured experimental data**: ChEMBL bioassay measurements (pChEMBL)
+        and the B3DB blood-brain-barrier database, totalling **64,474 measured compound-endpoint records**
+        (61,317 unique compounds). Molecules are represented by a 1024-bit ECFP-4 fingerprint plus 12 RDKit
+        physicochemical descriptors. The **deployed model is a random forest per endpoint** (selected after
+        comparison with XGBoost, gradient boosting and a graph neural network), with **isotonic probability
+        calibration** and **conformal prediction** in validation.
+
+        Models were validated under increasingly stringent regimes: random 10-fold, **scaffold** (grouped)
+        10-fold, and **temporal (future-compound)** splits. Classifiers reach AUROC ≈ 0.95-0.97 (random),
+        0.87-0.96 (scaffold, mean 0.92) and 0.61-0.91 (temporal). Full methods, figures and per-endpoint
+        metrics are in the accompanying manuscript and model card (`docs/METHODS.md`, `docs/BS_MODEL_CARD.md`).
+        """)
+    with st.container(border=True):
+        st.markdown("""
+        ### Scope & limitations
+        BrainSafe AI predicts **molecular target engagement and physicochemical properties, not clinical
+        efficacy**, and does not distinguish agonism from antagonism. Predictions outside the models'
+        applicability domain (novel chemotypes, low max-Tanimoto) are flagged as low-confidence. The tool is
+        intended for research prioritisation and hypothesis generation and is **pending peer review**; it is
+        **not** for medical, diagnostic, or treatment use.
+        """)
+    with st.container(border=True):
+        st.markdown("""
+        ### 100 Years of Selfless Service
+        This offering celebrates **100 years of selfless service and unconditional love to society** by
+        **Bhagawan Sri Sathya Sai Baba** (1926-2011). BrainSafe AI is part of the **SAI-Net** initiative at the
+        **Sri Sathya Sai Institute of Higher Learning (SSSIHL)**, Prasanthi Nilayam.
+        """)
+        st.markdown("""
+        <div class="quote"><p>&#8220;Let the world achieve the glory of becoming a family, through Love.&#8221;</p>
+        <cite>Bhagawan Sri Sathya Sai Baba</cite></div>
+        <div class="quote" style="border-left-color:#1A3A5C;background:#F0F5FB"><p style="color:#1A3A5C">
+        &#8220;True knowledge is that which makes man work for the welfare of humanity.&#8221;</p>
+        <cite style="color:#1A3A5C">Bhagawan Sri Sathya Sai Baba</cite></div>
+        """, unsafe_allow_html=True)
+    st.markdown('<div class="bs-foot">Repository: https://github.com/krishna-g-999/brainsafe-ai · '
+                'See CITATION.cff for how to cite. Research use, pending peer review.</div>', unsafe_allow_html=True)
+
+
+EXAMPLES = {
+    "Donepezil": "COc1cc2c(cc1OC)C(=O)C(CC1CCN(Cc3ccccc3)CC1)C2",
+    "Fluoxetine": "CNCCC(Oc1ccc(C(F)(F)F)cc1)c1ccccc1",
+    "Haloperidol": "O=C(CCCN1CCC(O)(c2ccc(Cl)cc2)CC1)c1ccc(F)cc1",
+    "Morphine": "CN1CCC23c4c5ccc(O)c4OC2C(O)C=CC3C1C5",
+    "Resveratrol": "C1=CC(=CC=C1/C=C/C2=CC(=CC(=C2)O)O)O",
+    "Caffeine": "Cn1cnc2c1c(=O)n(C)c(=O)n2C",
+    "Diazepam": "CN1C(=O)CN=C(c2ccccc2)c2cc(Cl)ccc21",
+    "Atenolol (peripheral)": "CC(C)NCC(O)COc1ccc(CC(N)=O)cc1",
+    "Loperamide (effluxed)": "CN(C)C(=O)C(CCN1CCC(O)(c2ccc(Cl)cc2)CC1)(c1ccccc1)c1ccccc1",
+}
+
+
+@st.cache_data(show_spinner=False)
+def _pubchem_smiles(name):
+    """Resolve a compound name to a SMILES via PubChem (returns None if offline/not found).
+    PubChem returns the value under a key such as SMILES or ConnectivitySMILES, so read whichever
+    SMILES-like key is present."""
+    import urllib.parse
+    import requests
+    requests.packages.urllib3.disable_warnings()
+    u = ("https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/"
+         f"{urllib.parse.quote(name)}/property/SMILES,ConnectivitySMILES/JSON")
+    for verify in (True, False):  # verified first, fall back for SSL-intercepted networks
+        try:
+            r = requests.get(u, timeout=12, verify=verify)
+            if r.ok:
+                props = r.json()["PropertyTable"]["Properties"][0]
+                for k in ("SMILES", "IsomericSMILES", "ConnectivitySMILES", "CanonicalSMILES"):
+                    if props.get(k):
+                        return props[k]
+                return None
+        except Exception:
+            continue
+    return None
+
+
+def resolve_query(q):
+    """Return (smiles, display_name, error). Accepts a curated example, a SMILES string, or a
+    compound name resolved through PubChem."""
+    q = q.strip()
+    for nm, smi in EXAMPLES.items():
+        if q.lower() in (nm.lower(), nm.split(" (")[0].lower()):
+            return smi, nm.split(" (")[0], None
+    if Chem.MolFromSmiles(q) is not None:
+        return q, "Query compound", None
+    smi = _pubchem_smiles(q)
+    if smi and Chem.MolFromSmiles(smi) is not None:
+        return smi, q.title(), None
+    return None, None, (f'Could not interpret "{q}" as a SMILES string or resolve it as a compound '
+                        f'name. Check the spelling, or paste a SMILES string.')
+
+
+def render_report(smiles, name="Compound"):
     mol = Chem.MolFromSmiles(smiles.strip())
     if mol is None:
-        st.error("Could not parse that SMILES.")
+        st.error("Could not parse that structure.")
         return
     m = load_models()
     r = predict_all(smiles.strip(), m)
     if r is None:
         st.error("Could not featurize that structure.")
         return
+    render_reliability_banner(smiles.strip())
+    render_summary(mol, r)
+    st.write("")
+    render_network(r, name=name)
+    st.write("")
+    a, b = st.columns(2, gap="large")
+    with a: render_disease(r)
+    with b: render_targets(r)
+    st.write("")
+    c, d = st.columns(2, gap="large")
+    with c: render_adme(r)
+    with d: render_receptors(r)
+    st.write("")
+    e, f = st.columns(2, gap="large")
+    with e: render_physchem(r)
+    with f: render_confidence(smiles.strip())
+    st.markdown(
+        '<div class="bs-foot">Predictions are calibrated random-forest outputs trained on measured public '
+        'bioactivity and ADME data (64,474 records; 61,317 unique compounds); scaffold-split AUROC ~0.92 '
+        '(target panel). Least reliable for compounds far from the training chemistry (see applicability domain) '
+        'and for the weakest endpoints (clearance, plasma-protein binding). Not for medical, diagnostic or '
+        'treatment use. See docs/METHODS.md and docs/ADME_RESULTS.md.</div>', unsafe_allow_html=True)
 
-    c1, c2 = st.columns([1, 2])
-    with c1:
-        st.image(Draw.MolToImage(mol, size=(320, 240)))
-    with c2:
-        kpuu = r["adme"]["kpuu"]; bbb = r["targets"]["BBB"]
-        label, colour, note = verdict(kpuu, bbb)
-        st.markdown(f"### Free brain exposure: <span style='color:{colour}'>**{label}**</span>",
-                    unsafe_allow_html=True)
-        cc = st.columns(3)
-        cc[0].metric("Predicted Kp,uu", f"{kpuu:.2f}")
-        cc[1].metric("BBB penetration", f"{bbb:.0%}")
-        cc[2].metric("hERG safety flag", f"{r['targets']['hERG']:.0%}")
-        st.caption(note)
 
-    st.divider()
-    left, right = st.columns(2)
-    with left:
-        st.subheader("Target engagement (calibrated probability)")
-        df = pd.DataFrame([{"Endpoint": ep, "Context": TARGET_CLASSIFIERS[ep],
-                            "P(active)": f"{r['targets'][ep]:.0%}",
-                            "Call": "active" if r["targets"][ep] >= 0.5 else "inactive"}
-                           for ep in TARGET_CLASSIFIERS])
-        st.dataframe(df, hide_index=True, use_container_width=True)
+def main():
+    st.set_page_config(page_title="BrainSafe AI | SAI-Net", page_icon="🧠",
+                       layout="wide", initial_sidebar_state="collapsed")
+    inject_css()
+    render_header()
 
-        st.subheader("Receptor potency (predicted pKi/pChEMBL)")
-        dr = pd.DataFrame([{"Receptor": RECEPTOR_REGRESSORS[ep], "Predicted": f"{r['receptors'][ep]:.2f}"}
-                          for ep in RECEPTOR_REGRESSORS] +
-                          [{"Receptor": "Antioxidant (DPPH pIC50)", "Predicted": f"{r['antioxidant']:.2f}"}])
-        st.dataframe(dr, hide_index=True, use_container_width=True)
-    with right:
-        st.subheader("ADME / exposure")
-        da = pd.DataFrame([{"Property": ADME[ep][0], "Value": (f"{r['adme'][ep]:.2f}"),
-                            "Units": ADME[ep][1]} for ep in ADME])
-        st.dataframe(da, hide_index=True, use_container_width=True)
+    tab_search, tab_about = st.tabs(["Compound Search", "About"])
+    with tab_search:
+        with st.container(border=True):
+            st.markdown('<p class="t" style="font-size:1.05rem;font-weight:700;color:#0D2137;margin:0 0 3px">'
+                        'Search a compound</p><p class="d" style="font-size:.82rem;color:#4A5568;margin:0 0 10px;'
+                        'line-height:1.55">Type a <b>compound name</b> (for example morphine or donepezil) or paste a '
+                        '<b>SMILES</b> string, then press Predict. Names are resolved to structure via PubChem. The '
+                        'compound is profiled across all validated endpoints with calibrated probabilities and an '
+                        'applicability-domain confidence.</p>', unsafe_allow_html=True)
+            c1, c2 = st.columns([3, 1])
+            with c1:
+                query = st.text_input("Compound name or SMILES", value="", label_visibility="collapsed",
+                                      placeholder="Type a compound name or SMILES, e.g. morphine, fluoxetine, or COc1cc2...")
+            with c2:
+                go = st.button("Predict", type="primary", use_container_width=True)
+            picks = st.pills("Examples", list(EXAMPLES), selection_mode="single", default=None) \
+                if hasattr(st, "pills") else st.selectbox("Examples", ["(none)"] + list(EXAMPLES))
 
-    st.divider()
-    st.caption("Predictions are calibrated random-forest outputs trained on measured public bioactivity "
-               "and ADME data; scaffold-split AUROC ~0.92 (target panel). Values are least reliable for "
-               "compounds far from the training chemistry (applicability domain) and for the weakest "
-               "endpoints (clearance, plasma-protein binding). Not for medical, diagnostic or treatment "
-               "use. See docs/METHODS.md and docs/ADME_RESULTS.md.")
+        chosen = None
+        if isinstance(picks, str) and picks in EXAMPLES:
+            chosen = picks
+        if go and query.strip():
+            smi, name, err = resolve_query(query.strip())
+            if err:
+                st.error(err)
+            else:
+                render_report(smi, name)
+        elif chosen:
+            render_report(EXAMPLES[chosen], chosen.split(" (")[0])
+        else:
+            st.markdown('<div class="bs-empty"><div class="k">🔎</div>'
+                        '<div style="margin-top:8px">Type a <b>compound name</b> or <b>SMILES</b> above, or tap an '
+                        'example, then press <b>Predict</b>.</div></div>', unsafe_allow_html=True)
+
+    with tab_about:
+        render_about()
 
 
 if __name__ == "__main__":
