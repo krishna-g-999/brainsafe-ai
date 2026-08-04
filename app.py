@@ -714,8 +714,33 @@ def build_network_svg(r, name="Compound"):
         edges.append(("Nav1_5", "Cardiac ion channel", "CARD", 0.8, nav_s))
 
     if not edges:
-        return ('<div style="padding:34px 10px;text-align:center;color:#5A6B82;font-size:.92rem">'
-                'No distinctive target engagement predicted for this compound.</div>')
+        # A silent result must still be an informative one. Report the strongest sub-threshold
+        # mechanisms and the exposure numbers, so a peripheral drug is visibly distinguishable
+        # from another peripheral drug rather than every null result looking identical.
+        ranked = sorted(((t, target_signal(r, neuro, t)) for t in KNOWLEDGE_GRAPH),
+                        key=lambda x: -x[1])[:4]
+        near = [(t, s) for t, s in ranked if s > 0]
+        if near:
+            chips = "".join(
+                f'<span class="bs-badge bs-badge-out" style="margin:3px">'
+                f'{MECH_LABEL.get(t, t)} {s:.0%}</span>' for t, s in near)
+            detail = (f'<div class="bs-note" style="margin-top:10px">Closest mechanisms, all below '
+                      f'the {MIN_ACTIONABLE_SCORE:.0%} reporting threshold:</div>'
+                      f'<div style="margin-top:6px">{chips}</div>')
+        else:
+            detail = ('<div class="bs-note" style="margin-top:10px">No modelled target scored above '
+                      'its own background rate.</div>')
+        return (
+            f'<div style="padding:26px 14px;text-align:center;color:{MUTE}">'
+            f'<div style="font-size:1.02rem;font-weight:700;color:{NAVY}">'
+            f'No CNS target engagement above the reporting threshold</div>'
+            f'<div class="bs-note" style="margin-top:8px;max-width:70ch;margin-left:auto;'
+            f'margin-right:auto">The analysis ran across all {len(KNOWLEDGE_GRAPH)} modelled '
+            f'targets. This is the expected result for a peripherally acting compound. It is not '
+            f'evidence of inactivity: the molecule may act through a mechanism this tool does not '
+            f'model (see the Coverage panel in About). Exposure was still assessed, and is shown '
+            f'above: predicted BBB penetration {bbb:.0%} and unbound brain exposure '
+            f'K<sub>p,uu</sub> {r["adme"]["kpuu"]:.2f}.</div>{detail}</div>')
 
     T = list(dict.fromkeys(e[0] for e in edges))
     P = list(dict.fromkeys(e[1] for e in edges))
@@ -1378,11 +1403,15 @@ def main():
             picks = st.pills("Examples", list(EXAMPLES), selection_mode="single", default=None) \
                 if hasattr(st, "pills") else st.selectbox("Examples", ["(none)"] + list(EXAMPLES))
 
-        chosen = None
-        if isinstance(picks, str) and picks in EXAMPLES:
-            chosen = picks
-        if go and query.strip():
-            smi, name, err = resolve_query(query.strip())
+        # A typed query always takes precedence, and it acts whether the user presses Enter or the
+        # Predict button. Example pills are only consulted when the box is empty. Without this
+        # precedence a pill selected earlier persists across reruns and silently re-renders its own
+        # compound for every subsequent query, so the structure and scores shown belong to the pill
+        # rather than to what was typed.
+        chosen = picks if (isinstance(picks, str) and picks in EXAMPLES) else None
+        typed = query.strip()
+        if typed:
+            smi, name, err = resolve_query(typed)
             if err:
                 st.error(err)
             else:
