@@ -52,6 +52,20 @@ def main():
         for s in d.loc[sel, "smiles"].astype(str):
             activity.setdefault(s, set()).add(target)
 
+    # read-across-only targets: measured actives for proteins this project does not model.
+    # They widen what the index can recognise without implying any prediction, and are marked
+    # with a trailing asterisk so the interface can label them as similarity evidence only.
+    for f in glob.glob(str(ROOT / "data" / "readacross" / "*.csv")):
+        target = Path(f).stem + "*"
+        try:
+            d = pd.read_csv(f)
+        except Exception:
+            continue
+        if "smiles" not in d.columns:
+            continue
+        for s in d["smiles"].astype(str):
+            activity.setdefault(s, set()).add(target)
+
     smiles, fps, targets = [], [], []
     for s, tg in activity.items():
         m = Chem.MolFromSmiles(s)
