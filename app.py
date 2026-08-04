@@ -555,13 +555,22 @@ def low_power_target(tgt):
     return info.get("reliable_call") is False
 
 
+def screening_mode():
+    """True when the user has selected the high-precision mode for low-prevalence screening."""
+    return bool(st.session_state.get("screening_mode", False))
+
+
 def binder_threshold(tgt):
     """Decision threshold for a binder-panel target. Where enough experimentally measured inactives
     exist, this is the probability at which 10% of them would be called binders; otherwise a global
     fallback. Using a per-target threshold matters because the default 0.5 cut, learned against
     property-matched decoys, is far too permissive on real tested chemistry."""
     info = load_binder_modes().get(tgt, {})
-    t = info.get("threshold")
+    # In screening mode use the stricter cut calibrated to a 1% background false-positive rate,
+    # which is what keeps precision usable when real actives are rare.
+    t = info.get("screening_threshold") if screening_mode() else None
+    if t is None:
+        t = info.get("threshold")
     if t is None:
         br = info.get("base_rate")
         return float(br) if (info.get("mode") == "measured_labels" and br) else BINDER_FLOOR
@@ -1238,6 +1247,46 @@ def render_physchem(r):
                 f'<span class="bs-h-sub">RDKit descriptors</span></div>{html}</div>', unsafe_allow_html=True)
 
 
+def render_decision_guidance():
+    """State what acting on a positive call costs, because that is what decides wet-lab spend.
+
+    Discrimination is prevalence-free; a laboratory is not. At the deployed operating point
+    (sensitivity 0.90, false-positive rate 0.125 measured on 1000 non-CNS compounds) precision
+    depends entirely on how common real actives are in the set being examined, and it collapses when
+    they are rare. Presenting a positive call without that context invites exactly the wasted animal
+    and reagent spend this tool exists to prevent."""
+    st.markdown(
+        f"""
+        <div class="bs-card" style="border-left:5px solid {AMBER};margin-bottom:16px">
+          <div style="font-weight:800;color:{NAVY};font-size:.95rem;margin-bottom:6px">
+            How to act on a positive call</div>
+          <div class="bs-note">
+            This tool ranks well but is <b>not</b> a substitute for a binary go or no-go decision when
+            real actives are rare. At the deployed operating point, sensitivity 0.90 and a measured
+            false-positive rate of 12.5%, the precision of a positive call depends on how common
+            actives are in the set you are screening:
+            <ul style="margin:8px 0 0;padding-left:18px;line-height:1.7">
+              <li>focused set, roughly half active: precision <b>88%</b>, about 0.1 false leads per true hit</li>
+              <li>enriched set, roughly one in ten: precision <b>44%</b>, about 1.3 false leads per true hit</li>
+              <li>diverse library, roughly one in a hundred: precision <b>7%</b>, about
+                  <b>14 false leads per true hit</b></li>
+            </ul>
+            <br>Use it to <b>prioritise</b> a ranked list and test from the top, which is where the
+            0.79 prospective recall pays off. A negative call is the more dependable direction: the
+            negative predictive value exceeds 0.98 whenever actives are uncommon, so this is a better
+            instrument for deprioritising than for selecting.
+            <br><br>For a large diverse library, switch on <b>high-precision screening mode</b> above.
+            It raises every threshold to a 1% background false-positive rate, which lifts precision at
+            1% prevalence from 7% to <b>37%</b> and cuts the cost from about 14 wasted experiments per
+            true hit to <b>1.7</b>. Mean sensitivity falls from 0.90 to 0.69 in exchange, so the
+            stricter mode finds fewer of the real actives but wastes far less effort on the ones it
+            reports. Neither setting is the correct one in general: the choice depends on whether a
+            missed active or a wasted experiment is the more costly error in your campaign.
+          </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+
 def render_reliability_banner(smiles):
     """Prospective-reliability statement based on the query's applicability domain.
 
@@ -1604,6 +1653,7 @@ def render_report(smiles, name="Compound"):
     if r is None:
         st.error("Could not featurize that structure.")
         return
+    render_decision_guidance()
     render_reliability_banner(smiles.strip())
     render_summary(mol, r)
     st.write("")
@@ -1657,6 +1707,14 @@ def main():
                 go = st.button("Predict", type="primary", use_container_width=True)
             picks = st.pills("Examples", list(EXAMPLES), selection_mode="single", default=None) \
                 if hasattr(st, "pills") else st.selectbox("Examples", ["(none)"] + list(EXAMPLES))
+            st.checkbox(
+                "High-precision screening mode",
+                key="screening_mode",
+                help="Raises every target threshold to a 1 percent background false-positive "
+                     "rate. Use when triaging a large diverse library, where actives are rare "
+                     "and a false positive costs an experiment. Recall falls in exchange for "
+                     "precision. Leave it off for a focused or enriched set, where recall "
+                     "matters more.")
 
         # A typed query always takes precedence, and it acts whether the user presses Enter or the
         # Predict button. Example pills are only consulted when the box is empty. Without this

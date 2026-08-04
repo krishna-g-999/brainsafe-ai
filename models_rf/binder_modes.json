@@ -15,7 +15,10 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.02,
     "background_fpr_at_threshold": 0.0243,
-    "n_measured_inactive_for_threshold": 219
+    "n_measured_inactive_for_threshold": 219,
+    "screening_threshold": 0.9969,
+    "screening_background_fpr": 0.01,
+    "screening_sensitivity": 0.519
   },
   "A2A": {
     "mode": "hybrid_decoys_plus_measured_inactives",
@@ -33,7 +36,10 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.0213,
     "background_fpr_at_threshold": 0.033,
-    "n_measured_inactive_for_threshold": 231
+    "n_measured_inactive_for_threshold": 231,
+    "screening_threshold": 0.9992,
+    "screening_background_fpr": 0.01,
+    "screening_sensitivity": 0.363
   },
   "a7nAChR": {
     "mode": "hybrid_decoys_plus_measured_inactives",
@@ -51,7 +57,10 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.007,
     "background_fpr_at_threshold": 0.0077,
-    "n_measured_inactive_for_threshold": 181
+    "n_measured_inactive_for_threshold": 181,
+    "screening_threshold": 0.6262,
+    "screening_background_fpr": 0.0077,
+    "screening_sensitivity": 0.935
   },
   "CB1": {
     "mode": "hybrid_decoys_plus_measured_inactives",
@@ -69,7 +78,10 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.019,
     "background_fpr_at_threshold": 0.0243,
-    "n_measured_inactive_for_threshold": 209
+    "n_measured_inactive_for_threshold": 209,
+    "screening_threshold": 0.9995,
+    "screening_background_fpr": 0.0133,
+    "screening_sensitivity": 0.587
   },
   "COX2": {
     "mode": "hybrid_decoys_plus_measured_inactives",
@@ -87,7 +99,10 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.0083,
     "background_fpr_at_threshold": 0.0087,
-    "n_measured_inactive_for_threshold": 693
+    "n_measured_inactive_for_threshold": 693,
+    "screening_threshold": 0.9087,
+    "screening_background_fpr": 0.0083,
+    "screening_sensitivity": 0.752
   },
   "CSF1R": {
     "mode": "hybrid_decoys_plus_measured_inactives",
@@ -105,7 +120,10 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.0203,
     "background_fpr_at_threshold": 0.0317,
-    "n_measured_inactive_for_threshold": 36
+    "n_measured_inactive_for_threshold": 36,
+    "screening_threshold": 0.9901,
+    "screening_background_fpr": 0.01,
+    "screening_sensitivity": 0.867
   },
   "D2": {
     "mode": "hybrid_decoys_plus_measured_inactives",
@@ -123,7 +141,10 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.0203,
     "background_fpr_at_threshold": 0.045,
-    "n_measured_inactive_for_threshold": 266
+    "n_measured_inactive_for_threshold": 266,
+    "screening_threshold": 0.9981,
+    "screening_background_fpr": 0.01,
+    "screening_sensitivity": 0.302
   },
   "D3": {
     "mode": "hybrid_decoys_plus_measured_inactives",
@@ -141,7 +162,10 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.0163,
     "background_fpr_at_threshold": 0.05,
-    "n_measured_inactive_for_threshold": 185
+    "n_measured_inactive_for_threshold": 185,
+    "screening_threshold": 0.9995,
+    "screening_background_fpr": 0.018,
+    "screening_sensitivity": 0.628
   },
   "DAT": {
     "mode": "hybrid_decoys_plus_measured_inactives",
@@ -159,7 +183,10 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.02,
     "background_fpr_at_threshold": 0.0273,
-    "n_measured_inactive_for_threshold": 312
+    "n_measured_inactive_for_threshold": 312,
+    "screening_threshold": 0.992,
+    "screening_background_fpr": 0.01,
+    "screening_sensitivity": 0.78
   },
   "GABA_A": {
     "mode": "hybrid_decoys_plus_measured_inactives",
@@ -174,7 +201,10 @@
     "background_fpr_at_threshold": 0.024,
     "sensitivity_at_threshold": 0.985,
     "reliable_call": true,
-    "n_measured_inactive_for_threshold": 22
+    "n_measured_inactive_for_threshold": 22,
+    "screening_threshold": 0.4281,
+    "screening_background_fpr": 0.01,
+    "screening_sensitivity": 0.96
   },
   "GBA1": {
     "mode": "hybrid_decoys_plus_measured_inactives",
@@ -192,7 +222,10 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.0007,
     "background_fpr_at_threshold": 0.0007,
-    "n_measured_inactive_for_threshold": 262
+    "n_measured_inactive_for_threshold": 262,
+    "screening_threshold": 0.4987,
+    "screening_background_fpr": 0.001,
+    "screening_sensitivity": 0.925
   },
   "GluN2B": {
     "mode": "hybrid_decoys_plus_measured_inactives",
@@ -210,7 +243,10 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.0067,
     "background_fpr_at_threshold": 0.0067,
-    "n_measured_inactive_for_threshold": 32
+    "n_measured_inactive_for_threshold": 32,
+    "screening_threshold": 0.999,
+    "screening_background_fpr": 0.0053,
+    "screening_sensitivity": 0.848
   },
   "H3": {
     "mode": "hybrid_decoys_plus_measured_inactives",
@@ -228,7 +264,10 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.02,
     "background_fpr_at_threshold": 0.035,
-    "n_measured_inactive_for_threshold": 176
+    "n_measured_inactive_for_threshold": 176,
+    "screening_threshold": 0.9995,
+    "screening_background_fpr": 0.0143,
+    "screening_sensitivity": 0.631
   },
   "HDAC1": {
     "mode": "hybrid_decoys_plus_measured_inactives",
@@ -246,7 +285,10 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.02,
     "background_fpr_at_threshold": 0.035,
-    "n_measured_inactive_for_threshold": 571
+    "n_measured_inactive_for_threshold": 571,
+    "screening_threshold": 0.9929,
+    "screening_background_fpr": 0.01,
+    "screening_sensitivity": 0.44
   },
   "HDAC6": {
     "mode": "hybrid_decoys_plus_measured_inactives",
@@ -264,7 +306,10 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.02,
     "background_fpr_at_threshold": 0.035,
-    "n_measured_inactive_for_threshold": 246
+    "n_measured_inactive_for_threshold": 246,
+    "screening_threshold": 0.995,
+    "screening_background_fpr": 0.01,
+    "screening_sensitivity": 0.392
   },
   "HT1A": {
     "mode": "hybrid_decoys_plus_measured_inactives",
@@ -282,7 +327,10 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.019,
     "background_fpr_at_threshold": 0.05,
-    "n_measured_inactive_for_threshold": 194
+    "n_measured_inactive_for_threshold": 194,
+    "screening_threshold": 0.9992,
+    "screening_background_fpr": 0.01,
+    "screening_sensitivity": 0.247
   },
   "HT2A": {
     "mode": "hybrid_decoys_plus_measured_inactives",
@@ -300,7 +348,10 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.02,
     "background_fpr_at_threshold": 0.0423,
-    "n_measured_inactive_for_threshold": 81
+    "n_measured_inactive_for_threshold": 81,
+    "screening_threshold": 0.9993,
+    "screening_background_fpr": 0.01,
+    "screening_sensitivity": 0.344
   },
   "HT6": {
     "mode": "hybrid_decoys_plus_measured_inactives",
@@ -318,7 +369,10 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.02,
     "background_fpr_at_threshold": 0.0233,
-    "n_measured_inactive_for_threshold": 57
+    "n_measured_inactive_for_threshold": 57,
+    "screening_threshold": 0.9988,
+    "screening_background_fpr": 0.01,
+    "screening_sensitivity": 0.55
   },
   "HT7": {
     "mode": "hybrid_decoys_plus_measured_inactives",
@@ -336,7 +390,10 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.0203,
     "background_fpr_at_threshold": 0.05,
-    "n_measured_inactive_for_threshold": 115
+    "n_measured_inactive_for_threshold": 115,
+    "screening_threshold": 0.9958,
+    "screening_background_fpr": 0.01,
+    "screening_sensitivity": 0.559
   },
   "KEAP1": {
     "mode": "hybrid_decoys_plus_measured_inactives",
@@ -354,7 +411,10 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.005,
     "background_fpr_at_threshold": 0.005,
-    "n_measured_inactive_for_threshold": 107
+    "n_measured_inactive_for_threshold": 107,
+    "screening_threshold": 0.7607,
+    "screening_background_fpr": 0.006,
+    "screening_sensitivity": 0.828
   },
   "LRRK2": {
     "mode": "hybrid_decoys_plus_measured_inactives",
@@ -369,7 +429,10 @@
     "background_fpr_at_threshold": 0.0093,
     "sensitivity_at_threshold": 0.974,
     "reliable_call": true,
-    "n_measured_inactive_for_threshold": 18
+    "n_measured_inactive_for_threshold": 18,
+    "screening_threshold": 0.8723,
+    "screening_background_fpr": 0.0097,
+    "screening_sensitivity": 0.974
   },
   "mGluR5": {
     "mode": "hybrid_decoys_plus_measured_inactives",
@@ -387,7 +450,10 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.0057,
     "background_fpr_at_threshold": 0.0063,
-    "n_measured_inactive_for_threshold": 59
+    "n_measured_inactive_for_threshold": 59,
+    "screening_threshold": 0.9957,
+    "screening_background_fpr": 0.0083,
+    "screening_sensitivity": 0.71
   },
   "MT1": {
     "mode": "hybrid_decoys_plus_measured_inactives",
@@ -405,7 +471,10 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.0043,
     "background_fpr_at_threshold": 0.0037,
-    "n_measured_inactive_for_threshold": 30
+    "n_measured_inactive_for_threshold": 30,
+    "screening_threshold": 0.9896,
+    "screening_background_fpr": 0.0037,
+    "screening_sensitivity": 0.732
   },
   "mTOR": {
     "mode": "hybrid_decoys_plus_measured_inactives",
@@ -423,7 +492,10 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.0203,
     "background_fpr_at_threshold": 0.0287,
-    "n_measured_inactive_for_threshold": 376
+    "n_measured_inactive_for_threshold": 376,
+    "screening_threshold": 0.9995,
+    "screening_background_fpr": 0.016,
+    "screening_sensitivity": 0.71
   },
   "Nav1_5": {
     "mode": "measured_labels_holdout",
@@ -439,7 +511,10 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.02,
     "background_fpr_at_threshold": 0.05,
-    "n_measured_inactive_for_threshold": 591
+    "n_measured_inactive_for_threshold": 591,
+    "screening_threshold": 0.5717,
+    "screening_background_fpr": 0.01,
+    "screening_sensitivity": 0.925
   },
   "NET": {
     "mode": "hybrid_decoys_plus_measured_inactives",
@@ -457,7 +532,10 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.02,
     "background_fpr_at_threshold": 0.0283,
-    "n_measured_inactive_for_threshold": 266
+    "n_measured_inactive_for_threshold": 266,
+    "screening_threshold": 0.9922,
+    "screening_background_fpr": 0.01,
+    "screening_sensitivity": 0.794
   },
   "NLRP3": {
     "mode": "hybrid_decoys_plus_measured_inactives",
@@ -475,7 +553,10 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.02,
     "background_fpr_at_threshold": 0.015,
-    "n_measured_inactive_for_threshold": 59
+    "n_measured_inactive_for_threshold": 59,
+    "screening_threshold": 0.339,
+    "screening_background_fpr": 0.01,
+    "screening_sensitivity": 0.982
   },
   "OPRK1": {
     "mode": "hybrid_decoys_plus_measured_inactives",
@@ -493,7 +574,10 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.02,
     "background_fpr_at_threshold": 0.038,
-    "n_measured_inactive_for_threshold": 310
+    "n_measured_inactive_for_threshold": 310,
+    "screening_threshold": 0.9995,
+    "screening_background_fpr": 0.018,
+    "screening_sensitivity": 0.675
   },
   "OPRM1": {
     "mode": "hybrid_decoys_plus_measured_inactives",
@@ -511,7 +595,10 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.0197,
     "background_fpr_at_threshold": 0.0413,
-    "n_measured_inactive_for_threshold": 366
+    "n_measured_inactive_for_threshold": 366,
+    "screening_threshold": 0.9995,
+    "screening_background_fpr": 0.01,
+    "screening_sensitivity": 0.316
   },
   "OX1": {
     "mode": "hybrid_decoys_plus_measured_inactives",
@@ -529,7 +616,10 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.0183,
     "background_fpr_at_threshold": 0.034,
-    "n_measured_inactive_for_threshold": 114
+    "n_measured_inactive_for_threshold": 114,
+    "screening_threshold": 0.9995,
+    "screening_background_fpr": 0.0233,
+    "screening_sensitivity": 0.788
   },
   "OX2": {
     "mode": "hybrid_decoys_plus_measured_inactives",
@@ -544,7 +634,10 @@
     "background_fpr_at_threshold": 0.0347,
     "sensitivity_at_threshold": 0.925,
     "reliable_call": true,
-    "n_measured_inactive_for_threshold": 24
+    "n_measured_inactive_for_threshold": 24,
+    "screening_threshold": 0.9995,
+    "screening_background_fpr": 0.033,
+    "screening_sensitivity": 0.896
   },
   "P2X7": {
     "mode": "hybrid_decoys_plus_measured_inactives",
@@ -562,7 +655,10 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.0173,
     "background_fpr_at_threshold": 0.016,
-    "n_measured_inactive_for_threshold": 43
+    "n_measured_inactive_for_threshold": 43,
+    "screening_threshold": 0.9995,
+    "screening_background_fpr": 0.0183,
+    "screening_sensitivity": 0.832
   },
   "PDE10A": {
     "mode": "hybrid_decoys_plus_measured_inactives",
@@ -580,7 +676,10 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.02,
     "background_fpr_at_threshold": 0.024,
-    "n_measured_inactive_for_threshold": 60
+    "n_measured_inactive_for_threshold": 60,
+    "screening_threshold": 0.9995,
+    "screening_background_fpr": 0.014,
+    "screening_sensitivity": 0.574
   },
   "PDE4B": {
     "mode": "hybrid_decoys_plus_measured_inactives",
@@ -598,7 +697,10 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.0203,
     "background_fpr_at_threshold": 0.025,
-    "n_measured_inactive_for_threshold": 226
+    "n_measured_inactive_for_threshold": 226,
+    "screening_threshold": 0.7545,
+    "screening_background_fpr": 0.01,
+    "screening_sensitivity": 0.972
   },
   "SERT": {
     "mode": "hybrid_decoys_plus_measured_inactives",
@@ -616,7 +718,10 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.02,
     "background_fpr_at_threshold": 0.0493,
-    "n_measured_inactive_for_threshold": 145
+    "n_measured_inactive_for_threshold": 145,
+    "screening_threshold": 0.9988,
+    "screening_background_fpr": 0.01,
+    "screening_sensitivity": 0.408
   },
   "Sigma1": {
     "mode": "hybrid_decoys_plus_measured_inactives",
@@ -634,7 +739,10 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.0203,
     "background_fpr_at_threshold": 0.0293,
-    "n_measured_inactive_for_threshold": 45
+    "n_measured_inactive_for_threshold": 45,
+    "screening_threshold": 0.9968,
+    "screening_background_fpr": 0.01,
+    "screening_sensitivity": 0.439
   },
   "SIRT1": {
     "mode": "measured_labels_holdout",
@@ -650,7 +758,10 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.0183,
     "background_fpr_at_threshold": 0.05,
-    "n_measured_inactive_for_threshold": 353
+    "n_measured_inactive_for_threshold": 353,
+    "screening_threshold": 0.7382,
+    "screening_background_fpr": 0.01,
+    "screening_sensitivity": 0.867
   },
   "TAAR1": {
     "mode": "measured_labels_holdout",
@@ -666,7 +777,10 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.0093,
     "background_fpr_at_threshold": 0.0403,
-    "n_measured_inactive_for_threshold": 65
+    "n_measured_inactive_for_threshold": 65,
+    "screening_threshold": 0.9285,
+    "screening_background_fpr": 0.01,
+    "screening_sensitivity": 0.72
   },
   "GluA2": {
     "mode": "measured_labels_holdout",
@@ -682,7 +796,10 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.0063,
     "background_fpr_at_threshold": 0.05,
-    "n_measured_inactive_for_threshold": 86
+    "n_measured_inactive_for_threshold": 86,
+    "screening_threshold": 0.8501,
+    "screening_background_fpr": 0.01,
+    "screening_sensitivity": 0.608
   },
   "Nav1_1": {
     "mode": "measured_labels_holdout",
@@ -698,7 +815,10 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.02,
     "background_fpr_at_threshold": 0.05,
-    "n_measured_inactive_for_threshold": 360
+    "n_measured_inactive_for_threshold": 360,
+    "screening_threshold": 0.8311,
+    "screening_background_fpr": 0.01,
+    "screening_sensitivity": 0.6
   },
   "Nav1_7": {
     "mode": "hybrid_decoys_plus_measured_inactives",
@@ -716,6 +836,9 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.0203,
     "background_fpr_at_threshold": 0.023,
-    "n_measured_inactive_for_threshold": 337
+    "n_measured_inactive_for_threshold": 337,
+    "screening_threshold": 0.9977,
+    "screening_background_fpr": 0.01,
+    "screening_sensitivity": 0.448
   }
 }
