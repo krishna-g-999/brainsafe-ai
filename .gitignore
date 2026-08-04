@@ -65,3 +65,6 @@ archive/legacy/app/erc_ml.json
 # Generated HTML previews (regenerable, large)
 docs/app_preview.html
 docs/about_preview.html
+
+# Read-across index (regenerable via src/brainsafe/build_readacross_index.py)
+models_rf/readacross_index.pkl

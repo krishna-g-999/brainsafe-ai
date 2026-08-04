@@ -392,6 +392,84 @@ def target_signal(r, neuro, tgt):
     return engaged_signal(tgt, r["targets"][tgt])
 
 
+def _ramp(x, hi_good, lo_good):
+    """Monotonically decreasing desirability: 1 at or below hi_good, 0 at or above lo_good."""
+    if x <= hi_good:
+        return 1.0
+    if x >= lo_good:
+        return 0.0
+    return float((lo_good - x) / (lo_good - hi_good))
+
+
+def cns_mpo(r):
+    """CNS multiparameter optimisation desirability, after Wager et al. (ACS Chem Neurosci 2010).
+
+    The published score sums six desirability functions, each mapping a physicochemical property to
+    [0, 1]: cLogP, cLogD at pH 7.4, molecular weight, topological polar surface area, hydrogen-bond
+    donor count, and the most basic pKa. Higher totals associate with better CNS exposure and a
+    lower attrition rate.
+
+    Five of the six are computed here. cLogP, molecular weight, TPSA and donor count come from the
+    RDKit descriptors already in the feature vector; cLogD is taken from the measured-data
+    lipophilicity model rather than a rule of thumb. The most basic pKa is NOT computed, because no
+    pKa model is trained in this project and substituting a guess would put an unmeasured quantity
+    into a score presented as physicochemical fact. The result is therefore reported on a 0 to 5
+    scale and labelled as a five-component variant, never as the published six-component score.
+    """
+    d = r.get("descriptors", {})
+    mw, clogp = d.get("mw"), d.get("clogp")
+    tpsa, hbd = d.get("tpsa"), d.get("hbd")
+    logd = r.get("adme", {}).get("lipophilicity")
+    if None in (mw, clogp, tpsa, hbd) or logd is None:
+        return None
+    # TPSA is the one non-monotonic term: desirable in a window, penalised on both sides.
+    if tpsa < 20:
+        t_tpsa = 0.0
+    elif tpsa < 40:
+        t_tpsa = (tpsa - 20) / 20.0
+    elif tpsa <= 90:
+        t_tpsa = 1.0
+    else:
+        t_tpsa = _ramp(tpsa, 90, 120)
+    parts = {
+        "cLogP": _ramp(clogp, 3.0, 5.0),
+        "cLogD (predicted)": _ramp(logd, 2.0, 4.0),
+        "MW": _ramp(mw, 360.0, 500.0),
+        "TPSA": t_tpsa,
+        "HBD": _ramp(hbd, 0.5, 3.5),
+    }
+    return {"total": float(sum(parts.values())), "max": 5.0, "parts": parts}
+
+
+@st.cache_resource
+def load_readacross():
+    """Measured actives with fingerprints and the targets they hit, for similarity read-across."""
+    p = MODELS / "readacross_index.pkl"
+    if not p.exists():
+        return None
+    with p.open("rb") as fh:
+        return pickle.load(fh)
+
+
+def read_across(smiles, k=5, min_sim=0.35):
+    """Nearest measured actives and what they are active at.
+
+    Evidence about the neighbours, not about the query. Similarity is returned with every hit so the
+    user can weigh it, and nothing is returned below min_sim, where structural inference is not
+    defensible."""
+    idx = load_readacross()
+    if idx is None:
+        return []
+    mol = Chem.MolFromSmiles(smiles)
+    if mol is None:
+        return []
+    q = _AD_GEN.GetFingerprint(mol)
+    sims = np.array(DataStructs.BulkTanimotoSimilarity(q, idx["fps"]))
+    order = np.argsort(-sims)[:k]
+    return [{"smiles": idx["smiles"][i], "similarity": float(sims[i]), "targets": idx["targets"][i]}
+            for i in order if sims[i] >= min_sim]
+
+
 def low_power_target(tgt):
     """True when a binder model, held at a 10% false-positive rate on measured inactives, recovers
     too few genuine binders to be relied on for a negative call."""
@@ -977,6 +1055,68 @@ def render_receptors(r):
                 f'<div class="bs-note" style="margin-top:8px">{note}</div></div>', unsafe_allow_html=True)
 
 
+def render_readacross(smiles, r):
+    """Evidence available when no model fires: what the nearest measured compounds are active at."""
+    nn = read_across(smiles)
+    if not nn:
+        body = ('<div class="bs-note">No measured compound lies within a Tanimoto of 0.35 of this '
+                'structure. The chemistry is outside the measured library, so no similarity-based '
+                'inference is defensible. This is a genuine absence of evidence rather than evidence '
+                'of absence.</div>')
+    else:
+        rows = []
+        for h in nn:
+            tg = ", ".join(MECH_LABEL.get(t, t) for t in h["targets"][:5])
+            s = h["similarity"]
+            col = GREEN if s >= 0.7 else (AMBER if s >= 0.5 else MUTE2)
+            rows.append([
+                f'<span class="bs-delta {"up" if s >= 0.7 else "mid" if s >= 0.5 else "down"}">'
+                f'{s:.2f}</span>',
+                f'<span class="bs-num" style="color:{col}">{tg or "no annotated target"}</span>',
+                f'<span class="bs-ctx" style="word-break:break-all">{_esc(h["smiles"][:46])}</span>'])
+        body = _table(["Tanimoto", "Measured active at", "Structure"], rows, ["c", "l", "l"])
+    st.markdown(
+        f'<div class="bs-card"><div class="bs-h">Read-across evidence'
+        f'<span class="bs-h-sub">what the nearest measured compounds do</span></div>{body}'
+        f'<div class="bs-note" style="margin-top:8px">These are statements about the <b>neighbours</b>, '
+        f'not about the query. Read-across is weaker than a validated model and fails at activity '
+        f'cliffs, where one substitution abolishes binding, so the similarity is shown for every row. '
+        f'It is most useful when no model fires: a compound with no direct engagement may still sit in '
+        f'a chemical neighbourhood with known brain pharmacology. Index: 123,259 measured actives '
+        f'across 50 targets.</div></div>', unsafe_allow_html=True)
+
+
+def render_cns_mpo(r):
+    m = cns_mpo(r)
+    if m is None:
+        return
+    frac = m["total"] / m["max"]
+    col = GREEN if frac >= 0.7 else (AMBER if frac >= 0.5 else RED)
+    bars = "".join(
+        _bar(v, GREEN if v >= 0.7 else (AMBER if v >= 0.4 else MUTE2), k, f"{v:.2f}")
+        for k, v in m["parts"].items())
+    st.markdown(
+        f'<div class="bs-card"><div class="bs-h">CNS-likeness (CNS MPO)'
+        f'<span class="bs-h-sub">physicochemical desirability, no target required</span></div>'
+        f'<div style="display:flex;align-items:baseline;gap:10px;margin-bottom:12px">'
+        f'<span style="font-size:2rem;font-weight:800;color:{col};line-height:1">'
+        f'{m["total"]:.2f}</span><span class="bs-ctx">of {m["max"]:.0f}</span></div>{bars}'
+        f'<div class="bs-note" style="margin-top:6px">Desirability functions after Wager et al. '
+        f'(ACS Chemical Neuroscience, 2010). Five of the six published components are computed: '
+        f'cLogP, cLogD, molecular weight, polar surface area and hydrogen-bond donors. The sixth, '
+        f'the most basic pKa, is <b>not</b> included because no pKa model is trained here and a '
+        f'guessed value would enter a score presented as physicochemical fact. The total is '
+        f'therefore on a 0 to 5 scale, not the published 0 to 6. cLogD is taken from the '
+        f'measured-data lipophilicity model.<br><br>'
+        f'<b>Consequence of the missing pKa term:</b> strongly basic compounds are over-scored, '
+        f'because the published score penalises a high most-basic pKa and this variant cannot. '
+        f'Metformin illustrates it, scoring well on the five computed terms while the measured '
+        f'exposure models place its brain penetration low. Read this score alongside the predicted '
+        f'K<sub>p,uu</sub> and BBB values rather than in place of them; where the two disagree, the '
+        f'measured-data exposure models are the stronger evidence.</div></div>',
+        unsafe_allow_html=True)
+
+
 def render_physchem(r):
     d = r["descriptors"]
     show = [("MW", d.get("mw"), "{:.0f}"), ("clogP", d.get("clogp"), "{:.2f}"), ("TPSA", d.get("tpsa"), "{:.0f}"),
@@ -1363,6 +1503,12 @@ def render_report(smiles, name="Compound"):
     a, b = st.columns(2, gap="large")
     with a: render_disease(r)
     with b: render_targets(r)
+    st.write("")
+    # Read-across and CNS-likeness need no model to fire, so they carry the answer for a compound
+    # that engages nothing in the panel. They sit directly beneath the disease result for that reason.
+    g, h = st.columns(2, gap="large")
+    with g: render_readacross(smiles.strip(), r)
+    with h: render_cns_mpo(r)
     st.write("")
     c, d = st.columns(2, gap="large")
     with c: render_adme(r)
