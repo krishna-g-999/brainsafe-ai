@@ -1,0 +1,2 @@
+finding,implication
+BBB gate is rank-invariant across diseases,"gating cannot improve or harm disease ranking; it only rescales, so it must be justified as an exposure filter rather than as a discriminative term"

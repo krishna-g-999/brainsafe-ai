@@ -68,3 +68,7 @@ docs/about_preview.html
 
 # Read-across index (regenerable via src/brainsafe/build_readacross_index.py)
 models_rf/readacross_index.pkl
+
+# Inversion analysis intermediate logs (results CSVs and REPORT.md are tracked)
+inversion/*.log
+inversion/results/H4_distant_predictions.csv
