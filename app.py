@@ -77,10 +77,24 @@ TARGET_KIND = {"AChE": "enrich", "BChE": "enrich", "BACE1": "enrich", "GSK3B": "
                "HT2A": "binder", "NEURO": "pct", **{t: "binder" for t in BINDER_TARGETS}}
 
 # Curated target -> pathway -> disease knowledge graph. Each entry is (pathway, source_id, disease,
-# weight). Pathway/source anchors: KEGG cholinergic (hsa04725), serotonergic (hsa04726) and
-# dopaminergic (hsa04728) synapse maps; Alzheimer (hsa05010) and Parkinson (hsa05012) disease maps;
-# Reactome KEAP1-NFE2L2 oxidative-stress response (R-HSA-9755511). Disease scores take the strongest
-# engaged target per disease (not an average), so unrelated targets do not dilute a real signal.
+# weight).
+#
+# On the weights: an ablation over 15,609 scaffold-held-out compounds found that curated, uniform and
+# randomly permuted weights give top-3 disease accuracy of 0.7917, 0.7911 and 0.7899 respectively
+# (inversion/results/H2_weight_ablation.csv). The predictive information is carried by the graph's
+# TOPOLOGY, which target connects to which disease, and not by these numbers. They are retained as a
+# mechanistic prior expressing which link is the more direct, and they still scale the reported
+# score, but they are NOT tuned parameters and must not be described as such.
+#
+# Pathway and source anchors: KEGG cholinergic (hsa04725), serotonergic (hsa04726) and dopaminergic
+# (hsa04728) synapse maps; Alzheimer (hsa05010) and Parkinson (hsa05012) disease maps; Reactome
+# KEAP1-NFE2L2 pathway (R-HSA-9755511). Every assignment was checked against the source database's
+# own gene annotation.
+#
+# A disease takes the STRONGEST engaged target rather than an average, so unrelated targets cannot
+# dilute a real signal, and the result is then scaled by predicted BBB penetration. That scaling is
+# identical across diseases and therefore cannot reorder them; it decides only whether anything
+# clears the reporting threshold.
 KNOWLEDGE_GRAPH = {
     "AChE":  [("Cholinergic synapse", "hsa04725", "Alzheimer's disease", 1.0),
               ("Cholinergic synapse", "hsa04725", "Cognition (cholinergic)", 1.0)],
@@ -578,8 +592,13 @@ def binder_threshold(tgt):
 
 
 def disease_scores(r):
-    """BBB-gated brain-relevance per condition, from the STRONGEST engaged target in the
-    knowledge graph. Returns (bbb, neuro, rows)."""
+    """Brain-relevance per condition, from the STRONGEST engaged target in the knowledge graph,
+    scaled by predicted BBB penetration. Returns (bbb, neuro, rows).
+
+    The BBB term multiplies every disease identically, so it cannot change which condition ranks
+    first (verified in inversion/results/H3_gating.csv). It is an exposure filter: it decides whether
+    anything is reported at all, not which disease is reported. Describing it as though it sharpens
+    the disease call would overstate what it does."""
     bbb = r["targets"]["BBB"]
     neuro = neuro_signal(r)
     rows = []
@@ -1011,7 +1030,11 @@ def render_network(r, name="Compound"):
         'amyotrophic lateral sclerosis (hsa05014) disease maps; Reactome KEAP1-NFE2L2 pathway '
         '(R-HSA-9755511); IUPHAR Guide to Pharmacology. Every target-to-pathway assignment was verified '
         'against the source database gene annotation. Assignments not supported by pathway membership are '
-        'cited to the target annotation instead. Weights are curated and versioned in the repository.'
+        'cited to the target annotation instead. The edge weights are a curated mechanistic prior, not '
+        'tuned parameters: an ablation on held-out compounds found uniform and randomly permuted '
+        'weights give the same disease ranking, so the predictive content lies in the graph topology. '
+        'The BBB term scales every disease equally and therefore sets whether anything is reported, '
+        'not which condition ranks first.'
         '</div></div>',
         unsafe_allow_html=True)
 
@@ -1055,11 +1078,11 @@ def render_disease(r):
         bars += f'<div class="bs-barsub">{sub}</div>'
     profile = interpret_profile(r, bbb, neuro, rows)
     st.markdown(f'<div class="bs-card"><div class="bs-h">Brain-relevance signal'
-                f'<span class="bs-h-sub">strongest engaged mechanism × BBB penetration</span></div>'
+                f'<span class="bs-h-sub">strongest engaged mechanism, scaled by BBB exposure</span></div>'
                 f'<div class="bs-note" style="margin:-4px 0 12px;padding:9px 12px;background:#F7FAFE;'
                 f'border-left:3px solid {NAVY_MD};border-radius:0 8px 8px 0">{profile}</div>{bars}'
                 f'<div class="bs-note" style="margin-top:6px">Signal = enrichment of each mechanism <i>over its '
-                f'training base rate</i> (raw probability alone is not engagement), gated by predicted BBB '
+                f'training base rate</i> (raw probability alone is not engagement), then scaled by predicted BBB '
                 f'penetration. Research prioritisation only, not clinical efficacy.</div></div>',
                 unsafe_allow_html=True)
 

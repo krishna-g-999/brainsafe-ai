@@ -26,7 +26,7 @@ that includes a directly modelled unbound brain-to-plasma partition coefficient.
 validated under 10-fold cross-validation in two regimes, a random split and a scaffold-grouped split
 that holds out entire chemical series. Predictions are probability-calibrated, carry an
 endpoint-specific applicability-domain flag with the nearest measured analogue, and are combined into
-blood-brain-barrier-gated per-disease relevance scores traced through a curated
+per-disease relevance scores, filtered by blood-brain-barrier exposure and traced through a curated
 target-to-pathway-to-disease knowledge graph spanning fourteen brain conditions, including
 Alzheimer's disease, Parkinson's disease, amyotrophic lateral sclerosis, Huntington's disease and
 epilepsy. The measured-label classifier panel reaches a mean scaffold-split AUROC of 0.92. The binder
@@ -58,7 +58,8 @@ prediction is reported with its uncertainty: a calibrated probability, an applic
 and the nearest measured analogue behind it, so the user always knows whether a number is
 interpolation or extrapolation. Third, predictions are made mechanistically interpretable: individual
 target engagements are traced through a curated target-to-pathway-to-disease knowledge graph into
-BBB-gated per-disease relevance scores, so a result is an explanation rather than a bare number.
+per-disease relevance scores, filtered by predicted blood-brain-barrier exposure, so a result is an
+explanation rather than a bare number.
 
 ## Materials and Methods
 
@@ -248,8 +249,17 @@ knowledge graph maps each target through a biological pathway to the diseases it
 KEGG synapse and disease maps (hsa04725, hsa04726, hsa04728, hsa04723, hsa05032, hsa04080, hsa05010,
 hsa05012), the Reactome KEAP1-NFE2L2 oxidative-stress response (R-HSA-9755511) and IUPHAR Guide to
 Pharmacology associations. A per-disease relevance score is the strongest engaged target for that
-disease gated by predicted BBB penetration; taking the strongest rather than an average prevents
-unrelated mechanisms from diluting a real signal. Coverage spans eleven brain conditions (Figure 1).
+disease, scaled by predicted BBB penetration; taking the strongest rather than an average prevents
+unrelated mechanisms from diluting a real signal. Coverage spans fourteen brain conditions (Figure 1).
+
+Two properties of this construction were established by ablation rather than assumed, and both
+constrain how it should be described. First, the BBB term multiplies every disease identically and
+therefore cannot alter which condition ranks highest; it is an exposure filter that determines
+whether any signal is reported, not a discriminative term. Second, the curated edge weights do not
+measurably affect the disease ranking: over 15,609 scaffold-held-out compounds, curated, uniform and
+randomly permuted weights give top-3 accuracies of 0.7917, 0.7911 and 0.7899. The predictive content
+of the graph lies in its topology, in which target is connected to which disease, and the weights are
+retained as a mechanistic prior expressing directness of linkage rather than as fitted parameters.
 
 ### Web implementation
 
@@ -491,7 +501,7 @@ PubChem; structures are standardised with RDKit (salt stripping, largest-fragmen
 
 **Output.** Results are laid out as a single scrollable report (Figure 2): a summary card with the
 rendered structure, the free-brain-exposure verdict and headline metrics; the mechanistic map
-(Figure 3); a brain-relevance panel giving the BBB-gated score for each condition with its driving
+(Figure 3); a brain-relevance panel giving the exposure-scaled score for each condition with its driving
 mechanism; a target-engagement table reporting each calibrated probability, its base rate and a
 base-rate-aware call; a receptor-binding table; an ADME table; a physicochemical profile; and an
 applicability and confidence card giving global and per-endpoint domain flags with the nearest
