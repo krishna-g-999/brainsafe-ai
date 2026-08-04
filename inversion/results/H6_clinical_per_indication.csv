@@ -1,0 +1,10 @@
+indication,n,recovered_in_top3,recovered_ranking_only,silent
+Alzheimer's disease,10,0.2,0.8,5
+Parkinson's disease,39,0.154,0.59,18
+Depression / anxiety,113,0.611,0.779,30
+Psychosis / schizophrenia,73,0.644,0.74,14
+Addiction,17,0.412,0.471,6
+ADHD,31,0.226,0.258,16
+Chronic pain,144,0.229,0.229,87
+Sleep / wakefulness,27,0.296,0.296,11
+Epilepsy,58,0.103,0.362,47

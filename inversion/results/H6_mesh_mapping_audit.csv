@@ -1,0 +1,112 @@
+panel_condition,mesh_heading,records,status
+ADHD,Attention Deficit Disorder with Hyperactivity,31,mapped
+Addiction,Opioid-Related Disorders,8,mapped
+Addiction,Alcoholism,8,mapped
+Addiction,Tobacco Use Disorder,2,mapped
+Addiction,Substance Withdrawal Syndrome,1,mapped
+Alzheimer's disease,Alzheimer Disease,13,mapped
+Amyotrophic lateral sclerosis,Amyotrophic Lateral Sclerosis,3,mapped
+Chronic pain,Pain,93,mapped
+Chronic pain,Migraine Disorders,47,mapped
+Chronic pain,Acute Pain,28,mapped
+Chronic pain,Back Pain,12,mapped
+Chronic pain,Neuralgia,10,mapped
+Chronic pain,Chronic Pain,10,mapped
+Chronic pain,"Pain, Postoperative",10,mapped
+Chronic pain,"Neuralgia, Postherpetic",5,mapped
+Chronic pain,Cancer Pain,5,mapped
+Chronic pain,Abdominal Pain,3,mapped
+Chronic pain,Eye Pain,2,mapped
+Chronic pain,Trigeminal Neuralgia,1,mapped
+Chronic pain,Chest Pain,1,mapped
+Chronic pain,Musculoskeletal Pain,1,mapped
+Chronic pain,Breakthrough Pain,1,mapped
+Depression / anxiety,Depressive Disorder,103,mapped
+Depression / anxiety,"Depressive Disorder, Major",45,mapped
+Depression / anxiety,Anxiety,27,mapped
+Depression / anxiety,Anxiety Disorders,20,mapped
+Depression / anxiety,Depression,9,mapped
+Depression / anxiety,Obsessive-Compulsive Disorder,6,mapped
+Depression / anxiety,Panic Disorder,5,mapped
+Depression / anxiety,"Depression, Postpartum",2,mapped
+Epilepsy,Epilepsy,59,mapped
+Epilepsy,Seizures,40,mapped
+Epilepsy,"Epilepsies, Partial",6,mapped
+Epilepsy,"Epilepsy, Tonic-Clonic",4,mapped
+Epilepsy,"Epilepsy, Complex Partial",3,mapped
+Epilepsy,"Epilepsy, Absence",3,mapped
+Epilepsy,"Epilepsies, Myoclonic",3,mapped
+Epilepsy,Status Epilepticus,2,mapped
+Epilepsy,Epileptic Syndromes,1,mapped
+Epilepsy,"Myoclonic Epilepsy, Juvenile",1,mapped
+Huntington's disease,Huntington Disease,2,mapped
+Parkinson's disease,Parkinson Disease,39,mapped
+Parkinson's disease,"Parkinson Disease, Postencephalitic",2,mapped
+Parkinson's disease,"Parkinson Disease, Secondary",2,mapped
+Parkinson's disease,Wolff-Parkinson-White Syndrome,2,mapped
+Parkinson's disease,Parkinsonian Disorders,2,mapped
+Psychosis / schizophrenia,Psychotic Disorders,63,mapped
+Psychosis / schizophrenia,Bipolar Disorder,36,mapped
+Psychosis / schizophrenia,Schizophrenia,29,mapped
+Sleep / wakefulness,Sleep Initiation and Maintenance Disorders,17,mapped
+Sleep / wakefulness,Narcolepsy,13,mapped
+,Stroke,41,"discarded (neurological wording, no clear panel match)"
+,Glaucoma,37,"discarded (neurological wording, no clear panel match)"
+,Multiple Sclerosis,35,"discarded (neurological wording, no clear panel match)"
+,"Glaucoma, Open-Angle",17,"discarded (neurological wording, no clear panel match)"
+,Neuroendocrine Tumors,13,"discarded (neurological wording, no clear panel match)"
+,Sarcoma,12,"discarded (neurological wording, no clear panel match)"
+,"Multiple Sclerosis, Relapsing-Remitting",12,"discarded (neurological wording, no clear panel match)"
+,Osteosarcoma,7,"discarded (neurological wording, no clear panel match)"
+,Atherosclerosis,7,"discarded (neurological wording, no clear panel match)"
+,"Sexual Dysfunctions, Psychological",7,"discarded (neurological wording, no clear panel match)"
+,"Multiple Sclerosis, Chronic Progressive",6,"discarded (neurological wording, no clear panel match)"
+,"Muscular Atrophy, Spinal",6,"discarded (neurological wording, no clear panel match)"
+,Tuberous Sclerosis,6,"discarded (neurological wording, no clear panel match)"
+,Mental Disorders,6,"discarded (neurological wording, no clear panel match)"
+,Restless Legs Syndrome,5,"discarded (neurological wording, no clear panel match)"
+,Neuroblastoma,5,"discarded (neurological wording, no clear panel match)"
+,Cerebral Palsy,5,"discarded (neurological wording, no clear panel match)"
+,Neuronal Ceroid-Lipofuscinoses,5,"discarded (neurological wording, no clear panel match)"
+,Cognitive Dysfunction,5,"discarded (neurological wording, no clear panel match)"
+,Polyneuropathies,5,"discarded (neurological wording, no clear panel match)"
+,"Amyloid Neuropathies, Familial",5,"discarded (neurological wording, no clear panel match)"
+,"Sarcoma, Kaposi",4,"discarded (neurological wording, no clear panel match)"
+,Psychomotor Agitation,4,"discarded (neurological wording, no clear panel match)"
+,Brain Neoplasms,4,"discarded (neurological wording, no clear panel match)"
+,Autistic Disorder,3,"discarded (neurological wording, no clear panel match)"
+,Tourette Syndrome,3,"discarded (neurological wording, no clear panel match)"
+,Liposarcoma,3,"discarded (neurological wording, no clear panel match)"
+,"Glaucoma, Angle-Closure",3,"discarded (neurological wording, no clear panel match)"
+,Spinal Cord Injuries,3,"discarded (neurological wording, no clear panel match)"
+,Ischemic Stroke,3,"discarded (neurological wording, no clear panel match)"
+,Brain Edema,2,"discarded (neurological wording, no clear panel match)"
+,Neuromyelitis Optica,2,"discarded (neurological wording, no clear panel match)"
+,Neuromuscular Blockade,2,"discarded (neurological wording, no clear panel match)"
+,Spinal Cord Diseases,2,"discarded (neurological wording, no clear panel match)"
+,Arteriosclerosis,2,"discarded (neurological wording, no clear panel match)"
+,Brain Diseases,2,"discarded (neurological wording, no clear panel match)"
+,Leiomyosarcoma,1,"discarded (neurological wording, no clear panel match)"
+,Neurotic Disorders,1,"discarded (neurological wording, no clear panel match)"
+,Intracranial Arteriosclerosis,1,"discarded (neurological wording, no clear panel match)"
+,Diabetic Neuropathies,1,"discarded (neurological wording, no clear panel match)"
+,Neurofibromatoses,1,"discarded (neurological wording, no clear panel match)"
+,Hepatic Encephalopathy,1,"discarded (neurological wording, no clear panel match)"
+,Craniocerebral Trauma,1,"discarded (neurological wording, no clear panel match)"
+,"Diabetes Insipidus, Neurogenic",1,"discarded (neurological wording, no clear panel match)"
+,Brain Injuries,1,"discarded (neurological wording, no clear panel match)"
+,"Brain Injuries, Traumatic",1,"discarded (neurological wording, no clear panel match)"
+,Neurocysticercosis,1,"discarded (neurological wording, no clear panel match)"
+,Chronic Traumatic Encephalopathy,1,"discarded (neurological wording, no clear panel match)"
+,Neurofibromatosis 1,1,"discarded (neurological wording, no clear panel match)"
+,Dermatofibrosarcoma,1,"discarded (neurological wording, no clear panel match)"
+,"Xanthomatosis, Cerebrotendinous",1,"discarded (neurological wording, no clear panel match)"
+,Friedreich Ataxia,1,"discarded (neurological wording, no clear panel match)"
+,Spinal Fusion,1,"discarded (neurological wording, no clear panel match)"
+,Glossopharyngeal Nerve Diseases,1,"discarded (neurological wording, no clear panel match)"
+,"Injections, Spinal",1,"discarded (neurological wording, no clear panel match)"
+,Nervous System Diseases,1,"discarded (neurological wording, no clear panel match)"
+,Neurodegenerative Diseases,1,"discarded (neurological wording, no clear panel match)"
+,Nervous System Neoplasms,1,"discarded (neurological wording, no clear panel match)"
+,Neuromuscular Diseases,1,"discarded (neurological wording, no clear panel match)"
+,Autoimmune Diseases of the Nervous System,1,"discarded (neurological wording, no clear panel match)"

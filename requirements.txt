@@ -1,4 +1,13 @@
-# BrainSafe AI — core dependencies (versions used in this work)
+# BrainSafe AI core dependencies (versions used in this work).
+#
+# These are the versions in brainsafe_env, the environment that serves the application and under
+# which the deployed estimators were fitted; scikit-learn records its own version inside the pickles,
+# so loading them under a different minor version raises InconsistentVersionWarning. That warning was
+# checked rather than assumed harmless: 630 model outputs across 10 structurally unrelated compounds
+# were compared between 1.8.0 and 1.9.0 and agreed exactly except for one value differing by 1e-12.
+# Install the pinned version regardless, so the deployed configuration is the validated one.
+#
+# Verify an environment with:  python src/brainsafe/evaluation/app_health.py
 rdkit==2026.03.2
 scikit-learn==1.8.0
 numpy==2.4.6
@@ -8,6 +17,7 @@ matplotlib==3.10.9
 requests
 joblib
 streamlit
+plotly==6.7.0
 python-docx==1.2.0
 pypandoc_binary
 xgboost>=3.3

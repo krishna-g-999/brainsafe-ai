@@ -60,6 +60,31 @@ random.*
 For held-out compounds with a known target, ask how often read-across recovers that target, against
 a random-target baseline matched to target frequency.
 
+### H6. The disease scores match real clinical indications
+*Null: the disease layer agrees only with this project's own target-to-disease map, which was written
+by the same hands that wrote the scoring rule. Agreement with clinical reality is untested, and
+apparent success could come from the skew of indication frequencies or from memorising approved drugs
+that appear in the training actives.*
+
+H1 asked whether the layer recovers the disease a compound's target maps to, using our own map, so it
+established internal consistency rather than external truth. Ground truth here is ChEMBL's
+`drug_indication` table restricted to phase 4, mapped to the panel through a keyword list fixed
+before any prediction is computed and deliberately narrow, so that an unmatched heading is discarded
+rather than coerced. Compared against a permutation null that shuffles which drug carries which
+indication and a frequency null that always answers with the commonest indications, and stratified by
+whether the exact structure appears anywhere in the training chemistry, which separates prediction
+from memorisation.
+
+### H7. Silence means the compound is inactive
+*Null: a compound that scores zero has simply not been recognised, either because the model cannot
+rank it or because the reporting threshold sits above most true actives.*
+
+Prompted by H6, where 47 of 58 approved antiepileptics scored exactly zero. For every target, measure
+AUROC against 600 random PubChem structures and the fraction of its own held-out actives that clear
+the deployed threshold. The two failure modes have different remedies: a model that cannot rank
+cannot be fixed by moving a threshold, whereas a strict operating point is a deliberate trade whose
+price should be quoted rather than hidden.
+
 ## Reporting rule
 
 Each test writes its own CSV and a one-line verdict of SUPPORTED, WEAKENED or REFUTED. A refuted

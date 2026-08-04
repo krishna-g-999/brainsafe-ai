@@ -921,10 +921,14 @@ def build_network_svg(r, name="Compound"):
             f'<div class="bs-note" style="margin-top:8px;max-width:70ch;margin-left:auto;'
             f'margin-right:auto">The analysis ran across all {len(KNOWLEDGE_GRAPH)} modelled '
             f'targets. This is the expected result for a peripherally acting compound. It is not '
-            f'evidence of inactivity: the molecule may act through a mechanism this tool does not '
-            f'model (see the Coverage panel in About). Exposure was still assessed, and is shown '
-            f'above: predicted BBB penetration {bbb:.0%} and unbound brain exposure '
-            f'K<sub>p,uu</sub> {r["adme"]["kpuu"]:.2f}.</div>{detail}</div>')
+            f'evidence of inactivity, for two reasons. The molecule may act through a mechanism this '
+            f'tool does not model (see the Coverage panel in About). It may also act through a '
+            f'modelled target but fall under its reporting threshold: those thresholds are set for '
+            f'precision, holding the false-positive rate near 0.2% on random chemistry, and the '
+            f'measured cost is a median sensitivity of 0.77 across the panel, falling to 0.26 at the '
+            f'strictest endpoints (inversion/results/H7_target_discrimination.csv). Exposure was '
+            f'still assessed, and is shown above: predicted BBB penetration {bbb:.0%} and unbound '
+            f'brain exposure K<sub>p,uu</sub> {r["adme"]["kpuu"]:.2f}.</div>{detail}</div>')
 
     T = list(dict.fromkeys(e[0] for e in edges))
     P = list(dict.fromkeys(e[1] for e in edges))
