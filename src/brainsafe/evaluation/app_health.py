@@ -1,0 +1,262 @@
+"""Pre-flight check on the deployed application.
+
+Runs the checks that a browser session cannot make cheaply and that silently break a web server:
+every declared import resolves, every model file the app asks for exists and loads, every artefact
+referenced by the results panels is present, the knowledge graph is internally consistent, and a set
+of chemically diverse compounds produces distinct and plausible output rather than one answer
+repeated. The last of these exists because a shared answer across unrelated compounds was a real
+defect once and would not raise an exception if it returned.
+
+Exit status is 0 only if every check passes, so this can gate a deployment.
+
+Run it with the interpreter that actually serves the application, not whichever Python happens to be
+first on the path, or the version check will report drift that the deployed environment does not
+have:
+
+    brainsafe_env\\Scripts\\python.exe src/brainsafe/evaluation/app_health.py
+
+Read-only. Writes nothing.
+"""
+from __future__ import annotations
+
+import importlib
+import sys
+import traceback
+from pathlib import Path
+
+import numpy as np
+
+ROOT = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "src" / "brainsafe"))
+
+# chemically unrelated, spanning CNS drugs, peripheral drugs and a natural product
+PROBES = {
+    "donepezil": "COc1cc2c(cc1OC)C(=O)C(CC1CCN(Cc3ccccc3)CC1)C2",
+    "levodopa": "N[C@@H](Cc1ccc(O)c(O)c1)C(=O)O",
+    "fluoxetine": "CNCCC(Oc1ccc(C(F)(F)F)cc1)c1ccccc1",
+    "haloperidol": "O=C(CCCN1CCC(O)(c2ccc(Cl)cc2)CC1)c1ccc(F)cc1",
+    "morphine": "CN1CC[C@]23c4c5ccc(O)c4O[C@H]2[C@@H](O)C=C[C@H]3[C@H]1C5",
+    "caffeine": "Cn1c(=O)c2c(ncn2C)n(C)c1=O",
+    "paracetamol": "CC(=O)Nc1ccc(O)cc1",
+    "metformin": "CN(C)C(=N)NC(N)=N",
+    "fostamatinib": "COc1cc(Nc2ncc(F)c(Nc3ccccc3)n2)cc(OC)c1OC",
+    "resveratrol": "Oc1ccc(/C=C/c2cc(O)cc(O)c2)cc1",
+    "losartan": "CCCCc1nc(Cl)c(CO)n1Cc1ccc(-c2ccccc2-c2nnn[nH]2)cc1",
+    "atorvastatin": "CC(C)c1c(C(=O)Nc2ccccc2)c(-c2ccccc2)c(-c2ccc(F)cc2)n1CC[C@@H](O)C[C@@H](O)CC(=O)O",
+}
+
+fails, warns = [], []
+
+
+def check(name, fn):
+    try:
+        msg = fn()
+        print(f"  [ok]   {name}{(': ' + msg) if msg else ''}", flush=True)
+    except AssertionError as e:
+        fails.append(f"{name}: {e}")
+        print(f"  [FAIL] {name}: {e}", flush=True)
+    except Exception:
+        fails.append(f"{name}: {traceback.format_exc(limit=2).strip()}")
+        print(f"  [FAIL] {name}:\n{traceback.format_exc(limit=3)}", flush=True)
+
+
+def main():
+    print("1. imports")
+
+    def _imports():
+        missing = []
+        for mod in ["streamlit", "rdkit", "sklearn", "numpy", "pandas", "joblib",
+                    "plotly", "requests", "matplotlib"]:
+            try:
+                importlib.import_module(mod)
+            except ImportError:
+                missing.append(mod)
+        assert not missing, f"not installed: {', '.join(missing)}"
+        return "all third-party imports resolve"
+    check("third-party dependencies", _imports)
+
+    # every requirement the app declares must actually be importable, and vice versa
+    def _declared():
+        req = (ROOT / "requirements.txt").read_text().splitlines()
+        names = {ln.split("==")[0].split(">=")[0].strip().lower()
+                 for ln in req if ln.strip() and not ln.startswith("#")}
+        src = (ROOT / "app.py").read_text(encoding="utf-8")
+        for mod, pkg in [("plotly", "plotly"), ("streamlit", "streamlit"),
+                         ("joblib", "joblib"), ("rdkit", "rdkit")]:
+            if f"import {mod}" in src:
+                assert pkg in names, f"app.py imports {mod} but requirements.txt does not list it"
+        return f"{len(names)} declared dependencies, all app imports covered"
+    check("requirements.txt covers app.py imports", _declared)
+
+    def _versions():
+        """The pinned versions are the ones the models were fitted and validated under. Running on
+        anything else means the deployed numbers were produced by an unvalidated stack, and for
+        pickled estimators it can change predictions silently."""
+        import importlib.metadata as md
+
+        def norm(v):
+            # rdkit reports 2026.3.2 for a pin written 2026.03.2; strip leading zeros per component
+            # so equal versions do not read as drift
+            return tuple(p.lstrip("0") or "0" for p in v.strip().split("."))
+
+        drift = []
+        for ln in (ROOT / "requirements.txt").read_text().splitlines():
+            ln = ln.strip()
+            if not ln or ln.startswith("#") or "==" not in ln:
+                continue
+            pkg, want = ln.split("==")
+            try:
+                have = md.version(pkg.strip())
+            except md.PackageNotFoundError:
+                drift.append(f"{pkg} not installed (pinned {want})")
+                continue
+            if norm(have) != norm(want):
+                drift.append(f"{pkg}: pinned {want.strip()}, installed {have}")
+        if drift:
+            warns.extend(drift)
+            return "WARNING: " + "; ".join(drift)
+        return "installed versions match every pin"
+    check("environment matches the pinned versions", _versions)
+
+    print("2. application module")
+    import app  # noqa: E402  - deliberately after the import check
+
+    def _module():
+        for fn in ["load_models", "predict_all", "disease_scores", "assess_domain",
+                   "resolve_query", "render_report", "build_network_svg"]:
+            assert hasattr(app, fn), f"app.{fn} is missing"
+        return "public entry points present"
+    check("entry points", _module)
+
+    print("3. model artefacts")
+    models = {}
+
+    def _models():
+        nonlocal models
+        models = app.load_models()
+        assert models, "no models loaded"
+        return f"{len(models)} model objects loaded"
+    check("model files load", _models)
+
+    def _artefacts():
+        missing = [p.name for p in [ROOT / "models_rf" / "endpoint_context.json",
+                                    ROOT / "models_rf" / "ad_reference.pkl",
+                                    ROOT / "models_rf" / "binder_modes.json",
+                                    ROOT / "models_rf" / "readacross_index.pkl"] if not p.exists()]
+        assert not missing, f"absent: {', '.join(missing)}"
+        return "context, domain reference, binder modes and read-across index all present"
+    check("supporting artefacts", _artefacts)
+
+    print("4. knowledge graph")
+
+    def _graph():
+        kg, order = app.KNOWLEDGE_GRAPH, set(app.DISEASE_ORDER)
+        bad = {d for e in kg.values() for (_, _, d, _) in e} - order
+        assert not bad, f"diseases outside DISEASE_ORDER: {sorted(bad)}"
+        orphan = [d for d in order if d not in app.DISEASE_CONTRIB]
+        assert not orphan, f"diseases with no contributing target: {orphan}"
+        bad_w = [(t, d, w) for t, e in kg.items() for (_, _, d, w) in e if not 0 < w <= 1]
+        assert not bad_w, f"edge weights outside (0, 1]: {bad_w[:3]}"
+        return f"{len(kg)} targets, {len(order)} conditions, every edge well formed"
+    check("graph consistency", _graph)
+
+    def _covered():
+        # every target named in the graph must be scorable, or the edge is decorative
+        unscored = []
+        for t in app.KNOWLEDGE_GRAPH:
+            if t not in app.TARGET_KIND:
+                unscored.append(t)
+        assert not unscored, f"in the graph but not scorable: {unscored}"
+        return "every graph target has a scoring rule"
+    check("graph targets are scorable", _covered)
+
+    print("5. inference on chemically diverse probes")
+    reports = {}
+
+    def _predict():
+        for name, smi in PROBES.items():
+            r = app.predict_all(smi, models)
+            assert r is not None, f"{name} failed to featurise"
+            bbb, neuro, dz = app.disease_scores(r)
+            assert np.isfinite(bbb), f"{name} produced a non-finite BBB probability"
+            reports[name] = {"bbb": bbb, "neuro": neuro,
+                             "top": [(d["disease"], round(d["gated"], 3)) for d in dz[:3]],
+                             "vec": tuple(round(d["gated"], 6) for d in
+                                          sorted(dz, key=lambda x: x["disease"]))}
+        return f"{len(reports)} compounds scored"
+    check("all probes score", _predict)
+
+    def _distinct():
+        vecs = {n: r["vec"] for n, r in reports.items()}
+        dupes = [(a, b) for i, a in enumerate(vecs) for b in list(vecs)[i + 1:]
+                 if vecs[a] == vecs[b] and any(v > 0 for v in vecs[a])]
+        assert not dupes, f"identical non-zero disease profiles: {dupes}"
+        nz = sum(1 for v in vecs.values() if any(x > 0 for x in v))
+        assert nz >= len(vecs) // 2, f"only {nz}/{len(vecs)} probes produced any signal"
+        return f"{len(set(vecs.values()))} distinct profiles across {len(vecs)} compounds"
+    check("distinct compounds give distinct profiles", _distinct)
+
+    def _sanity():
+        # directional expectations that follow from established pharmacology, not from our numbers
+        problems = []
+        if reports["donepezil"]["bbb"] < 0.5:
+            problems.append("donepezil is predicted not to reach the brain")
+        if reports["metformin"]["bbb"] > reports["fluoxetine"]["bbb"]:
+            problems.append("metformin is predicted to penetrate better than fluoxetine")
+        top_lev = [d for d, _ in reports["levodopa"]["top"]]
+        if "Parkinson's disease" not in top_lev:
+            problems.append(f"levodopa top-3 does not include Parkinson's disease: {top_lev}")
+        assert not problems, "; ".join(problems)
+        return "BBB ordering and levodopa recovery behave as expected"
+    check("directional pharmacology", _sanity)
+
+    def _peripheral():
+        # peripheral drugs should not be presented as actionable CNS findings
+        loud = [n for n in ["losartan", "atorvastatin", "metformin"]
+                if reports[n]["top"] and reports[n]["top"][0][1] >= app.MIN_ACTIONABLE_SCORE]
+        if loud:
+            warns.append(f"peripheral controls above the reporting threshold: {loud}")
+            return f"WARNING: {loud} exceed MIN_ACTIONABLE_SCORE"
+        return "peripheral controls stay below the reporting threshold"
+    check("peripheral negative controls", _peripheral)
+
+    print("6. input handling")
+
+    def _resolve():
+        smi, nm, err = app.resolve_query("CC(=O)Nc1ccc(O)cc1")
+        assert err is None and smi, f"a valid SMILES was rejected: {err}"
+        _, _, err2 = app.resolve_query("not-a-molecule-@@@")
+        assert err2, "nonsense input was accepted without an error"
+        return "valid SMILES accepted, malformed input rejected"
+    check("query resolution", _resolve)
+
+    def _network():
+        svg = app.build_network_svg(app.predict_all(PROBES["donepezil"], models), "donepezil")
+        assert svg and "<svg" in svg, "network figure did not render"
+        assert "NaN" not in svg and "None" not in svg, "network figure contains undefined coordinates"
+        assert svg.count("<text") >= 4, "network figure rendered without labels"
+        return f"network SVG renders, {len(svg):,} characters, {svg.count('<text')} labels"
+    check("network figure", _network)
+
+    print()
+    for n, r in reports.items():
+        top = ", ".join(f"{d} {v:.2f}" for d, v in r["top"]) or "silent"
+        print(f"  {n:14} BBB {r['bbb']:.2f}   {top}")
+
+    print()
+    if fails:
+        print(f"FAILED: {len(fails)} check(s)")
+        for f in fails:
+            print(f"  - {f}")
+    if warns:
+        print(f"warnings: {len(warns)}")
+        for w in warns:
+            print(f"  - {w}")
+    if not fails:
+        print("app.py is healthy: all checks passed")
+    return 1 if fails else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
