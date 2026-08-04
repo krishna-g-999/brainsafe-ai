@@ -401,20 +401,44 @@ def _ramp(x, hi_good, lo_good):
     return float((lo_good - x) / (lo_good - hi_good))
 
 
-def cns_mpo(r):
+@st.cache_resource
+def load_pka_model():
+    """Most-basic-pKa regressor, loaded only if it passed its deployment threshold."""
+    p, mp = MODELS / "pka_basic.joblib", MODELS / "pka_basic_meta.json"
+    if not (p.exists() and mp.exists()):
+        return None, None
+    meta = json.loads(mp.read_text())
+    if not meta.get("deployed"):
+        return None, meta
+    return joblib.load(p), meta
+
+
+def predict_pka(smiles):
+    """Predicted most basic pKa, or None when no model is deployed or the structure has no basic
+    centre (in which case the CNS MPO pKa term is satisfied by definition)."""
+    mdl, _ = load_pka_model()
+    if mdl is None:
+        return None
+    x = featurize_one(smiles)
+    if x is None:
+        return None
+    return float(mdl.predict(x.reshape(1, -1))[0])
+
+
+def cns_mpo(r, smiles=None):
     """CNS multiparameter optimisation desirability, after Wager et al. (ACS Chem Neurosci 2010).
 
     The published score sums six desirability functions, each mapping a physicochemical property to
     [0, 1]: cLogP, cLogD at pH 7.4, molecular weight, topological polar surface area, hydrogen-bond
-    donor count, and the most basic pKa. Higher totals associate with better CNS exposure and a
-    lower attrition rate.
+    donor count, and the most basic pKa. Higher totals associate with better CNS exposure.
 
-    Five of the six are computed here. cLogP, molecular weight, TPSA and donor count come from the
-    RDKit descriptors already in the feature vector; cLogD is taken from the measured-data
-    lipophilicity model rather than a rule of thumb. The most basic pKa is NOT computed, because no
-    pKa model is trained in this project and substituting a guess would put an unmeasured quantity
-    into a score presented as physicochemical fact. The result is therefore reported on a 0 to 5
-    scale and labelled as a five-component variant, never as the published six-component score.
+    cLogP, molecular weight, TPSA and donor count come from the RDKit descriptors already in the
+    feature vector; cLogD is taken from the measured-data lipophilicity model rather than a rule of
+    thumb. The most basic pKa comes from a model trained here on 6,384 ChEMBL compounds that carry a
+    basic centre and no acid indication, which reaches a scaffold-split R2 of 0.456 and a mean
+    absolute error of 1.17 pKa units. That error is not negligible against a desirability transition
+    that runs from 8 to 10, so the pKa term is the least certain of the six and is reported as such.
+    When no pKa model is deployed the score falls back to the five-component form on a 0 to 5 scale.
     """
     d = r.get("descriptors", {})
     mw, clogp = d.get("mw"), d.get("clogp")
@@ -438,7 +462,11 @@ def cns_mpo(r):
         "TPSA": t_tpsa,
         "HBD": _ramp(hbd, 0.5, 3.5),
     }
-    return {"total": float(sum(parts.values())), "max": 5.0, "parts": parts}
+    pka = predict_pka(smiles) if smiles else None
+    if pka is not None:
+        parts["most basic pKa (predicted)"] = _ramp(pka, 8.0, 10.0)
+    return {"total": float(sum(parts.values())), "max": float(len(parts)),
+            "parts": parts, "pka": pka}
 
 
 @st.cache_resource
@@ -468,6 +496,56 @@ def read_across(smiles, k=5, min_sim=0.35):
     order = np.argsort(-sims)[:k]
     return [{"smiles": idx["smiles"][i], "similarity": float(sims[i]), "targets": idx["targets"][i]}
             for i in order if sims[i] >= min_sim]
+
+
+READ_ACROSS_POOL = 60      # neighbours considered when accumulating evidence per target
+READ_ACROSS_MIN_SIM = 0.35
+
+
+def read_across_targets(smiles, pool=READ_ACROSS_POOL, min_sim=READ_ACROSS_MIN_SIM):
+    """Aggregate read-across evidence per target, weighting by how many neighbours support it.
+
+    A single neighbour at Tanimoto 0.70 is weaker evidence than five independent neighbours at 0.55,
+    yet a list of nearest neighbours presents them alike. Each neighbour active at a target is
+    therefore treated as an independent, imperfect observation and combined with a noisy-OR:
+
+        evidence(T) = 1 - product over supporting neighbours of (1 - s_i)
+
+    where s_i is the neighbour's Tanimoto similarity. The form has the properties the problem
+    requires: it is monotonic in both similarity and neighbour count, it cannot exceed 1, and one
+    very close neighbour can still carry a target on its own. Supporting counts are returned so the
+    interface can show whether a score rests on one analogue or on many.
+    """
+    idx = load_readacross()
+    if idx is None:
+        return []
+    mol = Chem.MolFromSmiles(smiles)
+    if mol is None:
+        return []
+    q = _AD_GEN.GetFingerprint(mol)
+    sims = np.array(DataStructs.BulkTanimotoSimilarity(q, idx["fps"]))
+    order = [i for i in np.argsort(-sims)[:pool] if sims[i] >= min_sim]
+    acc = {}
+    for i in order:
+        s = float(sims[i])
+        # Temper each neighbour's contribution before combining. Raw Tanimoto in a noisy-OR
+        # saturates almost immediately: twenty neighbours at 0.7 reach 1.00, which asserts certainty
+        # that moderate analogy cannot support and destroys the ranking between targets. Rescaling
+        # similarity above the inclusion floor and squaring it keeps the ordering while reserving
+        # scores near 1 for genuinely close matches.
+        w = ((s - min_sim) / (1.0 - min_sim)) ** 2 if s > min_sim else 0.0
+        for t in idx["targets"][i]:
+            a = acc.setdefault(t, {"target": t, "n": 0, "best_sim": 0.0, "prod": 1.0})
+            a["n"] += 1
+            a["best_sim"] = max(a["best_sim"], s)
+            a["prod"] *= (1.0 - w)
+    out = []
+    for t, a in acc.items():
+        a["evidence"] = 1.0 - a["prod"]
+        del a["prod"]
+        out.append(a)
+    out.sort(key=lambda x: -x["evidence"])
+    return out
 
 
 def low_power_target(tgt):
@@ -1064,9 +1142,33 @@ def render_readacross(smiles, r):
                 'inference is defensible. This is a genuine absence of evidence rather than evidence '
                 'of absence.</div>')
     else:
+        agg = read_across_targets(smiles)
+        if agg:
+            arows = []
+            for a in agg[:6]:
+                e = a["evidence"]
+                col = GREEN if e >= 0.8 else (AMBER if e >= 0.5 else MUTE2)
+                arows.append([
+                    (f'<b>{MECH_LABEL.get(a["target"].rstrip("*"), a["target"].rstrip("*"))}</b>'
+                     + ('<span class="bs-ctx"> (not modelled)</span>' if a["target"].endswith("*") else '')),
+                    f'<span class="bs-num" style="color:{col}">{e:.2f}</span>',
+                    f'{a["n"]}',
+                    f'{a["best_sim"]:.2f}'])
+            body_top = (
+                '<div class="bs-note" style="font-weight:700;color:' + NAVY + ';margin-bottom:6px">'
+                'Aggregated evidence per target</div>'
+                + _table(["Target", "Evidence", "Supporting neighbours", "Closest"],
+                         arows, ["l", "r", "c", "r"])
+                + '<div class="bs-note" style="margin:8px 0 14px">Evidence combines every supporting '
+                  'neighbour as an independent observation, 1 minus the product of (1 minus each '
+                  'similarity), so five neighbours at 0.55 outweigh a single one at 0.70 while one '
+                  'very close analogue can still carry a target alone.</div>')
+        else:
+            body_top = ""
         rows = []
         for h in nn:
-            tg = ", ".join(MECH_LABEL.get(t, t) for t in h["targets"][:5])
+            tg = ", ".join(MECH_LABEL.get(t.rstrip("*"), t.rstrip("*")) + ("*" if t.endswith("*") else "")
+                           for t in h["targets"][:5])
             s = h["similarity"]
             col = GREEN if s >= 0.7 else (AMBER if s >= 0.5 else MUTE2)
             rows.append([
@@ -1074,7 +1176,7 @@ def render_readacross(smiles, r):
                 f'{s:.2f}</span>',
                 f'<span class="bs-num" style="color:{col}">{tg or "no annotated target"}</span>',
                 f'<span class="bs-ctx" style="word-break:break-all">{_esc(h["smiles"][:46])}</span>'])
-        body = _table(["Tanimoto", "Measured active at", "Structure"], rows, ["c", "l", "l"])
+        body = body_top + '<div class="bs-note" style="font-weight:700;color:' + NAVY + '">Nearest measured neighbours</div>' + _table(["Tanimoto", "Measured active at", "Structure"], rows, ["c", "l", "l"])
     st.markdown(
         f'<div class="bs-card"><div class="bs-h">Read-across evidence'
         f'<span class="bs-h-sub">what the nearest measured compounds do</span></div>{body}'
@@ -1082,12 +1184,13 @@ def render_readacross(smiles, r):
         f'not about the query. Read-across is weaker than a validated model and fails at activity '
         f'cliffs, where one substitution abolishes binding, so the similarity is shown for every row. '
         f'It is most useful when no model fires: a compound with no direct engagement may still sit in '
-        f'a chemical neighbourhood with known brain pharmacology. Index: 123,259 measured actives '
-        f'across 50 targets.</div></div>', unsafe_allow_html=True)
+        f'a chemical neighbourhood with known brain pharmacology. Index: 153,038 measured actives '
+        f'across 72 targets, of which 22 are marked <i>not modelled</i> or asterisked because this '
+        f'project trains no model for them; for those, similarity is the only evidence offered.</div></div>', unsafe_allow_html=True)
 
 
-def render_cns_mpo(r):
-    m = cns_mpo(r)
+def render_cns_mpo(r, smiles=None):
+    m = cns_mpo(r, smiles)
     if m is None:
         return
     frac = m["total"] / m["max"]
@@ -1095,6 +1198,17 @@ def render_cns_mpo(r):
     bars = "".join(
         _bar(v, GREEN if v >= 0.7 else (AMBER if v >= 0.4 else MUTE2), k, f"{v:.2f}")
         for k, v in m["parts"].items())
+    if m.get("pka") is not None:
+        pka_txt = (f'The most basic pK<sub>a</sub> is predicted at <b>{m["pka"]:.1f}</b> by a model '
+                   f'trained here on 6,384 measured ChEMBL compounds carrying a basic centre '
+                   f'(scaffold-split R&sup2; 0.456, mean absolute error 1.17 pK<sub>a</sub> units). '
+                   f'That error is appreciable against a desirability transition running from 8 to '
+                   f'10, so this is the least certain of the six terms, and its prospective '
+                   f'behaviour is weaker still at a temporal R&sup2; of 0.12.')
+    else:
+        pka_txt = ('The most basic pK<sub>a</sub> term is omitted because no pK<sub>a</sub> model is '
+                   'deployed, so the total is on a 0 to 5 scale rather than the published 0 to 6. '
+                   'Without it, strongly basic compounds are over-scored.')
     st.markdown(
         f'<div class="bs-card"><div class="bs-h">CNS-likeness (CNS MPO)'
         f'<span class="bs-h-sub">physicochemical desirability, no target required</span></div>'
@@ -1102,18 +1216,13 @@ def render_cns_mpo(r):
         f'<span style="font-size:2rem;font-weight:800;color:{col};line-height:1">'
         f'{m["total"]:.2f}</span><span class="bs-ctx">of {m["max"]:.0f}</span></div>{bars}'
         f'<div class="bs-note" style="margin-top:6px">Desirability functions after Wager et al. '
-        f'(ACS Chemical Neuroscience, 2010). Five of the six published components are computed: '
-        f'cLogP, cLogD, molecular weight, polar surface area and hydrogen-bond donors. The sixth, '
-        f'the most basic pKa, is <b>not</b> included because no pKa model is trained here and a '
-        f'guessed value would enter a score presented as physicochemical fact. The total is '
-        f'therefore on a 0 to 5 scale, not the published 0 to 6. cLogD is taken from the '
-        f'measured-data lipophilicity model.<br><br>'
-        f'<b>Consequence of the missing pKa term:</b> strongly basic compounds are over-scored, '
-        f'because the published score penalises a high most-basic pKa and this variant cannot. '
-        f'Metformin illustrates it, scoring well on the five computed terms while the measured '
-        f'exposure models place its brain penetration low. Read this score alongside the predicted '
-        f'K<sub>p,uu</sub> and BBB values rather than in place of them; where the two disagree, the '
-        f'measured-data exposure models are the stronger evidence.</div></div>',
+        f'(ACS Chemical Neuroscience, 2010). cLogD is taken from the measured-data lipophilicity '
+        f'model. {pka_txt}<br><br>'
+        f'<b>Read this alongside the exposure models, not in place of them.</b> CNS MPO is a '
+        f'physicochemical heuristic that carries no information about transporters, so an '
+        f'actively effluxed or poorly absorbed compound can still score well. Where this score '
+        f'and the predicted K<sub>p,uu</sub> disagree, the measured-data exposure models are the '
+        f'stronger evidence.</div></div>',
         unsafe_allow_html=True)
 
 
@@ -1508,7 +1617,7 @@ def render_report(smiles, name="Compound"):
     # that engages nothing in the panel. They sit directly beneath the disease result for that reason.
     g, h = st.columns(2, gap="large")
     with g: render_readacross(smiles.strip(), r)
-    with h: render_cns_mpo(r)
+    with h: render_cns_mpo(r, smiles.strip())
     st.write("")
     c, d = st.columns(2, gap="large")
     with c: render_adme(r)

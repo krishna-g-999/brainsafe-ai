@@ -1,0 +1,9 @@
+{
+  "endpoint": "pka_basic",
+  "n_compounds": 6384,
+  "n_scaffolds": 2958,
+  "scaffold_r2": 0.456,
+  "deploy_threshold_r2": 0.4,
+  "deployed": true,
+  "note": "most-basic pKa; training restricted to compounds with an RDKit basic centre and no acid indication in the assay description"
+}
