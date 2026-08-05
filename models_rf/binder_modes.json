@@ -789,7 +789,7 @@
     "threshold": 0.65,
     "threshold_basis": "random_chemistry_specificity",
     "auroc_vs_measured_inactives": 0.922,
-    "fpr_at_threshold": 0.102,
+    "fpr_at_threshold": 0.085,
     "sensitivity_at_threshold": 0.933,
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.0503,
@@ -799,7 +799,8 @@
     "screening_background_fpr": 0.01,
     "screening_sensitivity": 0.867,
     "rethreshold_reason": "random-chemistry false-positive rate 0.058, above the 5 percent intended",
-    "deployed": true
+    "deployed": true,
+    "sensitivity_basis": "re-measured at the specificity-corrected threshold"
   },
   "TAAR1": {
     "mode": "measured_labels_holdout",
@@ -914,14 +915,15 @@
     "threshold_basis": "random_chemistry_specificity",
     "n_measured_inactive": 94,
     "auroc_vs_measured_inactives": 0.992,
-    "fpr_at_threshold": 0.106,
-    "sensitivity_at_threshold": 0.985,
+    "fpr_at_threshold": 0.053,
+    "sensitivity_at_threshold": 0.975,
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.0193,
     "background_fpr_at_threshold": 0.0193,
     "rethreshold_reason": "ethanol scored 0.437 at the calibrated threshold of 0.392",
     "screening_threshold": 0.45,
-    "deployed": true
+    "deployed": true,
+    "sensitivity_basis": "re-measured at the specificity-corrected threshold"
   },
   "Nav1_6": {
     "mode": "hybrid_decoys_plus_measured_inactives",

@@ -227,6 +227,69 @@ def main():
                   f"{good6.holdout_recall.median():.3f}; {(good6.holdout_recall>=0.80).sum()} of "
                   f"{len(good6)} targets at or above 0.80.\n")
 
+    # ---- Table 7: falsification analysis verdicts ----
+    v = ROOT / "inversion" / "results" / "VERDICTS.csv"
+    if v.exists():
+        d = pd.read_csv(v)
+        md.append("\n## Table 7. Falsification analysis: each claim paired with a null model\n")
+        md.append("Every hypothesis was stated so that it could fail. Where predictive power was at "
+                  "issue, scoring used scaffold hold-out models that never saw the compounds they "
+                  "scored. A refuted hypothesis is reported as prominently as a confirmed one; the "
+                  "purpose of the exercise was to find failures.\n\n")
+        md.append(md_table(["Hypothesis", "Verdict", "Evidence"],
+                           [[r.hypothesis, f"**{r.verdict}**", r.headline] for r in d.itertuples()]))
+
+    # ---- Table 8: recovery of approved clinical indications, per condition ----
+    p8 = ROOT / "inversion" / "results" / "H6_clinical_per_indication.csv"
+    if p8.exists():
+        d = pd.read_csv(p8)
+        md.append("\n## Table 8. Recovery of approved clinical indications, by condition\n")
+        md.append("Ground truth is ChEMBL's drug_indication table restricted to phase 4, mapped to "
+                  "the panel through a keyword list fixed before any prediction was computed. "
+                  "'Ranking only' removes the reporting threshold, separating the ability to rank "
+                  "conditions from the decision to stay silent. 'Silent' counts drugs for which no "
+                  "condition reached the reporting threshold.\n\n")
+        md.append(md_table(["Indication", "Drugs", "Recovered in top 3", "Ranking only", "Silent"],
+                           [[r.indication, r.n, f"{r.recovered_in_top3:.3f}",
+                             f"{r.recovered_ranking_only:.3f}", r.silent] for r in d.itertuples()]))
+
+    # ---- Table 9: the targeted expansion and what happened to each candidate ----
+    p9 = ROOT / "results" / "batch4_audit.csv"
+    if p9.exists():
+        d = pd.read_csv(p9)
+        modes = {}
+        bm = ROOT / "models_rf" / "binder_modes.json"
+        if bm.exists():
+            modes = json.loads(bm.read_text())
+        rows = []
+        for r in d.itertuples():
+            m = modes.get(r.target, {})
+            reason = r.problems if isinstance(r.problems, str) and r.problems else ""
+            if not m:
+                outcome = "not trained"
+            elif not m.get("deployed", True):
+                outcome = "withdrawn after training"
+                # the pre-training audit passed these; the reason came from the deployed-specificity
+                # audit afterwards, so it must be read from there rather than left blank
+                reason = m.get("withdrawn_reason", reason)
+            else:
+                outcome = "deployed"
+            rows.append([r.target, r.actives, r.scaffolds_in_actives, r.measured_inactives,
+                         f"{m.get('auroc_vs_measured_inactives', float('nan')):.3f}" if m.get(
+                             "auroc_vs_measured_inactives") else "n/a",
+                         f"{m.get('sensitivity_at_threshold', float('nan')):.3f}" if m.get(
+                             "sensitivity_at_threshold") else "n/a",
+                         outcome, reason])
+        md.append("\n## Table 9. Targeted expansion: candidates, audit and outcome\n")
+        md.append("Candidates were selected because the clinical-indication test identified epilepsy "
+                  "and chronic pain as the conditions served worst, and a systematic ChEMBL query "
+                  "found these mechanisms clear both a volume bar of 800 measured activities and a "
+                  "source-diversity bar. Each was then audited on its own fetched data before "
+                  "training, and again on deployed specificity afterwards.\n\n")
+        md.append(md_table(["Candidate", "Actives", "Scaffolds", "Measured inactives",
+                            "AUROC vs inactives", "Sensitivity", "Outcome", "Reason if rejected"],
+                           rows))
+
     OUT_MD.write_text("\n".join(md), encoding="utf-8")
     print("wrote", OUT_MD)
     print("core:", len(pd.read_csv(TAB / 'manuscript_Table1_core.csv')),
