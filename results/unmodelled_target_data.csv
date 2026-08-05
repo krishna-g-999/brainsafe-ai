@@ -1,0 +1,28 @@
+group,mechanism,chembl_id,chembl_pref_name,activities_with_pchembl,n_documents_in_sample,n_assays_in_sample,largest_assay_share,dominant_assay,trainable,reason
+ALS genetics,SOD1,CHEMBL2354,Superoxide dismutase [Cu-Zn],29,7,7,0.621,Inhibition of SOD1 G93A mutant aggregation-induced cytotoxicity in rat,False,below the 800-activity bar
+ALS genetics,TDP-43 (TARDBP),CHEMBL2362981,TAR DNA-binding protein 43,9,2,3,0.444,Inhibition of TDP-43 (unknown origin) binding to RNA,False,below the 800-activity bar
+ALS genetics,C9orf72,,,0,0,0,,,False,no matching human target in ChEMBL
+Aggregation,tau (MAPT),CHEMBL1293224,Microtubule-associated protein tau,95345,1,4,0.858,PUBCHEM_BIOASSAY: Counterscreen qHTS for Inhibitors of Tau Fibril Form,False,"95,345 activities but 1 sources in a 1000-activity sample and 86% from one assay: a single campaign, not diverse chemistry"
+Aggregation,huntingtin (HTT),CHEMBL5514,Huntingtin,19063,2,3,0.982,PUBCHEM_BIOASSAY: qHTS Multiplex Assay to Identify Dual Action Probes ,False,"19,063 activities but 2 sources in a 1000-activity sample and 98% from one assay: a single campaign, not diverse chemistry"
+Aggregation,alpha-synuclein (SNCA),CHEMBL6152,Alpha-synuclein,535,40,61,0.168,In Vitro Inhibition Assay: α-Synucleinopathies are characterised by ag,False,below the 800-activity bar
+Calcium channels,alpha2delta-1 (CACNA2D1),CHEMBL1919,Voltage-dependent calcium channel subunit alpha-2/delta-1,873,12,13,0.399,Binding Assay: α2δ-1: Binding Assay to Human α2δ-1 Subunit of Cav2.2 C,False,"873 activities but 12 sources in a 1000-activity sample and 40% from one assay: a single campaign, not diverse chemistry"
+Calcium channels,T-type calcium channel,CHEMBL1859,Voltage-dependent T-type calcium channel subunit alpha-1H,848,30,41,0.283,Measurement of Calcium Channel Flux by Means of FLIPR Assay: Stock sol,True,
+Calcium channels,Cav2.2 N-type (CACNA1B),CHEMBL4478,Voltage-dependent N-type calcium channel subunit alpha-1B,566,38,49,0.127,Inhibition of Cav2.2 in human SH-SY5Y cells assessed as inhibition of ,False,below the 800-activity bar
+Calcium channels,Cav3.1 T-type (CACNA1G),CHEMBL2362995,Voltage-gated T-type calcium channel,1,1,1,1.0,Inhibition of Voltage-dependent T-type calcium channel (unknown origin,False,below the 800-activity bar
+Control (deployed),SERT,CHEMBL228,Sodium-dependent serotonin transporter,7535,76,111,0.065,Displacement of [3H]citalopram from SERT,True,
+Control (deployed),Nav1.1 (SCN1A),CHEMBL1845,Sodium channel protein type 1 subunit alpha,979,28,37,0.777,Sodium Influx Assay (In Vitro Assay): This sodium influx assay employs,False,"979 activities but 28 sources in a 1000-activity sample and 78% from one assay: a single campaign, not diverse chemistry"
+GABA-A subtypes,GABA-A alpha5/beta3/gamma2,CHEMBL2094122,GABA-A receptor; alpha-5/beta-3/gamma-2,861,41,58,0.148,Binding affinity for human recombinant gamma-aminobutyric-acid (GABA) ,True,
+GABA-A subtypes,GABA-A alpha2/beta3/gamma2,CHEMBL2094130,GABA-A receptor; alpha-2/beta-3/gamma-2,663,39,48,0.169,Binding affinity to human recombinant gamma-aminobutyric-acid (GABA) A,False,below the 800-activity bar
+GABA-A subtypes,GABA-A alpha1/beta2/gamma2,CHEMBL2095172,GABA-A receptor; alpha-1/beta-2/gamma-2,374,48,65,0.086,Antagonist activity at human GABAA alpha-1-beta-2-gamma-2 receptor exp,False,below the 800-activity bar
+Kainate receptors,GluK1 (GRIK1),CHEMBL1918,"Glutamate receptor ionotropic, kainate 1",244,22,34,0.193,Binding affinity against human ionotropic glutamate receptor kainate 1,False,below the 800-activity bar
+Kainate receptors,GluK2 (GRIK2),CHEMBL3683,"Glutamate receptor ionotropic, kainate 2",139,17,27,0.302,Binding affinity against human ionotropic glutamate receptor ionotropi,False,below the 800-activity bar
+Kainate receptors,kainate receptor,CHEMBL3684,"Glutamate receptor ionotropic, kainate 3",34,9,10,0.235,Binding affinity towards cloned human GluR7 subunit stably expressed i,False,below the 800-activity bar
+Monoamine storage,VMAT2 (SLC18A2),CHEMBL1893,Synaptic vesicular amine transporter,149,12,18,0.336,Determining human Vmat2 Inhibitory Activity of a Compound: The human K,False,below the 800-activity bar
+NMDA channel site,NMDA receptor,CHEMBL2015,"Glutamate receptor ionotropic, NMDA 1",151,9,11,0.278,Displacement of [3H]-MDL105519 from GluN1 LBD (unknown origin) incubat,False,below the 800-activity bar
+NMDA channel site,GluN1 subunit,CHEMBL2015,"Glutamate receptor ionotropic, NMDA 1",151,9,11,0.278,Displacement of [3H]-MDL105519 from GluN1 LBD (unknown origin) incubat,False,below the 800-activity bar
+Nicotinic subtypes,alpha4beta2 nAChR,CHEMBL1907589,Neuronal acetylcholine receptor; alpha4/beta2,2069,68,99,0.11,Agonist activity at recombinant human alpha-4-beta-2 nAChR expressed i,True,
+Nicotinic subtypes,alpha3beta4 nAChR,CHEMBL1907594,Neuronal acetylcholine receptor; alpha3/beta4,1297,61,95,0.16,Displacement of [3H]epibatidine from human alpha3beta4 nAChR expressed,True,
+Nicotinic subtypes,alpha6 nAChR,CHEMBL4888445,Neuronal acetylcholine receptor subunit alpha-6/alpha-3,0,0,0,0.0,,False,below the 800-activity bar
+Sodium subtypes,Nav1.6 (SCN8A),CHEMBL5202,Sodium channel protein type 8 subunit alpha,1995,38,50,0.394,Sodium Influx Assay (In Vitro Assay): This sodium influx assay employs,True,
+Sodium subtypes,Nav1.8 (SCN10A),CHEMBL5451,Sodium channel protein type 10 subunit alpha,817,36,49,0.267,Biological Assay: The following buffers were used for the Qube® record,True,
+Sodium subtypes,Nav1.2 (SCN2A),CHEMBL4187,Sodium channel protein type 2 subunit alpha,200,47,62,0.185,Inhibition of sodium channel blockade in CHO cells expressing neuronal,False,below the 800-activity bar
