@@ -392,6 +392,62 @@ def assess_per_endpoint(smiles):
     return {ep: float(max(DataStructs.BulkTanimotoSimilarity(q, fps))) for ep, fps in ref.items() if fps}
 
 
+# Homologous target families, and how often their members fire together.
+#
+# Measured on 400 approved drugs (inversion/results/H8_family_correlation.csv). The panel reports an
+# engaged-target count and draws one network edge per target, which invites reading two engaged
+# targets as two independent findings. For homologues that is wrong: across the drug set 34 targets
+# ever fire but they span only 13 independent directions, so the panel is roughly 2.6-fold redundant.
+# Co-firing is not itself an error, since a genuinely promiscuous ligand should hit both homologues
+# and that is a true fact about the compound. Presenting it as corroboration is the error, so where
+# two members of a family are engaged the interface says so and the measured conditional probability
+# is quoted rather than left for the reader to assume independence.
+TARGET_FAMILIES = {
+    "Dopamine D2-like": ["D2", "D3"],
+    "Opioid": ["OPRM1", "OPRK1"],
+    "Monoamine transporters": ["SERT", "DAT", "NET"],
+    "Serotonin receptors": ["HT1A", "HT2A", "HT6", "HT7"],
+    "Neuronal nicotinic": ["a7nAChR", "a4b2nAChR", "a3b4nAChR"],
+    "Voltage-gated sodium": ["Nav1_5", "Nav1_6", "Nav1_7", "Nav1_8"],
+}
+# phi correlation of joint firing across approved drugs, strongest measured pair per family
+FAMILY_COFIRE = {
+    "Dopamine D2-like": (0.81, "D2 and D3 fire together for 78% of compounds engaging D2"),
+    "Opioid": (0.79, "kappa fires for 65% of compounds engaging mu"),
+    "Monoamine transporters": (0.64, "NET fires for 84% of compounds engaging DAT"),
+    "Serotonin receptors": (0.70, "5-HT7 fires for 78% of compounds engaging 5-HT2A"),
+    "Neuronal nicotinic": (0.35, "the least correlated family measured; largely independent"),
+    "Voltage-gated sodium": (None, "too few joint engagements among approved drugs to estimate"),
+}
+_TARGET_TO_FAMILY = {t: f for f, ts in TARGET_FAMILIES.items() for t in ts}
+
+
+def independent_mechanisms(engaged):
+    """Count distinct mechanism families among engaged targets, not raw targets.
+
+    Two homologous receptors engaged by the same ligand are close to one observation. Counting
+    families rather than targets is a blunt correction, but it errs towards understating the
+    evidence, which is the safer direction for a tool whose purpose is to avoid wasted experiments.
+    """
+    fams, singles = set(), 0
+    for t in engaged:
+        f = _TARGET_TO_FAMILY.get(t)
+        if f:
+            fams.add(f)
+        else:
+            singles += 1
+    return len(fams) + singles
+
+
+def grouped_engagement(engaged):
+    """Engaged targets arranged by family, with the families that carry more than one member."""
+    by_fam = {}
+    for t in engaged:
+        by_fam.setdefault(_TARGET_TO_FAMILY.get(t, ""), []).append(t)
+    multi = {f: ts for f, ts in by_fam.items() if f and len(ts) > 1}
+    return by_fam, multi
+
+
 BINDER_FLOOR = 0.40  # calibrated binder probability below this is treated as no engagement
 
 # Minimum BBB-gated score at which a disease signal is reported as actionable. Set from the
@@ -1230,6 +1286,57 @@ def render_network(r, name="Compound"):
         unsafe_allow_html=True)
 
 
+def render_independence(r):
+    """How many independent mechanisms were engaged, as opposed to how many targets."""
+    neuro = neuro_signal(r)
+    engaged = [t for t in TARGET_KIND if t != "NEURO" and target_signal(r, neuro, t) > 0]
+    if not engaged:
+        return
+    by_fam, multi = grouped_engagement(engaged)
+    n_ind = independent_mechanisms(engaged)
+
+    chips = ""
+    for fam in sorted(by_fam):
+        ts = sorted(by_fam[fam], key=lambda t: -target_signal(r, neuro, t))
+        labels = " + ".join(f'{MECH_LABEL.get(t, t)} <b>{target_signal(r, neuro, t):.0%}</b>'
+                            for t in ts)
+        if not fam:
+            chips += (f'<div style="margin:6px 0"><span class="bs-chip">unrelated</span> '
+                      f'<span style="font-size:.82rem">{labels}</span></div>')
+            continue
+        phi, note = FAMILY_COFIRE.get(fam, (None, ""))
+        tag = (f'<span class="bs-badge" style="background:{AMBER}14;color:{AMBER};'
+               f'border-color:{AMBER}33">correlated, r = {phi:.2f}</span>'
+               if (len(ts) > 1 and phi) else "")
+        chips += (f'<div style="margin:6px 0"><span class="bs-chip">{fam}</span> '
+                  f'<span style="font-size:.82rem">{labels}</span> {tag}'
+                  + (f'<div class="bs-note" style="margin-left:4px">{note}</div>'
+                     if len(ts) > 1 else "") + '</div>')
+
+    if multi:
+        head = (f'{len(engaged)} targets engaged, but approximately <b>{n_ind}</b> independent '
+                f'mechanism{"s" if n_ind != 1 else ""}')
+        body = ('Members of the same family are homologous and are engaged together by the same '
+                'ligands, so their joint engagement is close to one observation rather than several. '
+                'The counts below are grouped for that reason, and the correlation measured across '
+                '400 approved drugs is stated wherever two members of a family both fire. Across '
+                'that set 34 targets ever fire but span only 13 independent directions, so a raw '
+                'target count overstates the evidence by roughly a factor of two and a half '
+                '(inversion/results/H8_family_correlation.csv).')
+    else:
+        head = f'{len(engaged)} target{"s" if len(engaged) != 1 else ""} engaged, no two homologous'
+        body = ('No two engaged targets belong to the same homologous family, so each is an '
+                'independent observation. Where homologues do fire together the interface says so, '
+                'because their joint engagement would otherwise read as corroboration it is not.')
+
+    st.markdown(
+        f'<div class="bs-card"><div class="bs-h">Independent mechanisms'
+        f'<span class="bs-h-sub">grouped by homology, not counted raw</span></div>'
+        f'<div style="font-size:.92rem;margin-bottom:8px">{head}</div>{chips}'
+        f'<div class="bs-note" style="margin-top:10px">{body}</div></div>',
+        unsafe_allow_html=True)
+
+
 def render_profile(r):
     """The panel-wide view. The network shows only what fired; this shows everything that was asked,
     including what came close, which is the context needed to read a negative result."""
@@ -1700,6 +1807,18 @@ def result_frame(smiles, name, r):
             round(m["total"], 2), f"of {m['max']:.0f}",
             "; ".join(f"{k} {v:.2f}" for k, v in m["parts"].items()))
 
+    neuro_sig = neuro_signal(r)
+    engaged = [t for t in TARGET_KIND if t != "NEURO" and target_signal(r, neuro_sig, t) > 0]
+    _by_fam, multi = grouped_engagement(engaged)
+    add("Mechanism independence", "n_targets_engaged", "Targets with a signal above threshold",
+        len(engaged), "count",
+        "; ".join(f"{f}: {', '.join(MECH_LABEL.get(t, t) for t in ts)}" for f, ts in multi.items())
+        or "no two engaged targets are homologous")
+    add("Mechanism independence", "n_independent_mechanisms",
+        "Distinct homology families among engaged targets", independent_mechanisms(engaged), "count",
+        "homologues are engaged together by the same ligands, so a raw target count overstates the "
+        "evidence; see inversion/results/H8_family_correlation.csv")
+
     ad = assess_domain(smiles)
     if ad:
         add("Applicability domain", "max_tanimoto", "Similarity to nearest measured training compound",
@@ -1741,8 +1860,17 @@ def result_json(smiles, name, r):
         "applicability_domain": ({"max_tanimoto": round(ad["max_sim"], 4), "tier": ad["tier"],
                                   "confidence": ad["confidence"],
                                   "nearest_analogue": ad["nearest_smiles"]} if ad else None),
+        "mechanism_independence": (lambda eng: {
+            "n_targets_engaged": len(eng),
+            "n_independent_mechanisms": independent_mechanisms(eng),
+            "correlated_families": {f: [MECH_LABEL.get(t, t) for t in ts]
+                                    for f, ts in grouped_engagement(eng)[1].items()},
+        })([t for t in TARGET_KIND if t != "NEURO" and target_signal(r, neuro, t) > 0]),
         "caveats": [
             "Research triage tool. Not for medical, diagnostic or treatment use.",
+            "Homologous targets are engaged together by the same ligands, so the number of engaged "
+            "targets overstates the number of independent observations. Across 400 approved drugs "
+            "34 targets ever fire but span only 13 independent directions.",
             "A silent result is not evidence of inactivity. Deployed sensitivity has a median of "
             "0.77 across the panel and falls to 0.26 at the strictest endpoints.",
             "The BBB term multiplies every disease equally and cannot change which disease ranks "
@@ -2001,6 +2129,9 @@ def batch_row(smiles, name, models):
         "herg_probability": round(r["targets"]["hERG"], 3),
         "cns_mpo": round(m["total"], 2) if m else None,
         "n_targets_engaged": len(eng),
+        # Homologous targets are engaged together, so a raw count overstates the evidence. Both are
+        # reported: rank on the independent count, read the raw one as breadth of engagement.
+        "n_independent_mechanisms": independent_mechanisms([t for t, _ in eng]),
         "top_mechanisms": ", ".join(f"{MECH_LABEL.get(t, t)} {s:.0%}" for t, s in eng),
         "top_diseases": ", ".join(f"{d['disease']} {d['gated']:.2f}" for d in top) or "none reported",
         "ad_max_tanimoto": round(ad["max_sim"], 3) if ad else None,
@@ -2344,6 +2475,8 @@ def render_report(smiles, name="Compound"):
     st.write("")
     # Read-across and CNS-likeness need no model to fire, so they carry the answer for a compound
     # that engages nothing in the panel. They sit directly beneath the disease result for that reason.
+    render_independence(r)
+    st.write("")
     g, h = st.columns(2, gap="large")
     with g: render_readacross(smiles.strip(), r)
     with h: render_cns_mpo(r, smiles.strip())

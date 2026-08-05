@@ -279,6 +279,28 @@ def main():
         return f"profile renders even when nothing is engaged, {svg.count('<rect')} elements"
     check("target profile chart", _profile)
 
+    def _independence():
+        """Homologous targets must be grouped, or a raw count reads as corroboration it is not."""
+        r = app.predict_all(PROBES["haloperidol"], models)
+        neuro = app.neuro_signal(r)
+        eng = [t for t in app.TARGET_KIND if t != "NEURO" and app.target_signal(r, neuro, t) > 0]
+        ind = app.independent_mechanisms(eng)
+        _by, multi = app.grouped_engagement(eng)
+        assert ind <= len(eng), "independent count exceeds the raw target count"
+        assert multi, "haloperidol engages D2 and D3 but no correlated family was detected"
+        assert ind < len(eng), "correlated families detected but the count was not reduced"
+        # every family member must be a real, scorable target, or the grouping is decorative
+        unknown = [t for ts in app.TARGET_FAMILIES.values() for t in ts
+                   if t not in app.TARGET_KIND]
+        assert not unknown, f"family members that are not scorable targets: {unknown}"
+        assert set(app.FAMILY_COFIRE) == set(app.TARGET_FAMILIES), \
+            "every family must carry a measured co-firing statement"
+        j = app.result_json(PROBES["haloperidol"], "Haloperidol", r)
+        assert "mechanism_independence" in j, "export omits the independence correction"
+        return (f"haloperidol {len(eng)} targets grouped to {ind} independent mechanisms across "
+                f"{len(app.TARGET_FAMILIES)} declared families")
+    check("homologous targets are grouped", _independence)
+
     def _nored():
         """No red anywhere: the palette must survive red-green colour-vision deficiency."""
         # Judged on hue, not on the red channel. The brand gold (#F0A500) and the caution amber

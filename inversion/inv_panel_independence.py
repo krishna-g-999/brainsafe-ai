@@ -24,6 +24,15 @@ that is a true fact about the compound. What would be an error is presenting tha
 corroboration. The test therefore reports the correlation and leaves the interpretation explicit
 rather than scoring it pass or fail.
 
+A first version of this test defined firing as a target signal above zero and reported that at least
+one target fires on 60% of random compounds. That figure was an artefact of the definition and is not
+what a user sees. The six base-rate-enrichment endpoints return a positive signal whenever the
+predicted probability exceeds the training base rate, which happens for about 12% of random compounds
+each, whereas the 43 binder endpoints require a calibrated threshold to be crossed and fire for about
+0.6%. Pooling the two counts an ordinary above-average probability as an event. The quantity that
+reaches the user is whether any condition crosses the reporting threshold, and that is now the
+headline; the signal-level rates are retained separately and labelled as internal.
+
 Read-only. Writes inversion/results/H8_panel_independence.csv
 """
 from __future__ import annotations
@@ -67,30 +76,39 @@ def main():
           flush=True)
 
     def matrix(smis, label):
-        rows = []
+        rows, actionable = [], []
         for i, s in enumerate(smis, 1):
             r = app.predict_all(s, models)
             if r is None:
                 continue
             neuro = app.neuro_signal(r)
             rows.append({t: float(app.target_signal(r, neuro, t) > 0) for t in live})
+            _b, _n, dz = app.disease_scores(r)
+            actionable.append(float(dz[0]["gated"] >= app.MIN_ACTIONABLE_SCORE))
             if i % 200 == 0:
                 print(f"  {label}: {i}/{len(smis)}", flush=True)
-        return pd.DataFrame(rows)
+        return pd.DataFrame(rows), np.array(actionable)
 
     print("scoring random chemistry ...", flush=True)
-    B = matrix(bg, "random")
+    B, act_bg = matrix(bg, "random")
     print("scoring approved drugs ...", flush=True)
-    D = matrix(drugs, "drugs")
+    D, act_dr = matrix(drugs, "drugs")
 
-    # ---- 1. how often does anything fire on a compound that should engage nothing? ----
-    any_bg = float((B.sum(axis=1) > 0).mean())
-    per_target = B.mean(axis=0)
-    # what an independent panel with these same per-target rates would give
-    indep = 1.0 - float(np.prod(1.0 - per_target.values))
-    print(f"\nat least one target fires on random chemistry: {any_bg:.3f}")
-    print(f"   independent-panel expectation from the same per-target rates: {indep:.3f}")
-    print(f"   mean targets fired per random compound: {B.sum(axis=1).mean():.2f}")
+    # ---- 1. how often does the server report a finding for a compound that should engage nothing?
+    # This is the decision-relevant rate: it is what the user sees and what costs an experiment.
+    report_bg = float(act_bg.mean())
+    report_dr = float(act_dr.mean())
+    binder_cols = [t for t in live if app.TARGET_KIND.get(t) == "binder"]
+    enrich_cols = [t for t in live if app.TARGET_KIND.get(t) != "binder"]
+    any_binder = float((B[binder_cols].sum(axis=1) > 0).mean()) if binder_cols else float("nan")
+    per_binder = B[binder_cols].mean(axis=0) if binder_cols else pd.Series(dtype=float)
+    indep = 1.0 - float(np.prod(1.0 - per_binder.values)) if len(per_binder) else float("nan")
+    print(f"\nreported finding on random chemistry: {report_bg:.3f}   (approved drugs {report_dr:.3f})")
+    print(f"   any binder endpoint above its threshold: {any_binder:.3f}")
+    print(f"   independent-panel expectation for the binder endpoints: {indep:.3f}")
+    print(f"   internal, not user visible: mean signal-positive rate "
+          f"{B[enrich_cols].values.mean():.3f} for the {len(enrich_cols)} enrichment endpoints "
+          f"against {B[binder_cols].values.mean():.3f} for the {len(binder_cols)} binder endpoints")
 
     # ---- 2. do homologous targets fire together? ----
     fam_rows = []
@@ -134,10 +152,14 @@ def main():
 
     rows = [
         {"metric": "targets in panel", "value": len(live)},
-        {"metric": "at least one fires on random chemistry", "value": round(any_bg, 4)},
-        {"metric": "independent-panel expectation", "value": round(indep, 4)},
-        {"metric": "mean targets fired per random compound", "value": round(float(B.sum(axis=1).mean()), 3)},
-        {"metric": "mean targets fired per approved drug", "value": round(float(D.sum(axis=1).mean()), 3)},
+        {"metric": "reported finding on random chemistry (user visible)", "value": round(report_bg, 4)},
+        {"metric": "reported finding on approved drugs", "value": round(report_dr, 4)},
+        {"metric": "any binder endpoint above threshold, random chemistry", "value": round(any_binder, 4)},
+        {"metric": "independent-panel expectation, binder endpoints", "value": round(indep, 4)},
+        {"metric": "mean binder endpoints fired per random compound",
+         "value": round(float(B[binder_cols].sum(axis=1).mean()), 3)},
+        {"metric": "mean binder endpoints fired per approved drug",
+         "value": round(float(D[binder_cols].sum(axis=1).mean()), 3)},
         {"metric": "targets that ever fire on the drug set", "value": len(used)},
         {"metric": "independent directions in the firing pattern", "value": eff},
     ]

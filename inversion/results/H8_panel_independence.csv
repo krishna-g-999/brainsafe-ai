@@ -1,0 +1,8 @@
+metric,value
+targets in panel,49.0
+at least one fires on random chemistry,0.6017
+independent-panel expectation,0.65
+mean targets fired per random compound,0.98
+mean targets fired per approved drug,1.952
+targets that ever fire on the drug set,34.0
+independent directions in the firing pattern,13.0
