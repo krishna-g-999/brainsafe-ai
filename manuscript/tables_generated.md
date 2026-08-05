@@ -163,13 +163,14 @@ Every hypothesis was stated so that it could fail. Where predictive power was at
 
 | Hypothesis | Verdict | Evidence |
 |---|---|---|
-| H1 the disease score is informative | **SUPPORTED** | top-3 accuracy 0.792 vs permutation null 0.205 (p=0.005) and frequency null 0.558 |
-| H2 the curated edge weights add value | **REFUTED** | curated 0.7917, uniform 0.7911, permuted 0.7899 |
+| H1 the disease score is informative | **SUPPORTED** | top-3 accuracy 0.794 vs permutation null 0.207 (p=0.005) and frequency null 0.548 |
+| H2 the curated edge weights add value | **REFUTED** | curated 0.7943, uniform 0.7935, permuted 0.7922 |
 | H3 BBB gating discriminates between diseases | **REFUTED (by construction)** | the gate multiplies every disease equally and cannot change their order |
 | H4 specificity transfers to novel chemistry | **SUPPORTED** | false-positive rate 0.051 on 59 distant compounds against 0.125 measured on library chemistry |
 | H5 read-across beats a frequency baseline | **SUPPORTED** | recall 0.970 against 0.060 |
 | H6 the disease scores match real clinical indications | **WEAKENED** | top-3 accuracy 0.352 on 162 drugs never seen in training, against permutation null 0.145 (p=0.001) and frequency null 0.654 |
 | H7 some panel targets are non-discriminative and explain the silent antiepileptics | **REFUTED** | none of 40 targets ranks below AUROC 0.70; the cause is the operating point, with median deployed sensitivity 0.77 and 7 targets under 0.50 |
+| H8 engaged targets are independent observations | **REFUTED** | 34 targets fire across approved drugs but span only 13 independent directions; 6 homologous pairs correlate above 0.5 |
 
 
 ## Table 8. Recovery of approved clinical indications, by condition

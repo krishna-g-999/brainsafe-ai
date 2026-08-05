@@ -459,6 +459,44 @@ discrimination against random chemistry can be near-perfect while discrimination
 that matters is poor. The dual constraint, measured inactives and background together, performs work
 that neither term performs alone.
 
+### Panel redundancy: how many independent mechanisms does an engaged compound show?
+
+A panel that reports the number of engaged targets invites the reading that three engaged targets are
+three independent pieces of evidence. For homologous proteins that reading is wrong, and the
+magnitude of the error was measured rather than assumed. Across 400 approved drugs, dopamine D2 and
+D3 fire together with a phi correlation of 0.813, and D3 fires for 78% of compounds engaging D2; the
+mu and kappa opioid receptors correlate at 0.791, 5-HT2A and 5-HT7 at 0.699, and the dopamine and
+noradrenaline transporters at 0.642, with the noradrenaline transporter firing for 84% of compounds
+engaging the dopamine transporter. Of 49 targets, 34 fire at least once on that set, but a
+correlation analysis of the firing pattern resolves only 13 independent directions. A raw count
+therefore overstates the evidence by roughly a factor of two and a half.
+
+Co-firing is not itself an error. A genuinely promiscuous ligand should engage both members of a
+homologous pair, and that is a true fact about the compound. Presenting it as corroboration is the
+error. The server therefore groups engaged targets into six homology families, reports the number of
+independent mechanisms alongside the number of targets, and states the measured correlation wherever
+two members of a family both fire. Haloperidol, for example, is reported as five engaged targets but
+approximately three independent mechanisms, with dopamine D2 and D3 and the two serotonin receptors
+each labelled with their correlation. The correction propagates to the batch table and to both
+machine-readable exports, so a stored result cannot be read as better corroborated than it is. The
+nicotinic endpoints added in the targeted expansion are the least correlated family measured, at
+0.35, so that expansion contributed more independent information than the panel average.
+
+The same analysis corrected an error in its own first formulation, which is recorded because it
+bears on how such rates should be reported. Defining engagement as any positive target signal gave an
+apparent rate of 60% of random compounds engaging at least one target. That figure is an artefact of
+the definition rather than a property of the server: the six base-rate-enrichment endpoints return a
+positive signal whenever the predicted probability merely exceeds the training base rate, which
+occurs for about 12% of random compounds at each endpoint, whereas the 43 binder endpoints require a
+calibrated threshold to be crossed and fire for about 0.6%. Pooling the two counts an ordinary
+above-average probability as an event. The quantity that reaches the user is whether any condition
+crosses the reporting threshold, which occurs for 11.5% of 600 random structures, against 55.0% of
+approved drugs. That rate sits close to the 12.5% measured on library compounds and above the 5.1%
+measured on chemistry most distant from training, as expected for a sample drawn without regard to
+similarity. Correlation among the endpoints slightly reduces rather than inflates the aggregate: at
+least one binder endpoint fires for 22.2% of random structures, against 23.9% for a hypothetical
+panel with the same per-endpoint rates firing independently.
+
 ## The BrainSafe AI server
 
 **Input.** The user types a compound name or pastes a SMILES string. Names are resolved through
@@ -545,10 +583,22 @@ dehydrogenase, 2,558), whereas stroke and cerebral ischaemia offer no comparable
 target set, consistent with four decades of failed neuroprotection trials.
 
 Expanding the panel is not costless, which bears on how these gaps should be closed. Each added
-endpoint is a further opportunity to fire spuriously, so the probability that at least one target
-fires on a compound that engages nothing rises with panel size. Coverage should therefore be extended
-where a measured weakness demands it, as was done here for addiction, rather than pursued for
-completeness.
+endpoint is a further opportunity to fire spuriously, so the probability that a compound engaging
+nothing nevertheless receives a reported finding rises with panel size; it stands at 11.5% on random
+chemistry. Added endpoints also overlap: 34 of 49 targets fire at least once across approved drugs
+but span only 13 independent directions. Coverage should therefore be extended where a measured
+weakness demands it, as was done here for addiction, rather than pursued for completeness, and
+preference given to mechanisms that are not homologous to those already present.
+
+An operational consequence follows for the coverage statement itself. The list of what the server can
+and cannot assess is read as an audit, and an audit that is wrong about its own models is worse than
+none. A hand-maintained version of that list drifted: it advertised an endpoint that had been
+withdrawn, denied two families that had been added, and quoted sensitivities of 0.54 and 0.58 for
+endpoints whose deployed values were 0.774 and 0.660. The modelled list and every sensitivity figure
+are now generated from the deployed model registry when the page loads, and a pre-flight check
+asserts that no deployed endpoint is missing from the list, that no withdrawn endpoint is advertised,
+that no mechanism declared absent is in fact deployed, and that every quoted sensitivity equals the
+deployed value.
 
 Two ADME endpoints, hepatocyte clearance and plasma protein binding, are weak under the scaffold
 split and are reported as such. Decoy-based validation gives an optimistic bound because decoys are

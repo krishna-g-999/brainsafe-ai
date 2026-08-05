@@ -6,19 +6,20 @@ Each hypothesis below was stated so that it could fail, and paired with a null m
 
 | Hypothesis | Verdict | Evidence |
 |---|---|---|
-| H1 the disease score is informative | **SUPPORTED** | top-3 accuracy 0.792 vs permutation null 0.205 (p=0.005) and frequency null 0.558 |
-| H2 the curated edge weights add value | **REFUTED** | curated 0.7917, uniform 0.7911, permuted 0.7899 |
+| H1 the disease score is informative | **SUPPORTED** | top-3 accuracy 0.794 vs permutation null 0.207 (p=0.005) and frequency null 0.548 |
+| H2 the curated edge weights add value | **REFUTED** | curated 0.7943, uniform 0.7935, permuted 0.7922 |
 | H3 BBB gating discriminates between diseases | **REFUTED (by construction)** | the gate multiplies every disease equally and cannot change their order |
 | H4 specificity transfers to novel chemistry | **SUPPORTED** | false-positive rate 0.051 on 59 distant compounds against 0.125 measured on library chemistry |
 | H5 read-across beats a frequency baseline | **SUPPORTED** | recall 0.970 against 0.060 |
 | H6 the disease scores match real clinical indications | **WEAKENED** | top-3 accuracy 0.352 on 162 drugs never seen in training, against permutation null 0.145 (p=0.001) and frequency null 0.654 |
 | H7 some panel targets are non-discriminative and explain the silent antiepileptics | **REFUTED** | none of 40 targets ranks below AUROC 0.70; the cause is the operating point, with median deployed sensitivity 0.77 and 7 targets under 0.50 |
+| H8 engaged targets are independent observations | **REFUTED** | 34 targets fire across approved drugs but span only 13 independent directions; 6 homologous pairs correlate above 0.5 |
 
 ## What each result means
 
-**H1.** Scored with hold-out models only, so no compound was seen in training. The disease layer reaches 79.2% top-3 accuracy where shuffling the target-to-disease map gives 20.5% and always answering with the three commonest diseases gives 55.8%. The layer carries real information.
+**H1.** Scored with hold-out models only, so no compound was seen in training. The disease layer reaches 79.4% top-3 accuracy where shuffling the target-to-disease map gives 20.7% and always answering with the three commonest diseases gives 54.8%. The layer carries real information.
 
-**H2.** Curated weights score 0.7917, uniform weights 0.7911 and randomly permuted weights 0.7899. The spread is 0.0018. The information lies in which target connects to which disease, not in how strongly. The weights should be described as structure rather than as tuned parameters, and the graph would be simpler and no less accurate without them.
+**H2.** Curated weights score 0.7943, uniform weights 0.7935 and randomly permuted weights 0.7922. The spread is 0.0021. The information lies in which target connects to which disease, not in how strongly. The weights should be described as structure rather than as tuned parameters, and the graph would be simpler and no less accurate without them.
 
 **H3.** Multiplying every disease score by the same BBB probability leaves their ranking untouched. Gating therefore cannot improve or damage which disease is chosen; it changes only the absolute value and hence what crosses the reporting threshold. It is an exposure filter, and the manuscript should call it one rather than implying it sharpens the disease call.
 
@@ -29,6 +30,8 @@ Each hypothesis below was stated so that it could fail, and paired with a null m
 **H6.** H1 asked whether the disease layer recovers the disease that a compound's target maps to, using this project's own map. H6 asks the harder question: whether the score matches the condition the drug is actually approved to treat. Ground truth is ChEMBL's drug_indication table restricted to phase 4, mapped to the panel through a keyword list fixed before any prediction was made. On the 162 drugs whose exact structure appears nowhere in the training chemistry, top-3 accuracy is 35.2% against 14.5% for shuffling which drug carries which indication and 65.4% for always answering with the commonest indications. Two readings follow and both are true. The tool beats the permutation null decisively, so its output does depend on the compound and is not memorisation: drugs whose structure appears nowhere in training score the same as drugs that do. It does not beat the frequency null, because pain, depression and psychosis account for most approved CNS indications and a constant answer naming those three is right about 65% of the time. That constant answer carries no information about any particular compound, but it is a real bar and the tool does not clear it on this metric. Removing the reporting threshold and judging the ranking alone raises accuracy to 49.0%, which locates much of the gap in the decision to stay silent rather than in the ranking. Per indication the spread is wide: Psychosis / schizophrenia is recovered for 64% of its drugs, Epilepsy for 10%, which H7 explains.
 
 **H7.** H6 left most approved antiepileptics scoring exactly zero, which looked like a broken model. It is not. Against 600 random PubChem structures, scored with models that never saw the compounds, every one of the 40 testable targets separates its own held-out actives from random chemistry at AUROC 0.91 or better. The cause is the operating point: thresholds hold the false-positive rate near 0.2 percent and the price is sensitivity, which ranges from 0.26 to 0.98 with a median of 0.77. 7 endpoints fire for under half their own actives (GluA2, HT2A, KEAP1, Nav1_6, P2X7, SIRT1, mGluR5). Old antiepileptics are small, simple and low-affinity, which is precisely the chemistry that sits under a strict cut. The user-facing consequence is that silence is not evidence of inactivity, and the tool should say so wherever it reports nothing.
+
+**H8.** The interface reports how many targets a compound engages and draws an edge for each, which invites reading three engaged targets as three independent findings. For homologues that is wrong. Measured across approved drugs, SERT and NET r=0.61; DAT and NET r=0.64; OPRM1 and OPRK1 r=0.79. Of the panel, 34 targets fire at least once but resolve into only 13 independent directions, so a raw count overstates the evidence by roughly a factor of two and a half. Co-firing is not itself an error, since a promiscuous ligand should engage both homologues; presenting it as corroboration is. Engaged targets are now grouped by homology family and the measured correlation is quoted wherever two members fire. Separately, a compound engaging nothing receives a reported finding 11.5% of the time on random chemistry, which bounds what a further expansion of the panel would cost in false leads.
 
 ## Consequences for the tool
 

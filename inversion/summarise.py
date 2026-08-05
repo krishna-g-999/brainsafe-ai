@@ -173,6 +173,38 @@ def main():
                        f"that silence is not evidence of inactivity, and the tool should say so "
                        f"wherever it reports nothing.")
 
+    h8 = read("H8_panel_independence.csv")
+    fam = read("H8_family_correlation.csv")
+    if h8 is not None:
+        def val(k):
+            m = h8[h8.metric.str.contains(k, regex=False)]
+            return float(m.value.iloc[0]) if len(m) else float("nan")
+        rate = val("reported finding on random chemistry")
+        n_t = val("targets that ever fire")
+        n_d = val("independent directions")
+        hi = fam[fam.phi_correlation.fillna(0) > 0.5] if fam is not None else None
+        v = "REFUTED" if (hi is not None and len(hi)) else "SUPPORTED"
+        verdicts.append({"hypothesis": "H8 engaged targets are independent observations",
+                         "verdict": v,
+                         "headline": f"{int(n_t)} targets fire across approved drugs but span only "
+                                     f"{int(n_d)} independent directions; "
+                                     f"{0 if hi is None else len(hi)} homologous pairs correlate "
+                                     f"above 0.5"})
+        top = ("; ".join(f"{r.target_a} and {r.target_b} r={r.phi_correlation:.2f}"
+                         for r in hi.head(3).itertuples()) if hi is not None and len(hi) else "none")
+        notes["H8"] = (f"The interface reports how many targets a compound engages and draws an edge "
+                       f"for each, which invites reading three engaged targets as three independent "
+                       f"findings. For homologues that is wrong. Measured across approved drugs, "
+                       f"{top}. Of the panel, {int(n_t)} targets fire at least once but resolve into "
+                       f"only {int(n_d)} independent directions, so a raw count overstates the "
+                       f"evidence by roughly a factor of two and a half. Co-firing is not itself an "
+                       f"error, since a promiscuous ligand should engage both homologues; presenting "
+                       f"it as corroboration is. Engaged targets are now grouped by homology family "
+                       f"and the measured correlation is quoted wherever two members fire. Separately, "
+                       f"a compound engaging nothing receives a reported finding {rate:.1%} of the "
+                       f"time on random chemistry, which bounds what a further expansion of the panel "
+                       f"would cost in false leads.")
+
     df = pd.DataFrame(verdicts)
     df.to_csv(RES / "VERDICTS.csv", index=False)
 
