@@ -71,7 +71,9 @@ BINDER_TARGETS = ["HT1A", "HT6", "HT7", "H3", "DAT", "NET", "Sigma1", "CB1",
                   "mGluR5", "GABA_A", "OX1", "OX2", "MT1", "mTOR", "SIRT1", "KEAP1",
                   "GBA1", "PDE4B", "Nav1_5",
                   # third expansion: pain, epilepsy, psychosis mechanisms
-                  "Nav1_7", "Nav1_1", "TAAR1", "GluA2"]
+                  "Nav1_7", "TAAR1", "GluA2",
+                  # fourth expansion; Nav1_1 was withdrawn here, see binder_modes.json
+                  "Nav1_6", "Nav1_8", "a4b2nAChR", "a3b4nAChR"]
 TARGET_KIND = {"AChE": "enrich", "BChE": "enrich", "BACE1": "enrich", "GSK3B": "enrich",
                "MAO_A": "enrich", "MAO_B": "enrich", "SERT": "binder", "D2": "binder",
                "HT2A": "binder", "NEURO": "pct", **{t: "binder" for t in BINDER_TARGETS}}
@@ -177,7 +179,23 @@ KNOWLEDGE_GRAPH = {
     # --- third expansion ---
     # Nav1.7 is the principal peripheral pain sodium channel; Nav1.1 underlies genetic epilepsy
     "Nav1_7": [("Voltage-gated sodium channels", "IUPHAR:Nav1.7", "Chronic pain", 0.9)],
-    "Nav1_1": [("Voltage-gated sodium channels", "IUPHAR:Nav1.1", "Epilepsy", 0.8)],
+    # --- fourth expansion: the epilepsy and pain mechanisms the panel was missing ---
+    # Added because the clinical-indication test (inversion H6) measured epilepsy and chronic pain as
+    # the two conditions served worst, recovering the approved indication for 10 and 23 percent of
+    # drugs, and the data audit found these clear both the volume and the source-diversity bar.
+    # Nav1.1 previously carried the epilepsy sodium-channel edge and has been withdrawn: it scored
+    # every trivial metabolite at 0.80 to 0.82 against a 0.796 threshold (see
+    # results/deployed_specificity_audit.csv). Nav1.6 replaces it with a random-chemistry
+    # false-positive rate of 0.000.
+    # KEGG membership verified: hsa04725 contains CHRNA3, CHRNA4, CHRNB2 and CHRNB4; hsa05033
+    # contains CHRNA4 and CHRNB2 but NOT CHRNA3 or CHRNB4, so the alpha3beta4 addiction edge is
+    # cited to the receptor annotation rather than to a pathway it does not belong to.
+    "Nav1_6": [("Voltage-gated sodium channels", "IUPHAR:Nav1.6", "Epilepsy", 0.85)],
+    "Nav1_8": [("Voltage-gated sodium channels", "IUPHAR:Nav1.8", "Chronic pain", 0.85)],
+    "a4b2nAChR": [("Cholinergic synapse", "hsa04725", "Cognition (cholinergic)", 0.7),
+                  ("Nicotine addiction", "hsa05033", "Addiction", 0.8)],
+    "a3b4nAChR": [("Cholinergic synapse", "hsa04725", "Cognition (cholinergic)", 0.4),
+                  ("Ganglionic nicotinic signalling", "IUPHAR:alpha3beta4", "Addiction", 0.7)],
     # TAAR1 agonism is the mechanism of the non-D2 antipsychotic class
     "TAAR1":  [("Trace-amine signalling", "IUPHAR:TAAR1", "Psychosis / schizophrenia", 0.7)],
     # AMPA receptor modulation in excitotoxicity and seizure control
@@ -204,8 +222,9 @@ MECH_LABEL = {"AChE": "AChE", "BChE": "BChE", "BACE1": "BACE1", "GSK3B": "GSK-3Î
               "HDAC1": "HDAC1", "HDAC6": "HDAC6", "GluN2B": "NMDA GluN2B", "mGluR5": "mGluR5",
               "GABA_A": "GABA-A", "OX1": "orexin OX1", "OX2": "orexin OX2", "MT1": "melatonin MT1",
               "mTOR": "mTOR", "SIRT1": "SIRT1", "KEAP1": "KEAP1/Nrf2", "GBA1": "GBA1", "PDE4B": "PDE4B",
-              "Nav1_5": "Nav1.5", "Nav1_7": "Nav1.7", "Nav1_1": "Nav1.1", "TAAR1": "TAAR1",
-              "GluA2": "AMPA GluA2"}
+              "Nav1_5": "Nav1.5", "Nav1_7": "Nav1.7", "TAAR1": "TAAR1",
+              "GluA2": "AMPA GluA2", "Nav1_6": "Nav1.6", "Nav1_8": "Nav1.8",
+              "a4b2nAChR": "alpha4beta2-nAChR", "a3b4nAChR": "alpha3beta4-nAChR"}
 
 # ---- BrainSafe visual identity (navy + gold, matching the earlier app) ----
 NAVY   = "#0D2137"
