@@ -18,26 +18,37 @@ Deciding whether a small molecule is likely to act on the brain requires answeri
 questions at once: can it cross the blood-brain barrier, which disease-relevant targets does it
 engage, does an achievable dose deliver free drug to the central nervous system, and is it safe.
 BrainSafe AI is an open web server that answers these questions from chemical structure alone. It
-integrates 63 models trained on measured public bioactivity data (ChEMBL, BindingDB and the B3DB
+integrates 66 models trained on measured public bioactivity data (ChEMBL, BindingDB and the B3DB
 blood-brain-barrier database): 50 molecular-target endpoints spanning blood-brain-barrier
-penetration, the principal neurodegenerative, psychiatric, neuroinflammatory and sleep-related target
-classes, and two cardiac safety liabilities, together with a nine-endpoint ADME and exposure layer
-that includes a directly modelled unbound brain-to-plasma partition coefficient. Every endpoint is
-validated under 10-fold cross-validation in two regimes, a random split and a scaffold-grouped split
-that holds out entire chemical series. Predictions are probability-calibrated, carry an
-endpoint-specific applicability-domain flag with the nearest measured analogue, and are combined into
-per-disease relevance scores, filtered by blood-brain-barrier exposure and traced through a curated
-target-to-pathway-to-disease knowledge graph spanning fourteen brain conditions, including
-Alzheimer's disease, Parkinson's disease, amyotrophic lateral sclerosis, Huntington's disease and
-epilepsy. The measured-label classifier panel reaches a mean scaffold-split AUROC of 0.92. The binder
-panel is validated not against the decoys used to train it but against compounds experimentally
-tested on the same target and found inactive, giving a mean AUROC of 0.96 across 38 targets; each
-target's decision threshold is calibrated on held-out measured inactives to hold the false-positive
-rate near 10%, yielding a mean sensitivity of 0.90. A variance decomposition shows that the wider scaffold
-error bars are dominated by genuine chemotype heterogeneity rather than statistical noise, which
-motivates the applicability-domain layer. The server returns an auditable, mechanistically
-interpretable brain-relevance profile rather than a single opaque score. BrainSafe AI is freely
-available at [URL].
+penetration, the principal neurodegenerative, psychiatric, neuroinflammatory, epileptic, analgesic
+and sleep-related target classes, and two cardiac safety liabilities, together with a nine-endpoint
+ADME and exposure layer that includes a directly modelled unbound brain-to-plasma partition
+coefficient. Every endpoint is validated under 10-fold cross-validation in two regimes, a random
+split and a scaffold-grouped split that holds out entire chemical series. Predictions are
+probability-calibrated, carry an endpoint-specific applicability-domain flag with the nearest
+measured analogue, and are combined into per-disease relevance scores, filtered by blood-brain-barrier
+exposure and traced through a curated target-to-pathway-to-disease knowledge graph of 49 targets
+spanning fourteen brain conditions. The measured-label classifier panel reaches a mean scaffold-split
+AUROC of 0.92. The binder panel is validated not against the decoys used to train it but against
+compounds experimentally tested on the same target and found inactive, giving a mean AUROC of 0.955
+across 41 targets, with a mean sensitivity of 0.898 at thresholds constrained simultaneously by
+held-out measured inactives and by the false-positive rate on unrelated chemistry.
+
+Beyond conventional validation, the server was subjected to a systematic falsification analysis in
+which each of its central claims was paired with a null model capable of reproducing the same
+apparent success by accident. This recovered results in both directions. The disease layer is
+informative (top-3 accuracy 0.794 against a permutation null of 0.207), but its curated edge weights
+are not: uniform and randomly permuted weights score 0.7935 and 0.7922 against 0.7943, so the
+predictive content lies in the graph topology and the weights are reported as structure rather than
+as tuned parameters. Validated against clinical indications drawn from ChEMBL rather than against the
+tool's own target-to-disease map, the disease scores exceed a permutation null decisively but do not
+exceed a constant baseline naming the three commonest indications, and this is stated rather than
+omitted. The same analysis identified a deployed endpoint, Nav1.1, that assigned binder probabilities
+between 0.801 and 0.816 to glucose, urea, acetate and glycine against a threshold of 0.796; it was
+withdrawn. The server returns an auditable, mechanistically interpretable brain-relevance profile
+rather than a single opaque score, exportable as a tidy data table, a self-contained report, a
+structured record or a vector figure, and supports batch screening of compound sets. BrainSafe AI is
+freely available at [URL].
 
 ---
 
@@ -342,6 +353,112 @@ value of reporting uncertainty alongside every prediction. The decoy-aware recep
 expected selectivity, for example haloperidol as a D2 and 5-HT2A binder and fluoxetine as a selective
 serotonin-transporter binder, while non-CNS controls return no distinctive engagement.
 
+### Falsification analysis
+
+Every result above was produced by investigators who wanted the tool to work. To counter that, each
+central claim was restated so that it could fail and paired with a null model able to produce the
+same apparent success by accident. Where predictive power was at issue, scoring used scaffold
+hold-out models that never saw the compounds they scored. The analysis is versioned separately from
+the validation results so that a refutation can never be mistaken for a confirmation (Table 7).
+
+**The disease layer carries information.** Across held-out compounds the correct condition appears in
+the top three predictions for 79.4% of cases, against 20.7% for a null that shuffles which disease
+each target maps to (p = 0.005) and 54.8% for always answering with the three commonest conditions.
+
+**The curated edge weights do not.** Recomputing the same predictions with uniform weights gives
+0.7935 and with weights randomly permuted across edges 0.7922, against 0.7943 for the curated values,
+a spread of 0.002. The information lies in which target connects to which condition, not in how
+strongly. The weights are therefore described in this manuscript as a mechanistic prior and as graph
+structure, not as tuned parameters, and the graph would be no less accurate without them.
+
+**Blood-brain-barrier gating is a filter, not a discriminator.** The gate multiplies every condition
+by the same probability and therefore cannot change which condition ranks first. It determines
+whether anything is reported at all. Earlier wording implying that it sharpens the disease call
+overstated its role and has been corrected throughout.
+
+**Specificity transfers to distant chemistry.** On compounds drawn by random PubChem identifier,
+independent of every set used to build the tool, the false-positive rate is 0.051 among those most
+distant from training chemistry, against 0.125 measured on library compounds. The suspicion that the
+headline specificity was an artefact of range restriction is refuted.
+
+**Read-across is validated only in its intended regime.** It recovers the true target for 97.0% of
+held-out compounds against 6.0% for a frequency baseline, with the query and any identical structure
+excluded. This does not show that read-across works for a target class the index does not contain,
+and the figure is not quoted as if it did.
+
+### Validation against clinical indications
+
+The preceding test asks whether the disease layer recovers the condition a compound's target maps to
+under this project's own map, which establishes internal consistency rather than external truth. A
+stronger test uses ChEMBL's drug_indication table restricted to phase 4, mapped to the panel through
+a keyword list fixed before any prediction was computed and deliberately narrow, so that an unmatched
+heading is discarded rather than coerced. Auditing that mapping rather than trusting it caught
+Wolff-Parkinson-White syndrome, a cardiac condition, matching the substring "parkinson"; it was
+excluded.
+
+On 467 drugs the top-3 accuracy is 0.379. On the 162 whose exact structure appears nowhere in the
+training chemistry it is 0.352, statistically indistinguishable from the 0.387 achieved on structures
+the models have seen, which establishes that the result is prediction rather than memorisation. Both
+exceed a permutation null of 0.145 decisively (p = 0.001). Neither exceeds a frequency null of 0.654,
+because chronic pain, depression and psychosis account for most approved central-nervous-system
+indications and a constant answer naming those three is right about two-thirds of the time. That
+constant answer carries no information about any individual compound, but it is a real bar and the
+tool does not clear it on this metric. Removing the reporting threshold and judging the ranking alone
+raises accuracy to 0.490, which locates much of the gap in the decision to stay silent rather than in
+the ranking itself. Per-indication recovery is reported in full (Table 8) because the aggregate
+conceals a wide spread, from 0.644 for psychosis to 0.103 for epilepsy.
+
+### Deployed specificity and the withdrawal of an endpoint
+
+Two gaps in the evidence above motivated a further test. The background-specificity calibration bounds
+the false-positive rate on a random sample of the measured training library, which is drug-like
+medicinal chemistry and therefore a weak negative set; a model can pass it and still fire on a sugar.
+The scaffold hold-out analysis used genuinely random structures but scored the hold-out twins rather
+than the models the server delivers. Every deployed binder model was therefore scored at its deployed
+threshold against 600 random PubChem structures and against molecules no central-nervous-system
+target plausibly binds.
+
+The median false-positive rate across the deployed panel is 0.0017. Four endpoints failed. Nav1.1
+assigned binder probabilities of 0.806 to glucose, 0.809 to urea, 0.802 to acetate and 0.816 to
+glycine against a threshold of 0.796, at an overall false-positive rate of 0.098 on random chemistry.
+The failure is not one of calibration: every trivial control lies within a band of 0.015, and the
+threshold that would restore 5% specificity still calls glycine a binder. This compressed-probability
+pathology also explains that endpoint's deployed sensitivity of 0.32 and its provenance, 78% of
+measurements from a single assay. Nav1.1 was withdrawn from the panel. Cav3.2 was rejected before
+deployment for the same pathology inverted, its calibrated threshold falling to 0.065 while atenolol
+scored 0.084. SIRT1 and alpha3beta4 were re-thresholded at negligible cost to sensitivity. After
+these decisions every deployed endpoint holds below 5% on random chemistry and none fires on a
+trivial molecule.
+
+### Targeted expansion, and a limit that more targets cannot remove
+
+Because the clinical-indication test identified epilepsy and chronic pain as the conditions served
+worst, ChEMBL was queried systematically for the mechanisms those conditions require. Six cleared
+both a volume bar of 800 measured activities and a source-diversity bar; four survived audit and
+training and are deployed: alpha4beta2 and alpha3beta4 nicotinic receptors, Nav1.6 and Nav1.8
+(Table 9). Nicotine and varenicline, previously invisible to the tool, now register their known
+nicotinic engagement, and recovery of approved indications for addiction rose from 0.412 to 0.529.
+
+Epilepsy did not improve, and the reason is instructive. In ChEMBL's own measurements carbamazepine
+scores pChEMBL 4.49 at Nav1.7 and lamotrigine 4.77, both labelled inactive; mexiletine reaches 4.93
+and lacosamide 6.74, below the binder threshold of 7. The classic antiepileptic drugs are not
+high-affinity sodium-channel ligands; they are use-dependent, state-dependent blockers acting at tens
+of micromolar. Silence on carbamazepine is therefore the correct response to the measured data, and
+no binding-affinity endpoint will recognise that pharmacological class. The epilepsy gap is a
+mismatch between what the panel measures and how a class of drugs works, not a missing target, and it
+is reported as such rather than as a coverage deficiency that further expansion would close.
+
+A related caution emerged from calibrating the new endpoints. Nav1.6 ranks its held-out actives
+against random chemistry at an AUROC of 0.997 with a false-positive rate of 0.000, which appears to
+license relaxing its threshold of 0.9605 and would raise sensitivity from 0.591 to 0.989. Tested
+against hard negatives the proposal fails: compounds assayed against Nav1.6 and found inactive carry
+a median probability of 0.532 and a 90th percentile of 0.951, overlapping a binder distribution whose
+10th percentile is 0.907, and the relaxed threshold would call 73% of tested-inactive compounds
+binders. A low false-positive rate on unrelated chemistry does not license a lower threshold, and
+discrimination against random chemistry can be near-perfect while discrimination against the chemistry
+that matters is poor. The dual constraint, measured inactives and background together, performs work
+that neither term performs alone.
+
 ## The BrainSafe AI server
 
 **Input.** The user types a compound name or pastes a SMILES string. Names are resolved through
@@ -355,7 +472,38 @@ base-rate-aware call; a receptor-binding table; an ADME table; a physicochemical
 applicability and confidence card giving global and per-endpoint domain flags with the nearest
 measured analogue. An About tab documents the methods, the model-selection and validation results,
 and an explicit coverage panel stating which mechanisms and diseases the tool can and cannot yet
-assess, so a null result is read as an honest unknown rather than as inactivity.
+assess, so a null result is read as an honest unknown rather than as inactivity. A target-engagement
+profile plots every modelled mechanism against its own reporting threshold; because each endpoint
+carries a different base rate and a different cut, raw probabilities are not comparable between
+endpoints, and what is plotted is the distance above each threshold, which is the quantity the
+disease layer consumes. Sub-threshold targets are shown as a percentage of their own cut, so a
+compound that engages nothing still yields an interpretable figure rather than an empty panel.
+
+Where the server reports nothing, it states the two reasons a null result can arise: the compound may
+act through a mechanism outside the panel, or through a modelled target but below its reporting
+threshold. The second is quantified for the user, since thresholds are set for precision, holding the
+false-positive rate near 0.2% on random chemistry, and the measured cost is a median sensitivity of
+0.77 falling to 0.26 at the strictest endpoints. Silence is not evidence of inactivity and the
+interface says so with the number attached.
+
+**Export.** Every result is downloadable in four forms generated from a single tidy table, so that
+they cannot disagree with the screen or with each other: a data table with units and training context
+for every endpoint; a self-contained report that inlines its figures, structure image and styling and
+therefore opens offline and prints to a portable document; a structured record carrying thresholds,
+screening mode, provenance and the caveats that must travel with the numbers; and the mechanistic map
+as a vector figure for direct use in a manuscript.
+
+**Batch screening.** Up to 300 compounds may be pasted or uploaded as delimited or plain text and are
+returned as one row each, giving exposure, engaged mechanisms, reported conditions and
+applicability-domain status, with the whole table downloadable. This is the mode intended for
+prioritising a library before laboratory work is committed.
+
+**Deployment.** The server is distributed as a container image running as an unprivileged process
+with a health endpoint for orchestration. A pre-flight script verifies that every declared dependency
+resolves at its pinned version, that all model artefacts load, that the knowledge graph is internally
+consistent, that chemically unrelated compounds yield distinct and directionally correct profiles,
+and that every export format is well formed and self-contained; it exits non-zero on any failure and
+is intended to gate a release.
 
 ## Discussion
 
@@ -378,18 +526,51 @@ interface shows a predicted pKi only for compounds already classified as binders
 regression that drives the neuroprotection axis has an in-domain prospective rank correlation of 0.59
 but essentially no out-of-domain signal, so that axis is a qualitative flag outside the domain.
 
-Target coverage, though broad, is finite: ionotropic glutamate and GABA-A receptors,
-protein-aggregation and neuroinflammation phenotypes, and epigenetic targets are not yet modelled, and
-conditions outside the current mechanistic panel (for example amyotrophic lateral sclerosis,
-Huntington's disease and stroke) are not scored. Two ADME endpoints, hepatocyte clearance and plasma
-protein binding, are weak under the scaffold split and are reported as such. Decoy-based validation
-gives an optimistic bound because decoys are presumed rather than measured inactives, which is why the
-near-miss figure and the background false-positive rate are reported together. The target-to-disease
-weights in the knowledge graph are expert-curated rather than learned, and are versioned in the
-repository so that they can be inspected and revised. Predictions concern molecular target engagement
-and physicochemical properties, not clinical efficacy, and do not distinguish agonism from antagonism.
-The tool is intended for research prioritisation and hypothesis generation and is not for medical,
-diagnostic or treatment decisions.
+Target coverage, though broad, is finite, and the boundaries have been measured rather than assumed.
+A systematic query of ChEMBL for the mechanisms the panel omits found that the reasons differ in kind
+and that only one of them is a matter of quantity. Some targets have too few measured ligands for any
+model: kainate receptors (244, 139 and 34 activities for GluK1, GluK2 and GluK3), the vesicular
+monoamine transporter VMAT2 (149), SOD1 (29), TDP-43 (9), and C9orf72, which has no ChEMBL target
+record at all. Some have volume without diversity, which is a more insidious failure: tau carries
+95,345 potency values, more than any deployed endpoint, but a 1,000-activity sample draws on a single
+document and 86% of it is one thioflavin-S displacement campaign, so a scaffold-split model would
+learn that screening library rather than the protein; huntingtin is worse at 98% from one assay.
+Some are obscured by target annotation rather than by data: ChEMBL assigns activity to the protein
+rather than to the binding site, so the phencyclidine channel site used by ketamine and the GluN2B
+allosteric site used by ifenprodil are pooled despite having unrelated structure-activity
+relationships, which is why the latter is modelled and the former is not. Finally, some conditions are
+not targets at all. Migraine and multiple sclerosis are reachable through defined mechanisms not yet
+included (the calcitonin-gene-related-peptide receptor, 1,578 activities, and dihydroorotate
+dehydrogenase, 2,558), whereas stroke and cerebral ischaemia offer no comparable small-molecule
+target set, consistent with four decades of failed neuroprotection trials.
+
+Expanding the panel is not costless, which bears on how these gaps should be closed. Each added
+endpoint is a further opportunity to fire spuriously, so the probability that at least one target
+fires on a compound that engages nothing rises with panel size. Coverage should therefore be extended
+where a measured weakness demands it, as was done here for addiction, rather than pursued for
+completeness.
+
+Two ADME endpoints, hepatocyte clearance and plasma protein binding, are weak under the scaffold
+split and are reported as such. Decoy-based validation gives an optimistic bound because decoys are
+presumed rather than measured inactives, which is why the near-miss figure and the background
+false-positive rate are reported together, and why deployed specificity is additionally measured on
+random chemistry and on molecules nothing should bind. The target-to-disease weights in the knowledge
+graph are expert-curated rather than learned; the falsification analysis shows they carry no
+measurable predictive content beyond the graph topology, and they are retained as a mechanistic prior
+and versioned in the repository so that they can be inspected and revised. Predictions concern
+molecular target engagement and physicochemical properties, not clinical efficacy, and do not
+distinguish agonism from antagonism. The tool is intended for research prioritisation and hypothesis
+generation and is not for medical, diagnostic or treatment decisions.
+
+One limitation deserves separate statement because it is not a coverage gap and cannot be closed by
+adding targets. The panel defines engagement as high-affinity binding, and an entire pharmacological
+class works otherwise. Use-dependent, state-dependent channel blockers act at concentrations one to
+two orders of magnitude weaker than the binder threshold, and ChEMBL's own measurements label the
+classic antiepileptic drugs inactive at the sodium channels through which they are understood to act.
+The server is therefore silent on carbamazepine, phenytoin and lamotrigine, and that silence is
+correct with respect to the measured data while being unhelpful with respect to the clinical
+question. Extending the tool to such mechanisms would require a different class of endpoint, modelling
+use-dependent block or a phenotypic outcome, not a further binding target.
 
 ## Data availability
 

@@ -154,3 +154,52 @@ Twenty per cent of Bemis-Murcko scaffolds were withheld per target and every mod
 
 
 Pooled recall 12,325/15,609 = 0.790; median per-target 0.807; 19 of 36 targets at or above 0.80.
+
+
+## Table 7. Falsification analysis: each claim paired with a null model
+
+Every hypothesis was stated so that it could fail. Where predictive power was at issue, scoring used scaffold hold-out models that never saw the compounds they scored. A refuted hypothesis is reported as prominently as a confirmed one; the purpose of the exercise was to find failures.
+
+
+| Hypothesis | Verdict | Evidence |
+|---|---|---|
+| H1 the disease score is informative | **SUPPORTED** | top-3 accuracy 0.792 vs permutation null 0.205 (p=0.005) and frequency null 0.558 |
+| H2 the curated edge weights add value | **REFUTED** | curated 0.7917, uniform 0.7911, permuted 0.7899 |
+| H3 BBB gating discriminates between diseases | **REFUTED (by construction)** | the gate multiplies every disease equally and cannot change their order |
+| H4 specificity transfers to novel chemistry | **SUPPORTED** | false-positive rate 0.051 on 59 distant compounds against 0.125 measured on library chemistry |
+| H5 read-across beats a frequency baseline | **SUPPORTED** | recall 0.970 against 0.060 |
+| H6 the disease scores match real clinical indications | **WEAKENED** | top-3 accuracy 0.352 on 162 drugs never seen in training, against permutation null 0.145 (p=0.001) and frequency null 0.654 |
+| H7 some panel targets are non-discriminative and explain the silent antiepileptics | **REFUTED** | none of 40 targets ranks below AUROC 0.70; the cause is the operating point, with median deployed sensitivity 0.77 and 7 targets under 0.50 |
+
+
+## Table 8. Recovery of approved clinical indications, by condition
+
+Ground truth is ChEMBL's drug_indication table restricted to phase 4, mapped to the panel through a keyword list fixed before any prediction was computed. 'Ranking only' removes the reporting threshold, separating the ability to rank conditions from the decision to stay silent. 'Silent' counts drugs for which no condition reached the reporting threshold.
+
+
+| Indication | Drugs | Recovered in top 3 | Ranking only | Silent |
+|---|---|---|---|---|
+| Alzheimer's disease | 10 | 0.200 | 0.800 | 5 |
+| Parkinson's disease | 39 | 0.154 | 0.538 | 16 |
+| Depression / anxiety | 113 | 0.611 | 0.779 | 30 |
+| Psychosis / schizophrenia | 73 | 0.644 | 0.740 | 14 |
+| Addiction | 17 | 0.529 | 0.588 | 5 |
+| ADHD | 31 | 0.226 | 0.258 | 16 |
+| Chronic pain | 144 | 0.229 | 0.229 | 86 |
+| Sleep / wakefulness | 27 | 0.296 | 0.296 | 11 |
+| Epilepsy | 58 | 0.103 | 0.224 | 47 |
+
+
+## Table 9. Targeted expansion: candidates, audit and outcome
+
+Candidates were selected because the clinical-indication test identified epilepsy and chronic pain as the conditions served worst, and a systematic ChEMBL query found these mechanisms clear both a volume bar of 800 measured activities and a source-diversity bar. Each was then audited on its own fetched data before training, and again on deployed specificity afterwards.
+
+
+| Candidate | Actives | Scaffolds | Measured inactives | AUROC vs inactives | Sensitivity | Outcome | Reason if rejected |
+|---|---|---|---|---|---|---|---|
+| a4b2nAChR | 796 | 278 | 146 | 0.954 | 0.849 | deployed |  |
+| a3b4nAChR | 398 | 153 | 187 | 0.992 | 0.975 | deployed |  |
+| Nav1_6 | 681 | 187 | 45 | 0.879 | 0.591 | deployed |  |
+| Nav1_8 | 501 | 163 | 39 | 0.955 | 0.901 | deployed |  |
+| Cav3_2 | 633 | 201 | 33 | 1.000 | 0.997 | withdrawn after training | active band compressed near zero, calibrated threshold 0.065, atenolol scores 0.084 |
+| GABAA_a5 | 672 | 284 | 4 | n/a | n/a | not trained | only 4 measured inactives, cannot set a threshold honestly |
