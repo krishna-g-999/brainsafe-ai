@@ -939,7 +939,9 @@
     "reliable_call": true,
     "background_fpr_at_old_threshold": 0.001,
     "background_fpr_at_threshold": 0.001,
-    "deployed": true
+    "deployed": true,
+    "sensitivity_note": "Deployed sensitivity is low by necessity, not by miscalibration. The background false-positive rate on random chemistry is 0.000 and AUROC against random chemistry is 0.997, which together suggest the 0.9605 threshold could be relaxed. It cannot. Measured inactives, compounds actually assayed against Nav1.6 and found inactive below pChEMBL 5, carry a median probability of 0.532 and a 90th percentile of 0.951, overlapping the binder distribution whose 10th percentile is 0.907. Lowering the cut to the value that would give 1 percent background false positives (0.099) raises sensitivity to 0.989 but calls 73 percent of tested-inactive compounds binders. Random chemistry is an easy negative set for this target; the real discrimination task is against sodium-channel chemistry that was tested and failed. The low sensitivity is the honest price of that, and is reported rather than engineered away.",
+    "deployed_sensitivity_scaffold_holdout": 0.32
   },
   "Nav1_8": {
     "mode": "hybrid_decoys_plus_measured_inactives",
