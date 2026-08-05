@@ -29,6 +29,15 @@ The two are trained and calibrated identically on nearly the same data, so their
 are close, but they are not the same estimator. The AUROC column does not depend on this. Endpoints
 with fewer than about 30 held-out actives carry wide uncertainty on sensitivity and are flagged.
 
+That caveat turned out to matter more than it reads. The false-positive rates below describe the
+hold-out twins, and for Nav1.1 the twin and the deployed model diverge by a factor of fifty: 0.0017
+here against 0.098 measured on the same 600 structures with the model the web server actually
+served. The deployed Nav1.1 called glucose, urea and acetate binders while its twin did not. Nothing
+in this file was wrong, but nothing in it licensed a claim about the deployed panel either, and the
+distinction was not obvious enough. results/deployed_specificity_audit.csv now measures the served
+models directly and is the authority for deployed specificity; this file is the authority for
+whether an endpoint can rank at all. Nav1.1 was withdrawn from the panel on that evidence.
+
 Read-only. Writes inversion/results/H7_target_discrimination.csv
 """
 from __future__ import annotations

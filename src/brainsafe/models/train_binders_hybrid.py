@@ -58,6 +58,14 @@ def _fp(s):
 
 
 def main():
+    # Targets may be named on the command line to train an addition without refitting the panel.
+    # Existing entries in binder_modes.json are merged, not replaced, so a partial run leaves every
+    # untouched endpoint exactly as it was validated. Retraining a deployed model silently would
+    # invalidate every number already reported for it.
+    global TARGETS
+    if len(sys.argv) > 1:
+        TARGETS = sys.argv[1:]
+        print(f"training only: {', '.join(TARGETS)}", flush=True)
     with (M / "ad_reference.pkl").open("rb") as fh:
         bg_smiles, bg_fps = pickle.load(fh)
     bg_smiles = np.array(bg_smiles)
