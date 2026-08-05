@@ -5,10 +5,10 @@ Amyotrophic lateral sclerosis,7,7,0,0.98,0.745
 Huntington's disease,2,2,0,0.845,0.777
 Depression / anxiety,11,9,1,0.858,0.762
 Psychosis / schizophrenia,4,3,1,0.795,0.525
-Cognition (cholinergic),6,4,0,0.923,0.857
-Addiction,3,3,0,0.895,0.865
+Cognition (cholinergic),8,6,0,0.923,0.849
+Addiction,5,5,0,0.895,0.865
 ADHD,2,2,0,0.865,0.836
-Chronic pain,4,4,0,0.895,0.816
+Chronic pain,5,5,0,0.895,0.775
 Sleep / wakefulness,6,5,1,0.897,0.812
 Epilepsy,6,5,1,0.767,0.422
 Neuroinflammation,5,5,0,0.923,0.806

@@ -58,6 +58,13 @@ def _fp(s):
 
 
 def main():
+    # Targets may be named on the command line so an addition to the panel can be given its
+    # hold-out twin without refitting, and thereby perturbing, the twins already evaluated.
+    global TARGETS
+    if len(sys.argv) > 1:
+        TARGETS = sys.argv[1:]
+        print(f"retraining hold-out twins for: {', '.join(TARGETS)}", flush=True)
+
     with (M / "ad_reference.pkl").open("rb") as fh:
         bg_smiles, bg_fps = pickle.load(fh)
     bg_smiles = np.array(bg_smiles)
@@ -68,7 +75,15 @@ def main():
     sub = rng.choice(len(bg_ok), size=min(2500, len(bg_ok)), replace=False)
     Xbg_eval, _ = featurize([str(bg_ok[i]) for i in sub])
 
-    modes, heldout = {}, {}
+    # Merge rather than replace. A subset run must not discard the hold-out models and held-out
+    # compound lists that inversion H1 and H7 already scored: regenerating them under a different
+    # random draw would silently move every number those tests reported.
+    modes = json.loads((OUT / "binder_modes.json").read_text()) \
+        if (OUT / "binder_modes.json").exists() else {}
+    heldout = json.loads((OUT / "heldout_actives.json").read_text()) \
+        if (OUT / "heldout_actives.json").exists() else {}
+    if modes:
+        print(f"merging into {len(modes)} existing hold-out entries", flush=True)
     for ep in TARGETS:
         f = ROOT / "data" / "endpoints" / f"{ep}.csv"
         if not f.exists():
