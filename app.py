@@ -1732,19 +1732,138 @@ COVERAGE_YES = [
     ("Safety hERG; measured antioxidant (DPPH)", "ChEMBL"),
     ("ADMET: Kp,uu, logBB, Caco-2, P-gp, solubility, logD, PPB, clearance", "measured"),
 ]
-COVERAGE_LOW = [
-    ("TAAR1 (non-D2 antipsychotic mechanism)", "sensitivity 0.54"),
-    ("AMPA GluA2", "sensitivity 0.58"),
-]
+# The low-sensitivity list is computed, never written down.
+#
+# It was previously hand-maintained and drifted badly: it claimed TAAR1 at sensitivity 0.54 and AMPA
+# GluA2 at 0.58 when the deployed values were 0.774 and 0.660, while omitting the one endpoint that
+# genuinely qualified. A coverage statement that is wrong about its own models is worse than none,
+# because it is read as an audit. Everything below is therefore derived from binder_modes.json at
+# render time and cannot disagree with what is deployed.
+LOW_SENSITIVITY_CUT = 0.65
+
+
+def coverage_low():
+    """Deployed endpoints whose sensitivity is low enough that a negative call carries little."""
+    out = []
+    for ep, v in sorted(load_binder_modes().items()):
+        if not v.get("deployed", True):
+            continue
+        s = v.get("sensitivity_at_threshold")
+        if s is None or s >= LOW_SENSITIVITY_CUT:
+            continue
+        why = f"sensitivity {s:.2f} at the deployed threshold"
+        if v.get("sensitivity_note"):
+            why += ", by necessity rather than miscalibration"
+        out.append((MECH_LABEL.get(ep, ep), why))
+    return out
+
+
+def coverage_modelled():
+    """Every deployed mechanism, grouped for reading, built from the live panel.
+
+    Grouping labels are curated for legibility but membership is not: a target appears here if and
+    only if it is scorable and not withdrawn, so an endpoint cannot be advertised after it has been
+    removed, nor omitted after it has been added."""
+    modes = load_binder_modes()
+    live = {t for t in TARGET_KIND if t != "NEURO"
+            and modes.get(t, {}).get("deployed", True)}
+    groups = [
+        ("Blood-brain barrier and exposure", ["BBB"], "B3DB"),
+        ("Cholinesterases and cognition", ["AChE", "BChE", "a7nAChR", "H3", "HT6", "PDE4B"], "ChEMBL"),
+        ("Amyloid and tau", ["BACE1", "GSK3B"], "ChEMBL"),
+        ("Monoamine oxidases", ["MAO_A", "MAO_B"], "ChEMBL"),
+        ("Serotonin receptors", ["HT1A", "HT2A", "HT6", "HT7"], "ChEMBL"),
+        ("Dopamine and transporters", ["D2", "D3", "DAT", "NET", "SERT", "TAAR1"], "ChEMBL"),
+        ("Opioid, cannabinoid, sigma", ["OPRM1", "OPRK1", "CB1", "Sigma1"], "ChEMBL"),
+        ("Adenosine and nicotinic", ["A1", "A2A", "a7nAChR", "a4b2nAChR", "a3b4nAChR"], "ChEMBL"),
+        ("Glutamate and GABA", ["GluN2B", "GluA2", "mGluR5", "GABA_A"], "ChEMBL"),
+        ("Sleep and circadian", ["OX1", "OX2", "MT1"], "ChEMBL"),
+        ("Neuroinflammation", ["NLRP3", "P2X7", "COX2", "CSF1R"], "ChEMBL"),
+        ("Epigenetic and proteostasis", ["HDAC1", "HDAC6", "SIRT1", "mTOR", "KEAP1"], "ChEMBL"),
+        ("Parkinson's and Huntington's", ["LRRK2", "GBA1", "PDE10A"], "ChEMBL"),
+        ("Ion channels", ["Nav1_5", "Nav1_6", "Nav1_7", "hERG"], "ChEMBL"),
+        ("Pain-selective channels", ["Nav1_8"], "ChEMBL"),
+    ]
+    out, seen = [], set()
+    for label, members, src in groups:
+        present = [m for m in members if m in live]
+        if not present:
+            continue
+        seen |= set(present)
+        out.append((f"{label}: " + ", ".join(MECH_LABEL.get(m, m) for m in present), src))
+    missing = sorted(live - seen)
+    if missing:
+        # never silently drop a deployed endpoint from its own coverage statement
+        out.append(("Other deployed endpoints: "
+                    + ", ".join(MECH_LABEL.get(m, m) for m in missing), "ChEMBL"))
+    out.append(("Antioxidant capacity (DPPH)", "ChEMBL"))
+    out.append(("ADMET: Kp,uu, logBB, Caco-2, P-gp substrate and inhibition, solubility, logD, "
+                "plasma-protein binding, clearance", "measured"))
+    return out
+
+
+def coverage_withdrawn():
+    """Endpoints trained and then removed, with the reason, so a removal is visible not silent."""
+    return [(MECH_LABEL.get(ep, ep), v.get("withdrawn_reason", "withdrawn"))
+            for ep, v in sorted(load_binder_modes().items())
+            if not v.get("deployed", True)]
+# What is not modelled, and why, with the measured evidence behind each claim.
+#
+# Every count below comes from a systematic ChEMBL query (results/unmodelled_target_data.csv) rather
+# than from recollection, because "there is not enough data" ages badly as ChEMBL grows. The reasons
+# are not interchangeable: too few ligands is a different problem from volume without diversity,
+# which is different again from a binding site that the target annotation does not separate, and
+# only the first is fixed by waiting. A health check asserts that nothing named here is in fact
+# deployed, which is how the previous version of this list was found to be wrong.
 COVERAGE_NO = [
-    "Kainate receptors; nicotinic subtypes other than alpha7",
-    "The NMDA channel-blocker (PCP) site used by ketamine; GluN2B here is the allosteric site",
-    "Vesicular monoamine transporter VMAT2 (for example tetrabenazine): no usable ChEMBL target set",
-    "Calcium channel subtypes, and neuronal sodium subtypes other than Nav1.1 and Nav1.7",
-    "alpha-synuclein, tau and huntingtin aggregation (phenotypic, not ligand-binding assays)",
-    "ALS genetics: SOD1, TDP-43, C9orf72 (too few measured ligands in ChEMBL to train)",
-    "Diseases not directly modelled: stroke and ischaemia, multiple sclerosis, migraine",
+    "Kainate receptors GluK1, GluK2, GluK3: 244, 139 and 34 measured activities, far below the 800 "
+    "required to train an endpoint that survives a scaffold split",
+    "The NMDA channel-blocker site used by ketamine and phencyclidine. ChEMBL annotates activity to "
+    "the protein rather than the binding site, so channel blockers, glycine-site ligands and GluN2B "
+    "allosteric modulators are pooled despite unrelated structure-activity relationships. The GluN2B "
+    "allosteric site modelled here can be isolated; the channel site cannot without assay-level "
+    "curation",
+    "Vesicular monoamine transporter VMAT2, the target of tetrabenazine: 149 activities from 12 "
+    "sources, too few and too narrow to train",
+    "Calcium channel subtypes. Cav3.2 was trained and rejected: its calibrated threshold collapsed to "
+    "0.065 and atenolol scored 0.084, so it would have generated false leads. Cav2.2 has 566 "
+    "activities, below the bar",
+    "Aggregation of alpha-synuclein, tau and huntingtin. These are phenotypic assays with no defined "
+    "binding site. Tau carries 95,345 potency values, more than any deployed endpoint, but 86 per "
+    "cent come from a single thioflavin-S displacement campaign and a 1,000-activity sample draws on "
+    "one document; huntingtin is 98 per cent one assay. A model trained on either learns the "
+    "screening library, not the protein",
+    "ALS genetics: SOD1 has 29 measured activities, TDP-43 has 9, and C9orf72 has no ChEMBL target "
+    "record at all",
+    "GABA-A subtype alpha5-beta3-gamma2: 672 actives were fetched and audited but only 4 measured "
+    "inactives exist, so no threshold could be set honestly. The pooled GABA-A endpoint is deployed "
+    "in its place",
+    "Diseases without a modelled mechanism: stroke and cerebral ischaemia, which offer no comparable "
+    "small-molecule target set; multiple sclerosis and migraine, which do have defined targets not "
+    "yet included (dihydroorotate dehydrogenase, 2,558 activities, and the calcitonin-gene-related-"
+    "peptide receptor, 1,578) and are the strongest candidates for the next expansion",
 ]
+
+# The mechanisms the prose above asserts are absent, named in canonical form so the claim can be
+# tested rather than read. Prose is not testable: an entry explaining that the pooled GABA-A endpoint
+# stands in for an unmodelled subtype necessarily contains the string "GABA-A", which a text search
+# cannot distinguish from a claim that GABA-A itself is missing.
+COVERAGE_NO_MECHANISMS = {
+    "GluK1", "GluK2", "GluK3", "NMDA_PCP_site", "VMAT2", "Cav3_2", "Cav2_2",
+    "SNCA", "MAPT", "HTT", "SOD1", "TARDBP", "C9orf72", "GABAA_a5", "CGRP", "DHODH",
+}
+
+# A drug class the panel cannot represent, which is a different kind of gap from a missing target and
+# is stated separately because no further endpoint will close it.
+COVERAGE_CLASS_LIMIT = (
+    "Use-dependent, state-dependent channel blockers. The panel defines engagement as high-affinity "
+    "binding at pChEMBL 7 or better, roughly 100 nM. The classic antiepileptic drugs act one to two "
+    "orders of magnitude weaker, and ChEMBL's own measurements label them inactive at the sodium "
+    "channels through which they work: carbamazepine 4.49 at Nav1.7, lamotrigine 4.77, mexiletine "
+    "4.93, lacosamide 6.74. Silence on carbamazepine is therefore correct with respect to the "
+    "measured data and unhelpful with respect to the clinical question. Covering this class needs a "
+    "different kind of endpoint, modelling use-dependent block or a phenotypic outcome, not another "
+    "binding target.")
 
 
 RESULTS = ROOT / "results" / "tables"
@@ -2302,9 +2421,17 @@ def render_model_comparison():
 
 
 def render_coverage_card():
-    yes = "".join(f'<li><b>{t}</b> <span class="bs-ctx">· {src}</span></li>' for t, src in COVERAGE_YES)
+    yes = "".join(f'<li><b>{t}</b> <span class="bs-ctx">· {src}</span></li>'
+                  for t, src in coverage_modelled())
     no = "".join(f"<li>{t}</li>" for t in COVERAGE_NO)
-    low = "".join(f'<li><b>{t}</b> <span class="bs-ctx">· {why}</span></li>' for t, why in COVERAGE_LOW)
+    _low = coverage_low()
+    low = ("".join(f'<li><b>{t}</b> <span class="bs-ctx">· {why}</span></li>' for t, why in _low)
+           if _low else
+           f'<li class="bs-note">No deployed endpoint falls below a sensitivity of '
+           f'{LOW_SENSITIVITY_CUT:.2f}.</li>')
+    _wd = coverage_withdrawn()
+    withdrawn = ("".join(f'<li><b>{t}</b> <span class="bs-ctx">· {why}</span></li>' for t, why in _wd)
+                 if _wd else "")
     st.markdown(
         f"""
         <div class="bs-card"><div class="bs-h">Coverage: what this tool can and cannot assess
@@ -2317,12 +2444,18 @@ def render_coverage_card():
               <div class="about-eyebrow" style="color:{AMBER};margin-top:12px">△ Modelled but low sensitivity</div>
               <ul class="bs-note" style="margin:6px 0 0;padding-left:18px;line-height:1.7">{low}</ul>
               <div class="bs-note" style="margin-top:6px">For these, a positive call carries information but a
-              negative one does not rule engagement out.</div></div>
+              negative one does not rule engagement out.</div>
+              {f'<div class="about-eyebrow" style="color:{ADVERSE};margin-top:12px">✕ Trained then withdrawn</div><ul class="bs-note" style="margin:6px 0 0;padding-left:18px;line-height:1.7">{withdrawn}</ul>' if withdrawn else ''}
+              </div>
           </div>
-          <div class="bs-note" style="margin-top:12px">Because the tool can only "see" mechanisms it has a
+          <div class="bs-note" style="margin-top:12px"><b>A class this panel cannot represent.</b>
+          {COVERAGE_CLASS_LIMIT}</div>
+          <div class="bs-note" style="margin-top:10px">Because the tool can only "see" mechanisms it has a
           validated model for, a compound whose real target is in the right-hand column will correctly show
-          "no distinctive engagement". That is a genuine <i>unknown</i>, not evidence of inactivity. Expanding
-          the left column (new validated endpoints) is the active development roadmap.</div>
+          "no distinctive engagement". That is a genuine <i>unknown</i>, not evidence of inactivity. The
+          modelled list and the sensitivity figures on this page are generated from the deployed model
+          registry at page load, not written by hand, so they cannot describe a panel other than the one
+          actually running.</div>
         </div>
         """,
         unsafe_allow_html=True,

@@ -301,6 +301,41 @@ def main():
                 f"{len(app.TARGET_FAMILIES)} declared families")
     check("homologous targets are grouped", _independence)
 
+    def _coverage():
+        """The coverage panel is read as an audit, so it must not be able to describe a different
+        panel from the one deployed. This is the check that would have caught the drift in which it
+        advertised a withdrawn endpoint, denied two deployed families, and quoted sensitivities of
+        0.54 and 0.58 for endpoints measuring 0.774 and 0.660."""
+        modes = app.load_binder_modes()
+        live = {t for t in app.TARGET_KIND if t != "NEURO"
+                and modes.get(t, {}).get("deployed", True)}
+        withdrawn = {t for t, v in modes.items() if not v.get("deployed", True)}
+
+        listed = " ".join(t for t, _ in app.coverage_modelled())
+        missing = [t for t in live if app.MECH_LABEL.get(t, t) not in listed]
+        assert not missing, f"deployed but absent from the coverage panel: {sorted(missing)}"
+        advertised = [t for t in withdrawn if app.MECH_LABEL.get(t, t) in listed]
+        assert not advertised, f"withdrawn but still advertised as modelled: {sorted(advertised)}"
+
+        # nothing declared unmodelled may in fact be deployed, tested against the structured claim
+        # rather than the prose, since prose that explains a substitution necessarily names both
+        wrong = sorted(app.COVERAGE_NO_MECHANISMS & live)
+        assert not wrong, f"declared not modelled but deployed: {wrong}"
+        assert app.COVERAGE_NO and app.COVERAGE_NO_MECHANISMS, "coverage claims are empty"
+
+        # every quoted sensitivity must equal the deployed value
+        for label, why in app.coverage_low():
+            ep = next((e for e in modes if app.MECH_LABEL.get(e, e) == label), None)
+            assert ep, f"low-sensitivity entry {label} matches no endpoint"
+            s = modes[ep].get("sensitivity_at_threshold")
+            assert s is not None and f"{s:.2f}" in why, \
+                f"{label} quotes a sensitivity that is not the deployed value {s}"
+            assert s < app.LOW_SENSITIVITY_CUT, f"{label} is listed as low but measures {s}"
+        return (f"{len(live)} deployed endpoints all listed, {len(withdrawn)} withdrawn none "
+                f"advertised, {len(app.coverage_low())} low-sensitivity entries all matching "
+                f"deployed values")
+    check("coverage panel matches the deployed panel", _coverage)
+
     def _nored():
         """No red anywhere: the palette must survive red-green colour-vision deficiency."""
         # Judged on hue, not on the red channel. The brand gold (#F0A500) and the caution amber
