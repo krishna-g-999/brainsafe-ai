@@ -239,6 +239,67 @@ def main():
         return f"network SVG renders, {len(svg):,} characters, {svg.count('<text')} labels"
     check("network figure", _network)
 
+    print("7. export and batch")
+
+    def _exports():
+        smi = PROBES["donepezil"]
+        r = app.predict_all(smi, models)
+        df = app.result_frame(smi, "Donepezil", r)
+        assert len(df) > 60, f"result table has only {len(df)} rows"
+        assert df.value.notna().all(), "result table contains missing values"
+        n_ep = len(app.TARGET_CLASSIFIERS) + len(app.RECEPTOR_REGRESSORS) + len(app.ADME)
+        assert len(df) >= n_ep, "result table does not cover every declared endpoint"
+        j = app.result_json(smi, "Donepezil", r)
+        import json as _j
+        _j.dumps(j)  # must be serialisable, so a stray numpy type fails here not in the browser
+        assert j["caveats"], "export carries no caveats"
+        html = app.build_html_report(smi, "Donepezil", r)
+        assert html.lstrip().startswith("<!doctype html"), "report is not a complete document"
+        assert "http://" not in html.replace("http://www.w3.org", ""), \
+            "report references an external resource and will not render offline"
+        assert "<svg" in html, "report contains no figures"
+        return (f"table {len(df)} rows, json {len(_j.dumps(j)):,} bytes, "
+                f"report {len(html):,} bytes and self-contained")
+    check("export formats", _exports)
+
+    def _batch():
+        rows = [app.batch_row(PROBES[n], n, models) for n in ("donepezil", "metformin")]
+        assert all(x["status"] == "ok" for x in rows), "batch row failed on a valid compound"
+        assert rows[0]["top_diseases"] != rows[1]["top_diseases"], \
+            "batch returns the same answer for different compounds"
+        bad = app.batch_row("not-a-smiles", "junk", models)
+        assert bad["status"] != "ok", "batch accepted an unparseable structure"
+        return "batch rows differ per compound and reject bad input"
+    check("batch screening", _batch)
+
+    def _profile():
+        svg = app.build_profile_svg(app.predict_all(PROBES["metformin"], models))
+        assert svg and "<svg" in svg, "profile chart did not render for a silent compound"
+        assert "NaN" not in svg, "profile chart contains undefined coordinates"
+        return f"profile renders even when nothing is engaged, {svg.count('<rect')} elements"
+    check("target profile chart", _profile)
+
+    def _nored():
+        """No red anywhere: the palette must survive red-green colour-vision deficiency."""
+        # Judged on hue, not on the red channel. The brand gold (#F0A500) and the caution amber
+        # (#B45309) are oranges near 40 and 26 degrees and are meant to be here; what must not
+        # appear is a true red or crimson, which sits above 335 or below 18 degrees.
+        import colorsys
+        import re as _re
+        bad = []
+        for path in ((ROOT / "app.py"), (ROOT / ".streamlit" / "config.toml")):
+            if not path.exists():
+                continue
+            for hexv in set(_re.findall(r"#([0-9A-Fa-f]{6})\b", path.read_text(encoding="utf-8"))):
+                r_, g_, b_ = (int(hexv[i:i + 2], 16) / 255 for i in (0, 2, 4))
+                h, s, v = colorsys.rgb_to_hsv(r_, g_, b_)
+                deg = h * 360
+                if s > 0.30 and v > 0.25 and (deg >= 335 or deg <= 18):
+                    bad.append(f"#{hexv} ({deg:.0f} deg, in {path.name})")
+        assert not bad, f"red tones present: {sorted(bad)}"
+        return "no red or crimson hue in the palette; gold and amber are oranges and are intended"
+    check("no red in the interface", _nored)
+
     print()
     for n, r in reports.items():
         top = ", ".join(f"{d} {v:.2f}" for d, v in r["top"]) or "silent"

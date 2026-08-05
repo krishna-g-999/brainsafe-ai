@@ -1,0 +1,32 @@
+# Server-side theme and runtime settings.
+#
+# The theme tokens here must match the visual identity constants at the top of app.py. Streamlit
+# paints the widgets it owns (buttons, tabs, inputs, alerts) from this file before any custom CSS
+# runs, so leaving it at the default produces a flash of unstyled red and pink on first paint.
+# There is no red anywhere in this palette: see the note on the status colours in app.py.
+
+[theme]
+base = "light"
+primaryColor = "#0D2137"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#EEF2F9"
+textColor = "#0D2137"
+font = "sans serif"
+
+[server]
+headless = true
+enableCORS = false
+enableXsrfProtection = true
+# A batch upload of a few hundred SMILES is small; this bound exists to keep a stray file from
+# exhausting memory on a shared host.
+maxUploadSize = 8
+
+[browser]
+gatherUsageStats = false
+
+[client]
+showErrorDetails = false
+toolbarMode = "minimal"
+
+[runner]
+fastReruns = true
