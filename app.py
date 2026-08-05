@@ -219,9 +219,15 @@ CARDBD = "#E2E8F2"
 INK    = "#0D2137"
 MUTE   = "#5A6B82"
 MUTE2  = "#94A3B8"
+# Status palette. There is deliberately no red anywhere in this interface. Red-green is the
+# commonest form of colour-vision deficiency, affecting roughly one man in twelve, and a scientific
+# result that changes meaning depending on who reads it is a defect. The adverse state is carried by
+# a deep violet, which separates cleanly from both the green and the amber under deuteranopia and
+# protanopia, and every status is additionally labelled in words so that colour is never the only
+# channel carrying the information.
 GREEN  = "#15803D"   # favourable / high engagement / in-domain
 AMBER  = "#B45309"   # borderline / caution
-RED    = "#9B2335"   # limited / risk
+ADVERSE = "#6B21A8"  # limited exposure / safety liability / out of domain
 BLUE   = "#1D4ED8"   # engagement accent
 
 _DESC_NAMES = feature_names()[-12:]
@@ -350,7 +356,7 @@ def assess_domain(smiles):
     mx = float(sims[i])
     tier = ("In domain", GREEN, "high") if mx >= 0.5 else \
            ("Near domain", AMBER, "moderate") if mx >= 0.3 else \
-           ("Out of domain", RED, "low")
+           ("Out of domain", ADVERSE, "low")
     return {"max_sim": mx, "nearest_smiles": ref_smiles[i], "n_ref": len(ref_smiles),
             "tier": tier[0], "colour": tier[1], "confidence": tier[2]}
 
@@ -618,7 +624,7 @@ def verdict(kpuu, bbb):
         return "Favourable", GREEN, "Predicted to reach a meaningful free concentration in the brain."
     if kpuu >= 0.1:
         return "Borderline", AMBER, "Some free brain exposure predicted; interpret with caution."
-    return "Limited", RED, "Low predicted free brain exposure (poor penetration or active efflux)."
+    return "Limited", ADVERSE, "Low predicted free brain exposure (poor penetration or active efflux)."
 
 
 # --------------------------------- presentation helpers ---------------------------------
@@ -635,7 +641,7 @@ def _mol_data_uri(mol, size=(340, 300)) -> str:
     return "data:image/png;base64," + base64.b64encode(buf.getvalue()).decode()
 
 
-def _risk_colour(p): return RED if p >= 0.5 else (AMBER if p >= 0.2 else GREEN)
+def _risk_colour(p): return ADVERSE if p >= 0.5 else (AMBER if p >= 0.2 else GREEN)
 def _score_colour(p): return GREEN if p >= 0.5 else (AMBER if p >= 0.25 else MUTE2)
 
 
@@ -671,19 +677,78 @@ def inject_css():
     st.markdown(
         f"""
         <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-        :root {{ --ink:{INK}; --mute:{MUTE}; --mute2:{MUTE2}; --line:{LINE}; --surf:{SURF};
-                 --navy:{NAVY}; --gold:{GOLD};
-                 --shadow:0 1px 2px rgba(13,33,55,.04), 0 12px 28px -16px rgba(13,33,55,.18); }}
+        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&family=JetBrains+Mono:wght@400;500&display=swap');
+
+        /* ------------------------------------------------------------------
+           Design tokens. Everything downstream is expressed in these, so the
+           interface can be retuned from one place and stays internally
+           consistent. Type and spacing follow a modular scale rather than
+           ad-hoc pixel values, which is what stops a dense scientific readout
+           from looking assembled by accident.
+           ------------------------------------------------------------------ */
+        :root {{
+            --ink:{INK}; --mute:{MUTE}; --mute2:{MUTE2}; --line:{LINE}; --surf:{SURF};
+            --navy:{NAVY}; --navy-md:{NAVY_MD}; --gold:{GOLD};
+            --ok:{GREEN}; --warn:{AMBER}; --adverse:{ADVERSE}; --accent:{BLUE};
+
+            /* fluid type scale, 1.200 minor third, clamped so it never collapses on mobile
+               nor bloats on a 4K panel */
+            --t-3xs:.625rem; --t-2xs:.6875rem; --t-xs:.75rem; --t-sm:.8125rem;
+            --t-base:.875rem; --t-md:clamp(.95rem,.9rem + .2vw,1.02rem);
+            --t-lg:clamp(1.1rem,1rem + .5vw,1.3rem);
+            --t-xl:clamp(1.35rem,1.15rem + .9vw,1.75rem);
+            --t-2xl:clamp(1.6rem,1.25rem + 1.6vw,2.35rem);
+
+            /* 4px base spacing scale */
+            --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:22px; --s6:30px; --s7:42px;
+
+            --r-sm:8px; --r-md:12px; --r-lg:16px; --r-xl:22px; --r-pill:999px;
+
+            /* layered elevation: a tight contact shadow plus a wide soft one reads as
+               physical depth, where a single blurred shadow reads as a smudge */
+            --e1:0 1px 2px rgba(13,33,55,.05), 0 1px 3px -1px rgba(13,33,55,.06);
+            --e2:0 1px 2px rgba(13,33,55,.04), 0 12px 28px -16px rgba(13,33,55,.20);
+            --e3:0 2px 4px rgba(13,33,55,.05), 0 26px 50px -24px rgba(13,33,55,.28);
+            --shadow:var(--e2);
+            --ring:0 0 0 3px rgba(240,165,0,.34);
+            --ease:cubic-bezier(.22,.61,.36,1);
+        }}
+
+        /* Derived tints. color-mix keeps every wash in exact relation to its source colour, so a
+           palette change propagates instead of leaving stale hard-coded rgba values behind. */
+        @supports (color: color-mix(in srgb, red, blue)) {{
+            :root {{
+                --wash-ok:color-mix(in srgb, {GREEN} 8%, white);
+                --wash-warn:color-mix(in srgb, {AMBER} 8%, white);
+                --wash-adverse:color-mix(in srgb, {ADVERSE} 7%, white);
+                --wash-navy:color-mix(in srgb, {NAVY} 4%, white);
+            }}
+        }}
+
         html, body, [class*="css"], .stApp {{
             font-family:'Inter',system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; color:var(--ink);
             -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
-            font-feature-settings:"tnum" 1, "ss01" 1, "cv05" 1; }}
-        .stApp {{ background:radial-gradient(1100px 460px at 50% -160px, #F4F7FC 0%, {BG} 62%) fixed; }}
-        ::selection {{ background:{GOLD}44; }}
-        [data-testid="stMainBlockContainer"] {{ max-width:1280px; padding:0 2rem 3rem; }}
+            font-feature-settings:"tnum" 1, "ss01" 1, "cv05" 1, "calt" 1;
+            font-optical-sizing:auto; }}
+        .stApp {{ background:
+            radial-gradient(1200px 520px at 50% -200px, #F5F8FD 0%, transparent 70%),
+            linear-gradient(180deg, {BG} 0%, #E9EFF7 100%) fixed; }}
+        ::selection {{ background:{GOLD}40; color:{NAVY}; }}
+        [data-testid="stMainBlockContainer"] {{ max-width:1320px; padding:0 var(--s5) var(--s7); }}
         [data-testid="stToolbar"], [data-testid="stDecoration"], #MainMenu, footer,
         [data-testid="stStatusWidget"], [data-testid="stHeader"] {{ display:none !important; }}
+
+        /* Headings set with balanced wrapping so a two-line title never leaves one orphan word,
+           and body copy set pretty so paragraphs do not end on a single short word. */
+        h1,h2,h3,.bs-h,.about-h,.header-title {{ text-wrap:balance; }}
+        p,.bs-note,.bs-verdict-note {{ text-wrap:pretty; }}
+
+        /* Visible, keyboard-only focus. The default browser ring is invisible against navy. */
+        *:focus-visible {{ outline:none; box-shadow:var(--ring); border-radius:var(--r-sm); }}
+
+        @media (prefers-reduced-motion:reduce) {{
+            *,*::before,*::after {{ animation-duration:.001ms !important; transition-duration:.001ms !important; }}
+        }}
 
         /* ---- site header (navy + gold) ---- */
         .site-header {{ background:linear-gradient(135deg,{NAVY_DK} 0%,#0A1929 40%,{NAVY} 72%,#112A47 100%);
@@ -706,15 +771,24 @@ def inject_css():
             border-radius:8px; padding:10px 16px; margin:0 0 14px; font-size:.84rem; color:#7A5B00; }}
 
         /* ---- cards ---- */
-        .bs-card {{ background:var(--surf); border:1px solid rgba(13,33,55,.08); border-radius:16px; padding:22px 24px;
-            box-shadow:var(--shadow); height:100%; box-sizing:border-box; }}
-        .bs-h {{ position:relative; font-size:.7rem; font-weight:800; letter-spacing:1.4px; text-transform:uppercase;
-            color:{NAVY}; display:flex; align-items:center; gap:10px; margin:0 0 16px; padding:0 0 11px;
-            border-bottom:1px solid #EDF1F8; }}
-        .bs-h::before {{ content:""; width:3px; height:13px; border-radius:2px;
-            background:linear-gradient(180deg,{GOLD},#D98E00); }}
-        .bs-h-sub {{ margin-left:auto; font-size:.64rem; font-weight:600; letter-spacing:.3px; color:var(--mute2);
-            text-transform:none; text-align:right; }}
+        .bs-card {{ background:var(--surf); border:1px solid rgba(13,33,55,.07); border-radius:var(--r-lg);
+            padding:var(--s5) var(--s5) calc(var(--s5) + 2px); box-shadow:var(--e2); height:100%;
+            box-sizing:border-box; position:relative; overflow:hidden;
+            transition:box-shadow .28s var(--ease), border-color .28s var(--ease); }}
+        /* a hairline of gold along the top edge, so a grid of cards has a rhythm without borders
+           heavy enough to fragment the page */
+        .bs-card::before {{ content:""; position:absolute; inset:0 0 auto 0; height:2px;
+            background:linear-gradient(90deg, transparent, {GOLD}66 18%, {GOLD}66 82%, transparent);
+            opacity:0; transition:opacity .28s var(--ease); }}
+        .bs-card:hover {{ box-shadow:var(--e3); border-color:rgba(13,33,55,.11); }}
+        .bs-card:hover::before {{ opacity:1; }}
+        .bs-h {{ position:relative; font-size:var(--t-2xs); font-weight:800; letter-spacing:.13em;
+            text-transform:uppercase; color:{NAVY}; display:flex; align-items:baseline; gap:var(--s2);
+            margin:0 0 var(--s4); padding:0 0 var(--s3); border-bottom:1px solid #EDF1F8; }}
+        .bs-h::before {{ content:""; width:3px; height:12px; border-radius:2px; align-self:center;
+            background:linear-gradient(180deg,{GOLD},#D98E00); flex:0 0 auto; }}
+        .bs-h-sub {{ margin-left:auto; font-size:var(--t-3xs); font-weight:600; letter-spacing:.02em;
+            color:var(--mute2); text-transform:none; text-align:right; }}
         .bs-summary {{ display:grid; grid-template-columns:300px 1fr; gap:24px; align-items:stretch; }}
         .bs-mol {{ border:1px solid var(--line); border-radius:12px; background:#FBFCFE;
             display:flex; align-items:center; justify-content:center; padding:10px; }}
@@ -726,19 +800,26 @@ def inject_css():
         .bs-verdict-label {{ font-size:1.5rem; font-weight:800; color:var(--vc); line-height:1.15; margin:2px 0 4px; }}
         .bs-verdict-note {{ font-size:.83rem; color:var(--mute); line-height:1.45; }}
         .bs-kpis {{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }}
-        .bs-kpi {{ background:linear-gradient(180deg,#FCFDFF,#F6FAFE); border:1px solid #E7EDF6; border-radius:12px;
-            padding:14px 16px; }}
-        .bs-kpi-label {{ font-size:.68rem; color:var(--mute); font-weight:700; text-transform:uppercase; letter-spacing:.06em; }}
-        .bs-kpi-val {{ font-size:1.75rem; font-weight:800; line-height:1.02; margin:8px 0 2px;
-            font-variant-numeric:tabular-nums; letter-spacing:-.015em; }}
-        .bs-kpi-sub {{ font-size:.66rem; color:var(--mute2); }}
-        .bs-table {{ width:100%; border-collapse:collapse; font-size:.82rem; }}
-        .bs-table th {{ font-size:.62rem; font-weight:800; text-transform:uppercase; letter-spacing:.6px;
-            color:var(--mute2); padding:0 11px 9px; border-bottom:1.5px solid #E7EDF6; }}
-        .bs-table td {{ padding:10px 11px; border-bottom:1px solid #F2F5FA; color:var(--ink);
-            font-variant-numeric:tabular-nums; vertical-align:middle; }}
+        .bs-kpi {{ background:linear-gradient(180deg,#FCFDFF,#F5F9FE); border:1px solid #E7EDF6;
+            border-radius:var(--r-md); padding:var(--s4) var(--s4) var(--s3); position:relative; }}
+        .bs-kpi-label {{ font-size:var(--t-3xs); color:var(--mute); font-weight:700;
+            text-transform:uppercase; letter-spacing:.08em; }}
+        .bs-kpi-val {{ font-size:clamp(1.5rem,1.2rem + .9vw,1.85rem); font-weight:800; line-height:1;
+            margin:var(--s2) 0 var(--s1); font-variant-numeric:tabular-nums lining-nums;
+            letter-spacing:-.025em; }}
+        .bs-kpi-sub {{ font-size:var(--t-3xs); color:var(--mute2); line-height:1.4; }}
+        .bs-table {{ width:100%; border-collapse:separate; border-spacing:0; font-size:var(--t-sm); }}
+        .bs-table th {{ font-size:var(--t-3xs); font-weight:800; text-transform:uppercase;
+            letter-spacing:.07em; color:var(--mute2); padding:0 var(--s3) var(--s2);
+            border-bottom:1.5px solid #E7EDF6; position:sticky; top:0; background:var(--surf); z-index:1; }}
+        .bs-table td {{ padding:var(--s3) var(--s3); border-bottom:1px solid #F2F5FA; color:var(--ink);
+            font-variant-numeric:tabular-nums lining-nums; vertical-align:middle; }}
         .bs-table tbody tr:last-child td {{ border-bottom:0; }}
+        .bs-table tbody tr {{ transition:background .16s var(--ease); }}
         .bs-table tbody tr:hover td {{ background:#F6FAFE; }}
+        /* zebra only on long tables, where the eye needs help tracking a row across */
+        .bs-table tbody:has(tr:nth-child(9)) tr:nth-child(even) td {{ background:#FCFDFF; }}
+        .bs-table tbody:has(tr:nth-child(9)) tr:hover td {{ background:#F2F7FD; }}
         .bs-num {{ font-weight:700; letter-spacing:-.01em; }}
         .bs-ctx {{ color:var(--mute); font-size:.76rem; }}
         .bs-badge {{ display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:6px;
@@ -755,10 +836,12 @@ def inject_css():
         .bs-barrow {{ margin:0 0 14px; }}
         .bs-barlabels {{ display:flex; justify-content:space-between; font-size:.82rem; margin-bottom:5px; }}
         .bs-barval {{ font-weight:800; font-variant-numeric:tabular-nums; }}
-        .bs-bartrack {{ height:8px; border-radius:20px; background:#E9EEF6; overflow:hidden;
+        .bs-bartrack {{ height:8px; border-radius:var(--r-pill); background:#E9EEF6; overflow:hidden;
             box-shadow:inset 0 1px 2px rgba(13,33,55,.07); }}
-        .bs-barfill {{ height:100%; border-radius:20px;
-            background-image:linear-gradient(90deg, rgba(255,255,255,.30), rgba(255,255,255,0)); }}
+        .bs-barfill {{ height:100%; border-radius:var(--r-pill);
+            background-image:linear-gradient(90deg, rgba(255,255,255,.32), rgba(255,255,255,0));
+            transform-origin:left center; animation:bs-grow .62s var(--ease) both; }}
+        @keyframes bs-grow {{ from {{ transform:scaleX(.02); opacity:.35 }} to {{ transform:scaleX(1); opacity:1 }} }}
         .bs-barsub {{ font-size:.68rem; color:var(--mute2); margin-top:3px; }}
         .bs-chip {{ font-size:.66rem; padding:2px 8px; border-radius:6px; background:#EEF2F9; color:var(--mute); }}
         .bs-note {{ font-size:.78rem; color:var(--mute); line-height:1.6; }}
@@ -769,14 +852,91 @@ def inject_css():
             padding:38px 28px; text-align:center; color:var(--mute); font-size:.9rem; }}
         .bs-empty .k {{ font-size:34px; }}
         /* input card */
-        .bs-searchcard p.t {{ font-size:1.05rem; font-weight:700; color:{NAVY}; margin:0 0 3px; }}
-        .bs-searchcard p.d {{ font-size:.82rem; color:#4A5568; margin:0 0 6px; line-height:1.55; }}
-        /* tabs */
-        button[data-baseweb="tab"] {{ font-weight:700; }}
-        [data-baseweb="tab-highlight"] {{ background:{GOLD} !important; }}
-        [data-testid="stTextArea"] textarea {{ font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.85rem; }}
-        div.stButton > button[kind="primary"] {{ background:{NAVY}; border:1px solid {NAVY}; font-weight:700; }}
-        div.stButton > button[kind="primary"]:hover {{ background:{NAVY_MD}; border-color:{NAVY_MD}; }}
+        .bs-searchcard p.t {{ font-size:var(--t-md); font-weight:700; color:{NAVY}; margin:0 0 var(--s1);
+            letter-spacing:-.01em; }}
+        .bs-searchcard p.d {{ font-size:var(--t-sm); color:#4A5568; margin:0 0 var(--s2); line-height:1.6; }}
+
+        /* ---- tabs: a segmented control rather than a browser tab strip ---- */
+        [data-baseweb="tab-list"] {{ gap:var(--s1) !important; background:#E4EBF5; padding:var(--s1);
+            border-radius:var(--r-md); border:1px solid #DAE3EF; margin-bottom:var(--s4);
+            display:inline-flex !important; }}
+        button[data-baseweb="tab"] {{ font-weight:700 !important; font-size:var(--t-sm) !important;
+            border-radius:var(--r-sm) !important; padding:var(--s2) var(--s5) !important;
+            color:var(--mute) !important; transition:all .2s var(--ease); }}
+        button[data-baseweb="tab"]:hover {{ color:{NAVY} !important; background:rgba(255,255,255,.6); }}
+        button[data-baseweb="tab"][aria-selected="true"] {{ background:var(--surf) !important;
+            color:{NAVY} !important; box-shadow:var(--e1); }}
+        [data-baseweb="tab-highlight"], [data-baseweb="tab-border"] {{ display:none !important; }}
+
+        /* ---- inputs ---- */
+        [data-testid="stTextArea"] textarea, [data-testid="stTextInput"] input {{
+            font-size:var(--t-base) !important; border-radius:var(--r-sm) !important; }}
+        [data-testid="stTextArea"] textarea {{ font-family:'JetBrains Mono',ui-monospace,Consolas,monospace;
+            font-size:var(--t-sm) !important; line-height:1.7; }}
+        [data-testid="stTextInput"] input {{ padding:var(--s3) var(--s4) !important; }}
+        [data-baseweb="input"], [data-baseweb="textarea"] {{ border-radius:var(--r-sm) !important;
+            border-color:#D6DFEC !important; transition:border-color .2s var(--ease), box-shadow .2s var(--ease); }}
+        [data-baseweb="input"]:focus-within, [data-baseweb="textarea"]:focus-within {{
+            border-color:{GOLD} !important; box-shadow:var(--ring); }}
+
+        /* ---- buttons ---- */
+        div.stButton > button, div.stDownloadButton > button {{ border-radius:var(--r-sm);
+            font-weight:700; font-size:var(--t-sm); padding:var(--s3) var(--s4);
+            transition:transform .16s var(--ease), box-shadow .2s var(--ease), background .2s var(--ease); }}
+        div.stButton > button:active, div.stDownloadButton > button:active {{ transform:translateY(1px); }}
+        div.stButton > button[kind="primary"], div.stDownloadButton > button[kind="primary"] {{
+            background:{NAVY}; border:1px solid {NAVY}; color:#fff; box-shadow:var(--e1); }}
+        div.stButton > button[kind="primary"]:hover, div.stDownloadButton > button[kind="primary"]:hover {{
+            background:{NAVY_MD}; border-color:{NAVY_MD}; box-shadow:var(--e2); }}
+        div.stDownloadButton > button {{ background:var(--surf); border:1px solid #DCE4F0;
+            color:{NAVY}; width:100%; }}
+        div.stDownloadButton > button:hover {{ border-color:{GOLD}; background:#FFFDF7;
+            box-shadow:var(--e2); color:{NAVY}; }}
+        .bs-export {{ background:linear-gradient(180deg,#FDFEFF,#F7FAFE); }}
+
+        /* ---- alerts: Streamlit paints errors red by default, which this interface does not use.
+           Warnings become amber and errors become the adverse violet, each with a written label so
+           the state never depends on colour alone. ---- */
+        [data-testid="stAlert"] {{ border-radius:var(--r-md); border-width:1px; border-style:solid;
+            box-shadow:var(--e1); font-size:var(--t-sm); }}
+        [data-testid="stAlertContentError"], div[data-baseweb="notification"][kind="negative"] {{
+            background:var(--wash-adverse,#F7F2FC) !important; border-color:{ADVERSE}3d !important;
+            color:{ADVERSE} !important; }}
+        [data-testid="stAlertContentWarning"] {{ background:var(--wash-warn,#FDF7EE) !important;
+            border-color:{AMBER}3d !important; color:{AMBER} !important; }}
+        [data-testid="stAlertContentSuccess"] {{ background:var(--wash-ok,#F1F9F3) !important;
+            border-color:{GREEN}3d !important; color:{GREEN} !important; }}
+        [data-testid="stAlertContentInfo"] {{ background:var(--wash-navy,#F4F8FD) !important;
+            border-color:{NAVY}26 !important; color:{NAVY} !important; }}
+        [data-testid="stAlert"] svg {{ fill:currentColor !important; }}
+
+        /* ---- data grid, uploader, progress ---- */
+        [data-testid="stDataFrame"] {{ border:1px solid #E3EAF4; border-radius:var(--r-md);
+            overflow:hidden; box-shadow:var(--e1); }}
+        [data-testid="stFileUploaderDropzone"] {{ border-radius:var(--r-md); border:1.5px dashed #CBD6E6;
+            background:#FAFCFF; transition:border-color .2s var(--ease), background .2s var(--ease); }}
+        [data-testid="stFileUploaderDropzone"]:hover {{ border-color:{GOLD}; background:#FFFDF7; }}
+        [data-testid="stProgress"] > div > div > div {{ background:{NAVY} !important; }}
+        [data-testid="stProgress"] > div > div {{ background:#E4EBF5 !important; border-radius:var(--r-pill); }}
+        [role="checkbox"][aria-checked="true"] {{ background:{NAVY} !important; border-color:{NAVY} !important; }}
+        [data-testid="stCaptionContainer"] p {{ font-size:var(--t-xs); color:var(--mute2); }}
+        /* expanders carry secondary reading, so they sit quietly until opened */
+        [data-testid="stExpander"] {{ border:1px solid #E3EAF4; border-radius:var(--r-md);
+            background:var(--surf); box-shadow:var(--e1); overflow:hidden; }}
+        [data-testid="stExpander"] summary {{ font-weight:700; font-size:var(--t-sm);
+            color:{NAVY}; padding:var(--s3) var(--s4); }}
+        [data-testid="stExpander"] summary:hover {{ background:#F7FAFE; }}
+        [data-testid="stExpander"] .bs-card {{ box-shadow:none; border:0; }}
+        [data-testid="stExpander"] .bs-card::before {{ display:none; }}
+
+        /* ---- print: the browser's own print path is the most reliable PDF route ---- */
+        @media print {{
+            .stApp {{ background:#fff; }}
+            [data-baseweb="tab-list"], div.stButton, div.stDownloadButton,
+            [data-testid="stFileUploaderDropzone"] {{ display:none !important; }}
+            .bs-card {{ box-shadow:none; border:1px solid #DDE4EF; break-inside:avoid; }}
+            .site-header {{ box-shadow:none; }}
+        }}
         /* about */
         .about-h {{ font-size:1.65rem; font-weight:800; color:{NAVY}; margin:0 0 14px; letter-spacing:-.01em; }}
         .about-h span {{ color:{GOLD}; }}
@@ -784,8 +944,16 @@ def inject_css():
         .quote {{ border-left:4px solid {GOLD}; background:#FFFBF0; border-radius:0 10px 10px 0; padding:14px 18px; margin:0 0 12px; }}
         .quote p {{ font-size:1.0rem; font-style:italic; color:#5A4000; margin:0 0 8px; line-height:1.6; }}
         .quote cite {{ font-size:.72rem; font-weight:700; color:{AMBER}; letter-spacing:.06em; text-transform:uppercase; font-style:normal; }}
-        @media (max-width:820px) {{ .bs-summary {{ grid-template-columns:1fr; }} .bs-kpis {{ grid-template-columns:1fr; }}
-            .header-inst,.header-div {{ display:none; }} }}
+        @media (max-width:1040px) {{ .bs-kpis {{ grid-template-columns:repeat(2,1fr); }} }}
+        @media (max-width:820px) {{
+            [data-testid="stMainBlockContainer"] {{ padding:0 var(--s3) var(--s6); }}
+            .bs-summary {{ grid-template-columns:1fr; }}
+            .bs-kpis {{ grid-template-columns:1fr; }}
+            .header-inst,.header-div {{ display:none; }}
+            .site-header {{ padding:var(--s5) var(--s4); margin:var(--s2) calc(-1 * var(--s3)) var(--s4); }}
+            [data-baseweb="tab-list"] {{ display:flex !important; width:100%; overflow-x:auto; }}
+            button[data-baseweb="tab"] {{ padding:var(--s2) var(--s3) !important; white-space:nowrap; }}
+        }}
         </style>
         """,
         unsafe_allow_html=True,
@@ -968,21 +1136,21 @@ def build_network_svg(r, name="Compound"):
     # compound -> target
     for t in T:
         s = herg if t == "hERG" else target_signal(r, neuro, t)
-        col = RED if t in safety else (GREEN if t == "NEURO" else BLUE)
+        col = ADVERSE if t in safety else (GREEN if t == "NEURO" else BLUE)
         paths.append(bez(colx[0] + NW, cy[("c", "C")], colx[1], cy[("t", t)], 1.5 + 5 * s, col, 0.22 + 0.5 * s))
     # target -> pathway (dedup)
     seen = set()
     for t, pw, dis, w, s in edges:
         if (t, pw) not in seen:
             seen.add((t, pw))
-            col = RED if t in safety else NAVY_MD
+            col = ADVERSE if t in safety else NAVY_MD
             paths.append(bez(colx[1] + NW, cy[("t", t)], colx[2], cy[("p", pw)], 1.5 + 5 * s, col, 0.20 + 0.45 * s))
     # pathway -> disease (max contribution per (pathway, disease))
     pd = {}
     for t, pw, dis, w, s in edges:
         pd[(pw, dis)] = max(pd.get((pw, dis), 0.0), w * s)
     for (pw, dis), c in pd.items():
-        col = RED if dis == "CARD" else NAVY_MD
+        col = ADVERSE if dis == "CARD" else NAVY_MD
         paths.append(bez(colx[2] + NW, cy[("p", pw)], colx[3], cy[("d", dis)], 1.5 + 5 * c, col, 0.20 + 0.5 * c))
 
     def node(x, ycc, label, sub, fill, stroke, textcol, sub_col=None):
@@ -997,16 +1165,16 @@ def build_network_svg(r, name="Compound"):
     nodes = [node(colx[0], cy[("c", "C")], name, "", NAVY, NAVY, "#FFFFFF", "#FFFFFF")]
     for t in T:
         s = herg if t == "hERG" else target_signal(r, neuro, t)
-        c = RED if t in safety else (GREEN if t == "NEURO" else _score_colour(s))
+        c = ADVERSE if t in safety else (GREEN if t == "NEURO" else _score_colour(s))
         nodes.append(node(colx[1], cy[("t", t)], MECH_LABEL.get(t, t), f"{s:.0%}",
                           _hex_rgba(c, 0.12), _hex_rgba(c, 0.55), INK, c))
     for p in P:
-        c = RED if p == "Cardiac ion channel" else NAVY_MD
+        c = ADVERSE if p == "Cardiac ion channel" else NAVY_MD
         nodes.append(node(colx[2], cy[("p", p)], PATHWAY_SHORT.get(p, p), "",
                           _hex_rgba(c, 0.08), _hex_rgba(c, 0.45), INK))
     for d in D:
         g = dscore[d]
-        c = RED if d == "CARD" else _score_colour(g)
+        c = ADVERSE if d == "CARD" else _score_colour(g)
         lab = "Cardiac liability" if d == "CARD" else _short_disease(d)
         nodes.append(node(colx[3], cy[("d", d)], lab, f"{g:.0%}",
                           _hex_rgba(c, 0.12), _hex_rgba(c, 0.55), INK, c))
@@ -1040,6 +1208,25 @@ def render_network(r, name="Compound"):
         'The BBB term scales every disease equally and therefore sets whether anything is reported, '
         'not which condition ranks first.'
         '</div></div>',
+        unsafe_allow_html=True)
+
+
+def render_profile(r):
+    """The panel-wide view. The network shows only what fired; this shows everything that was asked,
+    including what came close, which is the context needed to read a negative result."""
+    svg = build_profile_svg(r)
+    if not svg:
+        return
+    st.markdown(
+        '<div class="bs-card"><div class="bs-h">Target engagement profile'
+        '<span class="bs-h-sub">distance above each endpoint\'s own reporting threshold</span></div>'
+        f'<div style="overflow-x:auto">{svg}</div>'
+        '<div class="bs-note" style="margin-top:10px">Raw probabilities are not comparable between '
+        'endpoints, because each carries its own training base rate and its own threshold, so 0.8 '
+        'means engagement at one target and nothing at another. Plotted here is the distance each '
+        'target sits above its own cut, which is the quantity the disease layer consumes. Targets '
+        'below the cut show how close they came, as a percentage of their threshold; that is context '
+        'for a negative result, not evidence of activity.</div></div>',
         unsafe_allow_html=True)
 
 
@@ -1097,7 +1284,7 @@ def render_targets(r):
         p = r["targets"][ep]; br = base_rate(ep); e = enrichment(ep, p)
         engaged = e >= 0.2
         if ep in LIABILITY_TARGETS:
-            call = _badge("liability", RED) if engaged else _badge("clear", GREEN)
+            call = _badge("liability", ADVERSE) if engaged else _badge("clear", GREEN)
         elif engaged:
             call = _badge("engaged", BLUE)
         elif e >= 0.05:
@@ -1230,7 +1417,7 @@ def render_cns_mpo(r, smiles=None):
     if m is None:
         return
     frac = m["total"] / m["max"]
-    col = GREEN if frac >= 0.7 else (AMBER if frac >= 0.5 else RED)
+    col = GREEN if frac >= 0.7 else (AMBER if frac >= 0.5 else ADVERSE)
     bars = "".join(
         _bar(v, GREEN if v >= 0.7 else (AMBER if v >= 0.4 else MUTE2), k, f"{v:.2f}")
         for k, v in m["parts"].items())
@@ -1336,7 +1523,7 @@ def render_reliability_banner(smiles):
                 "On future compounds in this regime the classifiers fall to about 0.74 AUROC and the "
                 "potency models to about 0.30 rank correlation. Treat the profile as indicative.")
     else:
-        col, head = RED, "Outside the applicability domain"
+        col, head = ADVERSE, "Outside the applicability domain"
         body = (f"This compound is structurally unlike the measured training data (max Tanimoto {s:.2f}). "
                 "On future compounds in this regime the classifiers approach chance (about 0.57 AUROC) and "
                 "the potency models carry no rank information. Use the qualitative direction only, and "
@@ -1435,6 +1622,447 @@ COVERAGE_NO = [
 
 
 RESULTS = ROOT / "results" / "tables"
+# --------------------------------- export ---------------------------------
+# A prediction a scientist cannot save is a prediction they cannot act on: it cannot go into a
+# notebook, a grant, a supplementary table, or a colleague's inbox, and it cannot be re-checked
+# months later against what the bench actually found. Every export below is generated from one tidy
+# frame, so the CSV, the JSON and the printable report can never disagree with the screen or with
+# each other.
+
+APP_VERSION = "1.0"
+
+
+def result_frame(smiles, name, r):
+    """Every number the app computes, as one tidy table. This is the single source for all exports."""
+    bbb, neuro, dz = disease_scores(r)
+    rows = []
+
+    def add(section, endpoint, description, value, unit="", context=""):
+        rows.append({"section": section, "endpoint": endpoint, "description": description,
+                     "value": value, "unit": unit, "context": context})
+
+    for ep, desc in TARGET_CLASSIFIERS.items():
+        p = r["targets"][ep]
+        br = base_rate(ep)
+        add("Target and property models", ep, desc, round(p, 4), "calibrated probability",
+            f"training base rate {br:.3f}; enrichment {enrichment(ep, p):+.3f}" if br else "")
+
+    for ep in RECEPTOR_REGRESSORS:
+        v = r["receptors"][ep]
+        pct = reg_percentile(ep, v)
+        add("Receptor potency", ep, RECEPTOR_REGRESSORS[ep], round(v, 3), "pKi / pIC50",
+            f"{pct:.0%} of measured training actives are weaker" if pct is not None else "")
+
+    for ep, p in sorted(r.get("receptor_binder", {}).items()):
+        thr = binder_threshold(ep)
+        add("Binder panel", ep, MECH_LABEL.get(ep, ep), round(p, 4), "calibrated probability",
+            f"reporting threshold {thr:.3f}; {'engaged' if p >= thr else 'below threshold'}")
+
+    add("Neuroprotection", "antioxidant", "Antioxidant capacity (DPPH)",
+        round(r["antioxidant"], 3), "model units",
+        f"signal {neuro:.3f} on the 0 to 1 scale used by the disease layer")
+
+    for ep, (label, unit, _tf) in ADME.items():
+        add("ADME and exposure", ep, label, round(r["adme"][ep], 4), unit)
+
+    for k, v in r["descriptors"].items():
+        add("Physicochemical descriptors", k, k, round(float(v), 4), "")
+
+    for d in dz:
+        drv = d["driver"]
+        add("Disease relevance", d["disease"], "BBB-gated mechanism score", round(d["gated"], 4),
+            "0 to 1",
+            f"strongest mechanism {MECH_LABEL.get(drv[0], drv[0])} at signal {drv[1]:.3f}"
+            if drv else "no modelled mechanism engaged")
+
+    m = cns_mpo(r, smiles)
+    if m:
+        add("CNS likeness", "CNS_MPO", "CNS multiparameter optimisation score",
+            round(m["total"], 2), f"of {m['max']:.0f}",
+            "; ".join(f"{k} {v:.2f}" for k, v in m["parts"].items()))
+
+    ad = assess_domain(smiles)
+    if ad:
+        add("Applicability domain", "max_tanimoto", "Similarity to nearest measured training compound",
+            round(ad["max_sim"], 4), "Tanimoto",
+            f"{ad['tier']}; nearest analogue {ad['nearest_smiles']}")
+
+    df = pd.DataFrame(rows)
+    df.insert(0, "compound", name)
+    df.insert(1, "smiles", smiles)
+    return df
+
+
+def result_json(smiles, name, r):
+    """Structured result for programmatic use, with provenance so a stored answer stays traceable."""
+    bbb, neuro, dz = disease_scores(r)
+    ad = assess_domain(smiles)
+    m = cns_mpo(r, smiles)
+    kpuu = r["adme"]["kpuu"]
+    label, _colour, note = verdict(kpuu, bbb)
+    return {
+        "brainsafe_version": APP_VERSION,
+        "screening_mode": "high-precision" if screening_mode() else "standard",
+        "compound": {"name": name, "smiles": smiles},
+        "exposure": {"bbb_probability": round(bbb, 4), "kpuu": round(kpuu, 4),
+                     "verdict": label, "note": note},
+        "targets": {k: round(v, 4) for k, v in r["targets"].items()},
+        "receptors": {k: round(v, 3) for k, v in r["receptors"].items()},
+        "binders": {k: {"probability": round(v, 4), "threshold": round(binder_threshold(k), 4),
+                        "engaged": bool(v >= binder_threshold(k))}
+                    for k, v in sorted(r.get("receptor_binder", {}).items())},
+        "adme": {k: round(v, 4) for k, v in r["adme"].items()},
+        "descriptors": {k: round(float(v), 4) for k, v in r["descriptors"].items()},
+        "antioxidant": {"value": round(r["antioxidant"], 3), "signal": round(neuro, 4)},
+        "diseases": [{"disease": d["disease"], "score": round(d["gated"], 4),
+                      "driver": (MECH_LABEL.get(d["driver"][0], d["driver"][0]) if d["driver"] else None),
+                      "reported": bool(d["gated"] >= MIN_ACTIONABLE_SCORE)} for d in dz],
+        "cns_mpo": ({"score": round(m["total"], 2), "max": int(m["max"]),
+                     "components": {k: round(v, 3) for k, v in m["parts"].items()}} if m else None),
+        "applicability_domain": ({"max_tanimoto": round(ad["max_sim"], 4), "tier": ad["tier"],
+                                  "confidence": ad["confidence"],
+                                  "nearest_analogue": ad["nearest_smiles"]} if ad else None),
+        "caveats": [
+            "Research triage tool. Not for medical, diagnostic or treatment use.",
+            "A silent result is not evidence of inactivity. Deployed sensitivity has a median of "
+            "0.77 across the panel and falls to 0.26 at the strictest endpoints.",
+            "The BBB term multiplies every disease equally and cannot change which disease ranks "
+            "first; it is an exposure filter, not a discriminator.",
+        ],
+    }
+
+
+def build_profile_svg(r, top_n=18):
+    """Target engagement profile: every modelled mechanism against its own reporting threshold.
+
+    A bar chart of raw probabilities would be misleading, because each endpoint carries a different
+    threshold and a different training base rate, so 0.8 means engagement at one target and nothing
+    at another. This plots the distance each target sits above or below its own cut, which is the
+    quantity the disease layer actually consumes and the only one comparable across endpoints."""
+    neuro = neuro_signal(r)
+    items = []
+    for t in sorted(TARGET_KIND):
+        if t == "NEURO":
+            continue
+        s = target_signal(r, neuro, t)
+        p = r.get("receptor_binder", {}).get(t)
+        if p is None:
+            p = r["targets"].get(t)
+        if p is None:
+            continue
+        # Engaged targets rank first. Below the cut, targets are ordered by how close they came,
+        # measured as a fraction of their own threshold, so that a compound engaging nothing still
+        # shows where it came nearest rather than an empty figure.
+        thr = binder_threshold(t) if TARGET_KIND.get(t) == "binder" else 1.0
+        items.append((t, s, float(p), float(p) / thr if thr > 0 else 0.0))
+    items.sort(key=lambda x: (-x[1], -x[3]))
+    items = items[:top_n]
+    if not items:
+        return ""
+
+    W, rowh, pad_l, pad_t = 720, 22, 150, 34
+    H = pad_t + rowh * len(items) + 30
+    track_x, track_w = pad_l, W - pad_l - 74
+    out = [f'<svg viewBox="0 0 {W} {H}" width="100%" style="max-width:{W}px;display:block" '
+           f'xmlns="http://www.w3.org/2000/svg" role="img" '
+           f'aria-label="Target engagement profile">']
+    out.append(f'<text x="0" y="14" font-size="11" font-weight="700" fill="{NAVY}" '
+               f'letter-spacing="1.1">TARGET ENGAGEMENT ABOVE REPORTING THRESHOLD</text>')
+    for g in range(5):
+        x = track_x + track_w * g / 4
+        out.append(f'<line x1="{x:.1f}" y1="{pad_t - 8}" x2="{x:.1f}" y2="{H - 26}" '
+                   f'stroke="#E9EEF6" stroke-width="1"/>')
+        out.append(f'<text x="{x:.1f}" y="{H - 12}" font-size="9.5" fill="{MUTE2}" '
+                   f'text-anchor="middle">{g * 25}%</text>')
+    for i, (t, s, p, frac) in enumerate(items):
+        y = pad_t + i * rowh
+        col = ADVERSE if t in ("hERG", "Nav1_5") else (GREEN if s >= 0.5 else
+                                                      (BLUE if s > 0 else MUTE2))
+        out.append(f'<text x="{pad_l - 10}" y="{y + 11}" font-size="11" fill="{INK}" '
+                   f'text-anchor="end">{MECH_LABEL.get(t, t)}</text>')
+        out.append(f'<rect x="{track_x}" y="{y + 4}" width="{track_w}" height="9" rx="4.5" '
+                   f'fill="#EEF2F8"/>')
+        if s > 0:
+            out.append(f'<rect x="{track_x}" y="{y + 4}" width="{max(2.0, track_w * s):.1f}" '
+                       f'height="9" rx="4.5" fill="{col}"/>')
+        else:
+            # a hairline showing how far under its own threshold the target sits
+            out.append(f'<rect x="{track_x}" y="{y + 7}" '
+                       f'width="{max(1.5, track_w * min(1.0, frac) * 0.5):.1f}" height="3" rx="1.5" '
+                       f'fill="#CBD5E4"/>')
+        txt = f"{s:.0%}" if s > 0 else f"{frac:.0%} of cut"
+        out.append(f'<text x="{track_x + track_w + 8}" y="{y + 12}" font-size="10.5" '
+                   f'font-weight="{700 if s > 0 else 500}" fill="{col if s > 0 else MUTE2}">{txt}</text>')
+    out.append("</svg>")
+    return "".join(out)
+
+
+def build_html_report(smiles, name, r):
+    """A self-contained report the user can keep: no network, no fonts, no scripts, opens anywhere.
+
+    Everything is inlined, including the structure image and both figures, so the file still renders
+    identically in five years on a machine with no internet connection."""
+    bbb, neuro, dz = disease_scores(r)
+    kpuu = r["adme"]["kpuu"]
+    label, colour, note = verdict(kpuu, bbb)
+    mol = Chem.MolFromSmiles(smiles)
+    img = _mol_data_uri(mol, size=(300, 250)) if mol else ""
+    ad = assess_domain(smiles)
+    m = cns_mpo(r, smiles)
+    df = result_frame(smiles, name, r)
+
+    def esc(x):
+        return (str(x).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
+
+    sections = ""
+    for sec in df.section.unique():
+        sub = df[df.section == sec]
+        body = "".join(
+            f"<tr><td>{esc(x.endpoint)}</td><td>{esc(x.description)}</td>"
+            f"<td class='n'>{esc(x.value)}</td><td class='u'>{esc(x.unit)}</td>"
+            f"<td class='c'>{esc(x.context)}</td></tr>" for x in sub.itertuples())
+        sections += (f"<h2>{esc(sec)}</h2><table><thead><tr><th>Endpoint</th><th>Description</th>"
+                     f"<th>Value</th><th>Unit</th><th>Context</th></tr></thead>"
+                     f"<tbody>{body}</tbody></table>")
+
+    reported = [d for d in dz if d["gated"] >= MIN_ACTIONABLE_SCORE]
+    dz_txt = ("".join(
+        f"<li><b>{esc(d['disease'])}</b> at {d['gated']:.2f}, driven by "
+        f"{esc(MECH_LABEL.get(d['driver'][0], d['driver'][0]) if d['driver'] else 'no mechanism')}</li>"
+        for d in reported) if reported else
+        "<li>No modelled mechanism reached the reporting threshold. This is not evidence of "
+        "inactivity: see the limitations below.</li>")
+
+    return f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BrainSafe AI report: {esc(name)}</title><style>
+*{{box-sizing:border-box}}
+body{{font-family:ui-sans-serif,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+ color:{INK};margin:0;padding:38px 30px 60px;background:#fff;line-height:1.55;
+ -webkit-font-smoothing:antialiased}}
+.wrap{{max-width:980px;margin:0 auto}}
+h1{{font-size:1.7rem;margin:0 0 2px;letter-spacing:-.02em}}
+h1 span{{color:{GOLD}}}
+h2{{font-size:.72rem;text-transform:uppercase;letter-spacing:1.3px;color:{NAVY};
+ margin:30px 0 10px;padding-bottom:8px;border-bottom:2px solid {GOLD}}}
+.sub{{color:{MUTE};font-size:.86rem;margin:0 0 22px}}
+.top{{display:flex;gap:26px;align-items:flex-start;border:1px solid #E4EAF4;border-radius:14px;
+ padding:20px;background:#FBFCFE;margin-bottom:8px}}
+.top img{{border:1px solid #E4EAF4;border-radius:10px;background:#fff}}
+.kpis{{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;flex:1}}
+.kpi{{border:1px solid #E7EDF6;border-radius:11px;padding:12px 14px;background:#fff}}
+.kpi .l{{font-size:.63rem;text-transform:uppercase;letter-spacing:.07em;color:{MUTE};font-weight:700}}
+.kpi .v{{font-size:1.5rem;font-weight:800;margin-top:5px;font-variant-numeric:tabular-nums}}
+.verdict{{border-left:5px solid {colour};background:linear-gradient(90deg,{colour}12,transparent);
+ border-radius:9px;padding:12px 16px;margin:14px 0 0}}
+.verdict .h{{font-size:1.15rem;font-weight:800;color:{colour}}}
+table{{width:100%;border-collapse:collapse;font-size:.8rem;margin-bottom:6px}}
+th{{text-align:left;font-size:.6rem;text-transform:uppercase;letter-spacing:.06em;color:{MUTE2};
+ padding:0 9px 7px;border-bottom:1.5px solid #E7EDF6}}
+td{{padding:7px 9px;border-bottom:1px solid #F2F5FA;vertical-align:top}}
+td.n{{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}}
+td.u,td.c{{color:{MUTE};font-size:.75rem}}
+ul{{margin:6px 0 0 18px;padding:0}} li{{margin:3px 0;font-size:.86rem}}
+.fig{{border:1px solid #E4EAF4;border-radius:12px;padding:16px;margin:10px 0 0;background:#fff;
+ overflow-x:auto}}
+.foot{{margin-top:34px;padding-top:16px;border-top:1px solid #E6ECF5;font-size:.72rem;color:{MUTE}}}
+@media print{{body{{padding:0}} .fig,.top{{break-inside:avoid}}}}
+</style></head><body><div class="wrap">
+<h1>BrainSafe <span>AI</span></h1>
+<p class="sub">Multi-endpoint prediction of small-molecule effects on the human brain</p>
+<div class="top">
+  <img src="{img}" alt="structure of {esc(name)}" width="300" height="250">
+  <div style="flex:1">
+    <div style="font-size:1.25rem;font-weight:800;margin-bottom:3px">{esc(name)}</div>
+    <div style="font-family:ui-monospace,Consolas,monospace;font-size:.74rem;color:{MUTE};
+     word-break:break-all;margin-bottom:14px">{esc(smiles)}</div>
+    <div class="kpis">
+      <div class="kpi"><div class="l">BBB penetration</div><div class="v">{bbb:.0%}</div></div>
+      <div class="kpi"><div class="l">Unbound brain (Kp,uu)</div><div class="v">{kpuu:.2f}</div></div>
+      <div class="kpi"><div class="l">CNS MPO</div>
+        <div class="v">{(f"{m['total']:.1f}/{m['max']:.0f}" if m else "n/a")}</div></div>
+    </div>
+    <div class="verdict"><div class="h">{esc(label)}</div>
+      <div style="font-size:.82rem;color:{MUTE}">{esc(note)}</div></div>
+  </div>
+</div>
+<h2>Reported disease relevance</h2><ul>{dz_txt}</ul>
+<h2>Mechanism network</h2><div class="fig">{build_network_svg(r, name)}</div>
+<h2>Target engagement profile</h2><div class="fig">{build_profile_svg(r)}</div>
+{sections}
+<h2>Applicability and limitations</h2>
+<p style="font-size:.82rem">Nearest measured training compound at Tanimoto
+{(f"{ad['max_sim']:.2f} ({esc(ad['tier'])}, {esc(ad['confidence'])} confidence)" if ad else "unknown")}.
+Predictions are least reliable far from training chemistry.</p>
+<ul>
+<li>A silent result is not evidence of inactivity. Reporting thresholds are set for precision,
+holding the false-positive rate near 0.2 percent on random chemistry, and the measured cost is a
+median sensitivity of 0.77 across the panel, falling to 0.26 at the strictest endpoints.</li>
+<li>The blood-brain barrier term multiplies every disease equally, so it cannot change which
+condition ranks first. It is an exposure filter, not a discriminator.</li>
+<li>The tool ranks mechanisms. It does not predict clinical efficacy, and it has not undergone
+wet-lab or clinical validation.</li>
+</ul>
+<div class="foot">BrainSafe AI version {APP_VERSION}, {"high-precision" if screening_mode() else "standard"}
+screening mode. Calibrated random-forest models trained on measured public bioactivity and ADME data
+(64,474 records; 61,317 unique compounds). Research decision-support for prioritisation and
+hypothesis generation only. Not for medical, diagnostic or treatment decisions.</div>
+</div></body></html>"""
+
+
+def _slug(name):
+    keep = "".join(c if (c.isalnum() or c in "-_") else "_" for c in str(name)).strip("_")
+    return (keep or "compound")[:60]
+
+
+def render_exports(smiles, name, r):
+    """Four formats, one frame behind all of them: a table to analyse, a record to archive, a
+    structured object to automate against, and a figure to drop into a manuscript."""
+    slug = _slug(name)
+    st.markdown('<div class="bs-card bs-export"><div class="bs-h">Export this result'
+                '<span class="bs-h-sub">every number on this page, in the format you need</span>'
+                '</div>', unsafe_allow_html=True)
+    c1, c2, c3, c4 = st.columns(4)
+    with c1:
+        st.download_button("Data table (CSV)",
+                           result_frame(smiles, name, r).to_csv(index=False).encode("utf-8"),
+                           file_name=f"brainsafe_{slug}.csv", mime="text/csv",
+                           use_container_width=True,
+                           help="Every endpoint as one tidy row per prediction, with units and the "
+                                "training context needed to interpret it.")
+    with c2:
+        st.download_button("Full report (HTML)",
+                           build_html_report(smiles, name, r).encode("utf-8"),
+                           file_name=f"brainsafe_{slug}_report.html", mime="text/html",
+                           use_container_width=True,
+                           help="Self-contained page with the structure, both figures and every "
+                                "table. Opens offline in any browser and prints to PDF.")
+    with c3:
+        st.download_button("Structured (JSON)",
+                           json.dumps(result_json(smiles, name, r), indent=2).encode("utf-8"),
+                           file_name=f"brainsafe_{slug}.json", mime="application/json",
+                           use_container_width=True,
+                           help="Machine-readable result with thresholds, provenance and the "
+                                "caveats that must travel with the numbers.")
+    with c4:
+        svg = build_network_svg(r, name)
+        i = svg.find("<svg")
+        st.download_button("Network figure (SVG)",
+                           (svg[i:svg.rfind("</svg>") + 6] if i >= 0 else svg).encode("utf-8"),
+                           file_name=f"brainsafe_{slug}_network.svg", mime="image/svg+xml",
+                           use_container_width=True,
+                           help="Vector figure at any size, for a manuscript or a slide.")
+    st.markdown('</div>', unsafe_allow_html=True)
+
+
+# --------------------------------- batch screening ---------------------------------
+BATCH_LIMIT = 300
+
+
+def batch_row(smiles, name, models):
+    """One summary row per compound. Deliberately narrow: the columns a triage decision needs."""
+    mol = Chem.MolFromSmiles(smiles)
+    if mol is None:
+        return {"input": name, "smiles": smiles, "status": "unparseable"}
+    cs = Chem.MolToSmiles(mol)
+    r = predict_all(cs, models)
+    if r is None:
+        return {"input": name, "smiles": cs, "status": "not featurizable"}
+    bbb, neuro, dz = disease_scores(r)
+    top = [d for d in dz if d["gated"] >= MIN_ACTIONABLE_SCORE][:3]
+    ad = assess_domain(cs)
+    eng = [(t, target_signal(r, neuro, t)) for t in TARGET_KIND if t != "NEURO"]
+    eng = sorted([e for e in eng if e[1] > 0], key=lambda x: -x[1])[:5]
+    m = cns_mpo(r, cs)
+    return {
+        "input": name, "smiles": cs, "status": "ok",
+        "bbb_probability": round(bbb, 3),
+        "kpuu": round(r["adme"]["kpuu"], 3),
+        "exposure_verdict": verdict(r["adme"]["kpuu"], bbb)[0],
+        "herg_probability": round(r["targets"]["hERG"], 3),
+        "cns_mpo": round(m["total"], 2) if m else None,
+        "n_targets_engaged": len(eng),
+        "top_mechanisms": ", ".join(f"{MECH_LABEL.get(t, t)} {s:.0%}" for t, s in eng),
+        "top_diseases": ", ".join(f"{d['disease']} {d['gated']:.2f}" for d in top) or "none reported",
+        "ad_max_tanimoto": round(ad["max_sim"], 3) if ad else None,
+        "ad_tier": ad["tier"] if ad else None,
+    }
+
+
+def render_batch():
+    st.markdown('<div class="bs-searchcard"><p class="t">Screen a set of compounds</p>'
+                '<p class="d">Paste one compound per line, as SMILES or as a name, or upload a file '
+                'with a <b>smiles</b> or <b>name</b> column. Every compound is profiled across the '
+                'full panel and returned as one row. Use this to rank a library before committing '
+                f'bench time. Limit {BATCH_LIMIT} compounds per run.</p></div>',
+                unsafe_allow_html=True)
+    c1, c2 = st.columns([3, 2], gap="large")
+    with c1:
+        text = st.text_area("Compounds", height=190, label_visibility="collapsed",
+                            placeholder="donepezil\nfluoxetine\nCC(=O)Nc1ccc(O)cc1\n...")
+    with c2:
+        up = st.file_uploader("or upload CSV / TSV / plain text", type=["csv", "tsv", "txt", "smi"])
+        st.caption("A CSV needs a column called smiles or name. A plain text file is read as one "
+                   "compound per line.")
+    run = st.button("Screen set", type="primary")
+
+    entries = []
+    if up is not None:
+        try:
+            if up.name.lower().endswith((".csv", ".tsv")):
+                d = pd.read_csv(up, sep=None, engine="python")
+                col = next((c for c in d.columns if c.strip().lower() in ("smiles", "smi")), None) \
+                    or next((c for c in d.columns if c.strip().lower() in ("name", "compound")), None)
+                if col is None:
+                    st.warning("No smiles or name column found in that file.")
+                else:
+                    entries = [str(v) for v in d[col].dropna().tolist()]
+            else:
+                entries = up.getvalue().decode("utf-8", "replace").splitlines()
+        except Exception as e:
+            st.warning(f"Could not read that file: {e}")
+    if text.strip():
+        entries = [ln for ln in text.splitlines()] + entries
+    entries = [e.strip() for e in entries if e and e.strip()]
+
+    if not run:
+        if entries:
+            st.caption(f"{len(entries)} compounds ready. Press **Screen set** to run.")
+        return
+    if not entries:
+        st.warning("Nothing to screen. Paste compounds or upload a file first.")
+        return
+
+    dropped = max(0, len(entries) - BATCH_LIMIT)
+    entries = entries[:BATCH_LIMIT]
+    models = load_models()
+    rows, prog = [], st.progress(0.0, text=f"Screening {len(entries)} compounds")
+    for i, e in enumerate(entries, 1):
+        smi, nm, err = resolve_query(e)
+        rows.append({"input": e, "smiles": e, "status": err} if err
+                    else batch_row(smi, nm, models))
+        prog.progress(i / len(entries), text=f"Screening {i} of {len(entries)}")
+    prog.empty()
+
+    df = pd.DataFrame(rows)
+    ok = int((df.status == "ok").sum())
+    if dropped:
+        st.info(f"{ok} of {len(entries)} compounds profiled. {dropped} beyond the "
+                f"{BATCH_LIMIT}-compound limit were not run.")
+    else:
+        st.success(f"{ok} of {len(entries)} compounds profiled.")
+
+    st.download_button("Download results (CSV)", df.to_csv(index=False).encode("utf-8"),
+                       file_name="brainsafe_batch.csv", mime="text/csv", type="primary")
+    st.dataframe(df, use_container_width=True, hide_index=True,
+                 column_config={"smiles": st.column_config.TextColumn("SMILES", width="medium")})
+    st.markdown('<div class="bs-note" style="margin-top:10px">Rank on the mechanisms and the '
+                'exposure verdict together: a strong mechanism behind a poor K<sub>p,uu</sub> will '
+                'not reach its target in vivo. Compounds reporting no mechanism are not thereby '
+                'inactive, and those outside the applicability domain carry the widest uncertainty.'
+                '</div>', unsafe_allow_html=True)
+
+
 CLF_ORDER = ["BBB", "AChE", "BChE", "BACE1", "GSK3B", "MAO_A", "MAO_B", "hERG"]
 
 
@@ -1680,11 +2308,16 @@ def render_report(smiles, name="Compound"):
     if r is None:
         st.error("Could not featurize that structure.")
         return
-    render_decision_guidance()
+    # Order matters. The reliability banner is about THIS compound and belongs above its result.
+    # The decision guidance is generic methodology, and putting it first pushed the answer the user
+    # asked for below the fold. It now sits under the result, where it is read as interpretation
+    # rather than as a preamble, and it is collapsed so it informs without competing.
     render_reliability_banner(smiles.strip())
     render_summary(mol, r)
     st.write("")
     render_network(r, name=name)
+    st.write("")
+    render_profile(r)
     st.write("")
     a, b = st.columns(2, gap="large")
     with a: render_disease(r)
@@ -1703,6 +2336,11 @@ def render_report(smiles, name="Compound"):
     e, f = st.columns(2, gap="large")
     with e: render_physchem(r)
     with f: render_confidence(smiles.strip())
+    st.write("")
+    with st.expander("How to act on this call, and what a positive costs at your hit rate"):
+        render_decision_guidance()
+    st.write("")
+    render_exports(smiles.strip(), name, r)
     st.markdown(
         '<div class="bs-foot">Predictions are calibrated random-forest outputs trained on measured public '
         'bioactivity and ADME data (64,474 records; 61,317 unique compounds); scaffold-split AUROC ~0.92 '
@@ -1717,7 +2355,7 @@ def main():
     inject_css()
     render_header()
 
-    tab_search, tab_about = st.tabs(["Compound Search", "About"])
+    tab_search, tab_batch, tab_about = st.tabs(["Compound Search", "Batch Screening", "About"])
     with tab_search:
         with st.container(border=True):
             st.markdown('<p class="t" style="font-size:1.05rem;font-weight:700;color:#0D2137;margin:0 0 3px">'
@@ -1762,6 +2400,10 @@ def main():
             st.markdown('<div class="bs-empty"><div class="k">🔎</div>'
                         '<div style="margin-top:8px">Type a <b>compound name</b> or <b>SMILES</b> above, or tap an '
                         'example, then press <b>Predict</b>.</div></div>', unsafe_allow_html=True)
+
+    with tab_batch:
+        with st.container(border=True):
+            render_batch()
 
     with tab_about:
         render_about()

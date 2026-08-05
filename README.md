@@ -58,9 +58,54 @@ python src/brainsafe/evaluation/validate_inversion.py   # adversarial checks
 streamlit run app.py                                    # interactive tool
 ```
 
+## Using the web server
+
+Three ways in, all from the same models:
+
+| Mode | What it is for |
+|---|---|
+| **Compound Search** | one compound, full report: exposure, mechanism network, target engagement profile, disease relevance, ADME, read-across, CNS MPO and applicability domain |
+| **Batch Screening** | up to 300 compounds pasted or uploaded as CSV, TSV or plain text, returned as one ranked row each with a CSV download |
+| **Export** | every result downloadable as a tidy CSV, a self-contained HTML report, a structured JSON object, or the network as vector SVG |
+
+The HTML report inlines its own figures, structure image and styling, so it opens offline in any
+browser and prints to PDF without a network connection. The JSON carries thresholds, the screening
+mode and the caveats, so a stored answer stays interpretable away from the interface.
+
+## Running it
+
+Locally:
+
+```bash
+pip install -r requirements.txt
+streamlit run app.py
+```
+
+As a container, which is how it should be deployed:
+
+```bash
+docker build -t brainsafe-ai . && docker run -p 8501:8501 brainsafe-ai
+```
+
+The image runs as an unprivileged user, reads only from disk, and exposes Streamlit's health
+endpoint at `/_stcore/health` so an orchestrator can restart a wedged container. Server settings and
+the theme live in `.streamlit/config.toml`.
+
+Before deploying, verify the environment and the application in one step:
+
+```bash
+python src/brainsafe/evaluation/app_health.py
+```
+
+It checks that every declared dependency resolves and matches its pin, that all 63 model artefacts
+load, that the knowledge graph is internally consistent, that chemically unrelated compounds produce
+distinct and directionally correct profiles, that every export format is well formed and
+self-contained, and that no red hue has entered the palette. It exits non-zero on any failure, so it
+can gate a release.
+
 ## Environment
 Python 3.13, RDKit 2026.03.2, scikit-learn 1.8.0, NumPy 2.4.6, pandas 3.0.3, SciPy 1.17.1,
-matplotlib 3.10.9. See `requirements.txt`. Random seed 42 throughout.
+matplotlib 3.10.9, Plotly 6.7.0. See `requirements.txt`. Random seed 42 throughout.
 
 ## Data sources
 ChEMBL 37 and BindingDB (target activity), B3DB (BBB; Meng et al.,

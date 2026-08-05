@@ -1,0 +1,14 @@
+brainsafe_env/
+.git/
+__pycache__/
+**/__pycache__/
+*.pyc
+inversion/cache/
+data/
+figures/
+manuscript/
+archive/
+notebooks/
+scratch/
+.venv/
+*.log
