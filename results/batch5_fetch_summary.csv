@@ -1,0 +1,4 @@
+target,chembl_id,compounds,actives_p6,binders_p7,measured_inactives,distinct_documents
+CGRP,CHEMBL3798,787,761,599,26,49
+DHODH,CHEMBL1966,1566,1421,963,145,98
+RIPK1,CHEMBL5464,3068,2349,1490,719,90
