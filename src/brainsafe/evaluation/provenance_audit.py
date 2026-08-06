@@ -43,7 +43,9 @@ MODES = ROOT / "models_rf" / "binder_modes.json"
 # were audited is not stale for naming one that was subsequently rejected. Judging every file against
 # the full panel produced three false alarms on the first run of this script.
 PANEL_FILES = [
-    (INV / "H7_target_discrimination.csv", "target", "binder"),
+    # H7 can only score targets that have a hold-out twin with enough held-out actives;
+    # it reports the ones it could not reach, so those are not an omission.
+    (INV / "H7_target_discrimination.csv", "target", "holdout"),
     (RES / "deployed_specificity_audit.csv", "target", "binder"),
     (RES / "batch4_audit.csv", "target", "historical"),
     (RES / "tables" / "binder_vs_measured_inactives.csv", None, "binder"),
@@ -74,11 +76,14 @@ def main():
             col = next((c for c in d.columns if c.lower() in
                         ("target", "endpoint", "name")), None)
         named = set(d[col].astype(str)) if col else set()
-        expected = binder_deployed if scope == "binder" else deployed
+        untestable = {"GABA_A", "GBA1", "TAAR1"}   # no hold-out twin; reported by H7 itself
+        expected = (binder_deployed - untestable) if scope == "holdout" else (
+            binder_deployed if scope == "binder" else deployed)
         gone = sorted(named & withdrawn) if scope != "historical" else []
         absent = sorted(expected - named) if (named and scope != "historical") else []
         problems = []
-        if age < model_mtime:
+        if age < model_mtime and scope != "historical":
+            # a record of a decision taken before training is expected to predate the models
             problems.append(f"older than the deployed models ({time.ctime(age)})")
         if gone:
             problems.append(f"reports withdrawn endpoints {gone}")
@@ -92,23 +97,34 @@ def main():
         print(f"  {path.name:42} {'STALE' if problems else 'current'}", flush=True)
 
     # the inversion verdicts describe a graph that has since gained two conditions
-    v = INV / "VERDICTS.csv"
-    if v.exists():
-        graph_files = [INV / "H1_disease_layer.csv", INV / "H2_weight_ablation.csv",
-                       INV / "H6_clinical_indication.csv", INV / "H8_panel_independence.csv"]
-        app_mtime = (ROOT / "app.py").stat().st_mtime
-        for p in graph_files:
-            if not p.exists():
-                continue
-            stale = p.stat().st_mtime < app_mtime
-            rows.append({"artefact": str(p.relative_to(ROOT)),
-                         "status": "STALE" if stale else "current", "n_rows": len(pd.read_csv(p)),
-                         "detail": ("computed before the knowledge graph last changed; the disease "
-                                    "layer now has "
-                                    f"{len(app.DISEASE_ORDER)} conditions and "
-                                    f"{len(app.KNOWLEDGE_GRAPH)} targets")
-                         if stale else "consistent with the current graph"})
-            print(f"  {p.name:42} {'STALE' if stale else 'current'}", flush=True)
+    # Graph-dependent results are judged on a content fingerprint, not a timestamp. An edit to a
+    # comment in app.py must not mark every inversion result stale, and a change to the graph must
+    # not escape notice because the file's mtime happened not to move.
+    import hashlib
+    payload = json.dumps({
+        "diseases": list(app.DISEASE_ORDER),
+        "graph": {t: sorted((a, b, c, d) for a, b, c, d in e)
+                  for t, e in sorted(app.KNOWLEDGE_GRAPH.items())},
+        "peripheral": sorted(app.PERIPHERAL_MECHANISM_DISEASES),
+    }, sort_keys=True)
+    current_fp = hashlib.sha256(payload.encode()).hexdigest()
+    fp_file = INV / "GRAPH_FINGERPRINT.json"
+    recorded = json.loads(fp_file.read_text()).get("sha256") if fp_file.exists() else None
+    graph_current = (recorded == current_fp)
+    graph_files = [INV / "H1_disease_layer.csv", INV / "H2_weight_ablation.csv",
+                   INV / "H6_clinical_indication.csv", INV / "H8_panel_independence.csv"]
+    for q in graph_files:
+        if not q.exists():
+            continue
+        rows.append({"artefact": str(q.relative_to(ROOT)),
+                     "status": "current" if graph_current else "STALE",
+                     "n_rows": len(pd.read_csv(q)),
+                     "detail": (f"graph fingerprint matches: {len(app.DISEASE_ORDER)} conditions, "
+                                f"{len(app.KNOWLEDGE_GRAPH)} targets")
+                     if graph_current else
+                     ("the knowledge graph has changed since these were computed; rerun the "
+                      "inversion tests and summarise.py")})
+        print(f"  {q.name:42} {'current' if graph_current else 'STALE'}", flush=True)
 
     df = pd.DataFrame(rows)
     df.to_csv(RES / "provenance_audit.csv", index=False)

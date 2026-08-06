@@ -163,14 +163,14 @@ Every hypothesis was stated so that it could fail. Where predictive power was at
 
 | Hypothesis | Verdict | Evidence |
 |---|---|---|
-| H1 the disease score is informative | **SUPPORTED** | top-3 accuracy 0.794 vs permutation null 0.207 (p=0.005) and frequency null 0.548 |
-| H2 the curated edge weights add value | **REFUTED** | curated 0.7943, uniform 0.7935, permuted 0.7922 |
+| H1 the disease score is informative | **SUPPORTED** | top-3 accuracy 0.804 vs permutation null 0.188 (p=0.005) and frequency null 0.482 |
+| H2 the curated edge weights add value | **REFUTED** | curated 0.8045, uniform 0.8036, permuted 0.8025 |
 | H3 BBB gating discriminates between diseases | **REFUTED (by construction)** | the gate multiplies every disease equally and cannot change their order |
 | H4 specificity transfers to novel chemistry | **SUPPORTED** | false-positive rate 0.051 on 59 distant compounds against 0.125 measured on library chemistry |
 | H5 read-across beats a frequency baseline | **SUPPORTED** | recall 0.970 against 0.060 |
 | H6 the disease scores match real clinical indications | **WEAKENED** | top-3 accuracy 0.352 on 162 drugs never seen in training, against permutation null 0.145 (p=0.001) and frequency null 0.654 |
-| H7 some panel targets are non-discriminative and explain the silent antiepileptics | **REFUTED** | none of 40 targets ranks below AUROC 0.70; the cause is the operating point, with median deployed sensitivity 0.77 and 7 targets under 0.50 |
-| H8 engaged targets are independent observations | **REFUTED** | 34 targets fire across approved drugs but span only 13 independent directions; 6 homologous pairs correlate above 0.5 |
+| H7 some panel targets are non-discriminative and explain the silent antiepileptics | **REFUTED** | none of 43 targets ranks below AUROC 0.70; the cause is the operating point, with median deployed sensitivity 0.77 and 8 targets under 0.50 |
+| H8 engaged targets are independent observations | **REFUTED** | 36 targets fire across approved drugs but span only 14 independent directions; 6 homologous pairs correlate above 0.5 |
 
 
 ## Table 8. Recovery of approved clinical indications, by condition
@@ -186,7 +186,7 @@ Ground truth is ChEMBL's drug_indication table restricted to phase 4, mapped to 
 | Psychosis / schizophrenia | 73 | 0.644 | 0.740 | 14 |
 | Addiction | 17 | 0.529 | 0.588 | 5 |
 | ADHD | 31 | 0.226 | 0.258 | 16 |
-| Chronic pain | 144 | 0.229 | 0.229 | 86 |
+| Chronic pain | 144 | 0.229 | 0.250 | 83 |
 | Sleep / wakefulness | 27 | 0.296 | 0.296 | 11 |
 | Epilepsy | 58 | 0.103 | 0.224 | 47 |
 
@@ -204,3 +204,6 @@ Candidates were selected because the clinical-indication test identified epileps
 | Nav1_8 | 501 | 163 | 39 | 0.955 | 0.901 | deployed |  |
 | Cav3_2 | 633 | 201 | 33 | 1.000 | 0.997 | withdrawn after training | active band compressed near zero, calibrated threshold 0.065, atenolol scores 0.084 |
 | GABAA_a5 | 672 | 284 | 4 | n/a | n/a | not trained | only 4 measured inactives, cannot set a threshold honestly |
+| CGRP | 761 | 333 | 26 | n/a | 1.000 | deployed | only 26 measured inactives, cannot set a threshold honestly |
+| DHODH | 1421 | 360 | 145 | 0.918 | 0.673 | deployed |  |
+| RIPK1 | 2349 | 826 | 719 | 0.997 | 0.986 | deployed |  |

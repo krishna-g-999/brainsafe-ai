@@ -407,7 +407,7 @@ because chronic pain, depression and psychosis account for most approved central
 indications and a constant answer naming those three is right about two-thirds of the time. That
 constant answer carries no information about any individual compound, but it is a real bar and the
 tool does not clear it on this metric. Removing the reporting threshold and judging the ranking alone
-raises accuracy to 0.490, which locates much of the gap in the decision to stay silent rather than in
+raises accuracy to 0.497, which locates much of the gap in the decision to stay silent rather than in
 the ranking itself. Per-indication recovery is reported in full (Table 8) because the aggregate
 conceals a wide spread, from 0.644 for psychosis to 0.103 for epilepsy.
 
@@ -470,8 +470,8 @@ magnitude of the error was measured rather than assumed. Across 400 approved dru
 D3 fire together with a phi correlation of 0.813, and D3 fires for 78% of compounds engaging D2; the
 mu and kappa opioid receptors correlate at 0.791, 5-HT2A and 5-HT7 at 0.699, and the dopamine and
 noradrenaline transporters at 0.642, with the noradrenaline transporter firing for 84% of compounds
-engaging the dopamine transporter. Of 49 targets, 34 fire at least once on that set, but a
-correlation analysis of the firing pattern resolves only 13 independent directions. A raw count
+engaging the dopamine transporter. Of 52 targets, 36 fire at least once on that set, but a
+correlation analysis of the firing pattern resolves only 14 independent directions. A raw count
 therefore overstates the evidence by roughly a factor of two and a half.
 
 Co-firing is not itself an error. A genuinely promiscuous ligand should engage both members of a
@@ -493,7 +493,7 @@ positive signal whenever the predicted probability merely exceeds the training b
 occurs for about 12% of random compounds at each endpoint, whereas the 43 binder endpoints require a
 calibrated threshold to be crossed and fire for about 0.6%. Pooling the two counts an ordinary
 above-average probability as an event. The quantity that reaches the user is whether any condition
-crosses the reporting threshold, which occurs for 11.5% of 600 random structures, against 55.0% of
+crosses the reporting threshold, which occurs for 11.5% of 600 random structures, against 55.8% of
 approved drugs. That rate sits close to the 12.5% measured on library compounds and above the 5.1%
 measured on chemistry most distant from training, as expected for a sample drawn without regard to
 similarity. Correlation among the endpoints slightly reduces rather than inflates the aggregate: at
@@ -643,8 +643,8 @@ target set, consistent with four decades of failed neuroprotection trials.
 Expanding the panel is not costless, which bears on how these gaps should be closed. Each added
 endpoint is a further opportunity to fire spuriously, so the probability that a compound engaging
 nothing nevertheless receives a reported finding rises with panel size; it stands at 11.5% on random
-chemistry. Added endpoints also overlap: 34 of 49 targets fire at least once across approved drugs
-but span only 13 independent directions. Coverage should therefore be extended where a measured
+chemistry. Added endpoints also overlap: 36 of 52 targets fire at least once across approved drugs
+but span only 14 independent directions. Coverage should therefore be extended where a measured
 weakness demands it, as was done here for addiction, rather than pursued for completeness, and
 preference given to mechanisms that are not homologous to those already present.
 

@@ -1,10 +1,10 @@
 artefact,status,n_rows,detail
-inversion\results\H7_target_discrimination.csv,STALE,40,"older than the deployed models (Wed Aug  5 15:58:32 2026); omits 6 deployed endpoints: ['CGRP', 'DHODH', 'GABA_A', 'GBA1', 'RIPK1', 'TAAR1']"
+inversion\results\H7_target_discrimination.csv,current,43,consistent with the deployed panel
 results\deployed_specificity_audit.csv,current,47,consistent with the deployed panel
-results\batch4_audit.csv,STALE,9,older than the deployed models (Thu Aug  6 08:33:39 2026)
-results\tables\binder_vs_measured_inactives.csv,STALE,33,"older than the deployed models (Sat Aug  1 11:57:38 2026); omits 14 deployed endpoints: ['CGRP', 'COX2', 'DHODH', 'GBA1', 'GluA2', 'Nav1_5'] ..."
-results\tables\background_specificity.csv,STALE,49,"reports withdrawn endpoints ['Cav3_2', 'Nav1_1']"
-inversion\results\H1_disease_layer.csv,STALE,4,computed before the knowledge graph last changed; the disease layer now has 16 conditions and 52 targets
-inversion\results\H2_weight_ablation.csv,STALE,3,computed before the knowledge graph last changed; the disease layer now has 16 conditions and 52 targets
-inversion\results\H6_clinical_indication.csv,STALE,7,computed before the knowledge graph last changed; the disease layer now has 16 conditions and 52 targets
-inversion\results\H8_panel_independence.csv,STALE,9,computed before the knowledge graph last changed; the disease layer now has 16 conditions and 52 targets
+results\batch4_audit.csv,current,9,consistent with the deployed panel
+results\tables\binder_vs_measured_inactives.csv,current,47,consistent with the deployed panel
+results\tables\background_specificity.csv,current,47,consistent with the deployed panel
+inversion\results\H1_disease_layer.csv,current,4,"graph fingerprint matches: 16 conditions, 52 targets"
+inversion\results\H2_weight_ablation.csv,current,3,"graph fingerprint matches: 16 conditions, 52 targets"
+inversion\results\H6_clinical_indication.csv,current,7,"graph fingerprint matches: 16 conditions, 52 targets"
+inversion\results\H8_panel_independence.csv,current,9,"graph fingerprint matches: 16 conditions, 52 targets"

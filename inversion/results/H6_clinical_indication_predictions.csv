@@ -238,8 +238,8 @@ CHEMBL2219425,CCCCCCCCCCCC(=O)OCN1C(=O)CCc2ccc(OCCCCN3CCN(c4cccc(Cl)c4Cl)CC3)cc2
 CHEMBL22242,CCN1CCC[C@H]1CNC(=O)c1c(OC)ccc(Br)c1OC,Psychosis / schizophrenia,Psychosis / schizophrenia | Addiction,Psychosis / schizophrenia | Addiction | Alzheimer's disease,1,1,1,1,1,0.874,1.0
 CHEMBL2355839,CNC(C)CCC=C(C)C.CNC(C)CCC=C(C)C.O=C(O)[C@@H](O)[C@H](O)[C@H](O)[C@@H](O)C(=O)O,Chronic pain,NONE,Neuroprotection / oxidative stress | Alzheimer's disease | Parkinson's disease,0,0,11,0,0,0.014,0.677
 CHEMBL2364609,CN[C@]1(c2ccccc2Cl)CCCCC1=O.Cl,Depression / anxiety,NONE,Alzheimer's disease | Parkinson's disease | Amyotrophic lateral sclerosis,0,0,5,0,0,0.0,0.97
-CHEMBL2364629,N[C@@H]1c2cccnc2[C@H](OC(=O)N2CCC(n3c(=O)[nH]c4ncccc43)CC2)CC[C@H]1c1cccc(F)c1F.N[C@@H]1c2cccnc2[C@H](OC(=O)N2CCC(n3c(=O)[nH]c4ncccc43)CC2)CC[C@H]1c1cccc(F)c1F.O.O.O.O=S(=O)(O)O,Chronic pain,NONE,Epilepsy | Cognition (cholinergic) | Alzheimer's disease,0,0,11,0,0,0.062,0.479
-CHEMBL2364638,C[C@@H]1[C@H](c2ccccc2)C[C@H](NC(=O)c2cnc3c(c2)C[C@@]2(C3)C(=O)Nc3ncccc32)C(=O)N1CC(F)(F)F,Chronic pain,Neuroprotection / oxidative stress,Neuroprotection / oxidative stress | Alzheimer's disease | Parkinson's disease,0,0,11,1,0,0.308,0.625
+CHEMBL2364629,N[C@@H]1c2cccnc2[C@H](OC(=O)N2CCC(n3c(=O)[nH]c4ncccc43)CC2)CC[C@H]1c1cccc(F)c1F.N[C@@H]1c2cccnc2[C@H](OC(=O)N2CCC(n3c(=O)[nH]c4ncccc43)CC2)CC[C@H]1c1cccc(F)c1F.O.O.O.O=S(=O)(O)O,Chronic pain,Migraine,Migraine | Chronic pain | Epilepsy,0,1,2,1,0,0.894,0.479
+CHEMBL2364638,C[C@@H]1[C@H](c2ccccc2)C[C@H](NC(=O)c2cnc3c(c2)C[C@@]2(C3)C(=O)Nc3ncccc32)C(=O)N1CC(F)(F)F,Chronic pain,Migraine | Neuroprotection / oxidative stress,Migraine | Neuroprotection / oxidative stress | Chronic pain,0,1,3,1,0,0.896,0.625
 CHEMBL2368861,CO[C@@]12CC[C@@]3(C[C@@H]1[C@](C)(O)C(C)(C)C)[C@H]1Cc4ccc(O)c5c4[C@@]3(CCN1CC1CC1)[C@H]2O5.Cl,Addiction,Chronic pain | Addiction | Depression / anxiety,Chronic pain | Addiction | Depression / anxiety,1,1,2,1,1,0.995,1.0
 CHEMBL243712,CCN1CCCC1CNC(=O)c1cc(S(=O)(=O)CC)c(N)cc1OC,Psychosis / schizophrenia,Addiction | Psychosis / schizophrenia,Addiction | Psychosis / schizophrenia | Neuroprotection / oxidative stress,1,1,2,1,1,0.374,1.0
 CHEMBL2443262,COc1ccsc1CNCC[C@@]1(c2ccccn2)CCOC2(CCCC2)C1,Chronic pain,Chronic pain | Addiction,Chronic pain | Addiction | Cognition (cholinergic),1,1,1,1,1,0.674,1.0
@@ -315,7 +315,7 @@ CHEMBL3989844,C[C@H](N)Cc1ccccc1.O=C(O)[C@@H](O)[C@@H](O)[C@H](O)[C@@H](O)C(=O)O
 CHEMBL3989857,O.O.O.O.O.O.O.O=S(=O)([O-])[O-].[Mg+2],Epilepsy,NONE,Epilepsy | Alzheimer's disease | Parkinson's disease,0,1,1,0,0,0.062,0.75
 CHEMBL3989861,CN(C)CC(c1ccc(O)cc1)C1(O)CCCCC1.O.O=C(O)/C=C/C(=O)O,Depression / anxiety,ADHD | Depression / anxiety,ADHD | Depression / anxiety | Addiction,1,1,2,1,0,0.393,0.78
 CHEMBL3989949,NC(=O)O[C@@H](Cn1ncnn1)c1ccccc1Cl,Epilepsy,NONE,Alzheimer's disease | Parkinson's disease | Amyotrophic lateral sclerosis,0,0,12,0,0,0.0,0.333
-CHEMBL3991065,C[C@@H]1[C@H](c2c(F)ccc(F)c2F)C[C@H](NC(=O)c2cnc3c(c2)C[C@@]2(C3)C(=O)Nc3ncccc32)C(=O)N1CC(F)(F)F,Chronic pain,NONE,Alzheimer's disease | Neuroprotection / oxidative stress | Parkinson's disease,0,0,11,0,0,0.225,0.531
+CHEMBL3991065,C[C@@H]1[C@H](c2c(F)ccc(F)c2F)C[C@H](NC(=O)c2cnc3c(c2)C[C@@]2(C3)C(=O)Nc3ncccc32)C(=O)N1CC(F)(F)F,Chronic pain,Migraine,Migraine | Alzheimer's disease | Neuroprotection / oxidative stress,0,0,4,1,0,0.896,0.531
 CHEMBL40,CCC1(c2ccccc2)C(=O)NC(=O)NC1=O,Epilepsy,NONE,Alzheimer's disease | Parkinson's disease | Amyotrophic lateral sclerosis,0,0,12,0,1,0.0,1.0
 CHEMBL405,CC(N)Cc1ccccc1,ADHD,Psychosis / schizophrenia,Psychosis / schizophrenia | Alzheimer's disease | Parkinson's disease,0,0,9,1,1,0.449,1.0
 CHEMBL4105630,C[C@@]1(O)CC[C@H]2[C@H](CC[C@@H]3[C@@H]2CC[C@]2(C)[C@@H](C(=O)Cn4cc(C#N)cn4)CC[C@@H]32)C1,Depression / anxiety,Epilepsy | Depression / anxiety | Sleep / wakefulness,Epilepsy | Depression / anxiety | Sleep / wakefulness,1,1,2,1,0,0.587,0.667
@@ -348,7 +348,7 @@ CHEMBL4594214,CSCC[C@@H]1NC(=O)[C@H](CC(C)C)NC(=O)[C@H](CCCNC(=N)N)NC(=O)[C@H](C
 CHEMBL460,CCc1c(C)[nH]c2c1C(=O)C(CN1CCOCC1)CC2,Psychosis / schizophrenia,NONE,Alzheimer's disease | Parkinson's disease | Amyotrophic lateral sclerosis,0,0,6,0,1,0.0,1.0
 CHEMBL46399,CC1C2Cc3ccc(O)cc3C1(C)CCN2CCc1ccccc1,Chronic pain,Chronic pain | Addiction | Neuroprotection / oxidative stress,Chronic pain | Addiction | Neuroprotection / oxidative stress,1,1,1,1,1,0.993,1.0
 CHEMBL4650216,COc1ccc(-n2nccn2)c(C(=O)N2CCC[C@@]2(C)c2nc3c(C)c(Cl)ccc3[nH]2)c1.Cl,Sleep / wakefulness,Sleep / wakefulness,Sleep / wakefulness | Alzheimer's disease | Depression / anxiety,1,1,1,1,0,0.564,0.984
-CHEMBL4650220,Cc1cc(C[C@@H](NC(=O)N2CCC(c3cc4ccccc4[nH]c3=O)CC2)C(=O)N2CCN(C3CCN(C)CC3)CC2)cc2cn[nH]c12.Cl,Chronic pain,NONE,Cognition (cholinergic) | Alzheimer's disease | Parkinson's disease,0,0,10,0,0,0.03,0.354
+CHEMBL4650220,Cc1cc(C[C@@H](NC(=O)N2CCC(c3cc4ccccc4[nH]c3=O)CC2)C(=O)N2CCN(C3CCN(C)CC3)CC2)cc2cn[nH]c12.Cl,Chronic pain,Migraine,Migraine | Chronic pain | Cognition (cholinergic),0,1,2,1,0,0.892,0.354
 CHEMBL465026,CN1CCOC(c2ccccc2)c2ccccc2C1,Chronic pain,ADHD | Depression / anxiety,ADHD | Depression / anxiety | Addiction,0,0,10,1,1,0.49,1.0
 CHEMBL46516,O=C1NCN(c2ccccc2)C12CCN(CCCC(c1ccc(F)cc1)c1ccc(F)cc1)CC2,Psychosis / schizophrenia,Addiction | Chronic pain | Psychosis / schizophrenia,Addiction | Chronic pain | Psychosis / schizophrenia,1,1,3,1,1,0.616,1.0
 CHEMBL479,CSc1ccc2c(c1)N(CCC1CCCCN1C)c1ccccc1S2,Psychosis / schizophrenia,Psychosis / schizophrenia | Cognition (cholinergic),Psychosis / schizophrenia | Cognition (cholinergic) | Alzheimer's disease,1,1,1,1,1,0.35,1.0

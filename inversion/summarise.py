@@ -205,6 +205,27 @@ def main():
                        f"time on random chemistry, which bounds what a further expansion of the panel "
                        f"would cost in false leads.")
 
+    # Fingerprint of the graph these verdicts describe. File timestamps cannot answer "is this result
+    # still true", because any edit to app.py, including a comment, makes every result look stale
+    # while a change to the graph made without touching the file's mtime would look current. The
+    # fingerprint is over the content that actually determines the answers.
+    import hashlib
+    import json as _json
+    import sys as _sys
+    _sys.path.insert(0, str(ROOT))
+    import app as _app
+    payload = _json.dumps({
+        "diseases": list(_app.DISEASE_ORDER),
+        "graph": {t: sorted((p, s, d, w) for p, s, d, w in e)
+                  for t, e in sorted(_app.KNOWLEDGE_GRAPH.items())},
+        "peripheral": sorted(_app.PERIPHERAL_MECHANISM_DISEASES),
+    }, sort_keys=True)
+    (RES / "GRAPH_FINGERPRINT.json").write_text(_json.dumps({
+        "sha256": hashlib.sha256(payload.encode()).hexdigest(),
+        "n_conditions": len(_app.DISEASE_ORDER),
+        "n_targets": len(_app.KNOWLEDGE_GRAPH),
+    }, indent=2))
+
     df = pd.DataFrame(verdicts)
     df.to_csv(RES / "VERDICTS.csv", index=False)
 
