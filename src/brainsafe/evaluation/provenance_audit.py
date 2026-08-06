@@ -50,6 +50,8 @@ PANEL_FILES = [
     (RES / "batch4_audit.csv", "target", "historical"),
     (RES / "tables" / "binder_vs_measured_inactives.csv", None, "binder"),
     (RES / "tables" / "background_specificity.csv", None, "binder"),
+    # added after it drifted to describe 39 targets unnoticed: it was not on this list
+    (RES / "tables" / "MASTER_validation_summary.csv", None, "summary"),
 ]
 
 
@@ -78,7 +80,8 @@ def main():
         named = set(d[col].astype(str)) if col else set()
         untestable = {"GABA_A", "GBA1", "TAAR1"}   # no hold-out twin; reported by H7 itself
         expected = (binder_deployed - untestable) if scope == "holdout" else (
-            binder_deployed if scope == "binder" else deployed)
+            binder_deployed if scope == "binder" else
+            set() if scope == "summary" else deployed)
         gone = sorted(named & withdrawn) if scope != "historical" else []
         absent = sorted(expected - named) if (named and scope != "historical") else []
         problems = []

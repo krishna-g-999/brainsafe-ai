@@ -1,0 +1,6 @@
+mechanism,strategy,activities,distinct_documents_in_sample,worst_member_assay_share,trainable,detail
+Kainate receptors (pooled GluK1-K5),pool subtypes,454,29,0.378,False,GluK1 244; GluK2 139; GluK3 34; GluK5 37; pooled total 454 still below 800
+Protein aggregation (pooled),pool subtypes,114943,41,0.982,False,alpha-synuclein 535; tau 95345; huntingtin 19063; huntingtin is 98% one assay; pooling sets that are each one campaign does not create diverse chemistry
+ALS genetics (pooled),pool subtypes,38,8,0.621,False,SOD1 29; TDP-43 9; pooled total 38 still below 800
+Calcium channel subtypes (pooled),pool subtypes,2287,75,0.399,True,Cav2.2 566; Cav3.2 848; alpha2delta-1 873
+NMDA channel-blocker (PCP) site,curate by assay text,0,0,,False,0/151 sampled activities name the channel site; 151 total activities at this target

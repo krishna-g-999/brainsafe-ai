@@ -4,6 +4,7 @@ results\deployed_specificity_audit.csv,current,47,consistent with the deployed p
 results\batch4_audit.csv,current,9,consistent with the deployed panel
 results\tables\binder_vs_measured_inactives.csv,current,47,consistent with the deployed panel
 results\tables\background_specificity.csv,current,47,consistent with the deployed panel
+results\tables\MASTER_validation_summary.csv,current,7,consistent with the deployed panel
 inversion\results\H1_disease_layer.csv,current,4,"graph fingerprint matches: 16 conditions, 52 targets"
 inversion\results\H2_weight_ablation.csv,current,3,"graph fingerprint matches: 16 conditions, 52 targets"
 inversion\results\H6_clinical_indication.csv,current,7,"graph fingerprint matches: 16 conditions, 52 targets"

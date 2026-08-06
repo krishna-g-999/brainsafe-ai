@@ -1,6 +1,8 @@
 test,statistic,k,n,estimate,ci95_low,ci95_high,design
-Prospective sensitivity (scaffold-held-out),recall,12325,15609,0.7896,0.7831,0.7959,20% of Bemis-Murcko scaffolds withheld per target; 39 targets retrained; held-out compounds share no scaffold with training
-Specificity (non-CNS compounds),true-negative rate,875,1000,0.875,0.8531,0.8941,"1000 library compounds with no measured activity at any modelled target; presumed inactive, so a lower bound. Replicated on an independently drawn sample: 12.3% and 12.5% false-positive rate."
-Balanced accuracy,(sensitivity+specificity)/2,,16609,0.8323,,,combines the two tests above
-Targets reaching >=0.80 prospective recall,count,19,36,0.5278,,,"per-target, excluding 3 targets whose threshold collapsed (OX2, LRRK2, NLRP3)"
-Targets below 0.50 prospective recall,count,5,36,0.1389,,,"SIRT1, mGluR5, MT1, KEAP1, GluA2"
+Prospective sensitivity (scaffold-held-out),recall,11914,15069,0.7906,0.7841,0.7971,"20% of Bemis-Murcko scaffolds withheld per target; 40 deployed targets with a usable hold-out threshold; held-out compounds share no scaffold with training. 4 excluded for a threshold at the floor: CGRP, LRRK2, OX2, RIPK1"
+Specificity (non-CNS compounds),true-negative rate,875,1000,0.875,0.8531,0.8941,"library compounds with no measured activity at any modelled target; presumed inactive rather than proven so, therefore a lower bound"
+Deployed specificity on random chemistry,median false-positive rate per endpoint,,47,0.0017,,,"every served model at its deployed threshold against 600 structures drawn by random PubChem identifier, plus molecules no CNS target plausibly binds; 0 endpoints fire on a trivial molecule"
+Balanced accuracy,(sensitivity+specificity)/2,,16069,0.8328,,,combines the two tests above
+Targets reaching >=0.80 prospective recall,count,22,40,0.55,,,"per-target, excluding 4 whose hold-out threshold collapsed"
+Targets below 0.50 prospective recall,count,6,40,0.15,,,"GluA2, KEAP1, MT1, Nav1_6, SIRT1, mGluR5"
+Binder discrimination vs measured inactives,mean AUROC,,42,0.9546,,,"compounds experimentally tested on the same target and found inactive, held out from training"
