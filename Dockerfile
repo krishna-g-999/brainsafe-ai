@@ -23,7 +23,7 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-COPY app.py ./
+COPY app.py api.py serve.py ./
 COPY src/ ./src/
 COPY models_rf/ ./models_rf/
 COPY assets/ ./assets/
@@ -34,11 +34,15 @@ COPY docs/ ./docs/
 RUN useradd --create-home --uid 10001 brainsafe && chown -R brainsafe:brainsafe /app
 USER brainsafe
 
-EXPOSE 8501
+# 8501 serves the interface, 8000 the REST API. Both are started by serve.py in one container
+# because they share a single copy of the loaded models; running them as separate containers would
+# double the memory for no benefit, the models being read-only.
+EXPOSE 8501 8000
 
 # Streamlit's own health endpoint, so an orchestrator restarts a wedged container rather than
-# leaving it serving errors.
-HEALTHCHECK --interval=30s --timeout=5s --start-period=90s --retries=3 \
-    CMD curl -fsS http://localhost:8501/_stcore/health || exit 1
+# leaving it serving errors. The API's health endpoint is checked too, since the interface can be
+# healthy while the API thread has died.
+HEALTHCHECK --interval=30s --timeout=8s --start-period=90s --retries=3 \
+    CMD curl -fsS http://localhost:8501/_stcore/health && curl -fsS http://localhost:8000/health || exit 1
 
-CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+CMD ["python", "serve.py"]

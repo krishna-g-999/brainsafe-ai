@@ -1,0 +1,44 @@
+model,mb_before,mb_after,saved_mb,predictions_identical,status
+A2A.joblib,79.1,22.9,56.2,True,compressed
+A2A_binder.joblib,7.2,7.6,0.0,True,kept original: no saving
+AChE.joblib,21.9,6.6,15.4,True,compressed
+AChE_calibrated.joblib,27.4,28.7,0.0,True,kept original: no saving
+caco2_permeability.joblib,10.5,3.5,7.0,True,compressed
+clearance_hepatocyte.joblib,11.3,3.5,7.8,True,compressed
+kpuu.joblib,6.8,2.2,4.5,True,compressed
+lipophilicity.joblib,50.1,13.9,36.2,True,compressed
+logbb.joblib,12.6,3.7,8.9,True,compressed
+pgp_inhibition.joblib,6.4,2.0,4.4,True,compressed
+pgp_substrate.joblib,9.9,3.1,6.8,True,compressed
+plasma_protein_binding.joblib,21.5,6.6,14.9,True,compressed
+solubility.joblib,114.3,37.1,77.2,True,compressed
+antioxidant_DPPH.joblib,33.3,11.7,21.6,True,compressed
+BACE1.joblib,22.6,7.3,15.3,True,compressed
+BACE1_calibrated.joblib,28.0,28.9,0.0,True,kept original: no saving
+BBB.joblib,35.1,10.9,24.2,True,compressed
+BBB_calibrated.joblib,44.3,46.1,0.0,True,kept original: no saving
+BChE.joblib,12.3,3.8,8.5,True,compressed
+BChE_calibrated.joblib,52.3,16.0,36.3,True,compressed
+CB1_binder.joblib,5.3,5.6,0.0,True,kept original: no saving
+D2.joblib,91.6,27.4,64.1,True,compressed
+D2_binder.joblib,7.5,8.1,0.0,True,kept original: no saving
+D3_binder.joblib,6.9,7.3,0.0,True,kept original: no saving
+GSK3B.joblib,11.5,3.8,7.7,True,compressed
+GSK3B_calibrated.joblib,14.3,14.9,0.0,True,kept original: no saving
+H3_binder.joblib,6.0,6.3,0.0,True,kept original: no saving
+hERG.joblib,35.0,10.8,24.2,True,compressed
+hERG_calibrated.joblib,42.3,44.2,0.0,True,kept original: no saving
+HT1A_binder.joblib,7.0,7.1,0.0,True,kept original: no saving
+HT2A.joblib,70.8,20.8,50.0,True,compressed
+HT2A_binder.joblib,8.5,9.1,0.0,True,kept original: no saving
+MAO_A.joblib,14.1,4.6,9.5,True,compressed
+MAO_A_calibrated.joblib,17.9,18.3,0.0,True,kept original: no saving
+MAO_B.joblib,20.8,6.6,14.3,True,compressed
+MAO_B_calibrated.joblib,26.3,26.1,0.2,True,compressed
+OPRM1_binder.joblib,6.6,6.8,0.0,True,kept original: no saving
+OX2_binder.joblib,6.0,6.2,0.0,True,kept original: no saving
+P2X7_binder.joblib,5.6,5.8,0.0,True,kept original: no saving
+PDE10A_binder.joblib,6.3,6.4,0.0,True,kept original: no saving
+pka_basic.joblib,33.7,33.9,0.0,True,kept original: no saving
+SERT.joblib,53.8,15.8,37.9,True,compressed
+SERT_binder.joblib,7.1,7.5,0.0,True,kept original: no saving
