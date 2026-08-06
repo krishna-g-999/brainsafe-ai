@@ -42,7 +42,8 @@ EP = ROOT / "data" / "endpoints"
 OUT = ROOT / "results"
 GEN = rdFingerprintGenerator.GetMorganGenerator(radius=2, fpSize=2048)
 
-NEW = ["a4b2nAChR", "a3b4nAChR", "Nav1_6", "Nav1_8", "Cav3_2", "GABAA_a5"]
+NEW = ["a4b2nAChR", "a3b4nAChR", "Nav1_6", "Nav1_8", "Cav3_2", "GABAA_a5",
+       "CGRP", "DHODH", "RIPK1"]
 MIN_INACTIVES = 30      # below this a held-out half cannot set a threshold with any precision
 MIN_SCAFFOLDS = 100     # below this a scaffold-grouped split has too few groups to be meaningful
 MAX_OVERLAP = 0.60      # above this the endpoint is largely a restatement of an existing one

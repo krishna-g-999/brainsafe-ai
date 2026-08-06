@@ -53,6 +53,13 @@ WITHDRAW = {
 RETHRESHOLD = {
     "a3b4nAChR": (0.450, "ethanol scored 0.437 at the calibrated threshold of 0.392"),
     "SIRT1": (0.650, "random-chemistry false-positive rate 0.058, above the 5 percent intended"),
+    # RIPK1 shows the opposite of the Nav1.1 pathology and is therefore rescuable. Its actives sit at
+    # a median probability of 1.000 and its measured inactives at 0.002, so discrimination is
+    # excellent; the calibrated threshold fell to the permitted floor of 0.050 only because the 90th
+    # percentile of those easy kinase-screening negatives is 0.006, and that floor happens to sit
+    # inside the band where acetate, glycine and lactate score. Moving the cut to 0.50 removes every
+    # trivial call at a cost of 0.013 in sensitivity, where no cut at all could save Nav1.1.
+    "RIPK1": (0.500, "fired on acetate, glycine and lactate at the floor threshold of 0.050"),
 }
 
 

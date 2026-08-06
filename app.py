@@ -73,7 +73,9 @@ BINDER_TARGETS = ["HT1A", "HT6", "HT7", "H3", "DAT", "NET", "Sigma1", "CB1",
                   # third expansion: pain, epilepsy, psychosis mechanisms
                   "Nav1_7", "TAAR1", "GluA2",
                   # fourth expansion; Nav1_1 was withdrawn here, see binder_modes.json
-                  "Nav1_6", "Nav1_8", "a4b2nAChR", "a3b4nAChR"]
+                  "Nav1_6", "Nav1_8", "a4b2nAChR", "a3b4nAChR",
+                  # fifth expansion: migraine, multiple sclerosis, ALS-specific necroptosis
+                  "CGRP", "DHODH", "RIPK1"]
 TARGET_KIND = {"AChE": "enrich", "BChE": "enrich", "BACE1": "enrich", "GSK3B": "enrich",
                "MAO_A": "enrich", "MAO_B": "enrich", "SERT": "binder", "D2": "binder",
                "HT2A": "binder", "NEURO": "pct", **{t: "binder" for t in BINDER_TARGETS}}
@@ -196,6 +198,18 @@ KNOWLEDGE_GRAPH = {
                   ("Nicotine addiction", "hsa05033", "Addiction", 0.8)],
     "a3b4nAChR": [("Cholinergic synapse", "hsa04725", "Cognition (cholinergic)", 0.4),
                   ("Ganglionic nicotinic signalling", "IUPHAR:alpha3beta4", "Addiction", 0.7)],
+    # --- fifth expansion: two conditions that were absent for want of an endpoint, not of data ---
+    # The coverage audit found migraine and multiple sclerosis were listed as unmodelled while both
+    # have well-measured targets. Amyotrophic lateral sclerosis was already scored but through seven
+    # general mechanisms with nothing specific to the disease; RIPK1 closes that.
+    # KEGG membership verified: hsa04080 contains CALCRL, hsa00240 contains DHODH, and both hsa04217
+    # (necroptosis) and hsa04668 (TNF signalling) contain RIPK1.
+    "CGRP":  [("Neuroactive ligand-receptor interaction", "hsa04080", "Migraine", 0.9),
+              ("Trigeminovascular signalling", "IUPHAR:CGRP", "Chronic pain", 0.5)],
+    "DHODH": [("Pyrimidine metabolism", "hsa00240", "Multiple sclerosis", 0.9)],
+    "RIPK1": [("Necroptosis", "hsa04217", "Amyotrophic lateral sclerosis", 0.7),
+              ("TNF signalling", "hsa04668", "Neuroinflammation", 0.8),
+              ("Necroptosis", "hsa04217", "Multiple sclerosis", 0.6)],
     # TAAR1 agonism is the mechanism of the non-D2 antipsychotic class
     "TAAR1":  [("Trace-amine signalling", "IUPHAR:TAAR1", "Psychosis / schizophrenia", 0.7)],
     # AMPA receptor modulation in excitotoxicity and seizure control
@@ -204,8 +218,8 @@ KNOWLEDGE_GRAPH = {
 DISEASE_ORDER = ["Alzheimer's disease", "Parkinson's disease", "Amyotrophic lateral sclerosis",
                  "Huntington's disease", "Depression / anxiety", "Psychosis / schizophrenia",
                  "Cognition (cholinergic)", "Addiction", "ADHD", "Chronic pain",
-                 "Sleep / wakefulness", "Epilepsy", "Neuroinflammation",
-                 "Neuroprotection / oxidative stress"]
+                 "Sleep / wakefulness", "Epilepsy", "Migraine", "Multiple sclerosis",
+                 "Neuroinflammation", "Neuroprotection / oxidative stress"]
 # derived: disease -> [(target, weight)]
 DISEASE_CONTRIB = {}
 for _t, _entries in KNOWLEDGE_GRAPH.items():
@@ -224,7 +238,8 @@ MECH_LABEL = {"AChE": "AChE", "BChE": "BChE", "BACE1": "BACE1", "GSK3B": "GSK-3Î
               "mTOR": "mTOR", "SIRT1": "SIRT1", "KEAP1": "KEAP1/Nrf2", "GBA1": "GBA1", "PDE4B": "PDE4B",
               "Nav1_5": "Nav1.5", "Nav1_7": "Nav1.7", "TAAR1": "TAAR1",
               "GluA2": "AMPA GluA2", "Nav1_6": "Nav1.6", "Nav1_8": "Nav1.8",
-              "a4b2nAChR": "alpha4beta2-nAChR", "a3b4nAChR": "alpha3beta4-nAChR"}
+              "a4b2nAChR": "alpha4beta2-nAChR", "a3b4nAChR": "alpha3beta4-nAChR",
+              "CGRP": "CGRP receptor", "DHODH": "DHODH", "RIPK1": "RIPK1"}
 
 # ---- BrainSafe visual identity (navy + gold, matching the earlier app) ----
 NAVY   = "#0D2137"
@@ -672,14 +687,38 @@ def binder_threshold(tgt):
     return float(t)
 
 
+# Conditions whose principal drug mechanism acts OUTSIDE the blood-brain barrier, and which must
+# therefore not be filtered by predicted barrier penetration.
+#
+# The gate encodes an assumption that the target sits behind the barrier. For most conditions here it
+# does. For two it does not, and applying the gate would suppress correct calls:
+#
+#   Migraine              the calcitonin-gene-related-peptide receptor acts at the trigeminal
+#                         ganglion and the dural vasculature, which lie outside the barrier. That is
+#                         precisely why the gepants and the anti-CGRP antibodies work without central
+#                         penetration. Rimegepant carries a predicted barrier probability of 0.33 and
+#                         would be silenced by the gate despite engaging the receptor at 0.99.
+#   Multiple sclerosis    dihydroorotate dehydrogenase inhibition acts on proliferating peripheral
+#                         lymphocytes. Teriflunomide's therapeutic effect is immunological and
+#                         extracerebral.
+#
+# For these the reported score is the mechanism score itself. This does not weaken the exposure
+# statement: predicted penetration is still shown, and for a compound intended to act centrally it
+# still matters. It stops the tool from requiring central exposure of a drug class that does not need
+# it. RIPK1 is deliberately not exempted: its relevance to amyotrophic lateral sclerosis and to
+# neuroinflammation is central, so the gate is appropriate there.
+PERIPHERAL_MECHANISM_DISEASES = {"Migraine", "Multiple sclerosis"}
+
+
 def disease_scores(r):
     """Brain-relevance per condition, from the STRONGEST engaged target in the knowledge graph,
     scaled by predicted BBB penetration. Returns (bbb, neuro, rows).
 
-    The BBB term multiplies every disease identically, so it cannot change which condition ranks
-    first (verified in inversion/results/H3_gating.csv). It is an exposure filter: it decides whether
+    The BBB term multiplies every gated disease identically, so it cannot change their relative order
+    (verified in inversion/results/H3_gating.csv). It is an exposure filter: it decides whether
     anything is reported at all, not which disease is reported. Describing it as though it sharpens
-    the disease call would overstate what it does."""
+    the disease call would overstate what it does. Conditions in PERIPHERAL_MECHANISM_DISEASES are
+    exempt, because for them the assumption the gate encodes is false."""
     bbb = r["targets"]["BBB"]
     neuro = neuro_signal(r)
     rows = []
@@ -689,7 +728,9 @@ def disease_scores(r):
             s = target_signal(r, neuro, tgt)
             if w * s > best:
                 best, driver = w * s, (tgt, s)
-        rows.append({"disease": disease, "signal": best, "gated": bbb * best, "driver": driver})
+        gate = 1.0 if disease in PERIPHERAL_MECHANISM_DISEASES else bbb
+        rows.append({"disease": disease, "signal": best, "gated": gate * best, "driver": driver,
+                     "peripheral": disease in PERIPHERAL_MECHANISM_DISEASES})
     rows.sort(key=lambda d: d["gated"], reverse=True)
     return bbb, neuro, rows
 
@@ -1783,6 +1824,8 @@ def coverage_modelled():
         ("Parkinson's and Huntington's", ["LRRK2", "GBA1", "PDE10A"], "ChEMBL"),
         ("Ion channels", ["Nav1_5", "Nav1_6", "Nav1_7", "hERG"], "ChEMBL"),
         ("Pain-selective channels", ["Nav1_8"], "ChEMBL"),
+        ("Migraine and multiple sclerosis", ["CGRP", "DHODH"], "ChEMBL"),
+        ("Necroptosis", ["RIPK1"], "ChEMBL"),
     ]
     out, seen = [], set()
     for label, members, src in groups:
@@ -1834,14 +1877,18 @@ COVERAGE_NO = [
     "one document; huntingtin is 98 per cent one assay. A model trained on either learns the "
     "screening library, not the protein",
     "ALS genetics: SOD1 has 29 measured activities, TDP-43 has 9, and C9orf72 has no ChEMBL target "
-    "record at all",
+    "record at all. Amyotrophic lateral sclerosis itself is scored, through eight mechanisms "
+    "including RIPK1-mediated necroptosis, but none of them is one of the genetic lesions that "
+    "define the familial forms",
+    "Axon-degeneration and excitability targets proposed for ALS: SARM1 has 85 measured activities "
+    "from 3 sources and KCNQ2 has 103 from 12, both far below the bar",
     "GABA-A subtype alpha5-beta3-gamma2: 672 actives were fetched and audited but only 4 measured "
     "inactives exist, so no threshold could be set honestly. The pooled GABA-A endpoint is deployed "
     "in its place",
-    "Diseases without a modelled mechanism: stroke and cerebral ischaemia, which offer no comparable "
-    "small-molecule target set; multiple sclerosis and migraine, which do have defined targets not "
-    "yet included (dihydroorotate dehydrogenase, 2,558 activities, and the calcitonin-gene-related-"
-    "peptide receptor, 1,578) and are the strongest candidates for the next expansion",
+    "Stroke and cerebral ischaemia, the one condition on this list with no comparable small-molecule "
+    "target set, consistent with four decades of failed neuroprotection trials. Migraine and multiple "
+    "sclerosis were on this list and have been removed: both are now scored, through the "
+    "calcitonin-gene-related-peptide receptor and dihydroorotate dehydrogenase respectively",
 ]
 
 # The mechanisms the prose above asserts are absent, named in canonical form so the claim can be
@@ -1850,7 +1897,7 @@ COVERAGE_NO = [
 # cannot distinguish from a claim that GABA-A itself is missing.
 COVERAGE_NO_MECHANISMS = {
     "GluK1", "GluK2", "GluK3", "NMDA_PCP_site", "VMAT2", "Cav3_2", "Cav2_2",
-    "SNCA", "MAPT", "HTT", "SOD1", "TARDBP", "C9orf72", "GABAA_a5", "CGRP", "DHODH",
+    "SNCA", "MAPT", "HTT", "SOD1", "TARDBP", "C9orf72", "GABAA_a5", "SARM1", "KCNQ2",
 }
 
 # A drug class the panel cannot represent, which is a different kind of gap from a missing target and
