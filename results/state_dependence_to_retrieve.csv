@@ -1,0 +1,16 @@
+pmid,pmcid,doi,title,journal,year,open_access_fulltext,named_drugs,holding_potentials,potency_values_in_tables,score,retrieval
+,,10.1101/2024.11.04.621342,Volatile anaesthetics modulate voltage-gated sodium channel function at a site critical for gating,,2024,True,,,0,1,closed access: please retrieve
+,,10.1101/2023.10.23.563088,Nonspecific membrane bilayer perturbations by ivermectin underlie SARS-CoV-2 in vitro activity,,2023,True,,,0,1,closed access: please retrieve
+,,10.21203/rs.3.rs-1585258/v1,A Push-pull Mechanism Between Prrt2 and B 4 Differentially Regulates Membrane Exposure and Biophysical Properties of Nav1.2 Sodium Channels,,2022,True,,,0,1,closed access: please retrieve
+42141755.0,PMC13270922,10.1152/ajpcell.00239.2026,Discovery of Kv3.1 channel inhibitors reveals VU0521426 as a state-dependent inactivator preferentially active against pathogenic gain-of-function mutants.,Am J Physiol Cell Physiol,2026,False,,,0,1,closed access: please retrieve
+39322410.0,PMC11585256,10.1124/molpharm.124.000944,State-Dependent Inhibition of Nav1.8 Sodium Channels by VX-150 and VX-548.,Mol Pharmacol,2024,False,,,0,1,closed access: please retrieve
+40294084.0,PMC12036950,10.1085/jgp.202513778,"Sensory neuron sodium channels as pain targets; from cocaine to Journavx (VX-548, suzetrigine).",J Gen Physiol,2025,False,,,0,1,closed access: please retrieve
+42218117.0,PMC13271011,10.1113/jp290574,Functional role of Nav1.8 channels in action potentials of mouse CGRP-lineage dorsal root ganglion neurons.,J Physiol,2026,False,,,0,1,closed access: please retrieve
+40518131.0,PMC12862858,10.1111/bph.70080,Defining the polycystin pharmacophore through high-throughput screening and computational biophysics.,Br J Pharmacol,2025,False,,,0,1,closed access: please retrieve
+40233889.0,PMC12208624,10.1016/j.cbpc.2025.110205,Roles of funny HCN.,Comp Biochem Physiol C Toxicol Pharmacol,2025,False,,,0,1,closed access: please retrieve
+37633639.0,,10.1016/j.fct.2023.113992,The fungicide tebuconazole modulates the sodium current of human Na&lt;sub&gt;V&lt;/sub&gt;1.5 channels expressed in HEK293 cells.,Food Chem Toxicol,2023,False,,,0,1,closed access: please retrieve
+32882214.0,,10.1016/j.ejphar.2020.173532,Norquetiapine blocks the human cardiac sodium channel Na<sub>v</sub>1.5 in a state-dependent manner.,Eur J Pharmacol,2020,False,,,0,1,closed access: please retrieve
+36001977.0,PMC9523973,10.1016/j.celrep.2022.111248,Targeting the tamoxifen receptor within sodium channels to block osteoarthritic pain.,Cell Rep,2022,False,,,0,1,closed access: please retrieve
+38743485.0,PMC11250678,10.1113/jp286538,Role of Na&lt;sub&gt;V&lt;/sub&gt;1.7 in postganglionic sympathetic nerve function in human and guinea-pig arteries.,J Physiol,2024,False,,,0,1,closed access: please retrieve
+39820972.0,PMC11740781,10.1085/jgp.202413669,The differential impacts of equivalent gating-charge mutations in voltage-gated sodium channels.,J Gen Physiol,2025,False,,,0,1,closed access: please retrieve
+36460339.0,PMC9976794,10.1124/jpet.122.001407,Protein 14-3-3 Influences the Response of the Cardiac Sodium Channel Na&lt;sub&gt;v&lt;/sub&gt;1.5 to Antiarrhythmic Drugs.,J Pharmacol Exp Ther,2023,False,,,0,1,closed access: please retrieve

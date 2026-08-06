@@ -1,0 +1,35 @@
+compound,chembl_id,status,n_extracted,extracted_pchembl,chembl_pchembl_median,abs_log_difference,agrees
+ambroxol,CHEMBL153479,no overlap,22,,,,
+amitriptyline,CHEMBL1200964,no overlap,59,,,,
+bupivacaine,CHEMBL1098,no overlap,122,,,,
+cannabidiol,CHEMBL190461,compared,136,5.74,5.74,0.0,True
+carbamazepine,CHEMBL108,compared,237,4.48,4.49,0.01,True
+eslicarbazepine,CHEMBL87992,no overlap,26,,,,
+flecainide,CHEMBL1200822,no overlap,168,,,,
+fosphenytoin,CHEMBL1201336,no overlap,3,,,,
+gs-458967,,unresolvable name,33,,,,
+lacosamide,CHEMBL58323,compared,143,6.7,6.74,0.04,True
+lamotrigine,CHEMBL741,compared,202,4.77,4.77,0.0,True
+lidocaine,CHEMBL79,compared,403,4.7,4.67,0.03,True
+mexiletine,CHEMBL558,compared,206,4.91,4.92,0.01,True
+oxcarbazepine,CHEMBL1068,no overlap,56,,,,
+pf-05089771,CHEMBL2325014,compared,107,6.95,6.96,0.01,True
+phenobarbital,CHEMBL149972,no overlap,16,,,,
+phenytoin,CHEMBL16,compared,209,4.27,4.27,0.0,True
+procaine,CHEMBL569,no overlap,11,,,,
+propafenone,CHEMBL1201063,no overlap,53,,,,
+quinidine,CHEMBL1200437,no overlap,175,,,,
+ranolazine,CHEMBL1404,no overlap,216,,,,
+riluzole,CHEMBL744,compared,137,4.4,4.39,0.01,True
+ropivacaine,CHEMBL1077896,no overlap,36,,,,
+rufinamide,CHEMBL1201754,no overlap,41,,,,
+safinamide,CHEMBL396778,compared,1,4.07,4.24,0.17,True
+saxitoxin,CHEMBL501134,compared,167,8.64,8.64,0.0,True
+tetracaine,CHEMBL1255654,no overlap,102,,,,
+tetrodotoxin,CHEMBL507974,compared,593,8.22,8.22,0.0,True
+topiramate,CHEMBL220492,no overlap,52,,,,
+valproate,CHEMBL433,no overlap,58,,,,
+veratridine,CHEMBL439496,no overlap,164,,,,
+vinpocetine,CHEMBL71752,no overlap,32,,,,
+vixotrigine,CHEMBL3544913,compared,27,5.22,4.86,0.37,False
+zonisamide,CHEMBL750,no overlap,26,,,,
