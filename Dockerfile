@@ -31,7 +31,11 @@ COPY results/ ./results/
 COPY docs/ ./docs/
 
 # Run as an unprivileged user. The application only ever reads from disk.
-RUN useradd --create-home --uid 10001 brainsafe && chown -R brainsafe:brainsafe /app
+#
+# The user id is 1000 rather than an arbitrary high number because Hugging Face Spaces runs every
+# container as uid 1000, and a mismatch produces permission errors on the model directory that
+# surface only after a slow image build. Any other host is indifferent to the number.
+RUN useradd --create-home --uid 1000 brainsafe && chown -R brainsafe:brainsafe /app
 USER brainsafe
 
 # 8501 serves the interface, 8000 the REST API. Both are started by serve.py in one container
