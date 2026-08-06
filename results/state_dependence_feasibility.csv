@@ -1,0 +1,6 @@
+target,chembl_id,activities_with_pchembl,with_state_wording,with_parsable_holding_potential,distinct_holding_potentials,compounds_at_two_or_more_potentials,median_abs_shift,max_abs_shift
+Nav1.1,CHEMBL1845,979,137,16,4,0,,
+Nav1.2,CHEMBL4187,200,42,38,7,4,0.96,1.96
+Nav1.6,CHEMBL5202,1995,413,40,7,0,,
+Nav1.7,CHEMBL4296,9928,4780,1957,15,84,0.8,3.19
+Nav1.8,CHEMBL5451,817,45,35,6,1,1.0,1.0
