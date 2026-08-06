@@ -2509,7 +2509,108 @@ def render_coverage_card():
     )
 
 
+def render_glossary():
+    """One line per predicted quantity, so a reader knows what each number is before trusting it.
+
+    Built from the live registries rather than written out, so an endpoint cannot be added to the
+    tool without appearing here, nor described here after it has been withdrawn."""
+    modes = load_binder_modes()
+
+    def rows(items):
+        return "".join(
+            f'<tr><td style="white-space:nowrap"><b>{k}</b></td>'
+            f'<td class="bs-ctx">{v}</td></tr>' for k, v in items)
+
+    exposure = [
+        ("BBB penetration", "Probability that the compound crosses the blood-brain barrier, from "
+                            "measured brain-to-blood partition data. It sets whether a central "
+                            "mechanism is reported at all."),
+        ("K<sub>p,uu</sub>", "Ratio of unbound drug in brain to unbound drug in plasma. Above about "
+                             "0.3 a meaningful free concentration reaches the target; below 0.1 it "
+                             "does not, whatever the total brain level."),
+        ("logBB", "Total brain-to-plasma ratio. Less informative than K<sub>p,uu</sub> because it "
+                  "counts drug bound to tissue, which cannot engage a target."),
+        ("Free brain exposure verdict", "A plain reading of K<sub>p,uu</sub> and BBB together: "
+                                        "favourable, borderline or limited."),
+    ]
+    engagement = [
+        ("Binder probability", "Calibrated probability that the compound binds the named target at "
+                               "pChEMBL 7 or better, roughly 100 nM. Each target has its own "
+                               "threshold, so probabilities are not comparable between targets."),
+        ("Enrichment over base rate", "How far a prediction sits above what the training set would "
+                                      "give by chance. Used where the endpoint is a measured-label "
+                                      "classifier rather than a binder model; zero means the "
+                                      "prediction is no better than the base rate."),
+        ("Engagement signal", "Distance above a target's own reporting threshold, rescaled to 0 to "
+                              "1. This is the only engagement quantity comparable across targets, "
+                              "and it is what the disease layer consumes."),
+        ("Predicted pK<sub>i</sub>", "Potency among compounds already called binders. A weak prior, "
+                                     "not an affinity prediction, and shown only for binders."),
+        ("Independent mechanisms", "Engaged targets grouped by homology. Two homologous receptors "
+                                   "engaged by one ligand are close to a single observation, so "
+                                   "this is the number to weigh, not the raw target count."),
+    ]
+    disease = [
+        ("Disease relevance score", "The strongest engaged mechanism for that condition, multiplied "
+                                    "by predicted barrier penetration. It ranks conditions by "
+                                    "mechanism; it is not a probability of clinical efficacy."),
+        ("Driving mechanism", "The single target responsible for the score. The graph takes the "
+                              "strongest mechanism rather than summing, so one target explains it."),
+        ("Reporting threshold", f"Scores below {MIN_ACTIONABLE_SCORE:.2f} are not shown as findings. "
+                                f"Silence means no modelled mechanism cleared its threshold, which "
+                                f"is not the same as inactivity."),
+    ]
+    admet = [
+        ("Caco-2 permeability", "Passive membrane permeability, as log apparent permeability."),
+        ("P-gp substrate / inhibitor", "Whether the compound is pumped out of the brain by "
+                                       "P-glycoprotein, or blocks that pump for other drugs."),
+        ("Plasma-protein binding", "Fraction bound in plasma. Only the unbound fraction can cross "
+                                   "or engage."),
+        ("Hepatocyte clearance", "Rate of hepatic metabolism. Weakest endpoint under a scaffold "
+                                 "split; read qualitatively."),
+        ("Solubility, logD", "Aqueous solubility and lipophilicity at physiological pH."),
+        ("hERG liability", "Probability of blocking the cardiac hERG channel, a common cause of "
+                           "drug withdrawal. Higher is worse."),
+        ("CNS MPO", "A desirability score over six physicochemical properties associated with "
+                    "central exposure. A drug-likeness heuristic, not a model of activity."),
+        ("Antioxidant (DPPH)", "Measured radical-scavenging capacity, the basis of the "
+                               "neuroprotection axis."),
+        ("Most basic pK<sub>a</sub>", "Predicted ionisation of the most basic centre, used in CNS "
+                                      "MPO. Mean absolute error 1.17 units, the least certain term."),
+    ]
+    confidence = [
+        ("Applicability domain", "Maximum Tanimoto similarity to the nearest measured training "
+                                 "compound. In domain above 0.5, out of domain below 0.3, where "
+                                 "predictive power falls close to chance."),
+        ("Read-across", "Targets of the nearest measured analogues, weighted by similarity and by "
+                        "how many neighbours support each. Evidence when no model fires."),
+        ("High-precision mode", "Raises every threshold to a 1 percent background false-positive "
+                                "rate. Fewer true actives found, far fewer false leads."),
+    ]
+    n_binder = sum(1 for v in modes.values() if v.get("deployed", True))
+    sections = [("Exposure: can it reach the brain", exposure),
+                ("Target engagement: what does it touch", engagement),
+                ("Disease relevance: what might that mean", disease),
+                ("ADMET and safety", admet),
+                ("Confidence and context", confidence)]
+    body = "".join(
+        f'<div style="margin-top:14px"><div class="about-eyebrow" style="color:{NAVY}">{title}</div>'
+        f'<table class="bs-table" style="margin-top:6px"><tbody>{rows(items)}</tbody></table></div>'
+        for title, items in sections)
+    st.markdown(
+        f'<div class="bs-card"><div class="bs-h">What every number on this page means'
+        f'<span class="bs-h-sub">{n_binder} target endpoints, {len(ADME)} ADME endpoints, '
+        f'{len(DISEASE_ORDER)} conditions</span></div>'
+        f'<div class="bs-note">Read this before trusting any single figure. The quantities below are '
+        f'not interchangeable: a binder probability, an enrichment over base rate and an engagement '
+        f'signal are three different things on three different scales, and only the last is '
+        f'comparable between targets.</div>{body}</div>',
+        unsafe_allow_html=True)
+
+
 def render_about():
+    render_glossary()
+    st.write("")
     render_coverage_card()
     st.write("")
     render_model_comparison()
