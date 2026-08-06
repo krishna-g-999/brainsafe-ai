@@ -22,8 +22,14 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-UI_PORT = os.environ.get("PORT", "8501")
+# Hugging Face Spaces exposes exactly one port and defaults it to 7860; other hosts set PORT. The
+# default here is 7860 so a Space works with no configuration, and PORT overrides it everywhere else.
+UI_PORT = os.environ.get("PORT", "7860")
 API_PORT = os.environ.get("API_PORT", "8000")
+# A Space publishes only the one port, so the API is reachable inside the container but not from the
+# internet. Serving both publicly needs either a reverse proxy that can carry Streamlit's websocket,
+# which is not worth writing, or a second Space running api.py. DEPLOY.md sets that out.
+API_ONLY = os.environ.get("BRAINSAFE_API_ONLY", "").lower() in ("1", "true", "yes")
 
 
 def run_api():
@@ -34,6 +40,14 @@ def run_api():
 
 
 def main():
+    if API_ONLY:
+        # a Space dedicated to the API: it must own the single published port
+        print(f"API-only mode, serving on {UI_PORT}", flush=True)
+        sys.argv = ["api.py", UI_PORT]
+        sys.path.insert(0, str(ROOT))
+        import api
+        return api.main()
+
     print(f"starting API on {API_PORT} and interface on {UI_PORT}", flush=True)
     t = threading.Thread(target=run_api, daemon=True, name="brainsafe-api")
     t.start()
