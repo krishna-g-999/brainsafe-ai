@@ -411,8 +411,8 @@ def assess_per_endpoint(smiles):
 #
 # Measured on 400 approved drugs (inversion/results/H8_family_correlation.csv). The panel reports an
 # engaged-target count and draws one network edge per target, which invites reading two engaged
-# targets as two independent findings. For homologues that is wrong: across the drug set 34 targets
-# ever fire but they span only 13 independent directions, so the panel is roughly 2.6-fold redundant.
+# targets as two independent findings. For homologues that is wrong: across the drug set 36 targets
+# ever fire but they span only 14 independent directions, so the panel is roughly 2.6-fold redundant.
 # Co-firing is not itself an error, since a genuinely promiscuous ligand should hit both homologues
 # and that is a true fact about the compound. Presenting it as corroboration is the error, so where
 # two members of a family are engaged the interface says so and the measured conditional probability
@@ -1361,7 +1361,7 @@ def render_independence(r):
                 'ligands, so their joint engagement is close to one observation rather than several. '
                 'The counts below are grouped for that reason, and the correlation measured across '
                 '400 approved drugs is stated wherever two members of a family both fire. Across '
-                'that set 34 targets ever fire but span only 13 independent directions, so a raw '
+                'that set 36 targets ever fire but span only 14 independent directions, so a raw '
                 'target count overstates the evidence by roughly a factor of two and a half '
                 '(inversion/results/H8_family_correlation.csv).')
     else:
@@ -1506,7 +1506,7 @@ def render_receptors(r):
     note = ("<b>Binder probability</b> is a classifier trained to distinguish measured binders "
             "(pChEMBL &ge; 7) from property-matched non-binders. It is validated against compounds "
             "experimentally tested on the same target and found inactive, which were never used in "
-            "training: mean AUROC 0.96 across 34 targets. Each model is fitted on property-matched "
+            "training: mean AUROC 0.955 across 43 targets. Each model is fitted on property-matched "
             "decoys together with half of the measured inactives and is validated and thresholded on "
             "the held-out half, so no compound used for fitting is used to judge it. Thresholds hold "
             "the false-positive rate near 10%, giving a mean sensitivity of 0.90; the conventional 0.5 "
@@ -2036,7 +2036,7 @@ def result_json(smiles, name, r):
             "Research triage tool. Not for medical, diagnostic or treatment use.",
             "Homologous targets are engaged together by the same ligands, so the number of engaged "
             "targets overstates the number of independent observations. Across 400 approved drugs "
-            "34 targets ever fire but span only 13 independent directions.",
+            "36 targets ever fire but span only 14 independent directions.",
             "A silent result is not evidence of inactivity. Deployed sensitivity has a median of "
             "0.77 across the panel and falls to 0.26 at the strictest endpoints.",
             "The BBB term multiplies every disease equally and cannot change which disease ranks "
