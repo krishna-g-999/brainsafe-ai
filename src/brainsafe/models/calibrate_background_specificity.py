@@ -59,6 +59,12 @@ def main():
         mp = M / f"{ep}_binder.joblib"
         if not mp.exists():
             continue
+        if not v.get("deployed", True):
+            # A withdrawn endpoint has no operating point to calibrate, and leaving it in the output
+            # table means every aggregate computed from that table describes a panel that is not the
+            # one running. The provenance audit caught exactly this.
+            print(f"[{ep:8}] withdrawn, not calibrated", flush=True)
+            continue
         mdl = joblib.load(mp)
         pbg = mdl.predict_proba(Xbg)[:, 1]
         thr_bg = float(np.quantile(pbg, 1.0 - BACKGROUND_FPR))
