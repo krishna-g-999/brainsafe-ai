@@ -97,6 +97,16 @@ def cids_to_smiles(cids):
 
 
 def main():
+    # Targets may be named on the command line as NAME=ACCESSION so a thin endpoint can be
+    # supplemented without rescanning the ones already cached. Accessions are read from the ChEMBL
+    # target record's own component list, never recalled: a wrong accession would harvest another
+    # protein's screening data and label it as this target's measured inactives, which is the
+    # quietest way to corrupt a model.
+    global TARGETS
+    if len(sys.argv) > 1:
+        TARGETS = dict(a.split("=", 1) for a in sys.argv[1:])
+        print(f"fetching only: {TARGETS}", flush=True)
+
     summary = []
     for name, acc in TARGETS.items():
         cache = CACHE / f"{name}_inactives.csv"
