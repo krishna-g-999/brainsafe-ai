@@ -18,27 +18,27 @@ Deciding whether a small molecule is likely to act on the brain requires answeri
 questions at once: can it cross the blood-brain barrier, which disease-relevant targets does it
 engage, does an achievable dose deliver free drug to the central nervous system, and is it safe.
 BrainSafe AI is an open web server that answers these questions from chemical structure alone. It
-integrates 66 models trained on measured public bioactivity data (ChEMBL, BindingDB and the B3DB
-blood-brain-barrier database): 50 molecular-target endpoints spanning blood-brain-barrier
-penetration, the principal neurodegenerative, psychiatric, neuroinflammatory, epileptic, analgesic
-and sleep-related target classes, and two cardiac safety liabilities, together with a nine-endpoint
+integrates 69 models trained on measured public bioactivity data (ChEMBL, BindingDB and the B3DB
+blood-brain-barrier database): 53 molecular-target endpoints spanning blood-brain-barrier
+penetration, the principal neurodegenerative, psychiatric, neuroinflammatory, epileptic, analgesic,
+migraine, demyelinating and sleep-related target classes, and two cardiac safety liabilities, together with a nine-endpoint
 ADME and exposure layer that includes a directly modelled unbound brain-to-plasma partition
 coefficient. Every endpoint is validated under 10-fold cross-validation in two regimes, a random
 split and a scaffold-grouped split that holds out entire chemical series. Predictions are
 probability-calibrated, carry an endpoint-specific applicability-domain flag with the nearest
 measured analogue, and are combined into per-disease relevance scores, filtered by blood-brain-barrier
-exposure and traced through a curated target-to-pathway-to-disease knowledge graph of 49 targets
-spanning fourteen brain conditions. The measured-label classifier panel reaches a mean scaffold-split
+exposure and traced through a curated target-to-pathway-to-disease knowledge graph of 52 targets
+spanning sixteen brain conditions. The measured-label classifier panel reaches a mean scaffold-split
 AUROC of 0.92. The binder panel is validated not against the decoys used to train it but against
 compounds experimentally tested on the same target and found inactive, giving a mean AUROC of 0.955
-across 41 targets, with a mean sensitivity of 0.898 at thresholds constrained simultaneously by
+across 43 targets, with a mean sensitivity of 0.897 at thresholds constrained simultaneously by
 held-out measured inactives and by the false-positive rate on unrelated chemistry.
 
 Beyond conventional validation, the server was subjected to a systematic falsification analysis in
 which each of its central claims was paired with a null model capable of reproducing the same
 apparent success by accident. This recovered results in both directions. The disease layer is
-informative (top-3 accuracy 0.794 against a permutation null of 0.207), but its curated edge weights
-are not: uniform and randomly permuted weights score 0.7935 and 0.7922 against 0.7943, so the
+informative (top-3 accuracy 0.804 against a permutation null of 0.188), but its curated edge weights
+are not: uniform and randomly permuted weights score 0.8036 and 0.8025 against 0.8045, so the
 predictive content lies in the graph topology and the weights are reported as structure rather than
 as tuned parameters. Validated against clinical indications drawn from ChEMBL rather than against the
 tool's own target-to-disease map, the disease scores exceed a permutation null decisively but do not
@@ -90,9 +90,11 @@ modelled as an explicit liability. *Developability*: solubility, lipophilicity, 
 and hepatocyte clearance determine whether an achievable dose sustains exposure, and a measured
 antioxidant endpoint captures the oxidative-stress axis common to neurodegeneration.
 
-In total the server comprises 59 endpoints (50 molecular-target endpoints and 9 ADME endpoints),
-realised as 63 trained models because four receptor targets are represented both as potency
-regressions and as binder classifiers.
+In total the server comprises 62 endpoints (53 molecular-target endpoints and 9 ADME endpoints),
+realised as 69 trained models because four receptor targets are represented both as potency
+regressions and as binder classifiers, and because a pKa regression and an antioxidant regression
+support the CNS-likeness and neuroprotection axes. Two further endpoints were trained and withdrawn
+after deployment testing and are not counted here; the reasons are given in the Results.
 
 ### Training data
 
@@ -362,12 +364,13 @@ hold-out models that never saw the compounds they scored. The analysis is versio
 the validation results so that a refutation can never be mistaken for a confirmation (Table 7).
 
 **The disease layer carries information.** Across held-out compounds the correct condition appears in
-the top three predictions for 79.4% of cases, against 20.7% for a null that shuffles which disease
-each target maps to (p = 0.005) and 54.8% for always answering with the three commonest conditions.
+the top three predictions for 80.5% of cases, against 18.8% for a null that shuffles which disease
+each target maps to (p = 0.005) and 48.2% for always answering with the three commonest conditions.
 
 **The curated edge weights do not.** Recomputing the same predictions with uniform weights gives
-0.7935 and with weights randomly permuted across edges 0.7922, against 0.7943 for the curated values,
-a spread of 0.002. The information lies in which target connects to which condition, not in how
+0.8036 and with weights randomly permuted across edges 0.8025, against 0.8045 for the curated values,
+a spread of 0.002. The ablation was repeated after the graph gained two conditions and three targets,
+with new curated weights written for each, and the conclusion did not move. The information lies in which target connects to which condition, not in how
 strongly. The weights are therefore described in this manuscript as a mechanistic prior and as graph
 structure, not as tuned parameters, and the graph would be no less accurate without them.
 
@@ -497,6 +500,61 @@ similarity. Correlation among the endpoints slightly reduces rather than inflate
 least one binder endpoint fires for 22.2% of random structures, against 23.9% for a hypothetical
 panel with the same per-endpoint rates firing independently.
 
+### Two conditions opened, and a gating rule corrected
+
+The coverage audit distinguished conditions absent for want of data from conditions absent for want
+of an endpoint, and found two of the latter. The calcitonin-gene-related-peptide receptor (1,578
+measured activities across 26 sources) and dihydroorotate dehydrogenase (2,558 across 55) were added,
+bringing migraine and multiple sclerosis into the panel and taking it to 52 targets across sixteen
+conditions. Amyotrophic lateral sclerosis was already scored but through seven mechanisms shared with
+other conditions and none specific to it; RIPK1-mediated necroptosis (5,291 activities across 55
+sources) was added to close that, and it also contributes to multiple sclerosis, where its inhibitors
+are likewise in trial. Two further ALS candidates were rejected on data rather than judgement: SARM1
+has 85 measured activities from 3 sources and KCNQ2 has 103 from 12.
+
+Prospectively, on compounds sharing no scaffold with anything their models saw, the CGRP endpoint
+reaches an AUROC of 1.000 at a sensitivity of 0.993 and RIPK1 an AUROC of 0.995 at 0.950, both with a
+false-positive rate of 0.000 on random chemistry. DHODH ranks at 0.989 but fires for only 0.330 of
+its held-out actives at its deployed threshold, and is reported as a low-sensitivity endpoint.
+
+Adding these targets exposed an error in the gating rule that had been invisible while every modelled
+condition was central. The blood-brain-barrier term encodes an assumption that the target lies behind
+the barrier. For these two conditions it does not. The CGRP receptor acts at the trigeminal ganglion
+and dural vasculature, which are outside the barrier, and that is precisely why the gepants and the
+anti-CGRP antibodies are effective without central penetration; dihydroorotate dehydrogenase
+inhibition acts on proliferating peripheral lymphocytes. Applying the gate suppressed correct calls:
+rimegepant engages the receptor at 0.99 and was silenced by a predicted barrier probability of 0.33.
+Migraine and multiple sclerosis are therefore exempt from gating, after which all three marketed
+gepants report migraine and brequinar reports multiple sclerosis, while peripheral negative controls
+remain silent. RIPK1 is deliberately not exempt, its relevance being central.
+
+Two incidental observations support the underlying models rather than the interface. Leflunomide, an
+inactive prodrug, scores 0.06 at dihydroorotate dehydrogenase while its active metabolite
+teriflunomide scores 0.91, so the model separates them. And teriflunomide's own measured affinity is
+pChEMBL 6.45, below the value of 7 that defines a binder here, so declining to call it is
+definitionally correct rather than a failure of sensitivity.
+
+### A limitation quantified rather than asserted: state-dependent block
+
+The inability to represent use-dependent sodium-channel blockers was stated above as a boundary. It
+was then tested, because the scientifically correct quantity for that class is not the potency, which
+depends on the voltage protocol and is therefore not a function of structure, but the shift in
+potency between a depolarised and a hyperpolarised holding potential, which is a property of the
+molecule and is what use-dependence means.
+
+Across five sodium-channel subtypes and 13,919 activities carrying a pChEMBL value, 2,086 report a
+holding potential that can be parsed from the assay description, spread across fifteen distinct
+values, and 89 compounds are measured at two or more. Against the 800 measured activities every
+deployed endpoint had to clear, that is not a trainable endpoint.
+
+The same 89 compounds show why the question was worth asking and why pooling protocols is not an
+option. The median absolute shift is 0.82 log units, the 90th percentile 1.97 and the maximum 3.19,
+so a compound can appear sixfold to a thousandfold more or less potent depending only on the protocol
+used to measure it. That is the same magnitude as the total error of a good regression model, which
+is the quantitative form of the objection: a model trained on pooled protocols would have an error
+budget consumed entirely by the experimenter's choice of holding potential. The effect is real, it
+matters clinically, and public data cannot support learning it.
+
 ## The BrainSafe AI server
 
 **Input.** The user types a compound name or pastes a SMILES string. Names are resolved through
@@ -599,6 +657,18 @@ are now generated from the deployed model registry when the page loads, and a pr
 asserts that no deployed endpoint is missing from the list, that no withdrawn endpoint is advertised,
 that no mechanism declared absent is in fact deployed, and that every quoted sensitivity equals the
 deployed value.
+
+Three target endpoints carry thin negative classes, and an attempt to enlarge them failed in a way
+worth recording. The CGRP receptor, Nav1.6 and AMPA GluA2 have 26, 45 and 32 measured inactives
+respectively, and PubChem BioAssay holds 198, 196 and 516 assays for the corresponding genes, which
+appeared to offer a remedy. It does not: a scan of 120 assays per target returned no measured
+inactive compounds at all, and querying the largest six assays of each directly returns active
+compound identifiers against none inactive. These targets have never been through a large public
+primary screen; their assays are medicinal-chemistry dose-response series in which every compound
+tested was already of interest. The route remains valid for targets that have been screened at scale,
+which is why curated inactive sets exist for acetylcholinesterase and GSK-3-beta, but for these three
+the thin negative class cannot be remedied from public data and their sensitivity figures stand as
+reported.
 
 Two ADME endpoints, hepatocyte clearance and plasma protein binding, are weak under the scaffold
 split and are reported as such. Decoy-based validation gives an optimistic bound because decoys are
