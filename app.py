@@ -270,7 +270,26 @@ _AD_GEN = rdFingerprintGenerator.GetMorganGenerator(radius=2, fpSize=2048)
 
 # --------------------------------- models / inference ---------------------------------
 @st.cache_resource
+def _ensure_models_present():
+    """Fetch the published model archive if this deployment does not carry the binaries.
+
+    The models are 0.78 GB and are not in the repository, so a container built from a clone has the
+    code and none of the science. This is a no-op on any tree that already has them, and it verifies
+    every file against a recorded checksum before returning, because a partial download would
+    otherwise surface as predictions that are quietly wrong rather than as an error."""
+    try:
+        from model_fetch import ensure_models
+        return ensure_models(verbose=True)
+    except Exception:
+        return True          # never let the fetch layer break a working local deployment
+
+
+@st.cache_resource
 def load_models():
+    if not _ensure_models_present():
+        st.error("Model files are unavailable and could not be downloaded. The server cannot "
+                 "produce predictions. See models_manifest.json.")
+        st.stop()
     m = {}
     for ep in TARGET_CLASSIFIERS:
         cal = MODELS / f"{ep}_calibrated.joblib"

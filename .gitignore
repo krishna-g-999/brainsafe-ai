@@ -72,3 +72,7 @@ models_rf/readacross_index.pkl
 # Inversion analysis intermediate logs (results CSVs and REPORT.md are tracked)
 inversion/*.log
 inversion/results/H4_distant_predictions.csv
+
+# Packaged model archive: published to Zenodo, never committed (0.79 GB)
+dist/
+models_rf_uncompressed/
