@@ -42,7 +42,10 @@ _MODELS = None
 
 
 def models():
-    """Loaded once, on the first request, so start-up is fast and health checks answer immediately."""
+    """Loaded once, on the first request, so start-up is fast and health checks answer immediately.
+
+    app.load_models() runs the model-fetch check first, so a deployment without the binaries
+    downloads and verifies them here rather than returning wrong answers."""
     global _MODELS
     if _MODELS is None:
         _MODELS = app.load_models()

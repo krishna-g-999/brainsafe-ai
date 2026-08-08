@@ -59,11 +59,30 @@ Two ways to get them to the host, in order of preference:
    git push space main
    ```
 
-2. **Publish a release archive and fetch at container start.** Preferable if you want the models
-   citable, and it is what `README.md` already anticipates by naming Zenodo. Upload
-   `models_rf/` as one archive, then add a fetch step to the Dockerfile before `COPY models_rf/`.
-   A Zenodo DOI for the model set is worth having in the manuscript regardless of which route you
-   take.
+2. **Publish the archive and let the server fetch it.** This is now built and tested, and it is
+   the route that makes the server deployable anywhere rather than only on a host that gives you a
+   gigabyte of git storage. It also gives the manuscript a citable model archive.
+
+   ```bash
+   python src/brainsafe/models/package_models.py 1.0
+   ```
+
+   That writes `dist/brainsafe_models_v1.0.tar.gz` (0.79 GB) and `models_manifest.json`, which
+   records the archive's SHA-256 and the size and checksum of all 195 files inside it. The manifest
+   is committed; the archive is not.
+
+   Upload the archive to Zenodo, then put its direct download URL in `models_manifest.json` under
+   `"urls"` and the DOI under `"doi"`, and commit that one small file.
+
+   From then on, any deployment that lacks the binaries downloads them on first start, verifies the
+   archive checksum, extracts, and verifies every extracted file before a single model is loaded. A
+   truncated transfer or a substituted archive is refused rather than quietly serving predictions
+   that are wrong. A tree that already has the models does nothing: the check costs about a second.
+
+   Tested end to end: fetch into an empty tree restored and verified all 195 files; a second run was
+   a 1.3-second no-op; corrupting one file caused it to be detected and repaired.
+
+   `BRAINSAFE_SKIP_MODEL_FETCH=1` disables it for an image that bakes the models in.
 
 ## Option 2: Streamlit Community Cloud (free, simplest, interface only)
 
@@ -72,6 +91,12 @@ API is not served. Acceptable if you only need the interface reviewed.
 
 1. https://share.streamlit.io, connect the GitHub repository.
 2. Main file `app.py`, Python 3.13, `requirements.txt` is picked up automatically.
+3. **Set the branch to `main`, not `master`.** `master` is the repository default and holds the
+   superseded v3/v5 engine, so a deployment left on the default serves the wrong tool. This is not a
+   caching problem and rebooting will not fix it.
+4. The models are fetched from the archive on first start, so this route needs `models_manifest.json`
+   to carry a working URL. Without it the app starts and then reports that it cannot obtain the
+   models, which is the correct behaviour but is not a working server.
 
 ## Option 3: any container host (Render, Railway, Fly.io, Cloud Run)
 
