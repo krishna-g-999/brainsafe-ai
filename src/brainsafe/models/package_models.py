@@ -55,7 +55,7 @@ def main():
     t0 = time.time()
     with tarfile.open(archive, "w:gz", compresslevel=6) as tar:
         for i, p in enumerate(files, 1):
-            tar.add(p, arcname=str(p.relative_to(ROOT)))
+            tar.add(p, arcname=p.relative_to(ROOT).as_posix())
             if i % 40 == 0:
                 print(f"  {i}/{len(files)}", flush=True)
     size = archive.stat().st_size
@@ -76,7 +76,12 @@ def main():
         "doi": "",
         "note": "Fetched at start-up by model_fetch.py when models_rf/ is absent. Every file is "
                 "verified against its checksum before the server loads anything.",
-        "files": {str(p.relative_to(ROOT)): {"bytes": p.stat().st_size, "sha256": sha256(p)}
+        # POSIX separators always. Written with str() on Windows these become backslashes,
+        # which are a legal filename character on Linux, so a manifest built on Windows made
+        # every file appear missing on a Linux host and the server refused to start. The
+        # archive itself was never affected: tarfile normalises member names.
+        "files": {p.relative_to(ROOT).as_posix(): {"bytes": p.stat().st_size,
+                                                   "sha256": sha256(p)}
                   for p in files},
     }
     # keep any urls or doi already recorded, so republishing does not wipe them

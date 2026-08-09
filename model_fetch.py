@@ -29,6 +29,7 @@ import shutil
 import sys
 import tarfile
 import tempfile
+import time
 import urllib.request
 from pathlib import Path
 
@@ -49,10 +50,15 @@ def _missing(manifest, quick=True):
     """Files the manifest names that are absent, the wrong size, or the wrong content.
 
     quick=True checks existence and size only, which is what a start-up path can afford; the full
-    checksum pass runs after a download, when correctness matters more than a second of latency."""
+    checksum pass runs after a download, when correctness matters more than a second of latency.
+
+    Separators are normalised because a manifest written on Windows records "models_rf\\X". A
+    backslash is a legal filename character on Linux, so those keys resolve to single files that do
+    not exist, every file appears to be missing, and the server refuses to start while downloading
+    the archive over and over. That is precisely what happened on the first cloud deployment."""
     out = []
     for rel, meta in manifest["files"].items():
-        p = ROOT / rel
+        p = ROOT.joinpath(*rel.replace("\\", "/").split("/"))
         if not p.exists() or p.stat().st_size != meta["bytes"]:
             out.append(rel)
         elif not quick and _sha256(p) != meta["sha256"]:
@@ -88,9 +94,30 @@ def ensure_models(verbose=True):
     if not missing:
         return True
 
+    # One download at a time. A Streamlit host starts a script run per session, and on the first
+    # cloud deployment several runs each began fetching 0.79 GB simultaneously, competing for
+    # bandwidth and disk. The first process through the gate downloads; the others wait and then
+    # re-check, by which time the files are usually already there.
+    lock = ROOT / ".model_fetch.lock"
+    waited = 0
+    while lock.exists() and waited < 900:
+        if waited == 0:
+            log("another process is already fetching; waiting")
+        time.sleep(5)
+        waited += 5
+    if waited:
+        if not _missing(manifest, quick=True):
+            log("models were fetched by the other process")
+            return True
+    try:
+        lock.touch()
+    except OSError:
+        pass
+
     log(f"{len(missing)} of {manifest['n_files']} model files missing or the wrong size")
     urls = [u for u in manifest.get("urls", []) if u]
     if not urls:
+        lock.unlink(missing_ok=True)
         log("no download URL is recorded in models_manifest.json, so they cannot be fetched.")
         log("Publish the archive and add its URL under \"urls\", or place models_rf/ here yourself.")
         return False
@@ -127,11 +154,13 @@ def ensure_models(verbose=True):
                     tar.extractall(ROOT)      # Python older than 3.11.4
             break
         else:
+            lock.unlink(missing_ok=True)
             log("every download URL failed")
             return False
 
     log("verifying every extracted file ...")
     bad = _missing(manifest, quick=False)
+    lock.unlink(missing_ok=True)
     if bad:
         log(f"FAILED: {len(bad)} files do not match their checksum, for example {bad[:3]}")
         return False
