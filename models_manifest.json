@@ -6,8 +6,11 @@
   "archive_sha256": "3fd7294d3feb444148a19e33af546599cf13cd642d3b1011769f856b657293ee",
   "n_files": 195,
   "unpacked_bytes": 838987524,
-  "urls": [],
-  "doi": "",
+  "urls": [
+    "https://zenodo.org/records/21858576/files/brainsafe_models_v1.0.tar.gz?download=1",
+    "https://zenodo.org/api/records/21858576/files/brainsafe_models_v1.0.tar.gz/content"
+  ],
+  "doi": "10.5281/zenodo.21858576",
   "note": "Fetched at start-up by model_fetch.py when models_rf/ is absent. Every file is verified against its checksum before the server loads anything.",
   "files": {
     "models_rf\\A1_binder.joblib": {
