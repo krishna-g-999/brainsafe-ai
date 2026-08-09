@@ -1,0 +1,9 @@
+test_set,compound_seen_in_training,n,n_correct_or_correctly_silent,rate,ci95_low,ci95_high,what_rate_means
+External reference set,"no, held out from every training table",13,6,0.4615,0.2321,0.7086,pharmacological class recovered as the top prediction
+External reference set,"yes, overlaps training chemistry",2,2,1,0.3424,1,pharmacological class recovered as the top prediction
+H4 distant chemistry,"no, held out from every training table",599,533,0.8898,0.8622,0.9125,correctly silent on chemistry outside the applicability domain
+H4 distant chemistry,"yes, overlaps training chemistry",1,0,0,0,0.7935,correctly silent on chemistry outside the applicability domain
+H6 clinical indication,"no, held out from every training table",160,56,0.35,0.2804,0.4266,licensed indication recovered in the predicted top three
+H6 clinical indication,"yes, overlaps training chemistry",307,121,0.3941,0.3411,0.4498,licensed indication recovered in the predicted top three
+Non-CNS specificity,"no, held out from every training table",443,398,0.8984,0.8668,0.9232,correctly silent; a drug with no central action was not reported as engaging a brain mechanism
+Non-CNS specificity,"yes, overlaps training chemistry",557,477,0.8564,0.8248,0.8831,correctly silent; a drug with no central action was not reported as engaging a brain mechanism

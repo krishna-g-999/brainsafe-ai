@@ -1,0 +1,8 @@
+stratum,n,top3_accuracy,ci95_low,ci95_high,permutation_null,permutation_p,frequency_null
+ALL,467,0.379,0.3362,0.4238,0.1563,0.0005,0.6724
+never seen in training,162,0.3519,0.2825,0.428,0.1449,0.0005,0.6543
+present in training chemistry,305,0.3934,0.3403,0.4493,0.1676,0.0005,0.682
+tool reported a signal,258,0.686,0.627,0.7396,0.3353,0.0005,0.7519
+never seen AND signal reported,88,0.6477,0.5437,0.7394,0.3112,0.0005,0.7386
+"ALL, ranking only, reporting threshold removed",467,0.4968,0.4517,0.542,0.2631,0.0005,0.6724
+"never seen, ranking only",162,0.4506,0.376,0.5275,0.2545,0.0005,0.6543

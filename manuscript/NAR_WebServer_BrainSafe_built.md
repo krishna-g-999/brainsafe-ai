@@ -101,9 +101,17 @@ after deployment testing and are not counted here; the reasons are given in the 
 Protein-target activity is pooled from ChEMBL (pChEMBL values) and BindingDB at the compound level;
 BBB penetration uses the B3DB database augmented with FDA-curated approved drugs; the antioxidant
 endpoint uses measured DPPH pIC50 values; and the nine ADME endpoints use measured sets from
-Therapeutics Data Commons, MoleculeNet, B3DB and ChEMBL. The core target panel is trained on 64,474
-measured records across 61,317 unique compounds. No value is imputed and no source overrides a
-measurement. Per-endpoint compound counts, scaffold counts and class balance are given in Tables 1 to 3.
+Therapeutics Data Commons, MoleculeNet, B3DB and ChEMBL. The core target panel draws on 67,984
+measured records over 61,226 unique compounds by InChIKey, and the full panel, including the binder
+endpoints, on 203,884 records over 160,365 unique compounds. No value is imputed and no source
+overrides a measurement.
+
+These totals are sums across endpoints and are not the size of any training set. Each endpoint is
+trained and cross-validated on its own measured set alone, and those sets span two orders of
+magnitude, from 183 compounds at GluA2 to 8,501 at BACE1. A compound measured at several targets
+contributes one record to each and is counted once per endpoint. Per-endpoint compound counts,
+scaffold counts and class balance are given in Tables 1 to 3, and the complete per-endpoint
+accounting is in the Supplementary training record.
 
 ### Methods compared and model selection
 
@@ -136,7 +144,14 @@ scaffold is assigned to the same fold and each fold holds out entire chemical se
 training; this measures extrapolation to new chemotypes. Fold sizes are equal to within one compound in
 both regimes, so the two are directly comparable. All reported means and standard deviations are across
 the ten folds, and per-fold values for every endpoint are provided in the repository
-(`results/tables/manuscript_T2_per_fold.csv`).
+(`results/tables/manuscript_T2_per_fold.csv`, `adme_cv_folds.csv` and `binder_cv_folds.csv`).
+
+Cross-validation here fits models in order to measure, not in order to deploy. Each endpoint is fitted
+twenty times during evaluation, ten in each regime, and each of those twenty models is scored once on
+the fold withheld from it and then discarded. The model that is served is a twenty-first, refitted on
+the endpoint's full set after the estimate is fixed, so no compound used to report a score was in the
+training set of the model that scored it. Across the 67 cross-validated endpoints this is 1,420
+evaluation fits standing behind the deployed panel.
 
 A third, more demanding regime is also reported. In the **temporal** split the model is trained only on
 compounds published before a cutoff year and tested on compounds published after it (Table 5), which is
