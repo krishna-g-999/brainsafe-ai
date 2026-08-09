@@ -16,7 +16,40 @@ rupees a day, and the first 2 million requests a month sit in the always-free ti
 
 Set a budget alert anyway, at step 2. It costs nothing and removes the worry.
 
-## 1. Install the Google Cloud CLI
+## About the "Create service" form in the console
+
+If you have the console form open, with a **Repository** field, a **Developer Connect** connection
+and a region defaulting to `europe-west1`: close it. That form is the continuous-deployment path. It
+asks Google to watch a GitHub repository and rebuild on every push, which is why it wants a
+Developer Connect link and why it reports "No repositories found" until that link is authorised. It
+is more machinery than a first deploy needs, and the connection you created sits in `asia-south2`
+while the service would run elsewhere.
+
+Deploy from source instead. One command, no GitHub link, and you can still set up continuous
+deployment later if you ever want it. Section 1a is the fastest route because it needs nothing
+installed on your machine.
+
+The region default in that form, `europe-west1`, is simply the console's default and not a
+recommendation. `asia-south1` (Mumbai) is nearer to you and to your reviewers, so first-request
+latency is lower. Any region works; the choice is not scientific.
+
+## 1a. The quickest route: Cloud Shell, nothing to install
+
+Cloud Shell is a terminal in the browser with `gcloud` and `git` already present, so you can skip the
+Windows SDK installer entirely.
+
+Open https://console.cloud.google.com, confirm the project selector shows
+`project-47d4c9c7-5bfb-4527-b67`, then click the terminal icon in the top right to open Cloud Shell.
+In it:
+
+```bash
+git clone https://github.com/krishna-g-999/brainsafe-ai.git && cd brainsafe-ai
+```
+
+Then go to step 3. The clone carries no model binaries, which is intended: the build downloads and
+verifies them from Zenodo, as section "Why the models are fetched during the build" explains.
+
+## 1. Install the Google Cloud CLI (only if you prefer working locally)
 
 Download and run the installer: https://cloud.google.com/sdk/docs/install-sdk#windows
 
@@ -41,7 +74,7 @@ gcloud services enable run.googleapis.com cloudbuild.googleapis.com artifactregi
 
 ## 4. Deploy
 
-From the project directory:
+From the project directory. In Cloud Shell you are already there after the clone; locally:
 
 ```bash
 cd D:\BRAINSAFE_AI
