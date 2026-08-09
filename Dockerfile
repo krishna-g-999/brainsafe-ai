@@ -23,12 +23,27 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-COPY app.py api.py serve.py ./
+COPY app.py api.py serve.py model_fetch.py models_manifest.json ./
 COPY src/ ./src/
-COPY models_rf/ ./models_rf/
 COPY assets/ ./assets/
 COPY results/ ./results/
 COPY docs/ ./docs/
+
+# The models are fetched at BUILD time from the published archive rather than copied from the build
+# context or downloaded at start-up. Three reasons, in order of importance:
+#
+#   a build context does not have them   .gitignore excludes the binaries, so a build from a clone or
+#                                        from Cloud Build has the code and none of the science
+#   cold starts must be fast             a serverless host destroys idle instances, and fetching
+#                                        0.79 GB on every cold start would make the first request
+#                                        after each idle period take minutes and repeat the transfer
+#   a build that cannot get them fails   here, rather than producing an image that starts and then
+#                                        cannot answer
+#
+# The download verifies the archive checksum and every extracted file, so a corrupted layer cannot
+# reach a user. BRAINSAFE_SKIP_MODEL_FETCH then stops the running server repeating the check.
+RUN python model_fetch.py && rm -f .model_fetch.lock
+ENV BRAINSAFE_SKIP_MODEL_FETCH=1
 
 # Run as an unprivileged user. The application only ever reads from disk.
 #
