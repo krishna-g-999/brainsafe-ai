@@ -1,0 +1,68 @@
+{
+  "AChE": {
+    "uniprot": "P22303",
+    "chembl_target_id": "CHEMBL220",
+    "chembl_pref_name": "Acetylcholinesterase",
+    "resolved_from": "UniProt accession via ChEMBL target API"
+  },
+  "BChE": {
+    "uniprot": "P06276",
+    "chembl_target_id": "CHEMBL1914",
+    "chembl_pref_name": "Cholinesterase",
+    "resolved_from": "UniProt accession via ChEMBL target API"
+  },
+  "BACE1": {
+    "uniprot": "P56817",
+    "chembl_target_id": "CHEMBL4822",
+    "chembl_pref_name": "Beta-secretase 1",
+    "resolved_from": "UniProt accession via ChEMBL target API"
+  },
+  "GSK3B": {
+    "uniprot": "P49841",
+    "chembl_target_id": "CHEMBL262",
+    "chembl_pref_name": "Glycogen synthase kinase-3 beta",
+    "resolved_from": "UniProt accession via ChEMBL target API"
+  },
+  "MAO_A": {
+    "uniprot": "P21397",
+    "chembl_target_id": "CHEMBL1951",
+    "chembl_pref_name": "Amine oxidase [flavin-containing] A",
+    "resolved_from": "UniProt accession via ChEMBL target API"
+  },
+  "MAO_B": {
+    "uniprot": "P27338",
+    "chembl_target_id": "CHEMBL2039",
+    "chembl_pref_name": "Amine oxidase [flavin-containing] B",
+    "resolved_from": "UniProt accession via ChEMBL target API"
+  },
+  "hERG": {
+    "uniprot": "Q12809",
+    "chembl_target_id": "CHEMBL240",
+    "chembl_pref_name": "Voltage-gated inwardly rectifying potassium channel KCNH2",
+    "resolved_from": "UniProt accession via ChEMBL target API"
+  },
+  "D2": {
+    "uniprot": "P14416",
+    "chembl_target_id": "CHEMBL217",
+    "chembl_pref_name": "D(2) dopamine receptor",
+    "resolved_from": "UniProt accession via ChEMBL target API"
+  },
+  "A2A": {
+    "uniprot": "P29274",
+    "chembl_target_id": "CHEMBL251",
+    "chembl_pref_name": "Adenosine receptor A2a",
+    "resolved_from": "UniProt accession via ChEMBL target API"
+  },
+  "HT2A": {
+    "uniprot": "P28223",
+    "chembl_target_id": "CHEMBL224",
+    "chembl_pref_name": "5-hydroxytryptamine receptor 2A",
+    "resolved_from": "UniProt accession via ChEMBL target API"
+  },
+  "SERT": {
+    "uniprot": "P31645",
+    "chembl_target_id": "CHEMBL228",
+    "chembl_pref_name": "Sodium-dependent serotonin transporter",
+    "resolved_from": "UniProt accession via ChEMBL target API"
+  }
+}
