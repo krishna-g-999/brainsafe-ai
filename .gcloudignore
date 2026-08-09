@@ -1,0 +1,24 @@
+# What Cloud Build must NOT upload.
+#
+# The models are deliberately excluded: they are 0.79 GB, and the Dockerfile downloads them from the
+# published Zenodo archive during the build instead. Uploading them would make every deploy transfer
+# a gigabyte from a home connection for no benefit.
+models_rf/
+models_rf_uncompressed/
+dist/
+
+# Everything below is development material the running server never reads.
+brainsafe_env/
+.git/
+__pycache__/
+**/__pycache__/
+*.pyc
+data/
+inversion/
+manuscript/
+archive/
+reviewer_package/
+research papers/
+notebooks/
+figures/
+*.log
