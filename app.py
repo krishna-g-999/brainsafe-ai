@@ -70,7 +70,10 @@ ADME = {
     "pgp_inhibition": ("P-gp inhibition", "probability", "proba"),
     "solubility": ("Aqueous solubility (logS)", "log mol/L", None),
     "lipophilicity": ("Lipophilicity (logD)", "logD", None),
-    "plasma_protein_binding": ("Plasma-protein binding", "fraction bound", None),
+    # The training labels run 10.09 to 99.95, so this endpoint is percent bound, not a fraction.
+    # It was labelled "fraction bound", which made every value read as impossible: a fraction cannot
+    # be 33. The model was always correct; only the unit was wrong.
+    "plasma_protein_binding": ("Plasma-protein binding", "% bound", None),
     "clearance_hepatocyte": ("Hepatocyte clearance", "uL/min/1e6", None),
 }
 # Target readout kind: 'enrich' = classifier engagement as enrichment over the endpoint base rate
@@ -1550,7 +1553,9 @@ def render_receptors(r):
             "training: mean AUROC 0.955 across 43 targets. Each model is fitted on property-matched "
             "decoys together with half of the measured inactives and is validated and thresholded on "
             "the held-out half, so no compound used for fitting is used to judge it. Thresholds hold "
-            "the false-positive rate near 10%, giving a mean sensitivity of 0.90; the conventional 0.5 "
+            "the false-positive rate near 10% on those measured inactives AND no more than 5% on "
+            "unrelated chemistry, whichever is stricter, giving a mean sensitivity of 0.90; the "
+            "conventional 0.5 "
             "cut would be far too permissive. Predicted "
             "pK<sub>i</sub> is shown only for compounds called binders, as potency among binders. "
             "The numeric pK<sub>i</sub> and the antioxidant value are weak priors rather than affinity "
