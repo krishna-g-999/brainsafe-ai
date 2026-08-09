@@ -336,6 +336,34 @@ def main():
                 f"deployed values")
     check("coverage panel matches the deployed panel", _coverage)
 
+    def _adme_units():
+        """A declared unit must be consistent with the range of the labels the model was fitted on.
+
+        This exists because plasma-protein binding was labelled "fraction bound" while its training
+        labels run from 10.09 to 99.95, so every prediction was displayed as a fraction of 33. A
+        user cannot detect that from the number alone; the model was right and only the unit was
+        wrong, which is exactly the kind of error that survives review."""
+        import pandas as pd
+        problems = []
+        for ep, (_label, unit, _tf) in app.ADME.items():
+            f = ROOT / "data" / "adme" / f"{ep}.csv"
+            if not f.exists():
+                continue
+            d = pd.read_csv(f)
+            col = "y" if "y" in d else ("label" if "label" in d else None)
+            if col is None:
+                continue
+            y = pd.to_numeric(d[col], errors="coerce").dropna()
+            if y.empty:
+                continue
+            if unit in ("fraction bound", "fraction") and y.max() > 1.0:
+                problems.append(f"{ep} declares '{unit}' but labels reach {y.max():.2f}")
+            if unit == "probability" and not set(y.unique()) <= {0, 1}:
+                problems.append(f"{ep} declares 'probability' but labels are not binary")
+        assert not problems, "; ".join(problems)
+        return f"all {len(app.ADME)} ADME units consistent with their training label ranges"
+    check("ADME units match their data", _adme_units)
+
     def _nored():
         """No red anywhere: the palette must survive red-green colour-vision deficiency."""
         # Judged on hue, not on the red channel. The brand gold (#F0A500) and the caution amber
