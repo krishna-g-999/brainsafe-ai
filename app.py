@@ -25,7 +25,20 @@ import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 from rdkit import Chem, DataStructs
-from rdkit.Chem import Draw, rdFingerprintGenerator
+from rdkit.Chem import rdFingerprintGenerator
+
+# RDKit's 2D drawing links against system graphics libraries (libXrender, libXext, libSM) that a
+# minimal Linux host may not carry. Streamlit Community Cloud does not, and the resulting ImportError
+# happened at module import, so the entire server failed to start over a picture. packages.txt now
+# requests those libraries, and this import is guarded as well: every number the tool produces is
+# independent of the drawing layer, so losing structure images must degrade one panel rather than
+# take down the whole application.
+try:
+    from rdkit.Chem import Draw
+    _DRAW_AVAILABLE = True
+except (ImportError, OSError):
+    Draw = None
+    _DRAW_AVAILABLE = False
 
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT / "src" / "brainsafe"))
@@ -771,9 +784,18 @@ def _b64(path: Path) -> str:
 
 
 def _mol_data_uri(mol, size=(340, 300)) -> str:
-    img = Draw.MolToImage(mol, size=size)
-    buf = BytesIO(); img.save(buf, format="PNG")
-    return "data:image/png;base64," + base64.b64encode(buf.getvalue()).decode()
+    """Structure image, or an empty string where the drawing libraries are unavailable.
+
+    Callers already emit an <img> whose src may be empty, which renders as nothing rather than as a
+    broken layout. No prediction depends on this."""
+    if not _DRAW_AVAILABLE or mol is None:
+        return ""
+    try:
+        img = Draw.MolToImage(mol, size=size)
+        buf = BytesIO(); img.save(buf, format="PNG")
+        return "data:image/png;base64," + base64.b64encode(buf.getvalue()).decode()
+    except Exception:
+        return ""
 
 
 def _risk_colour(p): return ADVERSE if p >= 0.5 else (AMBER if p >= 0.2 else GREEN)
