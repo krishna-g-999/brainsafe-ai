@@ -1,0 +1,149 @@
+{
+  "glutamate NMDA receptor GRIN2B": {
+    "query": "glutamate NMDA receptor GRIN2B",
+    "chembl_id": "CHEMBL1904",
+    "pref_name": "Glutamate receptor ionotropic, NMDA 2B",
+    "target_type": "SINGLE PROTEIN",
+    "n_activities": 2255
+  },
+  "glutamate receptor ionotropic AMPA": {
+    "query": "glutamate receptor ionotropic AMPA",
+    "chembl_id": "CHEMBL3883294",
+    "pref_name": "Glutamate receptor AMPA 1/2",
+    "target_type": "PROTEIN COMPLEX",
+    "n_activities": 9
+  },
+  "metabotropic glutamate receptor 5": {
+    "query": "metabotropic glutamate receptor 5",
+    "chembl_id": "CHEMBL3227",
+    "pref_name": "Metabotropic glutamate receptor 5",
+    "target_type": "SINGLE PROTEIN",
+    "n_activities": 4320
+  },
+  "sodium channel protein type 2 alpha": {
+    "query": "sodium channel protein type 2 alpha",
+    "chembl_id": "CHEMBL1980",
+    "pref_name": "Sodium channel protein type 5 subunit alpha",
+    "target_type": "SINGLE PROTEIN",
+    "n_activities": 1706
+  },
+  "NLR family pyrin domain containing 3": {
+    "query": "NLR family pyrin domain containing 3",
+    "chembl_id": "CHEMBL1741208",
+    "pref_name": "NACHT, LRR and PYD domains-containing protein 3",
+    "target_type": "SINGLE PROTEIN",
+    "n_activities": 1069
+  },
+  "serine/threonine-protein kinase mTOR": {
+    "query": "serine/threonine-protein kinase mTOR",
+    "chembl_id": "CHEMBL2842",
+    "pref_name": "Serine/threonine-protein kinase mTOR",
+    "target_type": "SINGLE PROTEIN",
+    "n_activities": 6394
+  },
+  "Kelch-like ECH-associated protein 1": {
+    "query": "Kelch-like ECH-associated protein 1",
+    "chembl_id": "CHEMBL2069156",
+    "pref_name": "Kelch-like ECH-associated protein 1",
+    "target_type": "SINGLE PROTEIN",
+    "n_activities": 581
+  },
+  "phosphodiesterase 10A": {
+    "query": "phosphodiesterase 10A",
+    "chembl_id": "CHEMBL4409",
+    "pref_name": "cAMP and cAMP-inhibited cGMP 3',5'-cyclic phosphodiesterase 10A",
+    "target_type": "SINGLE PROTEIN",
+    "n_activities": 6883
+  },
+  "histone deacetylase 6": {
+    "query": "histone deacetylase 6",
+    "chembl_id": "CHEMBL4296072",
+    "pref_name": "Histone deacetylase 6/3",
+    "target_type": "PROTEIN FAMILY",
+    "n_activities": 0
+  },
+  "histone deacetylase 1": {
+    "query": "histone deacetylase 1",
+    "chembl_id": "CHEMBL325",
+    "pref_name": "Histone deacetylase 1",
+    "target_type": "SINGLE PROTEIN",
+    "n_activities": 10680
+  },
+  "P2X purinoceptor 7": {
+    "query": "P2X purinoceptor 7",
+    "chembl_id": "CHEMBL4805",
+    "pref_name": "P2X purinoceptor 7",
+    "target_type": "SINGLE PROTEIN",
+    "n_activities": 11083
+  },
+  "orexin receptor type 1": {
+    "query": "orexin receptor type 1",
+    "chembl_id": "CHEMBL4792",
+    "pref_name": "Orexin receptor type 2",
+    "target_type": "SINGLE PROTEIN",
+    "n_activities": 11421
+  },
+  "orexin receptor type 2": {
+    "query": "orexin receptor type 2",
+    "chembl_id": "CHEMBL4792",
+    "pref_name": "Orexin receptor type 2",
+    "target_type": "SINGLE PROTEIN",
+    "n_activities": 11421
+  },
+  "melatonin receptor type 1A": {
+    "query": "melatonin receptor type 1A",
+    "chembl_id": "CHEMBL1945",
+    "pref_name": "Melatonin receptor type 1A",
+    "target_type": "SINGLE PROTEIN",
+    "n_activities": 1526
+  },
+  "glucosylceramidase beta GBA": {
+    "query": "glucosylceramidase beta GBA",
+    "chembl_id": "CHEMBL2179",
+    "pref_name": "Lysosomal acid glucosylceramidase",
+    "target_type": "SINGLE PROTEIN",
+    "n_activities": 1919
+  },
+  "prostaglandin G/H synthase 2": {
+    "query": "prostaglandin G/H synthase 2",
+    "chembl_id": "CHEMBL230",
+    "pref_name": "Prostaglandin G/H synthase 2",
+    "target_type": "SINGLE PROTEIN",
+    "n_activities": 6289
+  },
+  "macrophage colony stimulating factor 1 receptor": {
+    "query": "macrophage colony stimulating factor 1 receptor",
+    "chembl_id": "CHEMBL1844",
+    "pref_name": "Macrophage colony-stimulating factor 1 receptor",
+    "target_type": "SINGLE PROTEIN",
+    "n_activities": 3834
+  },
+  "cAMP specific phosphodiesterase 4B": {
+    "query": "cAMP specific phosphodiesterase 4B",
+    "chembl_id": "CHEMBL275",
+    "pref_name": "3',5'-cyclic-AMP phosphodiesterase 4B",
+    "target_type": "SINGLE PROTEIN",
+    "n_activities": 2976
+  },
+  "NAD-dependent protein deacetylase sirtuin-1": {
+    "query": "NAD-dependent protein deacetylase sirtuin-1",
+    "chembl_id": "CHEMBL4506",
+    "pref_name": "NAD-dependent protein deacetylase sirtuin-1",
+    "target_type": "SINGLE PROTEIN",
+    "n_activities": 928
+  },
+  "catechol O-methyltransferase": {
+    "query": "catechol O-methyltransferase",
+    "chembl_id": "CHEMBL2023",
+    "pref_name": "Catechol O-methyltransferase",
+    "target_type": "SINGLE PROTEIN",
+    "n_activities": 198
+  },
+  "monoamine oxidase": {
+    "query": "monoamine oxidase",
+    "chembl_id": "CHEMBL2095205",
+    "pref_name": "Monoamine oxidase",
+    "target_type": "PROTEIN FAMILY",
+    "n_activities": 92
+  }
+}

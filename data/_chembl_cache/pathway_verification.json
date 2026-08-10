@@ -1,0 +1,383 @@
+{
+  "targets": {
+    "AChE": {
+      "kegg_gene": "hsa:43",
+      "uniprot": "P22303",
+      "verified": [
+        "hsa04725"
+      ],
+      "rejected": []
+    },
+    "BChE": {
+      "kegg_gene": "hsa:590",
+      "uniprot": "P06276",
+      "verified": [],
+      "rejected": [
+        "hsa04725"
+      ]
+    },
+    "BACE1": {
+      "kegg_gene": "hsa:23621",
+      "uniprot": "P56817",
+      "verified": [
+        "hsa05010"
+      ],
+      "rejected": []
+    },
+    "GSK3B": {
+      "kegg_gene": "hsa:2932",
+      "uniprot": "P49841",
+      "verified": [
+        "hsa05010"
+      ],
+      "rejected": []
+    },
+    "MAO_A": {
+      "kegg_gene": "hsa:4128",
+      "uniprot": "P21397",
+      "verified": [
+        "hsa04726",
+        "hsa04728"
+      ],
+      "rejected": []
+    },
+    "MAO_B": {
+      "kegg_gene": "hsa:4129",
+      "uniprot": "P27338",
+      "verified": [
+        "hsa04726",
+        "hsa04728"
+      ],
+      "rejected": []
+    },
+    "SERT": {
+      "kegg_gene": "hsa:6532",
+      "uniprot": "P31645",
+      "verified": [
+        "hsa04726"
+      ],
+      "rejected": []
+    },
+    "D2": {
+      "kegg_gene": "hsa:1813",
+      "uniprot": "P14416",
+      "verified": [
+        "hsa04728"
+      ],
+      "rejected": []
+    },
+    "D3": {
+      "kegg_gene": "hsa:1814",
+      "uniprot": "P35462",
+      "verified": [
+        "hsa04728"
+      ],
+      "rejected": []
+    },
+    "HT2A": {
+      "kegg_gene": "hsa:3356",
+      "uniprot": "P28223",
+      "verified": [
+        "hsa04726"
+      ],
+      "rejected": []
+    },
+    "HT1A": {
+      "kegg_gene": "hsa:3350",
+      "uniprot": "P08908",
+      "verified": [
+        "hsa04726"
+      ],
+      "rejected": []
+    },
+    "HT6": {
+      "kegg_gene": "hsa:3362",
+      "uniprot": "P50406",
+      "verified": [
+        "hsa04726"
+      ],
+      "rejected": []
+    },
+    "HT7": {
+      "kegg_gene": "hsa:3363",
+      "uniprot": "P34969",
+      "verified": [
+        "hsa04726"
+      ],
+      "rejected": []
+    },
+    "DAT": {
+      "kegg_gene": "hsa:6531",
+      "uniprot": "Q01959",
+      "verified": [
+        "hsa04728"
+      ],
+      "rejected": []
+    },
+    "NET": {
+      "kegg_gene": "hsa:6530",
+      "uniprot": "P23975",
+      "verified": [],
+      "rejected": [
+        "hsa04728",
+        "hsa04080"
+      ]
+    },
+    "CB1": {
+      "kegg_gene": "hsa:1268",
+      "uniprot": "P21554",
+      "verified": [
+        "hsa04723"
+      ],
+      "rejected": []
+    },
+    "OPRM1": {
+      "kegg_gene": "hsa:4988",
+      "uniprot": "P35372",
+      "verified": [
+        "hsa05032"
+      ],
+      "rejected": []
+    },
+    "OPRK1": {
+      "kegg_gene": "hsa:4986",
+      "uniprot": "P41145",
+      "verified": [],
+      "rejected": [
+        "hsa05032"
+      ]
+    },
+    "H3": {
+      "kegg_gene": "hsa:11255",
+      "uniprot": "Q9Y5N1",
+      "verified": [
+        "hsa04080"
+      ],
+      "rejected": []
+    },
+    "A1": {
+      "kegg_gene": "hsa:134",
+      "uniprot": "P30542",
+      "verified": [
+        "hsa04080"
+      ],
+      "rejected": []
+    },
+    "A2A": {
+      "kegg_gene": "hsa:135",
+      "uniprot": "P29274",
+      "verified": [
+        "hsa04080"
+      ],
+      "rejected": []
+    },
+    "a7nAChR": {
+      "kegg_gene": "hsa:1139",
+      "uniprot": "P36544",
+      "verified": [
+        "hsa04725"
+      ],
+      "rejected": []
+    },
+    "LRRK2": {
+      "kegg_gene": "hsa:120892",
+      "uniprot": "Q5S007",
+      "verified": [
+        "hsa05012"
+      ],
+      "rejected": []
+    },
+    "Sigma1": {
+      "kegg_gene": "hsa:10280",
+      "uniprot": "Q99720",
+      "verified": [],
+      "rejected": [
+        "hsa04080"
+      ]
+    },
+    "OX1": {
+      "kegg_gene": "hsa:3061",
+      "uniprot": "O43613",
+      "verified": [
+        "hsa04080"
+      ],
+      "rejected": []
+    },
+    "OX2": {
+      "kegg_gene": "hsa:3062",
+      "uniprot": "O43614",
+      "verified": [
+        "hsa04080"
+      ],
+      "rejected": []
+    },
+    "MT1": {
+      "kegg_gene": "hsa:4543",
+      "uniprot": "P48039",
+      "verified": [
+        "hsa04713"
+      ],
+      "rejected": []
+    },
+    "GABA_A": {
+      "kegg_gene": "hsa:2554",
+      "uniprot": "P14867",
+      "verified": [
+        "hsa04727"
+      ],
+      "rejected": []
+    },
+    "GluN2B": {
+      "kegg_gene": "hsa:2904",
+      "uniprot": "Q13224",
+      "verified": [
+        "hsa04724",
+        "hsa05014"
+      ],
+      "rejected": []
+    },
+    "mGluR5": {
+      "kegg_gene": "hsa:2915",
+      "uniprot": "P41594",
+      "verified": [
+        "hsa04724"
+      ],
+      "rejected": []
+    },
+    "NLRP3": {
+      "kegg_gene": "hsa:114548",
+      "uniprot": "Q96P20",
+      "verified": [
+        "hsa04621"
+      ],
+      "rejected": []
+    },
+    "P2X7": {
+      "kegg_gene": "hsa:5027",
+      "uniprot": "Q99572",
+      "verified": [
+        "hsa04621"
+      ],
+      "rejected": []
+    },
+    "COX2": {
+      "kegg_gene": "hsa:5743",
+      "uniprot": "P35354",
+      "verified": [
+        "hsa00590"
+      ],
+      "rejected": []
+    },
+    "CSF1R": {
+      "kegg_gene": "hsa:1436",
+      "uniprot": "P07333",
+      "verified": [
+        "hsa04060",
+        "hsa04380"
+      ],
+      "rejected": []
+    },
+    "PDE10A": {
+      "kegg_gene": "hsa:10846",
+      "uniprot": "Q9Y233",
+      "verified": [
+        "hsa04024"
+      ],
+      "rejected": []
+    },
+    "PDE4B": {
+      "kegg_gene": "hsa:5142",
+      "uniprot": "Q07343",
+      "verified": [
+        "hsa04024"
+      ],
+      "rejected": []
+    },
+    "HDAC1": {
+      "kegg_gene": "hsa:3065",
+      "uniprot": "Q13547",
+      "verified": [
+        "hsa05016"
+      ],
+      "rejected": []
+    },
+    "HDAC6": {
+      "kegg_gene": "hsa:10013",
+      "uniprot": "Q9UBN7",
+      "verified": [
+        "hsa05014"
+      ],
+      "rejected": [
+        "hsa05016"
+      ]
+    },
+    "mTOR": {
+      "kegg_gene": "hsa:2475",
+      "uniprot": "P42345",
+      "verified": [
+        "hsa04140",
+        "hsa05014"
+      ],
+      "rejected": []
+    },
+    "SIRT1": {
+      "kegg_gene": "hsa:23411",
+      "uniprot": "Q96EB6",
+      "verified": [
+        "hsa04213"
+      ],
+      "rejected": []
+    },
+    "GBA1": {
+      "kegg_gene": "hsa:2629",
+      "uniprot": "P04062",
+      "verified": [
+        "hsa04142"
+      ],
+      "rejected": []
+    },
+    "Nav1_5": {
+      "kegg_gene": "hsa:6331",
+      "uniprot": "Q14524",
+      "verified": [
+        "hsa04261"
+      ],
+      "rejected": []
+    },
+    "KEAP1": {
+      "kegg_gene": "hsa:9817",
+      "uniprot": "Q14145",
+      "verified": [],
+      "rejected": [],
+      "reactome": {
+        "id": "R-HSA-9755511",
+        "verified": true,
+        "name": "KEAP1-NFE2L2 pathway"
+      }
+    }
+  },
+  "pathway_names": {
+    "hsa04725": "Cholinergic synapse",
+    "hsa05010": "Alzheimer disease",
+    "hsa04726": "Serotonergic synapse",
+    "hsa04728": "Dopaminergic synapse",
+    "hsa04723": "Retrograde endocannabinoid signaling",
+    "hsa05032": "Morphine addiction",
+    "hsa04080": "Neuroactive ligand-receptor interaction",
+    "hsa05012": "Parkinson disease",
+    "hsa04713": "Circadian entrainment",
+    "hsa04727": "GABAergic synapse",
+    "hsa04724": "Glutamatergic synapse",
+    "hsa05014": "Amyotrophic lateral sclerosis",
+    "hsa04621": "NOD-like receptor signaling pathway",
+    "hsa00590": "Arachidonic acid metabolism",
+    "hsa04060": "Cytokine-cytokine receptor interaction",
+    "hsa04380": "Osteoclast differentiation",
+    "hsa04024": "cAMP signaling pathway",
+    "hsa05016": "Huntington disease",
+    "hsa04140": "Autophagy - animal",
+    "hsa04213": "Longevity regulating pathway - multiple species",
+    "hsa04142": "Lysosome biogenesis",
+    "hsa04261": "Adrenergic signaling in cardiomyocytes"
+  }
+}

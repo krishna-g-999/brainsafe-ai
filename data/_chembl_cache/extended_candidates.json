@@ -1,0 +1,132 @@
+{
+  "Alpha-1a adrenergic": [
+    "CHEMBL229",
+    3156,
+    "Alpha-1A adrenergic receptor"
+  ],
+  "Alpha-2a adrenergic": [
+    "CHEMBL1867",
+    1973,
+    "Alpha-2A adrenergic receptor"
+  ],
+  "Beta-2 adrenergic": [
+    "CHEMBL210",
+    3285,
+    "Beta-2 adrenergic receptor"
+  ],
+  "Muscarinic M1": [
+    "CHEMBL216",
+    4091,
+    "Muscarinic acetylcholine receptor M1"
+  ],
+  "Muscarinic M2": [
+    "CHEMBL211",
+    3505,
+    "Muscarinic acetylcholine receptor M2"
+  ],
+  "Muscarinic M3": [
+    "CHEMBL245",
+    3710,
+    "Muscarinic acetylcholine receptor M3"
+  ],
+  "Dopamine D1": [
+    "CHEMBL2056",
+    2792,
+    "D(1A) dopamine receptor"
+  ],
+  "Dopamine D4": [
+    "CHEMBL219",
+    4461,
+    "D(4) dopamine receptor"
+  ],
+  "5-HT2C": [
+    "CHEMBL225",
+    5826,
+    "5-hydroxytryptamine receptor 2C"
+  ],
+  "5-HT3": [
+    "CHEMBL1899",
+    1459,
+    "5-hydroxytryptamine receptor 3A"
+  ],
+  "5-HT4": [
+    "CHEMBL1875",
+    1090,
+    "5-hydroxytryptamine receptor 4"
+  ],
+  "Histamine H1": [
+    "CHEMBL231",
+    2524,
+    "Histamine H1 receptor"
+  ],
+  "Histamine H4": [
+    "CHEMBL3222",
+    1678,
+    "Delta-type opioid receptor"
+  ],
+  "CB2": [
+    "CHEMBL253",
+    10953,
+    "Cannabinoid receptor 2"
+  ],
+  "Delta opioid": [
+    "CHEMBL236",
+    7080,
+    "Delta-type opioid receptor"
+  ],
+  "COX-1": [
+    "CHEMBL221",
+    2481,
+    "Prostaglandin G/H synthase 1"
+  ],
+  "PDE5": [
+    "CHEMBL1827",
+    2577,
+    "cGMP-specific 3',5'-cyclic phosphodiesterase"
+  ],
+  "PDE3A": [
+    "CHEMBL5747",
+    3738,
+    "CREB-binding protein"
+  ],
+  "GSK3A": [
+    "CHEMBL2094115",
+    917,
+    "MAP kinase p38"
+  ],
+  "CDK5": [
+    "CHEMBL3116",
+    2247,
+    "Cyclin-dependent kinase 9"
+  ],
+  "ROCK1": [
+    "CHEMBL3231",
+    3346,
+    "Rho-associated protein kinase 1"
+  ],
+  "JNK3": [
+    "CHEMBL2637",
+    1965,
+    "Mitogen-activated protein kinase 10"
+  ],
+  "p38 alpha": [
+    "CHEMBL260",
+    7043,
+    "Mitogen-activated protein kinase 14"
+  ],
+  "Cathepsin B": [
+    "CHEMBL4072",
+    1553,
+    "Cathepsin B"
+  ],
+  "Caspase-3": [
+    "CHEMBL2334",
+    2325,
+    "Caspase-3"
+  ],
+  "PARP1": [
+    "CHEMBL3105",
+    5935,
+    "Poly [ADP-ribose] polymerase 1"
+  ]
+}
