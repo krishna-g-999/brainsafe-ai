@@ -1,0 +1,5 @@
+endpoint,published_n,published_auroc,reproduced_n,reproduced_auroc,reproduced_sd,delta_vs_published,dedup_n,rows_removed,conflicting_groups_dropped,dedup_auroc,dedup_sd,inflation_from_duplicates
+BBB,7805,0.9605,7805,0.9605,0.0071,-0.0,3901,3904,131,0.899,0.0153,0.0614
+AChE,4387,0.9626,4387,0.9626,0.0079,-0.0,4216,171,4,0.9619,0.0124,0.0007
+MAO_A,2228,0.9467,2228,0.9467,0.016,-0.0,2134,94,4,0.9462,0.0133,0.0005
+hERG,5875,0.9541,5875,0.9541,0.0062,0.0,5706,169,1,0.9516,0.0064,0.0026

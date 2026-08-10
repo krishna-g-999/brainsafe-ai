@@ -1,0 +1,65 @@
+A1               n=  4007 featdup=   95 ( 2.37%) skeldup=   96 conflict_groups=   2
+A2A              n=  6785 featdup=  258 ( 3.80%) skeldup=  277 conflict_groups=   1
+a3b4nAChR        n=   585 featdup=   62 (10.60%) skeldup=   61 conflict_groups=   1
+a4b2nAChR        n=   942 featdup=   95 (10.08%) skeldup=   94 conflict_groups=   3
+a7nAChR          n=  1004 featdup=   84 ( 8.37%) skeldup=   85 conflict_groups=   8
+AChE             n=  4387 featdup=  167 ( 3.81%) skeldup=  165 conflict_groups=   4
+BACE1            n=  8501 featdup=  628 ( 7.39%) skeldup=  641 conflict_groups=  41
+BBB              n=  7807 featdup= 3773 (48.34%) skeldup= 3787 conflict_groups= 131
+BChE             n=  2621 featdup=   84 ( 3.20%) skeldup=   85 conflict_groups=   4
+Cav3_2           n=   666 featdup=   17 ( 2.55%) skeldup=   20 conflict_groups=   0
+CB1              n=  4613 featdup=  168 ( 3.64%) skeldup=  170 conflict_groups=   0
+CGRP             n=   787 featdup=   40 ( 5.08%) skeldup=   40 conflict_groups=   0
+COX2             n=  3185 featdup=   92 ( 2.89%) skeldup=   84 conflict_groups=   9
+CSF1R            n=  2432 featdup=   89 ( 3.66%) skeldup=   97 conflict_groups=   0
+D2               n=  7734 featdup=  581 ( 7.51%) skeldup=  579 conflict_groups=   5
+D3               n=  5647 featdup=  398 ( 7.05%) skeldup=  397 conflict_groups=   3
+DAT              n=  2692 featdup=  349 (12.96%) skeldup=  348 conflict_groups=   4
+DHODH            n=  1566 featdup=   29 ( 1.85%) skeldup=   36 conflict_groups=   0
+GABA_A           n=   348 featdup=   12 ( 3.45%) skeldup=   13 conflict_groups=   0
+GABAA_a5         n=   676 featdup=    5 ( 0.74%) skeldup=    4 conflict_groups=   0
+GBA1             n=   554 featdup=   31 ( 5.60%) skeldup=   31 conflict_groups=  14
+GluA2            n=   183 featdup=    5 ( 2.73%) skeldup=    5 conflict_groups=   1
+GluN2B           n=  1580 featdup=   45 ( 2.85%) skeldup=   45 conflict_groups=   0
+GSK3B            n=  4958 featdup=  258 ( 5.20%) skeldup=  266 conflict_groups=   4
+H3               n=  4198 featdup=  272 ( 6.48%) skeldup=  268 conflict_groups=   1
+HDAC1            n=  6367 featdup=  140 ( 2.20%) skeldup=  136 conflict_groups=   1
+HDAC6            n=  5612 featdup=  202 ( 3.60%) skeldup=  194 conflict_groups=   1
+hERG             n=  5875 featdup=  168 ( 2.86%) skeldup=  173 conflict_groups=   1
+HT1A             n=  5414 featdup=  350 ( 6.46%) skeldup=  354 conflict_groups=   1
+HT2A             n=  5989 featdup=  300 ( 5.01%) skeldup=  312 conflict_groups=   0
+HT6              n=  3823 featdup=  117 ( 3.06%) skeldup=  114 conflict_groups=   0
+HT7              n=  2556 featdup=  109 ( 4.26%) skeldup=  108 conflict_groups=   1
+KEAP1            n=   323 featdup=   15 ( 4.64%) skeldup=   12 conflict_groups=   3
+LRRK2            n=  1478 featdup=  107 ( 7.24%) skeldup=  107 conflict_groups=   0
+MAO_A            n=  2228 featdup=   90 ( 4.04%) skeldup=  100 conflict_groups=   4
+MAO_B            n=  3665 featdup=  137 ( 3.74%) skeldup=  155 conflict_groups=   9
+mGluR5           n=  2434 featdup=   74 ( 3.04%) skeldup=   74 conflict_groups=   1
+MT1              n=   969 featdup=   45 ( 4.64%) skeldup=   45 conflict_groups=   2
+mTOR             n=  4484 featdup=  169 ( 3.77%) skeldup=  169 conflict_groups=   0
+Nav1_1           n=   425 featdup=   11 ( 2.59%) skeldup=   11 conflict_groups=   0
+Nav1_5           n=   833 featdup=   28 ( 3.36%) skeldup=   28 conflict_groups=   0
+Nav1_6           n=   726 featdup=   34 ( 4.68%) skeldup=   34 conflict_groups=   3
+Nav1_7           n=  5752 featdup=  245 ( 4.26%) skeldup=  216 conflict_groups=   1
+Nav1_8           n=   540 featdup=   22 ( 4.07%) skeldup=   22 conflict_groups=   0
+NET              n=  3067 featdup=  407 (13.27%) skeldup=  412 conflict_groups=   3
+NLRP3            n=   487 featdup=   10 ( 2.05%) skeldup=   17 conflict_groups=   0
+OPRK1            n=  5167 featdup=  543 (10.51%) skeldup=  527 conflict_groups=   2
+OPRM1            n=  6109 featdup=  534 ( 8.74%) skeldup=  525 conflict_groups=   4
+OX1.chembl_only  n=  5240 featdup=  225 ( 4.29%) skeldup=  225 conflict_groups=   0
+OX1              n=  5273 featdup=  225 ( 4.27%) skeldup=  225 conflict_groups=   0
+OX2.chembl_only  n=  6227 featdup=  262 ( 4.21%) skeldup=  263 conflict_groups=   1
+OX2              n=  6231 featdup=  262 ( 4.20%) skeldup=  263 conflict_groups=   1
+P2X7             n=  4401 featdup=  209 ( 4.75%) skeldup=  220 conflict_groups=   7
+PDE10A           n=  5112 featdup=  160 ( 3.13%) skeldup=  158 conflict_groups=   0
+PDE4B            n=  1938 featdup=   56 ( 2.89%) skeldup=   54 conflict_groups=   2
+RIPK1            n=  3068 featdup=  293 ( 9.55%) skeldup=  297 conflict_groups=   0
+SERT             n=  4572 featdup=  430 ( 9.41%) skeldup=  431 conflict_groups=   3
+Sigma1           n=  2838 featdup=  207 ( 7.29%) skeldup=  204 conflict_groups=   0
+SIRT1            n=   515 featdup=   17 ( 3.30%) skeldup=   17 conflict_groups=   1
+TAAR1            n=   303 featdup=    6 ( 1.98%) skeldup=    6 conflict_groups=   0
+
+TOTAL rows: 198499
+TOTAL feature-identical duplicate rows: 13846
+TOTAL feature groups with conflicting labels: 288
+wrote duplicate_audit.csv

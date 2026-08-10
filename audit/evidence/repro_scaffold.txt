@@ -1,0 +1,7 @@
+scaffold CV as published : n=7805 groups=2439 AUROC=0.9197 sd=0.0348 folds=10
+scaffold CV deduplicated : n=3901 groups=2310 AUROC=0.8826 sd=0.0284 folds=10
+difference               : +0.0371
+
+largest scaffold groups: [410, 378, 126, 100, 59]
+singleton scaffold groups: 1444 of 2439
+compounds with an empty (acyclic) scaffold, each given its own group: 311

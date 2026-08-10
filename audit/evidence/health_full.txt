@@ -1,0 +1,46 @@
+1. imports
+  [ok]   third-party dependencies: all third-party imports resolve
+  [ok]   requirements.txt covers app.py imports: 13 declared dependencies, all app imports covered
+  [ok]   environment matches the pinned versions: installed versions match every pin
+2026-08-10 18:32:10.636 WARNING streamlit.runtime.caching.cache_data_api: No runtime found, using MemoryCacheStorageManager
+2. application module
+  [ok]   entry points: public entry points present
+3. model artefacts
+  [ok]   model files load: 69 model objects loaded
+  [ok]   supporting artefacts: context, domain reference, binder modes and read-across index all present
+4. knowledge graph
+  [ok]   graph consistency: 52 targets, 16 conditions, every edge well formed
+  [ok]   graph targets are scorable: every graph target has a scoring rule
+2026-08-10 18:32:30.394 WARNING streamlit.runtime.state.session_state_proxy: Session state does not function when running a script without `streamlit run`
+5. inference on chemically diverse probes
+  [ok]   all probes score: 12 compounds scored
+  [ok]   distinct compounds give distinct profiles: 11 distinct profiles across 12 compounds
+  [ok]   directional pharmacology: BBB ordering and levodopa recovery behave as expected
+  [ok]   peripheral negative controls: peripheral controls stay below the reporting threshold
+2026-08-10 18:33:16.298 WARNING streamlit.runtime.caching.cache_data_api: No runtime found, using MemoryCacheStorageManager
+6. input handling
+  [ok]   query resolution: valid SMILES accepted, malformed input rejected
+  [ok]   network figure: network SVG renders, 6,655 characters, 16 labels
+7. export and batch
+  [ok]   export formats: table 101 rows, json 6,886 bytes, report 48,792 bytes and self-contained
+  [ok]   batch screening: batch rows differ per compound and reject bad input
+  [ok]   target profile chart: profile renders even when nothing is engaged, 36 elements
+  [ok]   homologous targets are grouped: haloperidol 5 targets grouped to 3 independent mechanisms across 6 declared families
+  [ok]   coverage panel matches the deployed panel: 52 deployed endpoints all listed, 2 withdrawn none advertised, 1 low-sensitivity entries all matching deployed values
+  [ok]   ADME units match their data: all 9 ADME units consistent with their training label ranges
+  [ok]   no red in the interface: no red or crimson hue in the palette; gold and amber are oranges and are intended
+
+  donepezil      BBB 0.99   Alzheimer's disease 0.99, Cognition (cholinergic) 0.99, Neuroprotection / oxidative stress 0.68
+  levodopa       BBB 0.47   Neuroprotection / oxidative stress 0.34, Alzheimer's disease 0.14, Parkinson's disease 0.14
+  fluoxetine     BBB 0.99   Depression / anxiety 0.99, ADHD 0.89, Parkinson's disease 0.14
+  haloperidol    BBB 0.99   Psychosis / schizophrenia 0.92, Addiction 0.77, Neuroprotection / oxidative stress 0.74
+  morphine       BBB 1.00   Chronic pain 0.99, Addiction 0.89, Depression / anxiety 0.54
+  caffeine       BBB 0.88   Alzheimer's disease 0.00, Parkinson's disease 0.00, Amyotrophic lateral sclerosis 0.00
+  paracetamol    BBB 0.66   Alzheimer's disease 0.00, Parkinson's disease 0.00, Amyotrophic lateral sclerosis 0.00
+  metformin      BBB 0.32   Neuroprotection / oxidative stress 0.06, Alzheimer's disease 0.02, Parkinson's disease 0.02
+  fostamatinib   BBB 0.59   Neuroinflammation 0.37, Amyotrophic lateral sclerosis 0.24, Alzheimer's disease 0.00
+  resveratrol    BBB 0.28   Neuroprotection / oxidative stress 0.10, Alzheimer's disease 0.04, Parkinson's disease 0.04
+  losartan       BBB 0.46   Alzheimer's disease 0.27, Depression / anxiety 0.17, Parkinson's disease 0.00
+  atorvastatin   BBB 0.18   Epilepsy 0.01, Cognition (cholinergic) 0.00, Alzheimer's disease 0.00
+
+app.py is healthy: all checks passed
