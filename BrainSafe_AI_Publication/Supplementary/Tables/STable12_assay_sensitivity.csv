@@ -1,4 +1,0 @@
-endpoint,pooled_n,pooled_AUROC,IC50only_n,IC50only_AUROC,AUROC_delta_pooled_minus_IC50
-GSK3B,4044,0.919,2445,0.913,0.006
-MAO_B,3455,0.884,3211,0.89,-0.006
-hERG,5905,0.901,5054,0.901,0.0

@@ -76,3 +76,9 @@ inversion/results/H4_distant_predictions.csv
 # Packaged model archive: published to Zenodo, never committed (0.79 GB)
 dist/
 models_rf_uncompressed/
+
+# ---- Consolidated archive (see ARCHIVE_MANIFEST.csv, which IS committed) ----
+# Everything superseded lives in one dated folder: the July publication bundle, the 2026-07-20
+# legacy archive, build intermediates, run logs and the unused literature. Roughly 4 GB, all of it
+# either regenerable or already in git history, so the folder stays local and the manifest travels.
+_ARCHIVE_*/

@@ -1,0 +1,892 @@
+path,category,extension,size_kb,in_git
+.dockerignore,"Root: application, build and project files",(none),0.1,yes
+.gcloudignore,"Root: application, build and project files",(none),0.6,yes
+.gitignore,"Root: application, build and project files",(none),2.5,yes
+.streamlit/config.toml,"Root: application, build and project files",toml,0.9,yes
+api.py,"Root: application, build and project files",py,9.0,yes
+app.py,"Root: application, build and project files",py,167.4,yes
+ARCHIVE_MANIFEST.csv,"Root: application, build and project files",csv,177.0,no
+assets/sai_net_logo.png,Application assets,png,28.6,yes
+assets/sssihl_logo.png,Application assets,png,76.0,yes
+CITATION.cff,"Root: application, build and project files",cff,0.7,yes
+data/_bindingdb_cache/A2A.json,"Root: application, build and project files",json,593.8,no
+data/_bindingdb_cache/A2A_labelled.csv,"Root: application, build and project files",csv,365.7,no
+data/_bindingdb_cache/AChE.json,"Root: application, build and project files",json,236.7,no
+data/_bindingdb_cache/AChE_labelled.csv,"Root: application, build and project files",csv,145.0,no
+data/_bindingdb_cache/BACE1.json,"Root: application, build and project files",json,916.8,no
+data/_bindingdb_cache/BACE1_labelled.csv,"Root: application, build and project files",csv,466.7,no
+data/_bindingdb_cache/BChE.json,"Root: application, build and project files",json,140.9,no
+data/_bindingdb_cache/BChE_labelled.csv,"Root: application, build and project files",csv,89.6,no
+data/_bindingdb_cache/D2.json,"Root: application, build and project files",json,778.6,no
+data/_bindingdb_cache/D2_labelled.csv,"Root: application, build and project files",csv,372.8,no
+data/_bindingdb_cache/GSK3B.json,"Root: application, build and project files",json,407.8,no
+data/_bindingdb_cache/GSK3B_labelled.csv,"Root: application, build and project files",csv,242.6,no
+data/_bindingdb_cache/hERG_labelled.csv,"Root: application, build and project files",csv,0.0,no
+data/_bindingdb_cache/HT2A.json,"Root: application, build and project files",json,608.0,no
+data/_bindingdb_cache/HT2A_labelled.csv,"Root: application, build and project files",csv,297.1,no
+data/_bindingdb_cache/MAO_A.json,"Root: application, build and project files",json,62.9,no
+data/_bindingdb_cache/MAO_A_labelled.csv,"Root: application, build and project files",csv,38.7,no
+data/_bindingdb_cache/MAO_B.json,"Root: application, build and project files",json,161.7,no
+data/_bindingdb_cache/MAO_B_labelled.csv,"Root: application, build and project files",csv,100.0,no
+data/_bindingdb_cache/SERT.json,"Root: application, build and project files",json,339.0,no
+data/_bindingdb_cache/SERT_labelled.csv,"Root: application, build and project files",csv,179.6,no
+data/_chembl_cache/A2A_y.json,"Root: application, build and project files",json,850.8,no
+data/_chembl_cache/AChE.json,"Root: application, build and project files",json,870.9,no
+data/_chembl_cache/AChE_std.json,"Root: application, build and project files",json,899.0,no
+data/_chembl_cache/AChE_y.json,"Root: application, build and project files",json,780.7,no
+data/_chembl_cache/antioxidant_dpph_raw.json,"Root: application, build and project files",json,376.2,no
+data/_chembl_cache/BACE1.json,"Root: application, build and project files",json,1440.6,no
+data/_chembl_cache/BACE1_std.json,"Root: application, build and project files",json,1927.4,no
+data/_chembl_cache/BACE1_y.json,"Root: application, build and project files",json,1703.6,no
+data/_chembl_cache/BChE_std.json,"Root: application, build and project files",json,512.1,no
+data/_chembl_cache/BChE_y.json,"Root: application, build and project files",json,445.1,no
+data/_chembl_cache/D2_y.json,"Root: application, build and project files",json,1420.5,no
+data/_chembl_cache/extended_candidates.json,"Root: application, build and project files",json,2.3,no
+data/_chembl_cache/GSK3B.json,"Root: application, build and project files",json,857.4,no
+data/_chembl_cache/GSK3B_std.json,"Root: application, build and project files",json,880.1,no
+data/_chembl_cache/GSK3B_y.json,"Root: application, build and project files",json,764.2,no
+data/_chembl_cache/hERG.json,"Root: application, build and project files",json,1286.7,no
+data/_chembl_cache/hERG_std.json,"Root: application, build and project files",json,1577.4,no
+data/_chembl_cache/hERG_y.json,"Root: application, build and project files",json,1379.4,no
+data/_chembl_cache/HT2A_y.json,"Root: application, build and project files",json,809.4,no
+data/_chembl_cache/MAO_A.json,"Root: application, build and project files",json,412.5,no
+data/_chembl_cache/MAO_A_std.json,"Root: application, build and project files",json,425.9,no
+data/_chembl_cache/MAO_A_y.json,"Root: application, build and project files",json,364.0,no
+data/_chembl_cache/MAO_B.json,"Root: application, build and project files",json,621.1,no
+data/_chembl_cache/MAO_B_std.json,"Root: application, build and project files",json,641.1,no
+data/_chembl_cache/MAO_B_y.json,"Root: application, build and project files",json,547.4,no
+data/_chembl_cache/pathway_verification.json,"Root: application, build and project files",json,7.9,no
+data/_chembl_cache/SERT_y.json,"Root: application, build and project files",json,632.2,no
+data/_chembl_cache/target_search.json,"Root: application, build and project files",json,5.0,no
+data/_pubchem_cache/AChE_inactives.csv,"Root: application, build and project files",csv,0.0,no
+data/_pubchem_cache/BACE1_added.csv,"Root: application, build and project files",csv,0.8,no
+data/_pubchem_cache/BACE1_inactives.csv,"Root: application, build and project files",csv,0.9,no
+data/_pubchem_cache/BChE_inactives.csv,"Root: application, build and project files",csv,0.0,no
+data/_pubchem_cache/CGRP_inactives.csv,"Root: application, build and project files",csv,0.0,no
+data/_pubchem_cache/CSF1R_inactives.csv,"Root: application, build and project files",csv,0.0,no
+data/_pubchem_cache/external_100_smiles.json,"Root: application, build and project files",json,9.9,no
+data/_pubchem_cache/GABA_A_inactives.csv,"Root: application, build and project files",csv,0.0,no
+data/_pubchem_cache/GluA2_inactives.csv,"Root: application, build and project files",csv,0.0,no
+data/_pubchem_cache/GluN2B_inactives.csv,"Root: application, build and project files",csv,0.0,no
+data/_pubchem_cache/GSK3B_added.csv,"Root: application, build and project files",csv,262.5,no
+data/_pubchem_cache/GSK3B_inactives.csv,"Root: application, build and project files",csv,851.0,no
+data/_pubchem_cache/hERG_inactives.csv,"Root: application, build and project files",csv,841.3,no
+data/_pubchem_cache/HT2A_inactives.csv,"Root: application, build and project files",csv,0.0,no
+data/_pubchem_cache/HT6_inactives.csv,"Root: application, build and project files",csv,0.0,no
+data/_pubchem_cache/LRRK2_inactives.csv,"Root: application, build and project files",csv,0.0,no
+data/_pubchem_cache/MAO_A_inactives.csv,"Root: application, build and project files",csv,0.0,no
+data/_pubchem_cache/MAO_B_added.csv,"Root: application, build and project files",csv,0.1,no
+data/_pubchem_cache/MAO_B_inactives.csv,"Root: application, build and project files",csv,0.1,no
+data/_pubchem_cache/mGluR5_inactives.csv,"Root: application, build and project files",csv,0.0,no
+data/_pubchem_cache/MT1_inactives.csv,"Root: application, build and project files",csv,0.0,no
+data/_pubchem_cache/Nav1_6_inactives.csv,"Root: application, build and project files",csv,0.0,no
+data/_pubchem_cache/NLRP3_inactives.csv,"Root: application, build and project files",csv,0.0,no
+data/_pubchem_cache/OX1_inactives.csv,"Root: application, build and project files",csv,198.4,no
+data/_pubchem_cache/OX2_inactives.csv,"Root: application, build and project files",csv,11.8,no
+data/_pubchem_cache/P2X7_inactives.csv,"Root: application, build and project files",csv,0.0,no
+data/_pubchem_cache/PDE10A_inactives.csv,"Root: application, build and project files",csv,0.0,no
+data/_pubchem_cache/Sigma1_inactives.csv,"Root: application, build and project files",csv,0.0,no
+data/adme/caco2_permeability.csv,"Training data, ADME endpoints",csv,89.9,yes
+data/adme/clearance_hepatocyte.csv,"Training data, ADME endpoints",csv,87.0,yes
+data/adme/kpuu.csv,"Training data, ADME endpoints",csv,58.7,yes
+data/adme/lipophilicity.csv,"Training data, ADME endpoints",csv,339.0,yes
+data/adme/logbb.csv,"Training data, ADME endpoints",csv,78.2,yes
+data/adme/pgp_inhibition.csv,"Training data, ADME endpoints",csv,101.7,yes
+data/adme/pgp_substrate.csv,"Training data, ADME endpoints",csv,141.7,yes
+data/adme/plasma_protein_binding.csv,"Training data, ADME endpoints",csv,154.3,yes
+data/adme/solubility.csv,"Training data, ADME endpoints",csv,656.5,yes
+data/adme/SOURCE.md,"Training data, ADME endpoints",md,1.4,yes
+data/brainsafe_expanded.csv,"Root: application, build and project files",csv,49.0,yes
+data/brainsafe_FINAL.csv,"Root: application, build and project files",csv,87.2,yes
+data/brainsafe_master.csv,"Root: application, build and project files",csv,66.1,yes
+data/brainsafe_master_v2.csv,"Root: application, build and project files",csv,83.1,yes
+data/brainsafe_SCIENTIFIC_FIXED.csv,"Root: application, build and project files",csv,95.1,yes
+data/brainsafe_training_set.csv,"Root: application, build and project files",csv,18.6,yes
+data/brainsafe_training_set_325.csv,"Root: application, build and project files",csv,44.0,yes
+data/clinical_cns_reference.csv,"Root: application, build and project files",csv,37.9,yes
+data/core_panel_target_ids.json,"Root: application, build and project files",json,2.2,yes
+data/endpoints/_summary.json,"Training data, per endpoint",json,1.8,yes
+data/endpoints/A1.csv,"Training data, per endpoint",csv,300.3,yes
+data/endpoints/A2A.csv,"Training data, per endpoint",csv,524.3,yes
+data/endpoints/a3b4nAChR.csv,"Training data, per endpoint",csv,38.9,yes
+data/endpoints/a4b2nAChR.csv,"Training data, per endpoint",csv,55.6,yes
+data/endpoints/a7nAChR.csv,"Training data, per endpoint",csv,76.8,yes
+data/endpoints/AChE.csv,"Training data, per endpoint",csv,334.1,yes
+data/endpoints/BACE1.csv,"Training data, per endpoint",csv,782.3,yes
+data/endpoints/BBB.csv,"Training data, per endpoint",csv,468.9,yes
+data/endpoints/BChE.csv,"Training data, per endpoint",csv,203.2,yes
+data/endpoints/Cav3_2.csv,"Training data, per endpoint",csv,48.9,yes
+data/endpoints/CB1.csv,"Training data, per endpoint",csv,367.2,yes
+data/endpoints/CGRP.csv,"Training data, per endpoint",csv,86.7,yes
+data/endpoints/COX2.csv,"Training data, per endpoint",csv,229.4,yes
+data/endpoints/CSF1R.csv,"Training data, per endpoint",csv,185.9,yes
+data/endpoints/D2.csv,"Training data, per endpoint",csv,612.4,yes
+data/endpoints/D3.csv,"Training data, per endpoint",csv,422.7,yes
+data/endpoints/DAT.csv,"Training data, per endpoint",csv,179.9,yes
+data/endpoints/DHODH.csv,"Training data, per endpoint",csv,119.6,yes
+data/endpoints/GABA_A.csv,"Training data, per endpoint",csv,22.1,yes
+data/endpoints/GABAA_a5.csv,"Training data, per endpoint",csv,42.8,yes
+data/endpoints/GBA1.csv,"Training data, per endpoint",csv,39.7,yes
+data/endpoints/GluA2.csv,"Training data, per endpoint",csv,12.4,yes
+data/endpoints/GluN2B.csv,"Training data, per endpoint",csv,102.5,yes
+data/endpoints/GSK3B.csv,"Training data, per endpoint",csv,374.1,yes
+data/endpoints/H3.csv,"Training data, per endpoint",csv,276.6,yes
+data/endpoints/HDAC1.csv,"Training data, per endpoint",csv,466.0,yes
+data/endpoints/HDAC6.csv,"Training data, per endpoint",csv,404.2,yes
+data/endpoints/hERG.csv,"Training data, per endpoint",csv,457.0,yes
+data/endpoints/HT1A.csv,"Training data, per endpoint",csv,380.3,yes
+data/endpoints/HT2A.csv,"Training data, per endpoint",csv,434.3,yes
+data/endpoints/HT6.csv,"Training data, per endpoint",csv,268.1,yes
+data/endpoints/HT7.csv,"Training data, per endpoint",csv,171.6,yes
+data/endpoints/KEAP1.csv,"Training data, per endpoint",csv,43.0,yes
+data/endpoints/LRRK2.csv,"Training data, per endpoint",csv,113.2,yes
+data/endpoints/MAO_A.csv,"Training data, per endpoint",csv,142.5,yes
+data/endpoints/MAO_B.csv,"Training data, per endpoint",csv,235.6,yes
+data/endpoints/mGluR5.csv,"Training data, per endpoint",csv,150.9,yes
+data/endpoints/MT1.csv,"Training data, per endpoint",csv,55.4,yes
+data/endpoints/mTOR.csv,"Training data, per endpoint",csv,358.4,yes
+data/endpoints/Nav1_1.csv,"Training data, per endpoint",csv,36.6,yes
+data/endpoints/Nav1_5.csv,"Training data, per endpoint",csv,72.1,yes
+data/endpoints/Nav1_6.csv,"Training data, per endpoint",csv,60.7,yes
+data/endpoints/Nav1_7.csv,"Training data, per endpoint",csv,602.2,yes
+data/endpoints/Nav1_8.csv,"Training data, per endpoint",csv,41.8,yes
+data/endpoints/NET.csv,"Training data, per endpoint",csv,198.4,yes
+data/endpoints/NLRP3.csv,"Training data, per endpoint",csv,36.5,yes
+data/endpoints/OPRK1.csv,"Training data, per endpoint",csv,480.3,yes
+data/endpoints/OPRM1.csv,"Training data, per endpoint",csv,556.1,yes
+data/endpoints/OX1.chembl_only.csv,"Training data, per endpoint",csv,459.2,yes
+data/endpoints/OX1.csv,"Training data, per endpoint",csv,460.7,yes
+data/endpoints/OX2.chembl_only.csv,"Training data, per endpoint",csv,532.9,yes
+data/endpoints/OX2.csv,"Training data, per endpoint",csv,533.2,yes
+data/endpoints/P2X7.csv,"Training data, per endpoint",csv,311.1,yes
+data/endpoints/PDE10A.csv,"Training data, per endpoint",csv,354.7,yes
+data/endpoints/PDE4B.csv,"Training data, per endpoint",csv,142.4,yes
+data/endpoints/RIPK1.csv,"Training data, per endpoint",csv,251.0,yes
+data/endpoints/SERT.csv,"Training data, per endpoint",csv,319.7,yes
+data/endpoints/Sigma1.csv,"Training data, per endpoint",csv,182.0,yes
+data/endpoints/SIRT1.csv,"Training data, per endpoint",csv,39.6,yes
+data/endpoints/TAAR1.csv,"Training data, per endpoint",csv,15.7,yes
+data/endpoints_reg/antioxidant_dpph.csv,"Training data, per endpoint",csv,218.7,yes
+data/endpoints_reg/pka_all.csv,"Training data, per endpoint",csv,714.2,yes
+data/endpoints_reg/pka_basic.csv,"Training data, per endpoint",csv,396.8,yes
+data/external/admetlab/admetlab_input_ALL240.smi,External structure libraries,smi,14.2,yes
+data/external/admetlab/admetlab_input_BBB.smi,External structure libraries,smi,7.4,yes
+data/external/admetlab/admetlab_input_hERG.smi,External structure libraries,smi,6.8,yes
+data/external/admetlab/admetlab_testset.csv,External structure libraries,csv,17.4,yes
+data/external/approved_drugs_targets.tsv,External structure libraries,tsv,0.5,no
+data/external/BBB_Final_GNN_Dataset_2026_CLEAN_v5.csv,External structure libraries,csv,163.3,yes
+data/external/chembl34_smiles_clean.tsv,External structure libraries,tsv,113231.0,no
+data/external/coconut_smiles.tsv,External structure libraries,tsv,73430.3,no
+data/external/COMPREHENSIVE_DRUG_DATABASE.tsv,External structure libraries,tsv,3.4,no
+data/external/drug_smiles.tsv,External structure libraries,tsv,0.1,no
+data/external/drugbank_smiles.tsv,External structure libraries,tsv,979.3,no
+data/external/natural_all_CNS.tsv,External structure libraries,tsv,26629.0,no
+data/external/processed/external_bbb_test.csv,External structure libraries,csv,196.2,yes
+data/external/processed/external_drugs.csv,External structure libraries,csv,1747.4,yes
+data/external/processed/external_summary.csv,External structure libraries,csv,0.2,yes
+data/external/processed/flavonoid_panel.csv,External structure libraries,csv,7006.0,yes
+data/external/processed/natural_products_coverage.csv,External structure libraries,csv,33267.1,no
+data/external/pubchem_natural_smiles_clean.tsv,External structure libraries,tsv,400.6,no
+data/external/SOURCE.md,External structure libraries,md,3.0,yes
+data/processed/compound_library.csv,Derived data tables,csv,11523.0,yes
+data/processed/cv_predictions/A2A_random_oof.csv,Derived data tables,csv,558.8,yes
+data/processed/cv_predictions/A2A_scaffold_oof.csv,Derived data tables,csv,558.9,yes
+data/processed/cv_predictions/AChE_random_oof.csv,Derived data tables,csv,347.4,yes
+data/processed/cv_predictions/AChE_scaffold_oof.csv,Derived data tables,csv,347.2,yes
+data/processed/cv_predictions/adme/caco2_permeability_random_oof.csv,Derived data tables,csv,83.9,yes
+data/processed/cv_predictions/adme/caco2_permeability_scaffold_oof.csv,Derived data tables,csv,83.9,yes
+data/processed/cv_predictions/adme/clearance_hepatocyte_random_oof.csv,Derived data tables,csv,79.4,yes
+data/processed/cv_predictions/adme/clearance_hepatocyte_scaffold_oof.csv,Derived data tables,csv,79.4,yes
+data/processed/cv_predictions/adme/kpuu_random_oof.csv,Derived data tables,csv,52.6,yes
+data/processed/cv_predictions/adme/kpuu_scaffold_oof.csv,Derived data tables,csv,52.6,yes
+data/processed/cv_predictions/adme/lipophilicity_random_oof.csv,Derived data tables,csv,309.3,yes
+data/processed/cv_predictions/adme/lipophilicity_scaffold_oof.csv,Derived data tables,csv,309.3,yes
+data/processed/cv_predictions/adme/logbb_random_oof.csv,Derived data tables,csv,71.9,yes
+data/processed/cv_predictions/adme/logbb_scaffold_oof.csv,Derived data tables,csv,72.0,yes
+data/processed/cv_predictions/adme/pgp_inhibition_random_oof.csv,Derived data tables,csv,89.2,yes
+data/processed/cv_predictions/adme/pgp_inhibition_scaffold_oof.csv,Derived data tables,csv,89.2,yes
+data/processed/cv_predictions/adme/pgp_substrate_random_oof.csv,Derived data tables,csv,125.3,yes
+data/processed/cv_predictions/adme/pgp_substrate_scaffold_oof.csv,Derived data tables,csv,125.2,yes
+data/processed/cv_predictions/adme/plasma_protein_binding_random_oof.csv,Derived data tables,csv,140.2,yes
+data/processed/cv_predictions/adme/plasma_protein_binding_scaffold_oof.csv,Derived data tables,csv,140.2,yes
+data/processed/cv_predictions/adme/solubility_random_oof.csv,Derived data tables,csv,596.5,yes
+data/processed/cv_predictions/adme/solubility_scaffold_oof.csv,Derived data tables,csv,596.5,yes
+data/processed/cv_predictions/antioxidant_DPPH_random_oof.csv,Derived data tables,csv,271.5,yes
+data/processed/cv_predictions/antioxidant_DPPH_scaffold_oof.csv,Derived data tables,csv,271.5,yes
+data/processed/cv_predictions/BACE1_random_oof.csv,Derived data tables,csv,788.5,yes
+data/processed/cv_predictions/BACE1_scaffold_oof.csv,Derived data tables,csv,791.7,yes
+data/processed/cv_predictions/BBB_random_oof.csv,Derived data tables,csv,664.0,yes
+data/processed/cv_predictions/BBB_scaffold_oof.csv,Derived data tables,csv,663.6,yes
+data/processed/cv_predictions/BChE_random_oof.csv,Derived data tables,csv,210.2,yes
+data/processed/cv_predictions/BChE_scaffold_oof.csv,Derived data tables,csv,210.2,yes
+data/processed/cv_predictions/D2_random_oof.csv,Derived data tables,csv,643.1,yes
+data/processed/cv_predictions/D2_scaffold_oof.csv,Derived data tables,csv,643.0,yes
+data/processed/cv_predictions/GSK3B_random_oof.csv,Derived data tables,csv,388.3,yes
+data/processed/cv_predictions/GSK3B_scaffold_oof.csv,Derived data tables,csv,389.9,yes
+data/processed/cv_predictions/hERG_random_oof.csv,Derived data tables,csv,497.7,yes
+data/processed/cv_predictions/hERG_scaffold_oof.csv,Derived data tables,csv,497.6,yes
+data/processed/cv_predictions/HT2A_random_oof.csv,Derived data tables,csv,461.2,yes
+data/processed/cv_predictions/HT2A_scaffold_oof.csv,Derived data tables,csv,461.2,yes
+data/processed/cv_predictions/MAO_A_random_oof.csv,Derived data tables,csv,152.7,yes
+data/processed/cv_predictions/MAO_A_scaffold_oof.csv,Derived data tables,csv,152.6,yes
+data/processed/cv_predictions/MAO_B_random_oof.csv,Derived data tables,csv,247.6,yes
+data/processed/cv_predictions/MAO_B_scaffold_oof.csv,Derived data tables,csv,247.6,yes
+data/processed/cv_predictions/SERT_random_oof.csv,Derived data tables,csv,337.7,yes
+data/processed/cv_predictions/SERT_scaffold_oof.csv,Derived data tables,csv,337.8,yes
+data/processed/endpoint_labels_long.csv,Derived data tables,csv,8538.1,yes
+data/raw/brainsafe_libs_lean/BBB_Final_GNN_Dataset_2026_CLEAN_v5.csv,Source data as retrieved,csv,163.3,yes
+data/raw/brainsafe_libs_lean/chembl34_smiles_clean.tsv,Source data as retrieved,tsv,113231.0,no
+data/raw/brainsafe_libs_lean/coconut_smiles.tsv,Source data as retrieved,tsv,73430.3,no
+data/raw/brainsafe_libs_lean/COMPREHENSIVE_DRUG_DATABASE.tsv,Source data as retrieved,tsv,3.4,no
+data/raw/brainsafe_libs_lean/drug_smiles.tsv,Source data as retrieved,tsv,0.1,no
+data/raw/brainsafe_libs_lean/drugbank_smiles.tsv,Source data as retrieved,tsv,979.3,no
+data/raw/brainsafe_libs_lean/natural_all_CNS.tsv,Source data as retrieved,tsv,26629.0,no
+data/raw/brainsafe_libs_lean/pubchem_natural_smiles_clean.tsv,Source data as retrieved,tsv,400.6,no
+data/raw/measured_endpoints_SOURCE.md,Source data as retrieved,md,3.1,yes
+data/readacross/ADRA1A.csv,Read-across index inputs,csv,107.8,yes
+data/readacross/ADRA2A.csv,Read-across index inputs,csv,41.6,yes
+data/readacross/ADRB2.csv,Read-across index inputs,csv,109.2,yes
+data/readacross/CASP3.csv,Read-across index inputs,csv,60.9,yes
+data/readacross/CB2.csv,Read-across index inputs,csv,369.5,yes
+data/readacross/COX1.csv,Read-across index inputs,csv,19.6,yes
+data/readacross/CTSB.csv,Read-across index inputs,csv,45.8,yes
+data/readacross/D1.csv,Read-across index inputs,csv,63.3,yes
+data/readacross/D4.csv,Read-across index inputs,csv,130.6,yes
+data/readacross/H1.csv,Read-across index inputs,csv,79.6,yes
+data/readacross/HT2C.csv,Read-across index inputs,csv,160.2,yes
+data/readacross/HT3A.csv,Read-across index inputs,csv,37.7,yes
+data/readacross/HT4.csv,Read-across index inputs,csv,45.7,yes
+data/readacross/JNK3.csv,Read-across index inputs,csv,61.8,yes
+data/readacross/M1.csv,Read-across index inputs,csv,125.3,yes
+data/readacross/M2.csv,Read-across index inputs,csv,125.9,yes
+data/readacross/M3.csv,Read-across index inputs,csv,151.8,yes
+data/readacross/OPRD1.csv,Read-across index inputs,csv,319.1,yes
+data/readacross/p38a.csv,Read-across index inputs,csv,268.4,yes
+data/readacross/PARP1.csv,Read-across index inputs,csv,228.8,yes
+data/readacross/PDE5.csv,Read-across index inputs,csv,99.7,yes
+data/readacross/ROCK1.csv,Read-across index inputs,csv,106.5,yes
+data/README.md,"Root: application, build and project files",md,2.2,yes
+data/silver_candidates.csv,"Root: application, build and project files",csv,20.8,yes
+deploy/gcloud/deploy_cloud_run.md,Deployment instructions,md,6.1,yes
+deploy/huggingface/push_to_space.sh,Deployment instructions,sh,2.2,yes
+deploy/huggingface/README.md,Deployment instructions,md,3.1,yes
+DEPLOY.md,"Root: application, build and project files",md,7.3,yes
+Dockerfile,"Root: application, build and project files",(none),3.3,yes
+docs/about_preview.html,Documentation,html,4843.4,no
+docs/ADME_RESULTS.md,Documentation,md,4.9,yes
+docs/app_preview.html,Documentation,html,149.8,no
+docs/BS_BENCHMARK_ANALYSIS.md,Documentation,md,8.6,yes
+docs/BS_LLM_benchmark_protocol.md,Documentation,md,5.5,yes
+docs/BS_MODEL_CARD.md,Documentation,md,36.0,yes
+docs/DATA_DICTIONARY.md,Documentation,md,4.7,yes
+docs/DATA_HEADROOM_A2.md,Documentation,md,1.8,yes
+docs/DATA_MANIFEST.md,Documentation,md,3.7,yes
+docs/decisions_log.md,Documentation,md,6.8,yes
+docs/ENDPOINT_JUSTIFICATION.md,Documentation,md,8.1,yes
+docs/EXPANSION_PLAN.md,Documentation,md,8.4,yes
+docs/INACTIVES_EXPERIMENT.md,Documentation,md,3.3,yes
+docs/METHODOLOGY_AUDIT.md,Documentation,md,6.0,yes
+docs/METHODS.md,Documentation,md,7.0,yes
+docs/MODEL_SELECTION_AND_DATA.md,Documentation,md,2.7,yes
+docs/PROJECT_STRUCTURE.md,Documentation,md,3.6,yes
+docs/RF_CV_RESULTS.md,Documentation,md,5.1,yes
+docs/VALIDATION.md,Documentation,md,6.8,yes
+figures/_oof_cache.npz,Manuscript figures,npz,1005.9,no
+figures/fig1_workflow.png,Manuscript figures,png,227.4,yes
+figures/fig2_dataset.png,Manuscript figures,png,137.4,yes
+figures/fig3_validation.png,Manuscript figures,png,94.5,yes
+figures/fig4_roc_calibration.png,Manuscript figures,png,354.0,yes
+figures/fig5_conformal_comparison.png,Manuscript figures,png,177.5,yes
+figures/fig6_benchmark.png,Manuscript figures,png,108.9,yes
+figures/fig7_regression.png,Manuscript figures,png,1886.2,yes
+figures/fig8_generalisation.png,Manuscript figures,png,273.0,yes
+figures/graphical_abstract.png,Manuscript figures,png,185.0,yes
+inversion/audit_mesh_map.py,Inversion and falsification analysis,py,3.6,yes
+inversion/cache/chembl_drug_smiles.json,Inversion and falsification analysis,json,29.6,yes
+inversion/cache/chembl_indications.json,Inversion and falsification analysis,json,18.3,yes
+inversion/cache/H6_scored.json,Inversion and falsification analysis,json,275.4,yes
+inversion/H1H2H3.log,Inversion and falsification analysis,log,2.1,no
+inversion/H4.log,Inversion and falsification analysis,log,6976.8,no
+inversion/H5.log,Inversion and falsification analysis,log,2.5,no
+inversion/inv_clinical_indication.py,Inversion and falsification analysis,py,14.6,yes
+inversion/inv_disease_layer.py,Inversion and falsification analysis,py,8.7,yes
+inversion/inv_distant_specificity.py,Inversion and falsification analysis,py,6.0,yes
+inversion/inv_panel_independence.py,Inversion and falsification analysis,py,9.6,yes
+inversion/inv_readacross_value.py,Inversion and falsification analysis,py,4.8,yes
+inversion/inv_target_discrimination.py,Inversion and falsification analysis,py,8.1,yes
+inversion/PLAN.md,Inversion and falsification analysis,md,5.3,yes
+inversion/REPORT.md,Inversion and falsification analysis,md,7.9,yes
+inversion/results/GRAPH_FINGERPRINT.json,Inversion and falsification analysis,json,0.1,yes
+inversion/results/H1_disease_layer.csv,Inversion and falsification analysis,csv,0.2,yes
+inversion/results/H2_weight_ablation.csv,Inversion and falsification analysis,csv,0.1,yes
+inversion/results/H3_gating.csv,Inversion and falsification analysis,csv,0.2,yes
+inversion/results/H4_distant_predictions.csv,Inversion and falsification analysis,csv,36.7,no
+inversion/results/H4_distant_specificity.csv,Inversion and falsification analysis,csv,0.3,yes
+inversion/results/H5_readacross_per_target.csv,Inversion and falsification analysis,csv,0.8,yes
+inversion/results/H5_readacross_value.csv,Inversion and falsification analysis,csv,0.2,yes
+inversion/results/H6_clinical_indication.csv,Inversion and falsification analysis,csv,0.6,yes
+inversion/results/H6_clinical_indication_predictions.csv,Inversion and falsification analysis,csv,85.8,yes
+inversion/results/H6_clinical_per_indication.csv,Inversion and falsification analysis,csv,0.4,yes
+inversion/results/H6_mesh_mapping_audit.csv,Inversion and falsification analysis,csv,7.2,yes
+inversion/results/H7_disease_sensitivity.csv,Inversion and falsification analysis,csv,0.7,yes
+inversion/results/H7_target_discrimination.csv,Inversion and falsification analysis,csv,2.5,yes
+inversion/results/H8_family_correlation.csv,Inversion and falsification analysis,csv,1.2,yes
+inversion/results/H8_panel_independence.csv,Inversion and falsification analysis,csv,0.5,yes
+inversion/results/VERDICTS.csv,Inversion and falsification analysis,csv,1.2,yes
+inversion/summarise.py,Inversion and falsification analysis,py,17.5,yes
+LICENSE,"Root: application, build and project files",(none),1.1,yes
+logo/brainsafe_logo.png,Source logos,png,1430.5,yes
+logo/SSSIHL logo.png,Source logos,png,42.5,yes
+manuscript/BrainSafe_AI_Manuscript.docx,Manuscript,docx,583.9,yes
+manuscript/BS_MANUSCRIPT_FINAL.md,Manuscript,md,37.0,yes
+manuscript/figures/Figure10_performance.png,Manuscript,png,152.0,yes
+manuscript/figures/Figure11_decision_analysis.png,Manuscript,png,231.7,yes
+manuscript/figures/Figure1_endpoint_rationale.png,Manuscript,png,663.5,yes
+manuscript/figures/Figure2_mechanism.png,Manuscript,png,323.5,yes
+manuscript/figures/Figure3_model_selection.png,Manuscript,png,164.0,yes
+manuscript/figures/Figure4_validation.png,Manuscript,png,170.2,yes
+manuscript/figures/Figure5_cv_design_and_errorbars.png,Manuscript,png,314.0,yes
+manuscript/figures/Figure6_all_endpoints.png,Manuscript,png,219.8,yes
+manuscript/figures/Figure7_temporal_by_domain.png,Manuscript,png,284.3,yes
+manuscript/figures/Figure8_scaffold_holdout.png,Manuscript,png,307.7,yes
+manuscript/figures/Figure9_specificity.png,Manuscript,png,206.8,yes
+manuscript/NAR_WebServer_BrainSafe.docx,Manuscript,docx,2384.2,yes
+manuscript/NAR_WebServer_BrainSafe_built.md,Manuscript,md,78.6,yes
+manuscript/NAR_WebServer_BrainSafe_draft.docx,Manuscript,docx,607.2,yes
+manuscript/NAR_WebServer_BrainSafe_draft.md,Manuscript,md,63.0,yes
+manuscript/references.md,Manuscript,md,4.3,yes
+manuscript/references_verified.json,Manuscript,json,9.6,yes
+manuscript/tables_generated.md,Manuscript,md,15.7,yes
+model_fetch.py,"Root: application, build and project files",py,7.4,yes
+models_manifest.json,"Root: application, build and project files",json,30.8,yes
+models_rf/A1_binder.joblib,Deployed model artefacts and metadata,joblib,4265.4,no
+models_rf/A1_binder_meta.json,Deployed model artefacts and metadata,json,0.6,yes
+models_rf/A2A.joblib,Deployed model artefacts and metadata,joblib,22343.7,no
+models_rf/A2A_binder.joblib,Deployed model artefacts and metadata,joblib,7057.4,no
+models_rf/A2A_binder_meta.json,Deployed model artefacts and metadata,json,0.6,yes
+models_rf/A2A_meta.json,Deployed model artefacts and metadata,json,0.9,yes
+models_rf/a3b4nAChR_binder.joblib,Deployed model artefacts and metadata,joblib,559.5,no
+models_rf/a4b2nAChR_binder.joblib,Deployed model artefacts and metadata,joblib,1144.2,no
+models_rf/a7nAChR_binder.joblib,Deployed model artefacts and metadata,joblib,957.3,no
+models_rf/a7nAChR_binder_meta.json,Deployed model artefacts and metadata,json,0.6,yes
+models_rf/AChE.joblib,Deployed model artefacts and metadata,joblib,6429.4,no
+models_rf/AChE_calibrated.joblib,Deployed model artefacts and metadata,joblib,26799.5,no
+models_rf/AChE_meta.json,Deployed model artefacts and metadata,json,1.0,yes
+models_rf/ad_per_endpoint.pkl,Deployed model artefacts and metadata,pkl,14446.0,no
+models_rf/ad_reference.pkl,Deployed model artefacts and metadata,pkl,21899.4,no
+models_rf/adme/caco2_permeability.joblib,Deployed model artefacts and metadata,joblib,3404.4,no
+models_rf/adme/caco2_permeability_meta.json,Deployed model artefacts and metadata,json,0.3,yes
+models_rf/adme/clearance_hepatocyte.joblib,Deployed model artefacts and metadata,joblib,3387.1,no
+models_rf/adme/clearance_hepatocyte_meta.json,Deployed model artefacts and metadata,json,0.3,yes
+models_rf/adme/kpuu.joblib,Deployed model artefacts and metadata,joblib,2189.8,no
+models_rf/adme/kpuu_meta.json,Deployed model artefacts and metadata,json,0.2,yes
+models_rf/adme/lipophilicity.joblib,Deployed model artefacts and metadata,joblib,13622.1,no
+models_rf/adme/lipophilicity_meta.json,Deployed model artefacts and metadata,json,0.2,yes
+models_rf/adme/logbb.joblib,Deployed model artefacts and metadata,joblib,3580.5,no
+models_rf/adme/logbb_meta.json,Deployed model artefacts and metadata,json,0.2,yes
+models_rf/adme/pgp_inhibition.joblib,Deployed model artefacts and metadata,joblib,1962.1,no
+models_rf/adme/pgp_inhibition_meta.json,Deployed model artefacts and metadata,json,0.3,yes
+models_rf/adme/pgp_substrate.joblib,Deployed model artefacts and metadata,joblib,2989.9,no
+models_rf/adme/pgp_substrate_meta.json,Deployed model artefacts and metadata,json,0.3,yes
+models_rf/adme/plasma_protein_binding.joblib,Deployed model artefacts and metadata,joblib,6484.4,no
+models_rf/adme/plasma_protein_binding_meta.json,Deployed model artefacts and metadata,json,0.3,yes
+models_rf/adme/solubility.joblib,Deployed model artefacts and metadata,joblib,36213.6,no
+models_rf/adme/solubility_meta.json,Deployed model artefacts and metadata,json,0.2,yes
+models_rf/antioxidant_DPPH.joblib,Deployed model artefacts and metadata,joblib,11445.1,no
+models_rf/antioxidant_DPPH_meta.json,Deployed model artefacts and metadata,json,0.9,yes
+models_rf/BACE1.joblib,Deployed model artefacts and metadata,joblib,7104.7,no
+models_rf/BACE1_calibrated.joblib,Deployed model artefacts and metadata,joblib,27382.6,no
+models_rf/BACE1_meta.json,Deployed model artefacts and metadata,json,1.0,yes
+models_rf/BBB.joblib,Deployed model artefacts and metadata,joblib,10620.5,no
+models_rf/BBB_calibrated.joblib,Deployed model artefacts and metadata,joblib,43224.3,no
+models_rf/BBB_meta.json,Deployed model artefacts and metadata,json,1.0,yes
+models_rf/BChE.joblib,Deployed model artefacts and metadata,joblib,3749.4,no
+models_rf/BChE_calibrated.joblib,Deployed model artefacts and metadata,joblib,15630.2,no
+models_rf/BChE_meta.json,Deployed model artefacts and metadata,json,1.0,yes
+models_rf/binder_modes.json,Deployed model artefacts and metadata,json,36.8,yes
+models_rf/binder_modes.prespecificity.json,Deployed model artefacts and metadata,json,36.2,yes
+models_rf/Cav3_2_binder.joblib,Deployed model artefacts and metadata,joblib,666.1,no
+models_rf/CB1_binder.joblib,Deployed model artefacts and metadata,joblib,5182.2,no
+models_rf/CB1_binder_meta.json,Deployed model artefacts and metadata,json,0.6,yes
+models_rf/CGRP_binder.joblib,Deployed model artefacts and metadata,joblib,732.3,no
+models_rf/COX2_binder.joblib,Deployed model artefacts and metadata,joblib,3034.0,no
+models_rf/COX2_binder_meta.json,Deployed model artefacts and metadata,json,0.7,yes
+models_rf/CSF1R_binder.joblib,Deployed model artefacts and metadata,joblib,3342.6,no
+models_rf/CSF1R_binder_meta.json,Deployed model artefacts and metadata,json,0.6,yes
+models_rf/D2.joblib,Deployed model artefacts and metadata,joblib,26784.3,no
+models_rf/D2_binder.joblib,Deployed model artefacts and metadata,joblib,7327.4,no
+models_rf/D2_binder_meta.json,Deployed model artefacts and metadata,json,0.6,yes
+models_rf/D2_meta.json,Deployed model artefacts and metadata,json,0.9,yes
+models_rf/D3_binder.joblib,Deployed model artefacts and metadata,joblib,6705.3,no
+models_rf/D3_binder_meta.json,Deployed model artefacts and metadata,json,0.6,yes
+models_rf/DAT_binder.joblib,Deployed model artefacts and metadata,joblib,2957.6,no
+models_rf/DAT_binder_meta.json,Deployed model artefacts and metadata,json,0.6,yes
+models_rf/DHODH_binder.joblib,Deployed model artefacts and metadata,joblib,1823.5,no
+models_rf/endpoint_context.json,Deployed model artefacts and metadata,json,2.2,yes
+models_rf/feature_names.json,Deployed model artefacts and metadata,json,13.1,yes
+models_rf/GABA_A_binder.joblib,Deployed model artefacts and metadata,joblib,627.0,no
+models_rf/GABA_A_binder_meta.json,Deployed model artefacts and metadata,json,0.6,yes
+models_rf/GBA1_binder.joblib,Deployed model artefacts and metadata,joblib,308.0,no
+models_rf/GBA1_binder_meta.json,Deployed model artefacts and metadata,json,0.6,yes
+models_rf/GluA2_binder.joblib,Deployed model artefacts and metadata,joblib,147.0,no
+models_rf/GluN2B_binder.joblib,Deployed model artefacts and metadata,joblib,1466.7,no
+models_rf/GluN2B_binder_meta.json,Deployed model artefacts and metadata,json,0.6,yes
+models_rf/GSK3B.joblib,Deployed model artefacts and metadata,joblib,3683.9,no
+models_rf/GSK3B_calibrated.joblib,Deployed model artefacts and metadata,joblib,13948.4,no
+models_rf/GSK3B_meta.json,Deployed model artefacts and metadata,json,1.0,yes
+models_rf/H3_binder.joblib,Deployed model artefacts and metadata,joblib,5868.5,no
+models_rf/H3_binder_meta.json,Deployed model artefacts and metadata,json,0.6,yes
+models_rf/HDAC1_binder.joblib,Deployed model artefacts and metadata,joblib,4032.2,no
+models_rf/HDAC1_binder_meta.json,Deployed model artefacts and metadata,json,0.7,yes
+models_rf/HDAC6_binder.joblib,Deployed model artefacts and metadata,joblib,3935.0,no
+models_rf/HDAC6_binder_meta.json,Deployed model artefacts and metadata,json,0.7,yes
+models_rf/hERG.joblib,Deployed model artefacts and metadata,joblib,10572.8,no
+models_rf/hERG_calibrated.joblib,Deployed model artefacts and metadata,joblib,41272.1,no
+models_rf/hERG_meta.json,Deployed model artefacts and metadata,json,1.0,yes
+models_rf/holdout/A1_binder.joblib,Deployed model artefacts and metadata,joblib,3641.2,no
+models_rf/holdout/A2A_binder.joblib,Deployed model artefacts and metadata,joblib,6010.6,no
+models_rf/holdout/a3b4nAChR_binder.joblib,Deployed model artefacts and metadata,joblib,466.9,no
+models_rf/holdout/a4b2nAChR_binder.joblib,Deployed model artefacts and metadata,joblib,1015.5,no
+models_rf/holdout/a7nAChR_binder.joblib,Deployed model artefacts and metadata,joblib,780.1,no
+models_rf/holdout/binder_modes.json,Deployed model artefacts and metadata,json,12.3,no
+models_rf/holdout/CB1_binder.joblib,Deployed model artefacts and metadata,joblib,5352.1,no
+models_rf/holdout/CGRP_binder.joblib,Deployed model artefacts and metadata,joblib,702.5,no
+models_rf/holdout/COX2_binder.joblib,Deployed model artefacts and metadata,joblib,2533.5,no
+models_rf/holdout/CSF1R_binder.joblib,Deployed model artefacts and metadata,joblib,3459.4,no
+models_rf/holdout/D2_binder.joblib,Deployed model artefacts and metadata,joblib,6099.7,no
+models_rf/holdout/D3_binder.joblib,Deployed model artefacts and metadata,joblib,5740.5,no
+models_rf/holdout/DAT_binder.joblib,Deployed model artefacts and metadata,joblib,2643.8,no
+models_rf/holdout/DHODH_binder.joblib,Deployed model artefacts and metadata,joblib,1621.9,no
+models_rf/holdout/GABA_A_binder.joblib,Deployed model artefacts and metadata,joblib,585.9,no
+models_rf/holdout/GluA2_binder.joblib,Deployed model artefacts and metadata,joblib,266.9,no
+models_rf/holdout/GluN2B_binder.joblib,Deployed model artefacts and metadata,joblib,1336.4,no
+models_rf/holdout/H3_binder.joblib,Deployed model artefacts and metadata,joblib,5044.1,no
+models_rf/holdout/HDAC1_binder.joblib,Deployed model artefacts and metadata,joblib,4079.8,no
+models_rf/holdout/HDAC6_binder.joblib,Deployed model artefacts and metadata,joblib,4024.7,no
+models_rf/holdout/heldout_actives.json,Deployed model artefacts and metadata,json,1034.9,no
+models_rf/holdout/HT1A_binder.joblib,Deployed model artefacts and metadata,joblib,5743.5,no
+models_rf/holdout/HT2A_binder.joblib,Deployed model artefacts and metadata,joblib,6936.1,no
+models_rf/holdout/HT6_binder.joblib,Deployed model artefacts and metadata,joblib,3905.0,no
+models_rf/holdout/HT7_binder.joblib,Deployed model artefacts and metadata,joblib,2667.4,no
+models_rf/holdout/KEAP1_binder.joblib,Deployed model artefacts and metadata,joblib,261.8,no
+models_rf/holdout/LRRK2_binder.joblib,Deployed model artefacts and metadata,joblib,1774.7,no
+models_rf/holdout/mGluR5_binder.joblib,Deployed model artefacts and metadata,joblib,2210.2,no
+models_rf/holdout/MT1_binder.joblib,Deployed model artefacts and metadata,joblib,1030.2,no
+models_rf/holdout/mTOR_binder.joblib,Deployed model artefacts and metadata,joblib,3808.7,no
+models_rf/holdout/Nav1_1_binder.joblib,Deployed model artefacts and metadata,joblib,227.8,no
+models_rf/holdout/Nav1_5_binder.joblib,Deployed model artefacts and metadata,joblib,670.1,no
+models_rf/holdout/Nav1_6_binder.joblib,Deployed model artefacts and metadata,joblib,545.5,no
+models_rf/holdout/Nav1_7_binder.joblib,Deployed model artefacts and metadata,joblib,3430.3,no
+models_rf/holdout/Nav1_8_binder.joblib,Deployed model artefacts and metadata,joblib,558.2,no
+models_rf/holdout/NET_binder.joblib,Deployed model artefacts and metadata,joblib,3104.8,no
+models_rf/holdout/NLRP3_binder.joblib,Deployed model artefacts and metadata,joblib,525.1,no
+models_rf/holdout/OPRK1_binder.joblib,Deployed model artefacts and metadata,joblib,4798.1,no
+models_rf/holdout/OPRM1_binder.joblib,Deployed model artefacts and metadata,joblib,5629.6,no
+models_rf/holdout/OX1_binder.joblib,Deployed model artefacts and metadata,joblib,3736.5,no
+models_rf/holdout/OX2_binder.joblib,Deployed model artefacts and metadata,joblib,4897.5,no
+models_rf/holdout/P2X7_binder.joblib,Deployed model artefacts and metadata,joblib,4583.5,no
+models_rf/holdout/PDE10A_binder.joblib,Deployed model artefacts and metadata,joblib,6089.4,no
+models_rf/holdout/PDE4B_binder.joblib,Deployed model artefacts and metadata,joblib,2306.7,no
+models_rf/holdout/RIPK1_binder.joblib,Deployed model artefacts and metadata,joblib,2040.0,no
+models_rf/holdout/SERT_binder.joblib,Deployed model artefacts and metadata,joblib,5560.9,no
+models_rf/holdout/Sigma1_binder.joblib,Deployed model artefacts and metadata,joblib,3926.0,no
+models_rf/holdout/SIRT1_binder.joblib,Deployed model artefacts and metadata,joblib,469.5,no
+models_rf/HT1A_binder.joblib,Deployed model artefacts and metadata,joblib,6865.9,no
+models_rf/HT1A_binder_meta.json,Deployed model artefacts and metadata,json,0.6,yes
+models_rf/HT2A.joblib,Deployed model artefacts and metadata,joblib,20269.8,no
+models_rf/HT2A_binder.joblib,Deployed model artefacts and metadata,joblib,8301.7,no
+models_rf/HT2A_binder_meta.json,Deployed model artefacts and metadata,json,0.6,yes
+models_rf/HT2A_meta.json,Deployed model artefacts and metadata,json,0.9,yes
+models_rf/HT6_binder.joblib,Deployed model artefacts and metadata,joblib,4690.0,no
+models_rf/HT6_binder_meta.json,Deployed model artefacts and metadata,json,0.6,yes
+models_rf/HT7_binder.joblib,Deployed model artefacts and metadata,joblib,3232.3,no
+models_rf/HT7_binder_meta.json,Deployed model artefacts and metadata,json,0.6,yes
+models_rf/KEAP1_binder.joblib,Deployed model artefacts and metadata,joblib,327.8,no
+models_rf/KEAP1_binder_meta.json,Deployed model artefacts and metadata,json,0.6,yes
+models_rf/LRRK2_binder.joblib,Deployed model artefacts and metadata,joblib,2153.1,no
+models_rf/LRRK2_binder_meta.json,Deployed model artefacts and metadata,json,0.6,yes
+models_rf/MAO_A.joblib,Deployed model artefacts and metadata,joblib,4511.0,no
+models_rf/MAO_A_calibrated.joblib,Deployed model artefacts and metadata,joblib,17503.0,no
+models_rf/MAO_A_meta.json,Deployed model artefacts and metadata,json,1.0,yes
+models_rf/MAO_B.joblib,Deployed model artefacts and metadata,joblib,6418.8,no
+models_rf/MAO_B_calibrated.joblib,Deployed model artefacts and metadata,joblib,25491.5,no
+models_rf/MAO_B_meta.json,Deployed model artefacts and metadata,json,1.0,yes
+models_rf/mGluR5_binder.joblib,Deployed model artefacts and metadata,joblib,2216.7,no
+models_rf/mGluR5_binder_meta.json,Deployed model artefacts and metadata,json,0.6,yes
+models_rf/MT1_binder.joblib,Deployed model artefacts and metadata,joblib,1275.2,no
+models_rf/MT1_binder_meta.json,Deployed model artefacts and metadata,json,0.6,yes
+models_rf/mTOR_binder.joblib,Deployed model artefacts and metadata,joblib,3806.9,no
+models_rf/mTOR_binder_meta.json,Deployed model artefacts and metadata,json,0.7,yes
+models_rf/Nav1_1_binder.joblib,Deployed model artefacts and metadata,joblib,198.3,no
+models_rf/Nav1_5_binder.joblib,Deployed model artefacts and metadata,joblib,533.3,no
+models_rf/Nav1_5_binder_meta.json,Deployed model artefacts and metadata,json,0.6,yes
+models_rf/Nav1_6_binder.joblib,Deployed model artefacts and metadata,joblib,579.5,no
+models_rf/Nav1_7_binder.joblib,Deployed model artefacts and metadata,joblib,3405.3,no
+models_rf/Nav1_8_binder.joblib,Deployed model artefacts and metadata,joblib,592.6,no
+models_rf/NET_binder.joblib,Deployed model artefacts and metadata,joblib,3555.1,no
+models_rf/NET_binder_meta.json,Deployed model artefacts and metadata,json,0.6,yes
+models_rf/NLRP3_binder.joblib,Deployed model artefacts and metadata,joblib,611.3,no
+models_rf/NLRP3_binder_meta.json,Deployed model artefacts and metadata,json,0.6,yes
+models_rf/OPRK1_binder.joblib,Deployed model artefacts and metadata,joblib,4772.5,no
+models_rf/OPRK1_binder_meta.json,Deployed model artefacts and metadata,json,0.7,yes
+models_rf/OPRM1_binder.joblib,Deployed model artefacts and metadata,joblib,6470.0,no
+models_rf/OPRM1_binder_meta.json,Deployed model artefacts and metadata,json,0.7,yes
+models_rf/OX1_binder.joblib,Deployed model artefacts and metadata,joblib,4420.9,no
+models_rf/OX1_binder_meta.json,Deployed model artefacts and metadata,json,0.6,yes
+models_rf/OX2_binder.joblib,Deployed model artefacts and metadata,joblib,5826.5,no
+models_rf/OX2_binder_meta.json,Deployed model artefacts and metadata,json,0.6,yes
+models_rf/P2X7_binder.joblib,Deployed model artefacts and metadata,joblib,5445.0,no
+models_rf/P2X7_binder_meta.json,Deployed model artefacts and metadata,json,0.6,yes
+models_rf/PDE10A_binder.joblib,Deployed model artefacts and metadata,joblib,6128.9,no
+models_rf/PDE10A_binder_meta.json,Deployed model artefacts and metadata,json,0.6,yes
+models_rf/PDE4B_binder.joblib,Deployed model artefacts and metadata,joblib,2660.4,no
+models_rf/PDE4B_binder_meta.json,Deployed model artefacts and metadata,json,0.7,yes
+models_rf/pka_basic.joblib,Deployed model artefacts and metadata,joblib,32906.7,no
+models_rf/pka_basic_meta.json,Deployed model artefacts and metadata,json,0.3,yes
+models_rf/readacross_index.pkl,Deployed model artefacts and metadata,pkl,23205.8,no
+models_rf/RIPK1_binder.joblib,Deployed model artefacts and metadata,joblib,2040.9,no
+models_rf/SERT.joblib,Deployed model artefacts and metadata,joblib,15475.7,no
+models_rf/SERT_binder.joblib,Deployed model artefacts and metadata,joblib,6919.8,no
+models_rf/SERT_binder_meta.json,Deployed model artefacts and metadata,json,0.6,yes
+models_rf/SERT_meta.json,Deployed model artefacts and metadata,json,0.9,yes
+models_rf/Sigma1_binder.joblib,Deployed model artefacts and metadata,joblib,4631.4,no
+models_rf/Sigma1_binder_meta.json,Deployed model artefacts and metadata,json,0.6,yes
+models_rf/SIRT1_binder.joblib,Deployed model artefacts and metadata,joblib,353.0,no
+models_rf/SIRT1_binder_meta.json,Deployed model artefacts and metadata,json,0.6,yes
+models_rf/TAAR1_binder.joblib,Deployed model artefacts and metadata,joblib,200.8,no
+packages.txt,"Root: application, build and project files",txt,0.0,yes
+presentation/BrainSafe_AI_Presentation.pptx,Presentation,pptx,89.8,yes
+presentation/BrainSafe_AI_Supplementary.pptx,Presentation,pptx,3032.2,yes
+README.md,"Root: application, build and project files",md,5.8,yes
+REPOSITORY_INVENTORY.csv,"Root: application, build and project files",csv,70.1,no
+requirements.txt,"Root: application, build and project files",txt,0.9,yes
+results/action_type_availability.csv,"Root: application, build and project files",csv,0.4,yes
+results/batch4_audit.csv,"Root: application, build and project files",csv,0.8,yes
+results/batch4_fetch_summary.csv,"Root: application, build and project files",csv,0.4,yes
+results/batch5_fetch_summary.csv,"Root: application, build and project files",csv,0.2,yes
+results/binder_cv_run.log,"Root: application, build and project files",log,3.8,no
+results/deployed_specificity_audit.csv,"Root: application, build and project files",csv,1.9,yes
+results/extraction_validation.csv,"Root: application, build and project files",csv,1.7,yes
+results/figures/fig_adme_performance.png,Result figures,png,64.0,yes
+results/figures/fig_applicability_coverage.png,Result figures,png,45.1,yes
+results/figures/fig_calibration.png,Result figures,png,50.1,yes
+results/figures/fig_compound_counts.png,Result figures,png,59.5,yes
+results/figures/fig_descriptor_importance.png,Result figures,png,79.2,yes
+results/figures/fig_feature_block_ablation.png,Result figures,png,71.4,yes
+results/figures/fig_gnn_vs_rf.png,Result figures,png,46.6,yes
+results/figures/fig_kpuu_exposure.png,Result figures,png,51.8,yes
+results/figures/fig_learning_curve.png,Result figures,png,65.0,yes
+results/figures/fig_rf_classification_auroc.png,Result figures,png,44.9,yes
+results/figures/fig_rf_regression_r2.png,Result figures,png,40.1,yes
+results/gnn/gnn_vs_rf.csv,Graph-network comparison results,csv,0.3,yes
+results/model_compression.csv,"Root: application, build and project files",csv,2.4,yes
+results/provenance_audit.csv,"Root: application, build and project files",csv,1.0,yes
+results/remaining_gaps.csv,"Root: application, build and project files",csv,0.8,yes
+results/specificity_decisions.csv,"Root: application, build and project files",csv,0.6,yes
+results/state_dependence_extracted.csv,"Root: application, build and project files",csv,594.7,yes
+results/state_dependence_feasibility.csv,"Root: application, build and project files",csv,0.4,yes
+results/state_dependence_pairs.csv,"Root: application, build and project files",csv,9.6,yes
+results/state_dependence_papers.csv,"Root: application, build and project files",csv,93.7,yes
+results/state_dependence_to_retrieve.csv,"Root: application, build and project files",csv,3.2,yes
+results/tables/adme_cv_folds.csv,Result tables,csv,22.8,yes
+results/tables/adme_cv_summary.csv,Result tables,csv,2.1,yes
+results/tables/applicability_bbb_validation.csv,Result tables,csv,0.2,yes
+results/tables/applicability_coverage.csv,Result tables,csv,0.3,yes
+results/tables/background_specificity.csv,Result tables,csv,2.1,yes
+results/tables/binder_cv_folds.csv,Result tables,csv,186.5,yes
+results/tables/binder_cv_summary.csv,Result tables,csv,18.4,yes
+results/tables/binder_vs_measured_inactives.csv,Result tables,csv,4.0,yes
+results/tables/bindingdb_yield.csv,Result tables,csv,0.4,yes
+results/tables/calibration.csv,Result tables,csv,0.3,yes
+results/tables/cns_exposure_demo.csv,Result tables,csv,0.6,yes
+results/tables/drugbank_screen_summary.csv,Result tables,csv,0.3,yes
+results/tables/endpoint_rebuild_provenance.csv,Result tables,csv,0.4,yes
+results/tables/expansion_audit.csv,Result tables,csv,2.2,yes
+results/tables/external_100_predictions.csv,Result tables,csv,4.5,yes
+results/tables/external_100_summary.csv,Result tables,csv,0.8,yes
+results/tables/external_bbb_validation.csv,Result tables,csv,0.1,yes
+results/tables/feature_block_ablation.csv,Result tables,csv,2.1,yes
+results/tables/feature_descriptor_importance.csv,Result tables,csv,5.6,yes
+results/tables/final_thresholds.csv,Result tables,csv,2.6,yes
+results/tables/inactives_audit.csv,Result tables,csv,0.4,yes
+results/tables/inactives_merge_provenance.csv,Result tables,csv,0.3,yes
+results/tables/integrity_audit.csv,Result tables,csv,0.8,yes
+results/tables/integrity_calibration_per_target.csv,Result tables,csv,0.6,yes
+results/tables/inversion_validation.csv,Result tables,csv,0.6,yes
+results/tables/learning_curve.csv,Result tables,csv,1.0,yes
+results/tables/library_summary.csv,Result tables,csv,0.5,yes
+results/tables/manuscript_T1_endpoints.csv,Result tables,csv,4.2,yes
+results/tables/manuscript_T2_per_fold.csv,Result tables,csv,35.5,yes
+results/tables/manuscript_T3_variance.csv,Result tables,csv,1.2,yes
+results/tables/manuscript_T4_variance_decomposition.csv,Result tables,csv,1.7,yes
+results/tables/manuscript_Table1_core.csv,Result tables,csv,2.1,yes
+results/tables/manuscript_Table2_binder_validation.csv,Result tables,csv,2.5,yes
+results/tables/manuscript_Table2_binders.csv,Result tables,csv,1.8,yes
+results/tables/manuscript_Table3_adme.csv,Result tables,csv,1.2,yes
+results/tables/manuscript_Table5_temporal.csv,Result tables,csv,0.6,yes
+results/tables/manuscript_Table6_scaffold_holdout.csv,Result tables,csv,2.2,yes
+results/tables/MASTER_validation_summary.csv,Result tables,csv,1.3,yes
+results/tables/model_comparison.csv,Result tables,csv,4.8,yes
+results/tables/noncns_specificity_predictions.csv,Result tables,csv,80.4,yes
+results/tables/noncns_specificity_summary.csv,Result tables,csv,1.2,yes
+results/tables/pka_model.csv,Result tables,csv,0.3,yes
+results/tables/pubchem_inactives_summary.csv,Result tables,csv,0.1,yes
+results/tables/pubchem_merge_provenance.csv,Result tables,csv,0.2,yes
+results/tables/rf_conformal.csv,Result tables,csv,0.3,yes
+results/tables/rf_cv_folds.csv,Result tables,csv,8.0,yes
+results/tables/rf_cv_summary.csv,Result tables,csv,2.9,yes
+results/tables/rf_cv_summary_chembl_only_baseline.csv,Result tables,csv,2.9,yes
+results/tables/rf_cv_summary_pre_inactives.csv,Result tables,csv,2.9,yes
+results/tables/rf_temporal.csv,Result tables,csv,0.6,yes
+results/tables/scaffold_holdout_results.csv,Result tables,csv,2.2,yes
+results/tables/screening_thresholds.csv,Result tables,csv,1.6,yes
+results/tables/temporal_by_domain.csv,Result tables,csv,2.3,yes
+results/tables/temporal_diagnosis.csv,Result tables,csv,1.5,yes
+results/unmodelled_target_data.csv,"Root: application, build and project files",csv,5.6,yes
+reviewer_package/08.09.26/00_README.md,Reviewer package,md,2.5,yes
+reviewer_package/08.09.26/01_MASTER_endpoint_inventory.csv,Reviewer package,csv,37.5,yes
+reviewer_package/08.09.26/02_training_input_files.csv,Reviewer package,csv,18.2,yes
+reviewer_package/08.09.26/03_crossvalidation_summary.csv,Reviewer package,csv,5.5,yes
+reviewer_package/08.09.26/04_crossvalidation_per_fold.csv,Reviewer package,csv,66.3,yes
+reviewer_package/08.09.26/05_feature_definitions.csv,Reviewer package,csv,161.9,yes
+reviewer_package/08.09.26/06_model_registry.csv,Reviewer package,csv,9.5,yes
+reviewer_package/08.09.26/07_binder_panel_training_design.csv,Reviewer package,csv,7.5,yes
+reviewer_package/08.09.26/08_DATA_DICTIONARY.md,Reviewer package,md,6.0,yes
+reviewer_package/08.09.26/09_PROVENANCE_AND_LIMITATIONS.md,Reviewer package,md,3.4,yes
+reviewer_package/08.09.26/BrainSafe_AI_training_record.xlsx,Reviewer package,xlsx,11944.5,yes
+reviewer_package/08.09.26/MASTER_external_test_results.csv,Reviewer package,csv,621.4,yes
+reviewer_package/08.09.26/MASTER_external_test_summary.csv,Reviewer package,csv,1.3,yes
+reviewer_package/08.09.26/MASTER_training_inputs.csv,Reviewer package,csv,27431.5,yes
+reviewer_package/08.09.26/REVIEW/00_START_HERE.md,Reviewer package,md,3.4,yes
+reviewer_package/08.09.26/REVIEW/01_INPUTS/01_MASTER_endpoint_inventory.csv,Reviewer package,csv,37.5,yes
+reviewer_package/08.09.26/REVIEW/01_INPUTS/02_training_input_files.csv,Reviewer package,csv,18.2,yes
+reviewer_package/08.09.26/REVIEW/01_INPUTS/COMPOUND_MATRIX_endpoints_as_columns.csv,Reviewer package,csv,20593.2,yes
+reviewer_package/08.09.26/REVIEW/01_INPUTS/MASTER_training_inputs.csv,Reviewer package,csv,27431.5,yes
+reviewer_package/08.09.26/REVIEW/02_CROSS_VALIDATION/adme_cv_folds.csv,Reviewer package,csv,22.8,yes
+reviewer_package/08.09.26/REVIEW/02_CROSS_VALIDATION/adme_cv_summary.csv,Reviewer package,csv,2.1,yes
+reviewer_package/08.09.26/REVIEW/02_CROSS_VALIDATION/binder_cv_folds.csv,Reviewer package,csv,186.5,yes
+reviewer_package/08.09.26/REVIEW/02_CROSS_VALIDATION/binder_cv_summary.csv,Reviewer package,csv,18.4,yes
+reviewer_package/08.09.26/REVIEW/02_CROSS_VALIDATION/manuscript_T2_per_fold.csv,Reviewer package,csv,35.5,yes
+reviewer_package/08.09.26/REVIEW/02_CROSS_VALIDATION/rf_cv_summary.csv,Reviewer package,csv,2.9,yes
+reviewer_package/08.09.26/REVIEW/03_EXTERNAL_VALIDATION/H6_clinical_indication.csv,Reviewer package,csv,0.6,yes
+reviewer_package/08.09.26/REVIEW/03_EXTERNAL_VALIDATION/manuscript_Table5_temporal.csv,Reviewer package,csv,0.6,yes
+reviewer_package/08.09.26/REVIEW/03_EXTERNAL_VALIDATION/manuscript_Table6_scaffold_holdout.csv,Reviewer package,csv,2.2,yes
+reviewer_package/08.09.26/REVIEW/03_EXTERNAL_VALIDATION/MASTER_external_test_results.csv,Reviewer package,csv,621.8,yes
+reviewer_package/08.09.26/REVIEW/03_EXTERNAL_VALIDATION/MASTER_external_test_summary.csv,Reviewer package,csv,1.3,yes
+reviewer_package/08.09.26/REVIEW/03_EXTERNAL_VALIDATION/noncns_specificity_summary.csv,Reviewer package,csv,1.2,yes
+reviewer_package/08.09.26/REVIEW/03_EXTERNAL_VALIDATION/VERDICTS.csv,Reviewer package,csv,1.2,yes
+reviewer_package/08.09.26/REVIEW/04_MODELS/05_feature_definitions.csv,Reviewer package,csv,161.9,yes
+reviewer_package/08.09.26/REVIEW/04_MODELS/06_model_registry.csv,Reviewer package,csv,9.5,yes
+reviewer_package/08.09.26/REVIEW/04_MODELS/07_binder_panel_training_design.csv,Reviewer package,csv,7.5,yes
+reviewer_package/08.09.26/REVIEW/04_MODELS/models_manifest.json,Reviewer package,json,30.8,yes
+reviewer_package/08.09.26/REVIEW/BrainSafe_AI_training_record.xlsx,Reviewer package,xlsx,11944.5,yes
+reviewer_package/data/cv_predictions/A2A_random_oof.csv,Reviewer package,csv,558.8,yes
+reviewer_package/data/cv_predictions/A2A_scaffold_oof.csv,Reviewer package,csv,558.9,yes
+reviewer_package/data/cv_predictions/AChE_random_oof.csv,Reviewer package,csv,347.4,yes
+reviewer_package/data/cv_predictions/AChE_scaffold_oof.csv,Reviewer package,csv,347.2,yes
+reviewer_package/data/cv_predictions/antioxidant_DPPH_random_oof.csv,Reviewer package,csv,271.5,yes
+reviewer_package/data/cv_predictions/antioxidant_DPPH_scaffold_oof.csv,Reviewer package,csv,271.5,yes
+reviewer_package/data/cv_predictions/BACE1_random_oof.csv,Reviewer package,csv,788.5,yes
+reviewer_package/data/cv_predictions/BACE1_scaffold_oof.csv,Reviewer package,csv,791.7,yes
+reviewer_package/data/cv_predictions/BBB_random_oof.csv,Reviewer package,csv,664.0,yes
+reviewer_package/data/cv_predictions/BBB_scaffold_oof.csv,Reviewer package,csv,663.6,yes
+reviewer_package/data/cv_predictions/BChE_random_oof.csv,Reviewer package,csv,210.2,yes
+reviewer_package/data/cv_predictions/BChE_scaffold_oof.csv,Reviewer package,csv,210.2,yes
+reviewer_package/data/cv_predictions/D2_random_oof.csv,Reviewer package,csv,643.1,yes
+reviewer_package/data/cv_predictions/D2_scaffold_oof.csv,Reviewer package,csv,643.0,yes
+reviewer_package/data/cv_predictions/GSK3B_random_oof.csv,Reviewer package,csv,388.3,yes
+reviewer_package/data/cv_predictions/GSK3B_scaffold_oof.csv,Reviewer package,csv,389.9,yes
+reviewer_package/data/cv_predictions/hERG_random_oof.csv,Reviewer package,csv,497.7,yes
+reviewer_package/data/cv_predictions/hERG_scaffold_oof.csv,Reviewer package,csv,497.6,yes
+reviewer_package/data/cv_predictions/HT2A_random_oof.csv,Reviewer package,csv,461.2,yes
+reviewer_package/data/cv_predictions/HT2A_scaffold_oof.csv,Reviewer package,csv,461.2,yes
+reviewer_package/data/cv_predictions/MAO_A_random_oof.csv,Reviewer package,csv,152.7,yes
+reviewer_package/data/cv_predictions/MAO_A_scaffold_oof.csv,Reviewer package,csv,152.6,yes
+reviewer_package/data/cv_predictions/MAO_B_random_oof.csv,Reviewer package,csv,247.6,yes
+reviewer_package/data/cv_predictions/MAO_B_scaffold_oof.csv,Reviewer package,csv,247.6,yes
+reviewer_package/data/cv_predictions/SERT_random_oof.csv,Reviewer package,csv,337.7,yes
+reviewer_package/data/cv_predictions/SERT_scaffold_oof.csv,Reviewer package,csv,337.8,yes
+reviewer_package/data/endpoint_measurements_long.csv,Reviewer package,csv,8538.1,yes
+reviewer_package/data/endpoints/A2A.csv,Reviewer package,csv,524.3,yes
+reviewer_package/data/endpoints/AChE.csv,Reviewer package,csv,334.1,yes
+reviewer_package/data/endpoints/antioxidant_dpph.csv,Reviewer package,csv,218.7,yes
+reviewer_package/data/endpoints/BACE1.csv,Reviewer package,csv,782.3,yes
+reviewer_package/data/endpoints/BBB.csv,Reviewer package,csv,468.9,yes
+reviewer_package/data/endpoints/BChE.csv,Reviewer package,csv,203.2,yes
+reviewer_package/data/endpoints/D2.csv,Reviewer package,csv,612.4,yes
+reviewer_package/data/endpoints/GSK3B.csv,Reviewer package,csv,374.1,yes
+reviewer_package/data/endpoints/hERG.csv,Reviewer package,csv,457.0,yes
+reviewer_package/data/endpoints/HT2A.csv,Reviewer package,csv,434.3,yes
+reviewer_package/data/endpoints/MAO_A.csv,Reviewer package,csv,142.5,yes
+reviewer_package/data/endpoints/MAO_B.csv,Reviewer package,csv,235.6,yes
+reviewer_package/data/endpoints/SERT.csv,Reviewer package,csv,319.7,yes
+reviewer_package/data/feature_names_1036.json,Reviewer package,json,13.1,yes
+reviewer_package/data/master_compound_library.csv,Reviewer package,csv,11523.0,yes
+reviewer_package/figures/fig_adme_performance.png,Reviewer package,png,64.0,yes
+reviewer_package/figures/fig_applicability_coverage.png,Reviewer package,png,45.1,yes
+reviewer_package/figures/fig_calibration.png,Reviewer package,png,50.1,yes
+reviewer_package/figures/fig_compound_counts.png,Reviewer package,png,59.5,yes
+reviewer_package/figures/fig_descriptor_importance.png,Reviewer package,png,79.2,yes
+reviewer_package/figures/fig_feature_block_ablation.png,Reviewer package,png,71.4,yes
+reviewer_package/figures/fig_gnn_vs_rf.png,Reviewer package,png,46.6,yes
+reviewer_package/figures/fig_kpuu_exposure.png,Reviewer package,png,51.8,yes
+reviewer_package/figures/fig_learning_curve.png,Reviewer package,png,65.0,yes
+reviewer_package/figures/fig_rf_classification_auroc.png,Reviewer package,png,44.9,yes
+reviewer_package/figures/fig_rf_regression_r2.png,Reviewer package,png,40.1,yes
+reviewer_package/MANIFEST.md,Reviewer package,md,4.2,yes
+reviewer_package/notebooks/01_master_data_and_features.ipynb,Reviewer package,ipynb,4.9,yes
+reviewer_package/notebooks/01_master_data_and_features.py,Reviewer package,py,2.9,yes
+reviewer_package/notebooks/02_reproduce_10fold_training_testing.ipynb,Reviewer package,ipynb,9.2,yes
+reviewer_package/notebooks/02_reproduce_10fold_training_testing.py,Reviewer package,py,6.6,yes
+reviewer_package/notebooks/03_model_comparison.ipynb,Reviewer package,ipynb,5.8,yes
+reviewer_package/notebooks/03_model_comparison.py,Reviewer package,py,4.1,yes
+reviewer_package/notebooks/04_validation_calibration_conformal_temporal.ipynb,Reviewer package,ipynb,4.7,yes
+reviewer_package/notebooks/04_validation_calibration_conformal_temporal.py,Reviewer package,py,2.3,yes
+reviewer_package/README.md,Reviewer package,md,3.8,yes
+reviewer_package/results/adme_cv_folds.csv,Reviewer package,csv,22.8,yes
+reviewer_package/results/adme_cv_summary.csv,Reviewer package,csv,2.1,yes
+reviewer_package/results/applicability_bbb_validation.csv,Reviewer package,csv,0.2,yes
+reviewer_package/results/applicability_coverage.csv,Reviewer package,csv,0.3,yes
+reviewer_package/results/bindingdb_yield.csv,Reviewer package,csv,0.4,yes
+reviewer_package/results/calibration.csv,Reviewer package,csv,0.3,yes
+reviewer_package/results/cns_exposure_demo.csv,Reviewer package,csv,0.6,yes
+reviewer_package/results/drugbank_screen_summary.csv,Reviewer package,csv,0.3,yes
+reviewer_package/results/endpoint_rebuild_provenance.csv,Reviewer package,csv,0.4,yes
+reviewer_package/results/expansion_audit.csv,Reviewer package,csv,2.2,yes
+reviewer_package/results/external_bbb_validation.csv,Reviewer package,csv,0.1,yes
+reviewer_package/results/feature_block_ablation.csv,Reviewer package,csv,2.1,yes
+reviewer_package/results/feature_descriptor_importance.csv,Reviewer package,csv,5.6,yes
+reviewer_package/results/inactives_audit.csv,Reviewer package,csv,0.4,yes
+reviewer_package/results/inactives_merge_provenance.csv,Reviewer package,csv,0.3,yes
+reviewer_package/results/inversion_validation.csv,Reviewer package,csv,0.6,yes
+reviewer_package/results/learning_curve.csv,Reviewer package,csv,1.0,yes
+reviewer_package/results/library_summary.csv,Reviewer package,csv,0.5,yes
+reviewer_package/results/model_comparison.csv,Reviewer package,csv,4.8,yes
+reviewer_package/results/pubchem_inactives_summary.csv,Reviewer package,csv,0.2,yes
+reviewer_package/results/rf_conformal.csv,Reviewer package,csv,0.3,yes
+reviewer_package/results/rf_cv_folds.csv,Reviewer package,csv,8.0,yes
+reviewer_package/results/rf_cv_summary.csv,Reviewer package,csv,2.9,yes
+reviewer_package/results/rf_cv_summary_chembl_only_baseline.csv,Reviewer package,csv,2.9,yes
+reviewer_package/results/rf_cv_summary_pre_inactives.csv,Reviewer package,csv,2.9,yes
+reviewer_package/results/rf_temporal.csv,Reviewer package,csv,0.6,yes
+reviewer_package/scripts/calibrate.py,Reviewer package,py,3.8,yes
+reviewer_package/scripts/featurize.py,Reviewer package,py,3.7,yes
+reviewer_package/scripts/model_comparison.py,Reviewer package,py,5.2,yes
+reviewer_package/scripts/rebuild_endpoints.py,Reviewer package,py,5.5,yes
+reviewer_package/scripts/rf_conformal_temporal.py,Reviewer package,py,5.0,yes
+reviewer_package/scripts/train_rf.py,Reviewer package,py,9.3,yes
+reviewer_package/scripts/validate_inversion.py,Reviewer package,py,5.7,yes
+SCRIPT_INDEX.csv,"Root: application, build and project files",csv,22.7,no
+serve.py,"Root: application, build and project files",py,2.9,yes
+src/brainsafe/adme/cns_exposure.py,Source code,py,3.9,yes
+src/brainsafe/adme/fetch_adme.py,Source code,py,4.7,yes
+src/brainsafe/adme/fetch_pgp_substrate.py,Source code,py,2.9,yes
+src/brainsafe/adme/README.md,Source code,md,2.2,yes
+src/brainsafe/adme/train_adme.py,Source code,py,5.9,yes
+src/brainsafe/analysis/build_manuscript.py,Source code,py,1.6,yes
+src/brainsafe/analysis/build_master_inputs_and_external.py,Source code,py,10.5,yes
+src/brainsafe/analysis/build_master_validation.py,Source code,py,7.7,yes
+src/brainsafe/analysis/build_review_folder.py,Source code,py,11.0,yes
+src/brainsafe/analysis/build_reviewer_package.py,Source code,py,33.7,yes
+src/brainsafe/analysis/build_reviewer_workbook.py,Source code,py,17.9,yes
+src/brainsafe/analysis/figure_endpoint_rationale.py,Source code,py,5.7,yes
+src/brainsafe/analysis/figure_temporal.py,Source code,py,4.5,yes
+src/brainsafe/analysis/figures_powered_validation.py,Source code,py,8.8,yes
+src/brainsafe/analysis/figures_validation.py,Source code,py,8.8,yes
+src/brainsafe/analysis/manuscript_tables.py,Source code,py,17.9,yes
+src/brainsafe/analysis/per_endpoint_report.py,Source code,py,6.4,yes
+src/brainsafe/analysis/reorganise_repository.py,Source code,py,16.6,no
+src/brainsafe/analysis/temporal_diagnosis.py,Source code,py,8.8,yes
+src/brainsafe/analysis/variance_decomposition.py,Source code,py,4.1,yes
+src/brainsafe/analysis/verify_references.py,Source code,py,7.2,yes
+src/brainsafe/analysis/verify_references_strict.py,Source code,py,9.5,yes
+src/brainsafe/build_ad_per_endpoint.py,Source code,py,2.1,yes
+src/brainsafe/build_ad_reference.py,Source code,py,1.6,yes
+src/brainsafe/build_endpoint_context.py,Source code,py,2.2,yes
+src/brainsafe/build_manuscript_docx.py,Source code,py,2.6,yes
+src/brainsafe/build_manuscript_figures.py,Source code,py,9.1,yes
+src/brainsafe/build_readacross_index.py,Source code,py,3.2,yes
+src/brainsafe/data/assess_remaining_gaps.py,Source code,py,9.1,yes
+src/brainsafe/data/assess_state_dependence.py,Source code,py,6.9,yes
+src/brainsafe/data/assess_unmodelled_targets.py,Source code,py,12.3,yes
+src/brainsafe/data/audit_batch4.py,Source code,py,7.5,yes
+src/brainsafe/data/build_compound_library.py,Source code,py,11.8,yes
+src/brainsafe/data/fetch_batch2.py,Source code,py,4.2,yes
+src/brainsafe/data/fetch_batch3.py,Source code,py,3.0,yes
+src/brainsafe/data/fetch_batch4.py,Source code,py,6.7,yes
+src/brainsafe/data/fetch_batch5.py,Source code,py,4.5,yes
+src/brainsafe/data/fetch_bindingdb.py,Source code,py,6.1,yes
+src/brainsafe/data/fetch_new_targets.py,Source code,py,3.2,yes
+src/brainsafe/data/fetch_pka.py,Source code,py,4.8,yes
+src/brainsafe/data/fetch_pubchem_expansion.py,Source code,py,5.0,yes
+src/brainsafe/data/fetch_pubchem_inactives.py,Source code,py,5.5,yes
+src/brainsafe/data/fetch_readacross_targets.py,Source code,py,4.2,yes
+src/brainsafe/data/find_targets.py,Source code,py,4.1,yes
+src/brainsafe/data/harvest_state_dependence.py,Source code,py,9.0,yes
+src/brainsafe/data/integrate_external.py,Source code,py,9.8,yes
+src/brainsafe/data/merge_pubchem_inactives.py,Source code,py,5.2,yes
+src/brainsafe/data/rebuild_endpoints.py,Source code,py,5.5,yes
+src/brainsafe/data/rebuild_with_inactives.py,Source code,py,3.7,yes
+src/brainsafe/data/validate_extraction.py,Source code,py,7.5,yes
+src/brainsafe/data/verify_pathways.py,Source code,py,5.5,yes
+src/brainsafe/evaluation/app_health.py,Source code,py,20.1,yes
+src/brainsafe/evaluation/applicability_domain.py,Source code,py,4.5,yes
+src/brainsafe/evaluation/audit_expansion.py,Source code,py,2.7,yes
+src/brainsafe/evaluation/audit_inactives.py,Source code,py,3.6,yes
+src/brainsafe/evaluation/binder_cv_per_fold.py,Source code,py,9.7,yes
+src/brainsafe/evaluation/deployed_specificity_audit.py,Source code,py,5.4,yes
+src/brainsafe/evaluation/external_100.py,Source code,py,12.1,yes
+src/brainsafe/evaluation/external_100_stats.py,Source code,py,5.4,yes
+src/brainsafe/evaluation/external_validation.py,Source code,py,3.9,yes
+src/brainsafe/evaluation/feature_analysis.py,Source code,py,5.7,yes
+src/brainsafe/evaluation/integrity_audit.py,Source code,py,7.2,yes
+src/brainsafe/evaluation/learning_curve.py,Source code,py,4.2,yes
+src/brainsafe/evaluation/model_comparison.py,Source code,py,5.2,yes
+src/brainsafe/evaluation/noncns_specificity.py,Source code,py,6.6,yes
+src/brainsafe/evaluation/noncns_specificity_fast.py,Source code,py,6.3,yes
+src/brainsafe/evaluation/provenance_audit.py,Source code,py,7.3,yes
+src/brainsafe/evaluation/rf_conformal_temporal.py,Source code,py,5.0,yes
+src/brainsafe/evaluation/scaffold_holdout_panel.py,Source code,py,8.1,yes
+src/brainsafe/evaluation/scaffold_holdout_report.py,Source code,py,3.6,yes
+src/brainsafe/evaluation/validate_inversion.py,Source code,py,5.7,yes
+src/brainsafe/features/encodings.py,Source code,py,1.8,yes
+src/brainsafe/features/featurize.py,Source code,py,3.7,yes
+src/brainsafe/gnn/gin_model.py,Source code,py,2.6,yes
+src/brainsafe/gnn/graph_features.py,Source code,py,2.9,yes
+src/brainsafe/gnn/README.md,Source code,md,2.6,yes
+src/brainsafe/gnn/train_gnn.py,Source code,py,6.5,yes
+src/brainsafe/models/_train_nav17.py,Source code,py,7.5,no
+src/brainsafe/models/_train_ox.py,Source code,py,7.5,no
+src/brainsafe/models/_train_small.py,Source code,py,4.6,no
+src/brainsafe/models/apply_specificity_decisions.py,Source code,py,5.8,yes
+src/brainsafe/models/calibrate.py,Source code,py,3.8,yes
+src/brainsafe/models/calibrate_background_specificity.py,Source code,py,5.7,yes
+src/brainsafe/models/calibrate_binder_thresholds.py,Source code,py,5.2,yes
+src/brainsafe/models/compress_models.py,Source code,py,5.5,yes
+src/brainsafe/models/final_thresholds.py,Source code,py,5.2,yes
+src/brainsafe/models/package_models.py,Source code,py,4.4,yes
+src/brainsafe/models/screening_thresholds.py,Source code,py,4.8,yes
+src/brainsafe/models/train_batch2.py,Source code,py,6.6,yes
+src/brainsafe/models/train_binders_hybrid.py,Source code,py,8.1,yes
+src/brainsafe/models/train_measured_label_holdout.py,Source code,py,4.5,yes
+src/brainsafe/models/train_new_binders.py,Source code,py,5.8,yes
+src/brainsafe/models/train_pka.py,Source code,py,5.0,yes
+src/brainsafe/models/train_receptor_binders.py,Source code,py,7.2,yes
+src/brainsafe/models/train_rf.py,Source code,py,9.3,yes
+src/brainsafe/viz/make_figures.py,Source code,py,10.9,yes
+supplementary/STable0_data_provenance.csv,Supplementary tables,csv,1.5,yes
+supplementary/STable10_label_threshold_robustness.csv,Supplementary tables,csv,1.1,yes
+supplementary/STable11_assay_type_composition.csv,Supplementary tables,csv,0.6,yes
+supplementary/STable12_assay_sensitivity.csv,Supplementary tables,csv,0.2,yes
+supplementary/STable13_llm_scoreboard.csv,Supplementary tables,csv,0.4,yes
+supplementary/STable14_significance.csv,Supplementary tables,csv,0.5,yes
+supplementary/STable15_cv_comparison.csv,Supplementary tables,csv,0.4,yes
+supplementary/STable1_classification_metrics.csv,Supplementary tables,csv,1.3,yes
+supplementary/STable2_receptor_regression.csv,Supplementary tables,csv,0.3,yes
+supplementary/STable3_antioxidant_measured.csv,Supplementary tables,csv,0.2,yes
+supplementary/STable4_threshold_sensitivity.csv,Supplementary tables,csv,5.9,yes
+supplementary/STable5_similarity_binned_auroc.csv,Supplementary tables,csv,1.3,yes
+supplementary/STable6_clinical_reference_composition.csv,Supplementary tables,csv,0.2,yes
+supplementary/STable7_benchmark_vs_literature.csv,Supplementary tables,csv,0.2,yes
+supplementary/STable8_llm_capability_comparison.csv,Supplementary tables,csv,1.4,yes
+supplementary/STable9_baseline_comparison.csv,Supplementary tables,csv,0.4,yes

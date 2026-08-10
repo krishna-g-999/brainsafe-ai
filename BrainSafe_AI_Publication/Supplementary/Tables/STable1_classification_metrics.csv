@@ -1,9 +1,0 @@
-endpoint,n,pos_rate,source,AUROC_random,AUROC_scaffold,scaffold_AUROC_CI95_low,scaffold_AUROC_CI95_high,AUROC_cluster,AUROC_temporal,PR_AUC,balanced_acc,MCC,Brier,conformal_coverage,operating_threshold
-AChE,4324,0.716,"ChEMBL measured pChEMBL (>=6 active, <5 inactive)",0.975,0.915,0.906,0.925,0.912,0.784,0.963,0.834,0.633,0.099,0.899,0.719
-BACE1,8067,0.905,"ChEMBL measured pChEMBL (>=6 active, <5 inactive)",0.956,0.95,0.942,0.958,0.94,0.915,0.994,0.886,0.614,0.039,0.902,0.907
-BBB,7805,0.635,B3DB (measured),0.963,0.921,0.916,0.927,0.906,,0.952,0.839,0.659,0.105,0.897,0.647
-BChE,2580,0.695,"ChEMBL measured pChEMBL (>=6 active, <5 inactive)",0.976,0.937,0.928,0.946,0.921,0.794,0.974,0.874,0.701,0.09,0.899,0.75
-GSK3B,4044,0.914,"ChEMBL measured pChEMBL (>=6 active, <5 inactive)",0.943,0.92,0.906,0.934,0.915,0.658,0.991,0.838,0.468,0.044,0.885,0.934
-MAO_A,2141,0.376,"ChEMBL measured pChEMBL (>=6 active, <5 inactive)",0.95,0.867,0.852,0.883,0.89,0.614,0.815,0.799,0.586,0.136,0.905,0.5
-MAO_B,3455,0.652,"ChEMBL measured pChEMBL (>=6 active, <5 inactive)",0.96,0.885,0.872,0.896,0.873,0.758,0.925,0.807,0.606,0.122,0.895,0.661
-hERG,5905,0.415,"ChEMBL measured pChEMBL (>=6 active, <5 inactive)",0.95,0.901,0.894,0.908,0.87,0.757,0.874,0.817,0.626,0.123,0.896,0.429
