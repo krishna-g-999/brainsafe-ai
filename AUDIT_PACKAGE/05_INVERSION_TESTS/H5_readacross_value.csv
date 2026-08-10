@@ -1,0 +1,6 @@
+# WHAT THIS FILE CONTAINS: H5: whether similarity read-across alone would do as well as the trained models.
+# WHAT IT IS USED FOR: The falsification record. These analyses were designed to make the tool look wrong; the ones that succeeded are reported as such.
+# GENERATED FROM: inversion/results/H5_readacross_value.csv
+method,recall,ci95_low,ci95_high,n
+read-across (top-3 of 5 neighbours),0.9703,0.9646,0.9751,4004
+frequency baseline (commonest targets),0.0599,0.053,0.0677,4004

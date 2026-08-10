@@ -75,6 +75,7 @@ stage,script,purpose,writes,in_git
 9. Inversion and falsification,inversion/inv_readacross_value.py,H5: does read-across carry information beyond what a frequency baseline would give?,,yes
 9. Inversion and falsification,inversion/inv_target_discrimination.py,H7: what does silence mean? Deployed sensitivity of every target in the panel.,,yes
 9. Inversion and falsification,inversion/summarise.py,Collect the inversion results into one verdict table and a written report.,,yes
+10. Analysis and reporting,src/brainsafe/analysis/build_audit_package.py,"The audit package: what the model is, what it was fitted to, and what runs a prediction.",,no
 10. Analysis and reporting,src/brainsafe/analysis/build_manuscript.py,"Assemble the NAR manuscript: inject the generated tables, then convert to .docx.",,yes
 10. Analysis and reporting,src/brainsafe/analysis/build_master_inputs_and_external.py,"Two master files: every training input record, and every compound tested outside training.",,yes
 10. Analysis and reporting,src/brainsafe/analysis/build_master_validation.py,Regenerate the headline validation table from the deployed state.,,yes
@@ -87,7 +88,7 @@ stage,script,purpose,writes,in_git
 10. Analysis and reporting,src/brainsafe/analysis/figures_validation.py,Manuscript figures explaining the cross-validation design and the error bars.,,yes
 10. Analysis and reporting,src/brainsafe/analysis/manuscript_tables.py,"Build the complete, manuscript-ready endpoint tables (markdown + CSV).",,yes
 10. Analysis and reporting,src/brainsafe/analysis/per_endpoint_report.py,Complete per-endpoint validation report for the manuscript.,,yes
-10. Analysis and reporting,src/brainsafe/analysis/reorganise_repository.py,"Audit the repository, consolidate everything superseded into one archive, and index what remains.",,no
+10. Analysis and reporting,src/brainsafe/analysis/reorganise_repository.py,"Audit the repository, consolidate everything superseded into one archive, and index what remains.",,yes
 10. Analysis and reporting,src/brainsafe/analysis/temporal_diagnosis.py,"Why is temporal performance low, and what can be done about it?","results/tables/temporal_diagnosis.csv, results/tables/temporal_by_domain.csv",yes
 10. Analysis and reporting,src/brainsafe/analysis/variance_decomposition.py,Why are the cross-validation error bars larger under the scaffold split?,results/tables/manuscript_T4_variance_decomposition.csv,yes
 10. Analysis and reporting,src/brainsafe/analysis/verify_references.py,"Resolve every citation against Europe PMC and CrossRef, so no reference is written from memory.",manuscript/references_verified.json and manuscript/references.md,yes

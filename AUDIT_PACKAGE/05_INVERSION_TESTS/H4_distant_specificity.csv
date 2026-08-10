@@ -1,0 +1,8 @@
+# WHAT THIS FILE CONTAINS: H4: false-positive rate on chemistry increasingly unlike anything trained on.
+# WHAT IT IS USED FOR: The falsification record. These analyses were designed to make the tool look wrong; the ones that succeeded are reported as such.
+# GENERATED FROM: inversion/results/H4_distant_specificity.csv
+stratum,n,false_positive_rate,ci95_low,ci95_high,median_max_tanimoto,sample_source
+in domain (T>=0.5),77,0.1688,0.1014,0.2677,0.549,random PubChem CIDs
+near domain (0.3-0.5),464,0.1099,0.0846,0.1416,0.383,random PubChem CIDs
+distant (T<0.3),59,0.0508,0.0174,0.1392,0.278,random PubChem CIDs
+ALL,600,0.1117,0.0889,0.1394,0.385,random PubChem CIDs

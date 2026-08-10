@@ -1,0 +1,8 @@
+# WHAT THIS FILE CONTAINS: H1: whether the disease-scoring layer adds anything over the endpoint scores.
+# WHAT IT IS USED FOR: The falsification record. These analyses were designed to make the tool look wrong; the ones that succeeded are reported as such.
+# GENERATED FROM: inversion/results/H1_disease_layer.csv
+test,value,ci95_low,ci95_high,n
+observed top-3 accuracy,0.8045,0.7958,0.813,8232
+permutation null (mean),0.1877,0.0925,0.2964,200
+permutation p-value,0.0049751243781094,,,200
+frequency null (always top-3 commonest),0.4824,,,8232

@@ -5,9 +5,30 @@ path,category,extension,size_kb,in_git
 .streamlit/config.toml,"Root: application, build and project files",toml,0.9,yes
 api.py,"Root: application, build and project files",py,9.0,yes
 app.py,"Root: application, build and project files",py,167.4,yes
-ARCHIVE_MANIFEST.csv,"Root: application, build and project files",csv,177.0,no
+ARCHIVE_MANIFEST.csv,"Root: application, build and project files",csv,177.0,yes
 assets/sai_net_logo.png,Application assets,png,28.6,yes
 assets/sssihl_logo.png,Application assets,png,76.0,yes
+AUDIT_PACKAGE/00_FILE_INDEX.csv,"Root: application, build and project files",csv,6.3,no
+AUDIT_PACKAGE/00_READ_ME_FIRST.md,"Root: application, build and project files",md,4.7,no
+AUDIT_PACKAGE/01_HOW_THE_MODEL_WORKS/FEATURE_DEFINITIONS_all_1036.csv,"Root: application, build and project files",csv,125.1,no
+AUDIT_PACKAGE/01_HOW_THE_MODEL_WORKS/MODEL_INVENTORY_per_endpoint.csv,"Root: application, build and project files",csv,23.8,no
+AUDIT_PACKAGE/02_TRAINING_DATA_AND_LABELS/ENDPOINT_TRAINING_AND_LABELLING.csv,"Root: application, build and project files",csv,26.3,no
+AUDIT_PACKAGE/03_FEATURE_MATRIX_what_the_model_receives/FEATURE_MATRIX_all_1036_columns_tested_compounds.csv,"Root: application, build and project files",csv,8562.1,no
+AUDIT_PACKAGE/03_FEATURE_MATRIX_what_the_model_receives/FEATURE_MATRIX_descriptors_all_compounds.csv,"Root: application, build and project files",csv,20445.7,no
+AUDIT_PACKAGE/04_TRAINING_TESTING_VALIDATION/CROSS_VALIDATION_every_fold.csv,"Root: application, build and project files",csv,262.2,no
+AUDIT_PACKAGE/05_INVERSION_TESTS/H1_disease_layer.csv,"Root: application, build and project files",csv,0.5,no
+AUDIT_PACKAGE/05_INVERSION_TESTS/H2_weight_ablation.csv,"Root: application, build and project files",csv,0.4,no
+AUDIT_PACKAGE/05_INVERSION_TESTS/H4_distant_specificity.csv,"Root: application, build and project files",csv,0.7,no
+AUDIT_PACKAGE/05_INVERSION_TESTS/H5_readacross_value.csv,"Root: application, build and project files",csv,0.5,no
+AUDIT_PACKAGE/05_INVERSION_TESTS/H6_clinical_indication.csv,"Root: application, build and project files",csv,0.9,no
+AUDIT_PACKAGE/05_INVERSION_TESTS/H6_mesh_mapping_audit.csv,"Root: application, build and project files",csv,7.5,no
+AUDIT_PACKAGE/05_INVERSION_TESTS/H7_target_discrimination.csv,"Root: application, build and project files",csv,2.8,no
+AUDIT_PACKAGE/05_INVERSION_TESTS/H8_family_correlation.csv,"Root: application, build and project files",csv,1.5,no
+AUDIT_PACKAGE/05_INVERSION_TESTS/H8_panel_independence.csv,"Root: application, build and project files",csv,0.8,no
+AUDIT_PACKAGE/05_INVERSION_TESTS/INVERSION_PLAN.md,"Root: application, build and project files",md,5.3,no
+AUDIT_PACKAGE/05_INVERSION_TESTS/INVERSION_REPORT.md,"Root: application, build and project files",md,7.9,no
+AUDIT_PACKAGE/05_INVERSION_TESTS/VERDICTS.csv,"Root: application, build and project files",csv,1.5,no
+AUDIT_PACKAGE/06_WHAT_RUNS_A_PREDICTION/FILES_LOADED_AT_PREDICTION_TIME.csv,"Root: application, build and project files",csv,2.6,no
 CITATION.cff,"Root: application, build and project files",cff,0.7,yes
 data/_bindingdb_cache/A2A.json,"Root: application, build and project files",json,593.8,no
 data/_bindingdb_cache/A2A_labelled.csv,"Root: application, build and project files",csv,365.7,no
@@ -288,7 +309,7 @@ docs/INACTIVES_EXPERIMENT.md,Documentation,md,3.3,yes
 docs/METHODOLOGY_AUDIT.md,Documentation,md,6.0,yes
 docs/METHODS.md,Documentation,md,7.0,yes
 docs/MODEL_SELECTION_AND_DATA.md,Documentation,md,2.7,yes
-docs/PROJECT_STRUCTURE.md,Documentation,md,3.6,yes
+docs/PROJECT_STRUCTURE.md,Documentation,md,1.4,yes
 docs/RF_CV_RESULTS.md,Documentation,md,5.1,yes
 docs/VALIDATION.md,Documentation,md,6.8,yes
 figures/_oof_cache.npz,Manuscript figures,npz,1005.9,no
@@ -557,8 +578,9 @@ models_rf/TAAR1_binder.joblib,Deployed model artefacts and metadata,joblib,200.8
 packages.txt,"Root: application, build and project files",txt,0.0,yes
 presentation/BrainSafe_AI_Presentation.pptx,Presentation,pptx,89.8,yes
 presentation/BrainSafe_AI_Supplementary.pptx,Presentation,pptx,3032.2,yes
-README.md,"Root: application, build and project files",md,5.8,yes
-REPOSITORY_INVENTORY.csv,"Root: application, build and project files",csv,70.1,no
+README.md,"Root: application, build and project files",md,6.0,yes
+REPOSITORY_INVENTORY.csv,"Root: application, build and project files",csv,70.1,yes
+REPOSITORY_MAP.md,"Root: application, build and project files",md,3.9,yes
 requirements.txt,"Root: application, build and project files",txt,0.9,yes
 results/action_type_availability.csv,"Root: application, build and project files",csv,0.4,yes
 results/batch4_audit.csv,"Root: application, build and project files",csv,0.8,yes
@@ -776,13 +798,14 @@ reviewer_package/scripts/rebuild_endpoints.py,Reviewer package,py,5.5,yes
 reviewer_package/scripts/rf_conformal_temporal.py,Reviewer package,py,5.0,yes
 reviewer_package/scripts/train_rf.py,Reviewer package,py,9.3,yes
 reviewer_package/scripts/validate_inversion.py,Reviewer package,py,5.7,yes
-SCRIPT_INDEX.csv,"Root: application, build and project files",csv,22.7,no
+SCRIPT_INDEX.csv,"Root: application, build and project files",csv,22.7,yes
 serve.py,"Root: application, build and project files",py,2.9,yes
 src/brainsafe/adme/cns_exposure.py,Source code,py,3.9,yes
 src/brainsafe/adme/fetch_adme.py,Source code,py,4.7,yes
 src/brainsafe/adme/fetch_pgp_substrate.py,Source code,py,2.9,yes
 src/brainsafe/adme/README.md,Source code,md,2.2,yes
 src/brainsafe/adme/train_adme.py,Source code,py,5.9,yes
+src/brainsafe/analysis/build_audit_package.py,Source code,py,27.5,no
 src/brainsafe/analysis/build_manuscript.py,Source code,py,1.6,yes
 src/brainsafe/analysis/build_master_inputs_and_external.py,Source code,py,10.5,yes
 src/brainsafe/analysis/build_master_validation.py,Source code,py,7.7,yes
@@ -795,7 +818,7 @@ src/brainsafe/analysis/figures_powered_validation.py,Source code,py,8.8,yes
 src/brainsafe/analysis/figures_validation.py,Source code,py,8.8,yes
 src/brainsafe/analysis/manuscript_tables.py,Source code,py,17.9,yes
 src/brainsafe/analysis/per_endpoint_report.py,Source code,py,6.4,yes
-src/brainsafe/analysis/reorganise_repository.py,Source code,py,16.6,no
+src/brainsafe/analysis/reorganise_repository.py,Source code,py,16.6,yes
 src/brainsafe/analysis/temporal_diagnosis.py,Source code,py,8.8,yes
 src/brainsafe/analysis/variance_decomposition.py,Source code,py,4.1,yes
 src/brainsafe/analysis/verify_references.py,Source code,py,7.2,yes

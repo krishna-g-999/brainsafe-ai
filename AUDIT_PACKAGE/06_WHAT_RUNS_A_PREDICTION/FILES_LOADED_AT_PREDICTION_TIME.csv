@@ -1,0 +1,16 @@
+# WHAT THIS FILE CONTAINS: Every file the served application opens to answer a single query, and what each one does at that moment.
+# WHAT IT IS USED FOR: Separating what trained the model from what runs it. The training tables are not read at prediction time; the applicability-domain and calibration data are.
+# GENERATED FROM: the load functions in app.py
+file,kind,what_it_holds,what_it_does_at_prediction_time
+models_rf/<endpoint>.joblib,model,The fitted estimator for each endpoint. 71 files.,produces the raw score for that endpoint
+models_rf/<endpoint>_calibrated.joblib,model,Calibration wrapped around the frozen estimator.,converts the forest's vote share into a probability that means what it says
+models_rf/<endpoint>_binder.joblib,model,Binder classifier for targets whose measured set is almost entirely active.,engagement call for the binder panel
+models_rf/adme/<endpoint>.joblib,model,The nine ADME and exposure models.,"absorption, distribution and unbound brain exposure"
+models_rf/binder_modes.json,runtime table,"Per endpoint: how it was trained, its decision threshold and the basis for that threshold.",decides whether a probability is reported as engagement. Models trained against decoys and against measured inactives sit on different scales and must not share a cut
+models_rf/endpoint_context.json,runtime table,"Per endpoint base rate of activity, and the distribution of each regressor's training values.","turns a raw probability into enrichment over the base rate, which is what the interface reports"
+models_rf/ad_reference.pkl,runtime data,"158,890 background structures with fingerprints.",applicability domain. A query far from all of them is flagged as outside the domain rather than scored confidently
+models_rf/ad_per_endpoint.pkl,runtime data,Per-endpoint fingerprints of that endpoint's own measured chemistry.,"the same test, endpoint by endpoint, since the panel's domains differ"
+models_rf/readacross_index.pkl,runtime data,Measured actives with fingerprints and the targets they hit.,"shows the nearest measured compounds and what they are active at, so a prediction can be checked against real data"
+models_rf/<endpoint>_meta.json,metadata,"Training set size, positives, features, hyperparameters, CV summary.",displayed beside each prediction as provenance
+models_manifest.json,integrity,SHA-256 of the archive and of all 195 extracted files.,"model_fetch.py refuses to start on any mismatch, so a corrupted download cannot reach a user"
+results/tables/rf_cv_summary.csv,display only,Cross-validated scores.,shown in the interface. Read for display; it takes no part in computing a prediction

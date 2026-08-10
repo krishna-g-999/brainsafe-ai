@@ -1,0 +1,7 @@
+# WHAT THIS FILE CONTAINS: H2: sensitivity of disease ranking to the mechanism weights.
+# WHAT IT IS USED FOR: The falsification record. These analyses were designed to make the tool look wrong; the ones that succeeded are reported as such.
+# GENERATED FROM: inversion/results/H2_weight_ablation.csv
+weights,top3_accuracy
+curated,0.8045
+uniform (all 1.0),0.8036
+randomly permuted,0.8025
