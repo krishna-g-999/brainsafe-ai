@@ -82,40 +82,75 @@ def fetch_target(name: str, uniprot: str) -> list[dict]:
     return rows
 
 
-def parse_affinity(raw: str) -> float | None:
-    """Convert a BindingDB affinity string in nM to a -log10(molar) potency value."""
-    s = str(raw).strip().lstrip("><~=").strip()
+def parse_affinity(raw: str) -> tuple[float | None, str]:
+    """Convert a BindingDB affinity string in nM to (-log10(molar) potency, relation).
+
+    BindingDB records censored measurements: ">10000" means no binding was detected up to 10 uM,
+    "<1" means the affinity was beyond the assay's dynamic range. The relation is returned rather
+    than discarded, because stripping it turns a bound into an exact value: ">10000" would become
+    precisely 10 uM and "<1" precisely 1 nM, neither of which was measured.
+
+    Returned relation is one of "=", ">", "<", "~". For a censored record the value is the bound,
+    not an estimate, and the caller must treat it as such.
+    """
+    s = str(raw).strip()
+    relation = "="
+    if s[:1] in "><~":
+        relation = s[0]
+        s = s[1:]
+    s = s.lstrip("=").strip()
     try:
         v = float(s)
     except ValueError:
-        return None
+        return None, relation
     if v <= 0:
-        return None
-    return 9.0 - math.log10(v)  # nM -> pX
+        return None, relation
+    return 9.0 - math.log10(v), relation  # nM -> pX
 
 
 def label_from(pvalue: float) -> int:
     return 1 if pvalue >= 6.0 else (0 if pvalue < 5.0 else -1)
 
 
-def build_bindingdb_compounds(rows: list[dict]) -> pd.DataFrame:
-    """Standardise and median-aggregate BindingDB rows into labelled compounds keyed by InChIKey."""
-    recs = []
+def build_bindingdb_compounds(rows: list[dict]) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Aggregate BindingDB rows into labelled compounds keyed by InChIKey.
+
+    Only exact measurements contribute to the pooled potency, because a median taken over a mixture
+    of exact values and bounds is not a potency. Censored records are kept, separately, with the
+    bound and the relation, so the negative class they carry is available to a later step rather
+    than silently discarded here.
+
+    Returns (exact_compounds, censored_records).
+    """
+    exact, censored = [], []
     for a in rows:
-        p = parse_affinity(a.get("bdb.affinity"))
+        p, relation = parse_affinity(a.get("bdb.affinity"))
         if p is None:
             continue
         csmi, ik = standardise(a.get("bdb.smile"))
         if ik is None:
             continue
-        recs.append({"inchikey": ik, "smiles": csmi, "pvalue": p})
-    if not recs:
-        return pd.DataFrame(columns=["inchikey", "smiles", "pchembl", "label"])
-    df = pd.DataFrame(recs)
+        if relation == "=":
+            exact.append({"inchikey": ik, "smiles": csmi, "pvalue": p})
+        elif relation in "><":
+            # ">10000 nM" bounds potency from above (the compound is weaker than the bound);
+            # "<1 nM" bounds it from below. Decisive only when the bound falls outside the grey
+            # zone: a ">" bound at or below the inactive cut means inactive whatever the true
+            # value is, and a "<" bound at or above the active cut means active.
+            decisive = (relation == ">" and p <= 5.0) or (relation == "<" and p >= 6.0)
+            censored.append({"inchikey": ik, "smiles": csmi, "bound": p, "relation": relation,
+                             "implied_label": (1 if relation == "<" else 0) if decisive else -1})
+        # "~" is an approximation of unstated precision and is dropped.
+
+    cen_df = (pd.DataFrame(censored) if censored else
+              pd.DataFrame(columns=["inchikey", "smiles", "bound", "relation", "implied_label"]))
+    if not exact:
+        return pd.DataFrame(columns=["inchikey", "smiles", "pchembl", "label"]), cen_df
+    df = pd.DataFrame(exact)
     g = df.groupby("inchikey").agg(smiles=("smiles", "first"),
                                    pchembl=("pvalue", "median")).reset_index()
     g["label"] = g["pchembl"].apply(label_from)
-    return g[g["label"] >= 0].reset_index(drop=True)
+    return g[g["label"] >= 0].reset_index(drop=True), cen_df
 
 
 def current_inchikeys(endpoint: str) -> set[str]:
@@ -135,9 +170,10 @@ def main() -> None:
         if i:
             time.sleep(6)  # be gentle with the BindingDB server between targets
         rows = fetch_target(name, uniprot)
-        bdb = build_bindingdb_compounds(rows)
+        bdb, cen = build_bindingdb_compounds(rows)
         have = current_inchikeys(name)
         new = bdb[~bdb.inchikey.isin(have)]
+        decisive = cen[cen.implied_label >= 0] if len(cen) else cen
         summary.append({
             "endpoint": name,
             "current_chembl_compounds": len(have),
@@ -146,9 +182,15 @@ def main() -> None:
             "net_new_active": int((new.label == 1).sum()),
             "net_new_inactive": int((new.label == 0).sum()),
             "combined_total": len(have) + len(new),
+            # Censored records are counted rather than absorbed, so the size of the negative class
+            # the query throws away is visible instead of implicit.
+            "censored_records": len(cen),
+            "censored_decisive": len(decisive),
+            "censored_decisive_inactive": int((decisive.implied_label == 0).sum()) if len(decisive) else 0,
         })
         # persist the standardised BindingDB compounds for the later rebuild step
         bdb.to_csv(CACHE / f"{name}_labelled.csv", index=False)
+        cen.to_csv(CACHE / f"{name}_censored.csv", index=False)
         print(f"  [{name}] current {len(have)} + net-new {len(new)} "
               f"-> combined {len(have)+len(new)}")
     out = pd.DataFrame(summary)
