@@ -15,7 +15,6 @@ figures/_oof_cache.npz
 *.tsv
 *.sdf
 data/external/processed/natural_products_coverage.csv
-data/_bindingdb_cache/
 
 # keep the small metadata / reports that document the models
 !models_brain/*_meta.json
@@ -26,8 +25,11 @@ data/_bindingdb_cache/
 !models_genuine/*_meta.json
 !models_v5/*.json
 
-# ---- Raw API caches, logs, backups, scratch ----
-data/_chembl_cache/
+# ---- Raw API caches ----
+# These are committed deliberately. They are the only record of what ChEMBL, BindingDB and
+# PubChem returned on the retrieval dates, and the live APIs will not return the same rows
+# after the next release. Without them the endpoint tables cannot be regenerated at all.
+# ---- Logs, backups, scratch ----
 logs/
 *.log
 *.bak
@@ -49,7 +51,6 @@ BrainSafe_Supplementary/
 # Claude Code local settings
 .claude/
 archive/legacy/_bulky/
-data/_pubchem_cache/
 .ipynb_checkpoints/
 
 # Derived artifacts, regenerable from source scripts (large)
