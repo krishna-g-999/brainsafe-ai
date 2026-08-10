@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import re
 import time
+import sys
 from pathlib import Path
 
 import pandas as pd
@@ -27,6 +28,9 @@ from rdkit import Chem, RDLogger
 
 RDLogger.DisableLog("rdApp.*")
 requests.packages.urllib3.disable_warnings()
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from build_compound_library import add_parent_key  # noqa: E402
+
 ROOT = Path(__file__).resolve().parents[3]
 OUT = ROOT / "data" / "endpoints_reg"
 OUT.mkdir(parents=True, exist_ok=True)
@@ -95,10 +99,12 @@ def main():
     df["says_base"] = df.assay.str.contains(BASE_WORDS, na=False)
 
     # median per compound, so a compound measured repeatedly does not dominate
-    allp = df.groupby("smiles").agg(pka=("pka", "median"), year=("year", "max"),
+    allp = add_parent_key(df).groupby("inchikey").agg(
+                                    smiles=("smiles", "first"),
+                                    pka=("pka", "median"), year=("year", "max"),
                                     basic_centre=("basic_centre", "first"),
                                     says_acid=("says_acid", "any"),
-                                    says_base=("says_base", "any")).reset_index()
+                                    says_base=("says_base", "any")).reset_index(drop=True)
     allp.to_csv(OUT / "pka_all.csv", index=False)
 
     basic = allp[(allp.basic_centre) & (~allp.says_acid)]

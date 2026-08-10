@@ -17,6 +17,9 @@ import pandas as pd
 import requests
 
 requests.packages.urllib3.disable_warnings()
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from build_compound_library import add_parent_key  # noqa: E402
+
 ROOT = Path(__file__).resolve().parents[3]
 OUT = ROOT / "data" / "endpoints"
 CACHE = ROOT / "data" / "_chembl_cache"
@@ -71,8 +74,9 @@ def main():
         df = fetch_activities(cid)
         if df.empty:
             print(f"[{name}] no data"); continue
-        med = df.groupby("smiles").agg(pchembl=("pchembl", "median"),
-                                       year=("year", "max")).reset_index()
+        med = add_parent_key(df).groupby("inchikey").agg(
+            smiles=("smiles", "first"), pchembl=("pchembl", "median"),
+            year=("year", "max")).reset_index(drop=True)
         med["label"] = med["pchembl"].apply(label_from)
         med = med.dropna(subset=["label"])
         med["label"] = med["label"].astype(int)

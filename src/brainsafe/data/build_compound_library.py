@@ -106,6 +106,36 @@ def flavonoid_flag(mol) -> bool:
     return any(mol.HasSubstructMatch(p) for p in _FLAVO.values() if p is not None)
 
 
+def add_parent_key(df, smiles_col="smiles"):
+    """Add an `inchikey` column and canonicalise `smiles` to the desalted parent.
+
+    Measurement tables must be collapsed per compound before they become training rows, and the key
+    for that has to be the InChIKey of the parent structure. Grouping on the raw SMILES string, which
+    the expansion fetchers all did, counts a salt and its free base as two compounds and lets both
+    reach the training table. They are one compound, and once the featuriser strips the counter-ion
+    they are one input, so no split can keep them apart. Collapsing them here, while the measurement
+    is still attached and a median still means something, is the only place it can be done properly.
+
+    Note what this deliberately does not merge. The InChIKey separates stereoisomers, and it should:
+    enantiomers are different compounds and can differ in potency by orders of magnitude, so a data
+    step has no business averaging them. That they collide under a stereo-blind fingerprint is a
+    property of the model rather than the chemistry, and is handled where it belongs, in
+    train_rf._dedup_features.
+
+    Rows whose structure cannot be parsed are dropped, and the count is returned to the caller
+    through the row difference rather than being silently absorbed.
+    """
+    keys, parents = [], []
+    for smi in df[smiles_col].astype(str):
+        csmi, ik = standardise(smi)
+        keys.append(ik)
+        parents.append(csmi)
+    out = df.copy()
+    out["inchikey"] = keys
+    out[smiles_col] = parents
+    return out.dropna(subset=["inchikey"]).reset_index(drop=True)
+
+
 def collect_measurements() -> pd.DataFrame:
     """Read every measured source into a long table of standardised measurements."""
     records = []

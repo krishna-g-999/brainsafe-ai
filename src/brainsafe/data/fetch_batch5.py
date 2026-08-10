@@ -29,6 +29,9 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from build_compound_library import add_parent_key  # noqa: E402
+
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / "src" / "brainsafe"))
 from data.fetch_batch4 import OUT, fetch, verify  # noqa: E402
@@ -66,7 +69,9 @@ def main():
         if df.empty:
             print(f"[{name}] no data", flush=True)
             continue
-        med = df.groupby("smiles").agg(pchembl=("pchembl", "median"), year=("year", "max")).reset_index()
+        med = add_parent_key(df).groupby("inchikey").agg(
+            smiles=("smiles", "first"), pchembl=("pchembl", "median"),
+            year=("year", "max")).reset_index(drop=True)
         med["label"] = med["pchembl"].apply(lambda p: 1 if p >= 6 else (0 if p < 5 else None))
         med = med.dropna(subset=["label"])
         med["label"] = med["label"].astype(int)
