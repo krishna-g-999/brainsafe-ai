@@ -1,9 +1,0 @@
-endpoint,Ensemble_AUROC,kNN_Tanimoto_AUROC,LogisticRegression_AUROC,delta_vs_kNN,delta_vs_LR,ensemble_best
-AChE,0.915,0.874,0.828,0.041,0.087,True
-BACE1,0.95,0.885,0.883,0.065,0.067,True
-BBB,0.921,0.882,0.792,0.039,0.129,True
-BChE,0.937,0.899,0.866,0.038,0.071,True
-GSK3B,0.92,0.842,0.831,0.078,0.089,True
-MAO_A,0.867,0.853,0.731,0.014,0.136,True
-MAO_B,0.885,0.833,0.742,0.052,0.143,True
-hERG,0.901,0.871,0.792,0.03,0.109,True

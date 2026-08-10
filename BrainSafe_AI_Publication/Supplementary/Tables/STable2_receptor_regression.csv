@@ -1,5 +1,0 @@
-receptor,n,scaffold_cv_R2,RMSE,Spearman,temporal_R2,y_range,task
-D2,7511,0.425,0.713,0.652,-0.007,3.74-10.83,regression (pChEMBL)
-A2A,5547,0.526,0.738,0.706,0.326,3.39-11.0,regression (pChEMBL)
-HT2A,5256,0.46,0.757,0.684,0.085,4.0-11.0,regression (pChEMBL)
-SERT,4471,0.338,0.841,0.573,0.171,4.0-11.0,regression (pChEMBL)

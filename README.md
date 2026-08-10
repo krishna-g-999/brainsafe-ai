@@ -38,7 +38,8 @@ pass): [`docs/VALIDATION.md`](docs/VALIDATION.md).** Methods and results:
 
 ## Repository structure
 Standard research layout (`data/`, `src/brainsafe/{data,features,models,evaluation,viz,gnn,adme}`,
-`results/`, `docs/`, `manuscript/`, `archive/legacy/`). Superseded code is in `archive/legacy/`.
+`results/`, `docs/`, `manuscript/`). See `REPOSITORY_MAP.md` for the generated tree, `SCRIPT_INDEX.csv`
+for every script in pipeline order, and `ARCHIVE_MANIFEST.csv` for what was set aside and why.
 
 Key entry points: **`app.py`** (interactive application over the current models),
 `src/brainsafe/models/train_rf.py` (training), `src/brainsafe/evaluation/` (validation, comparison,
@@ -114,7 +115,7 @@ resolved via PubChem.
 
 ## Citation
 Manuscript in preparation (Sri Sathya Sai Institute of Higher Learning). See
-`BrainSafe_AI_Publication/Manuscript/`.
+`manuscript/NAR_WebServer_BrainSafe_built.md`.
 
 ## License
 See `LICENSE`.

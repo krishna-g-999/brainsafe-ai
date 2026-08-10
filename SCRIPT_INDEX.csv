@@ -1,0 +1,118 @@
+stage,script,purpose,writes,in_git
+1. Data acquisition,src/brainsafe/adme/fetch_adme.py,Fetch measured ADME / exposure datasets for ladder B (the properties that govern brain exposure).,"data/adme/<endpoint>.csv  (smiles, y[, label]) and data/adme/SOURCE.md",yes
+1. Data acquisition,src/brainsafe/adme/fetch_pgp_substrate.py,Fetch a measured P-glycoprotein *substrate* dataset from ChEMBL (distinct from inhibition).,"data/adme/pgp_substrate.csv (inchikey, smiles, efflux_ratio, label)",yes
+1. Data acquisition,src/brainsafe/data/fetch_batch2.py,"Fetch the second target expansion: ALS, Huntington, neuroinflammation, epilepsy and sleep.",,yes
+1. Data acquisition,src/brainsafe/data/fetch_batch3.py,"Fetch the second target expansion: ALS, Huntington, neuroinflammation, epilepsy and sleep.",,yes
+1. Data acquisition,src/brainsafe/data/fetch_batch4.py,Fetch the fourth target expansion: the mechanisms of epilepsy and pain the panel was missing.,,yes
+1. Data acquisition,src/brainsafe/data/fetch_batch5.py,"Fetch the fifth expansion: migraine, multiple sclerosis, and a genuinely ALS-linked mechanism.",,yes
+1. Data acquisition,src/brainsafe/data/fetch_bindingdb.py,Fetch measured binding affinities from BindingDB and report the net-new yield per target.,results/tables/bindingdb_yield.csv,yes
+1. Data acquisition,src/brainsafe/data/fetch_new_targets.py,Fetch measured ChEMBL activities for the new brain-target endpoints.,,yes
+1. Data acquisition,src/brainsafe/data/fetch_pka.py,"Fetch measured pKa from ChEMBL, and separate basic from acidic ionisation.","data/endpoints_reg/pka_basic.csv, data/endpoints_reg/pka_all.csv",yes
+1. Data acquisition,src/brainsafe/data/fetch_pubchem_expansion.py,Fetch measured inactives from PubChem BioAssay for the targets whose negative class is thin.,data/_pubchem_cache/<target>_inactives.csv,yes
+1. Data acquisition,src/brainsafe/data/fetch_pubchem_inactives.py,Fetch measured *inactive* compounds from PubChem BioAssay for the protein-target classifiers.,"data/_pubchem_cache/<target>_inactives.csv  (inchikey, smiles)",yes
+1. Data acquisition,src/brainsafe/data/fetch_readacross_targets.py,Fetch additional targets to widen read-across beyond the modelled panel.,data/readacross/<TARGET>.csv,yes
+1. Data acquisition,src/brainsafe/data/find_targets.py,"Resolve ChEMBL target IDs by NAME SEARCH, never by memorised identifier.",data/_chembl_cache/target_search.json,yes
+1. Data acquisition,src/brainsafe/data/harvest_state_dependence.py,Harvest state-dependent sodium-channel potency from the primary literature.,,yes
+2. Data assembly and audit,src/brainsafe/build_endpoint_context.py,Precompute per-endpoint training context so predictions can be reported HONESTLY.,,yes
+2. Data assembly and audit,src/brainsafe/data/assess_remaining_gaps.py,"One more attempt at every mechanism the panel still lacks, using angles not yet tried.",,yes
+2. Data assembly and audit,src/brainsafe/data/assess_state_dependence.py,Can a state-dependence endpoint be built? Count the paired measurements that would be needed.,,yes
+2. Data assembly and audit,src/brainsafe/data/assess_unmodelled_targets.py,How much measured data exists for the mechanisms the panel does not model?,,yes
+2. Data assembly and audit,src/brainsafe/data/audit_batch4.py,Audit the six new endpoints before any of them is trained.,,yes
+2. Data assembly and audit,src/brainsafe/data/build_compound_library.py,Build the BrainSafe compound library from measured bioactivity sources.,data/processed/compound_library.csv     one row per unique compound (wide); data/processed/endpoint_labels_long.csv  one row per compound-endpoint measurement (long); results/tables/library_summary.csv       record counts by source and endpoint; docs/DATA_DICTIONARY.md                  definition of every column,yes
+2. Data assembly and audit,src/brainsafe/data/integrate_external.py,Integrate the external compound libraries pulled from the HPC cluster.,external_drugs.csv          standardised DrugBank small molecules (role=evaluation); external_bbb_test.csv       FDA-curated BBB set with measured label + overlap flag vs B3DB; flavonoid_panel.csv         flavonoid-core compounds found across the natural-product sources; natural_products_coverage.csv   deduplicated natural-product coverage set,yes
+2. Data assembly and audit,src/brainsafe/data/merge_pubchem_inactives.py,Merge SIMILARITY-MATCHED PubChem inactives into the endpoint tables.,updated data/endpoints/<target>.csv and results/tables/pubchem_merge_provenance.csv,yes
+2. Data assembly and audit,src/brainsafe/data/rebuild_endpoints.py,Rebuild the endpoint training tables from pooled ChEMBL + BindingDB measured evidence.,"data/endpoints/<target>.csv        smiles,label,pchembl,year,source   (rebuilt); results/tables/endpoint_rebuild_provenance.csv   per-endpoint source breakdown",yes
+2. Data assembly and audit,src/brainsafe/data/rebuild_with_inactives.py,Merge the PubChem measured inactives into the protein-target classifier sets.,"rebuilt data/endpoints/<target>.csv, results/tables/inactives_merge_provenance.csv,; and data/_pubchem_cache/<target>_added.csv (the InChIKeys actually added, for the audit).",yes
+2. Data assembly and audit,src/brainsafe/data/validate_extraction.py,Measure the error rate of literature extraction before any of it is trusted.,,yes
+2. Data assembly and audit,src/brainsafe/data/verify_pathways.py,Verify every target-to-pathway assertion in the knowledge graph against KEGG and Reactome.,data/_chembl_cache/pathway_verification.json,yes
+3. Featurisation,src/brainsafe/features/encodings.py,Reversible integer encodings for the non-numeric metadata fields.,,yes
+3. Featurisation,src/brainsafe/features/featurize.py,Turn a molecular structure into the numeric feature vector the models train on.,,yes
+4. Model training,src/brainsafe/adme/train_adme.py,Train the ADME / exposure models (ladder B) with the same protocol as the target panel.,results/tables/adme_cv_summary.csv   mean +/- sd per endpoint and split; results/tables/adme_cv_folds.csv     every fold; models_rf/adme/<endpoint>.joblib     deployed model; data/processed/cv_predictions/adme/<endpoint>_<split>_oof.csv,yes
+4. Model training,src/brainsafe/models/train_batch2.py,"Train the second expansion batch, choosing the appropriate task per target.",,yes
+4. Model training,src/brainsafe/models/train_binders_hybrid.py,Hybrid retraining: property-matched decoys PLUS experimentally measured inactives.,,yes
+4. Model training,src/brainsafe/models/train_measured_label_holdout.py,Retrain the remaining measured-label models with a held-out inactive split.,,yes
+4. Model training,src/brainsafe/models/train_new_binders.py,Decoy-aware binder classifiers for the 14 new brain-target endpoints.,,yes
+4. Model training,src/brainsafe/models/train_pka.py,Train a most-basic-pKa regressor for the CNS MPO desirability score.,"models_rf/pka_basic.joblib, models_rf/pka_basic_meta.json, results/tables/pka_model.csv",yes
+4. Model training,src/brainsafe/models/train_receptor_binders.py,"Decoy-aware receptor binder classifiers (D2, A2A, HT2A, SERT).",,yes
+4. Model training,src/brainsafe/models/train_rf.py,"Random-forest models for the twelve endpoints, with ten-fold cross-validation.","results/tables/rf_cv_folds.csv     one row per endpoint x split x fold, with all metrics; results/tables/rf_cv_summary.csv   mean +/- sd per endpoint x split (headline metric first); models_rf/<endpoint>.joblib        final model refit on all data, for deployment; models_rf/<endpoint>_meta.json     n, positives, features, hyper-parameters, CV summary",yes
+5. Calibration and thresholds,src/brainsafe/models/apply_specificity_decisions.py,Act on the deployed-specificity audit.,,yes
+5. Calibration and thresholds,src/brainsafe/models/calibrate.py,Probability calibration for the classification endpoints.,"results/tables/calibration.csv          Brier and ECE, raw vs calibrated, per endpoint; models_rf/<endpoint>_calibrated.joblib  calibrated deployment model",yes
+5. Calibration and thresholds,src/brainsafe/models/calibrate_background_specificity.py,Add a background-specificity requirement to every binder threshold.,,yes
+5. Calibration and thresholds,src/brainsafe/models/calibrate_binder_thresholds.py,Calibrate each binder model's decision threshold against EXPERIMENTALLY MEASURED inactives.,"mode, base rate where applicable, the; calibrated threshold, the measured-inactive AUROC and the achieved false-positive rate.",yes
+5. Calibration and thresholds,src/brainsafe/models/final_thresholds.py,"Set every binder decision threshold from two independent requirements, computed from scratch.",,yes
+5. Calibration and thresholds,src/brainsafe/models/screening_thresholds.py,"Compute a second, high-precision threshold set for low-prevalence screening.",results/tables/screening_thresholds.csv,yes
+6. Applicability domain,src/brainsafe/build_ad_per_endpoint.py,Per-endpoint applicability-domain references.,,yes
+6. Applicability domain,src/brainsafe/build_ad_reference.py,Precompute the applicability-domain reference fingerprints once.,,yes
+6. Applicability domain,src/brainsafe/build_readacross_index.py,"Precompute the read-across index: measured compounds, their fingerprints, and what they hit.",,yes
+7. Packaging and release,model_fetch.py,Make sure the models are present before anything tries to load them.,,yes
+7. Packaging and release,src/brainsafe/models/compress_models.py,"Recompress the deployed models, verifying that not one prediction changes.",,yes
+7. Packaging and release,src/brainsafe/models/package_models.py,"Package the deployed models as one archive, with a manifest that can verify it.",,yes
+8. Evaluation,src/brainsafe/evaluation/app_health.py,Pre-flight check on the deployed application.,,yes
+8. Evaluation,src/brainsafe/evaluation/applicability_domain.py,"Applicability domain: how far a prediction sits from the training data, and whether that matters.",results/tables/applicability_bbb_validation.csv   in- vs out-of-domain metrics on the 306 drugs; results/tables/applicability_coverage.csv         in-domain fraction per endpoint on DrugBank,yes
+8. Evaluation,src/brainsafe/evaluation/audit_expansion.py,Audit the effect of the BindingDB expansion: compare pooled models to the ChEMBL-only baseline.,results/tables/expansion_audit.csv,yes
+8. Evaluation,src/brainsafe/evaluation/audit_inactives.py,Audit the PubChem-inactive augmentation: is the change genuine or an easy-negative artefact?,results/tables/inactives_audit.csv,yes
+8. Evaluation,src/brainsafe/evaluation/binder_cv_per_fold.py,Per-fold ten-fold cross-validation for the binder panel.,"results/tables/binder_cv_folds.csv     one row per endpoint x split x fold; results/tables/binder_cv_summary.csv   mean and sd per endpoint x split, with the recorded value",yes
+8. Evaluation,src/brainsafe/evaluation/deployed_specificity_audit.py,What does every DEPLOYED binder model do when shown chemistry it has no business recognising?,,yes
+8. Evaluation,src/brainsafe/evaluation/external_100.py,Prospective external validation on compounds absent from every training set.,"results/tables/external_100_predictions.csv   one row per compound, all endpoint outputs; results/tables/external_100_summary.csv       accuracy statistics with confidence intervals",yes
+8. Evaluation,src/brainsafe/evaluation/external_100_stats.py,Statistical analysis of the prospective external validation.,results/tables/external_100_summary.csv,yes
+8. Evaluation,src/brainsafe/evaluation/external_validation.py,External validation of the trained models on data held entirely out of training.,results/tables/external_bbb_validation.csv     metrics on the 306 novel approved-drug BBB compounds; results/tables/drugbank_screen_summary.csv     predicted-active fraction per endpoint on DrugBank,yes
+8. Evaluation,src/brainsafe/evaluation/feature_analysis.py,"Justify the retained features: which feature blocks matter, and which descriptors drive each model.",results/tables/feature_block_ablation.csv       headline metric per endpoint x block; results/tables/feature_descriptor_importance.csv  per-endpoint importance of each descriptor,yes
+8. Evaluation,src/brainsafe/evaluation/integrity_audit.py,Integrity and reliability audit for a tool intended to displace wet-lab experiments.,results/tables/integrity_audit.csv,yes
+8. Evaluation,src/brainsafe/evaluation/learning_curve.py,What happens if we add more training data? A scaffold-honest learning curve.,results/tables/learning_curve.csv; results/figures/fig_learning_curve.png,yes
+8. Evaluation,src/brainsafe/evaluation/model_comparison.py,Does a different estimator beat the random forest? RF vs XGBoost vs histogram gradient boosting.,results/tables/model_comparison.csv,yes
+8. Evaluation,src/brainsafe/evaluation/noncns_specificity.py,Large-scale specificity test on ~1000 compounds with no known engagement of any modelled target.,results/tables/noncns_specificity_predictions.csv   per-compound predictions; results/tables/noncns_specificity_summary.csv       rates with Wilson intervals,yes
+8. Evaluation,src/brainsafe/evaluation/noncns_specificity_fast.py,"Large-scale specificity test, efficient construction of the negative set.",results/tables/noncns_specificity_predictions.csv; results/tables/noncns_specificity_summary.csv,yes
+8. Evaluation,src/brainsafe/evaluation/provenance_audit.py,Which reported results are still true of the model that is deployed?,,yes
+8. Evaluation,src/brainsafe/evaluation/rf_conformal_temporal.py,Conformal prediction and temporal validation for the random-forest models.,"results/tables/rf_conformal.csv, results/tables/rf_temporal.csv",yes
+8. Evaluation,src/brainsafe/evaluation/scaffold_holdout_panel.py,"Scaffold-held-out retraining of the whole binder panel, for a properly powered prospective test.","models_rf/holdout/*.joblib, models_rf/holdout/binder_modes.json",yes
+8. Evaluation,src/brainsafe/evaluation/scaffold_holdout_report.py,Complete results table for the scaffold-held-out prospective test.,results/tables/scaffold_holdout_results.csv,yes
+8. Evaluation,src/brainsafe/evaluation/validate_inversion.py,"Adversarial (inversion) validation: try to break the model, confirm it holds.","results/tables/inversion_validation.csv (check, result, detail)",yes
+9. Inversion and falsification,inversion/audit_mesh_map.py,Audit the MeSH-to-panel mapping used by H6.,,yes
+9. Inversion and falsification,inversion/inv_clinical_indication.py,H6: do the disease scores predict real clinical indications?,,yes
+9. Inversion and falsification,inversion/inv_disease_layer.py,"H1-H3: does the disease layer carry information, and are its design choices justified?",,yes
+9. Inversion and falsification,inversion/inv_distant_specificity.py,H4: does the reported specificity survive outside the training neighbourhood?,,yes
+9. Inversion and falsification,inversion/inv_panel_independence.py,"H8: does a larger panel add information, or only more chances to fire?",,yes
+9. Inversion and falsification,inversion/inv_readacross_value.py,H5: does read-across carry information beyond what a frequency baseline would give?,,yes
+9. Inversion and falsification,inversion/inv_target_discrimination.py,H7: what does silence mean? Deployed sensitivity of every target in the panel.,,yes
+9. Inversion and falsification,inversion/summarise.py,Collect the inversion results into one verdict table and a written report.,,yes
+10. Analysis and reporting,src/brainsafe/analysis/build_manuscript.py,"Assemble the NAR manuscript: inject the generated tables, then convert to .docx.",,yes
+10. Analysis and reporting,src/brainsafe/analysis/build_master_inputs_and_external.py,"Two master files: every training input record, and every compound tested outside training.",,yes
+10. Analysis and reporting,src/brainsafe/analysis/build_master_validation.py,Regenerate the headline validation table from the deployed state.,,yes
+10. Analysis and reporting,src/brainsafe/analysis/build_review_folder.py,"Assemble the organised review folder: inputs, cross-validation, external validation, models.",,yes
+10. Analysis and reporting,src/brainsafe/analysis/build_reviewer_package.py,"Build the reviewer package: every endpoint, every input, every fold, every feature, every score.",,yes
+10. Analysis and reporting,src/brainsafe/analysis/build_reviewer_workbook.py,"One Excel workbook containing the whole training record, for reviewers.",,yes
+10. Analysis and reporting,src/brainsafe/analysis/figure_endpoint_rationale.py,"Figure 1: why these endpoints, and how they compose the tool.",,yes
+10. Analysis and reporting,src/brainsafe/analysis/figure_temporal.py,Figure 7: prospective (temporal) performance is governed by the applicability domain.,,yes
+10. Analysis and reporting,src/brainsafe/analysis/figures_powered_validation.py,Manuscript figures for the powered validation. Every value is read from a results table.,,yes
+10. Analysis and reporting,src/brainsafe/analysis/figures_validation.py,Manuscript figures explaining the cross-validation design and the error bars.,,yes
+10. Analysis and reporting,src/brainsafe/analysis/manuscript_tables.py,"Build the complete, manuscript-ready endpoint tables (markdown + CSV).",,yes
+10. Analysis and reporting,src/brainsafe/analysis/per_endpoint_report.py,Complete per-endpoint validation report for the manuscript.,,yes
+10. Analysis and reporting,src/brainsafe/analysis/reorganise_repository.py,"Audit the repository, consolidate everything superseded into one archive, and index what remains.",,no
+10. Analysis and reporting,src/brainsafe/analysis/temporal_diagnosis.py,"Why is temporal performance low, and what can be done about it?","results/tables/temporal_diagnosis.csv, results/tables/temporal_by_domain.csv",yes
+10. Analysis and reporting,src/brainsafe/analysis/variance_decomposition.py,Why are the cross-validation error bars larger under the scaffold split?,results/tables/manuscript_T4_variance_decomposition.csv,yes
+10. Analysis and reporting,src/brainsafe/analysis/verify_references.py,"Resolve every citation against Europe PMC and CrossRef, so no reference is written from memory.",manuscript/references_verified.json and manuscript/references.md,yes
+10. Analysis and reporting,src/brainsafe/analysis/verify_references_strict.py,"Resolve citations by EXACT TITLE against CrossRef and Europe PMC, with a strict match test.","manuscript/references_verified.json, manuscript/references.md",yes
+10. Analysis and reporting,src/brainsafe/build_manuscript_docx.py,"Build the manuscript .docx from the markdown source, with the result figures embedded.",,yes
+10. Analysis and reporting,src/brainsafe/build_manuscript_figures.py,Generate publication figures for the NAR Web Server manuscript.,,yes
+11. Application and serving,api.py,BrainSafe AI REST API: programmatic access to the same models the web interface serves.,,yes
+11. Application and serving,app.py,BrainSafe AI: interactive predictor (validated RF + ADME/exposure models).,,yes
+11. Application and serving,serve.py,Run the interface and the REST API together in one container.,,yes
+Supporting,reviewer_package/notebooks/01_master_data_and_features.py,"Master data table, per-endpoint sets, and the feature definition",paired notebook: 01_master_data_and_features.ipynb,yes
+Supporting,reviewer_package/notebooks/02_reproduce_10fold_training_testing.py,Reproduce: Random Forest + 10-fold cross-validation (training and testing),paired notebook: 02_reproduce_10fold_training_testing.ipynb,yes
+Supporting,reviewer_package/notebooks/03_model_comparison.py,Model comparison: why a random forest,paired notebook: 03_model_comparison.ipynb,yes
+Supporting,reviewer_package/notebooks/04_validation_calibration_conformal_temporal.py,"Validation: calibration, conformal coverage, temporal, and adversarial (inversion) checks",paired notebook: 04_validation_calibration_conformal_temporal.ipynb,yes
+Supporting,reviewer_package/scripts/calibrate.py,Probability calibration for the classification endpoints.,"results/tables/calibration.csv          Brier and ECE, raw vs calibrated, per endpoint; models_rf/<endpoint>_calibrated.joblib  calibrated deployment model",yes
+Supporting,reviewer_package/scripts/featurize.py,Turn a molecular structure into the numeric feature vector the models train on.,,yes
+Supporting,reviewer_package/scripts/model_comparison.py,Does a different estimator beat the random forest? RF vs XGBoost vs histogram gradient boosting.,results/tables/model_comparison.csv,yes
+Supporting,reviewer_package/scripts/rebuild_endpoints.py,Rebuild the endpoint training tables from pooled ChEMBL + BindingDB measured evidence.,"data/endpoints/<target>.csv        smiles,label,pchembl,year,source   (rebuilt); results/tables/endpoint_rebuild_provenance.csv   per-endpoint source breakdown",yes
+Supporting,reviewer_package/scripts/rf_conformal_temporal.py,Conformal prediction and temporal validation for the random-forest models.,"results/tables/rf_conformal.csv, results/tables/rf_temporal.csv",yes
+Supporting,reviewer_package/scripts/train_rf.py,"Random-forest models for the twelve endpoints, with ten-fold cross-validation.","results/tables/rf_cv_folds.csv     one row per endpoint x split x fold, with all metrics; results/tables/rf_cv_summary.csv   mean +/- sd per endpoint x split (headline metric first); models_rf/<endpoint>.joblib        final model refit on all data, for deployment; models_rf/<endpoint>_meta.json     n, positives, features, hyper-parameters, CV summary",yes
+Supporting,reviewer_package/scripts/validate_inversion.py,"Adversarial (inversion) validation: try to break the model, confirm it holds.","results/tables/inversion_validation.csv (check, result, detail)",yes
+Supporting,src/brainsafe/adme/cns_exposure.py,"Combine the target, BBB and ADME models into an interpretable CNS free-exposure readout.",,yes
+Supporting,src/brainsafe/gnn/gin_model.py,"A Graph Isomorphism Network (GIN) in pure PyTorch, no torch-geometric.",,yes
+Supporting,src/brainsafe/gnn/graph_features.py,"Turn a molecule into a graph for the GNN: atom nodes, bond edges, atom feature vectors.",,yes
+Supporting,src/brainsafe/gnn/train_gnn.py,"Train the GIN graph network and compare it, honestly, to the random forest on the same split.",results/gnn/gnn_vs_rf.csv,yes
+Supporting,src/brainsafe/models/_train_nav17.py,Hybrid retraining: property-matched decoys PLUS experimentally measured inactives.,,no
+Supporting,src/brainsafe/models/_train_ox.py,Hybrid retraining: property-matched decoys PLUS experimentally measured inactives.,,no
+Supporting,src/brainsafe/models/_train_small.py,Retrain the remaining measured-label models with a held-out inactive split.,,no
+Supporting,src/brainsafe/viz/make_figures.py,Render the result figures for the random-forest models and the feature analysis.,"fig_rf_classification_auroc.png   AUROC per classifier, random vs scaffold 10-fold; fig_rf_regression_r2.png          R-squared per regressor, random vs scaffold 10-fold; fig_compound_counts.png           compounds per endpoint (by data source if available); fig_feature_block_ablation.png    fingerprint-only vs descriptors-only vs combined",yes
