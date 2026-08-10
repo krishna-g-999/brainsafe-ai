@@ -7,20 +7,29 @@ dropped). Blood-brain-barrier data additionally gains the FDA-curated compounds 
 in B3DB. Nothing is imputed and no source overrides a measurement; where both sources measure a
 compound, their medians are pooled.
 
-The previous ChEMBL-only tables are copied to archive/legacy/ first, so the change is reversible and
-the provenance of every compound (which source, how many) is recorded.
+The current tables are copied to a timestamped folder under archive/legacy/ first, so the change is
+reversible and the provenance of every compound (which source, how many) is recorded.
+
+This script rewrites the training data, so it refuses to run on incomplete inputs. Every cached
+source response is checked before anything is touched, every table is rebuilt in memory and checked
+for plausibility before any file is written, and a rebuild that would empty or halve a table stops
+with a non-zero exit. On a fresh clone the caches are absent (they are not committed), and the
+correct outcome is a clear error, not eleven empty tables.
 
 Outputs:
   data/endpoints/<target>.csv        smiles,label,pchembl,year,source   (rebuilt)
   results/tables/endpoint_rebuild_provenance.csv   per-endpoint source breakdown
 
 Run:  python src/brainsafe/data/rebuild_endpoints.py
+      python src/brainsafe/data/rebuild_endpoints.py --allow-shrink   (only if a drop is intended)
 """
 from __future__ import annotations
 
+import argparse
 import json
 import shutil
 import sys
+from datetime import datetime
 from pathlib import Path
 
 import numpy as np
@@ -36,16 +45,59 @@ ENDPOINTS = ROOT / "data" / "endpoints"
 
 TARGETS = ["AChE", "BChE", "BACE1", "GSK3B", "MAO_B", "MAO_A", "D2", "A2A", "HT2A", "SERT", "hERG"]
 
+# A rebuilt endpoint below this many rows is a broken cache, not a result. The smallest table this
+# script legitimately produces is BChE at 2,621 rows, so the floor is far below any real outcome.
+MIN_ROWS = 100
+# Refuse to replace a table with one less than this fraction of its current size unless the operator
+# says the reduction is intended.
+SHRINK_LIMIT = 0.5
+
 
 def label_from(pvalue: float) -> int:
     return 1 if pvalue >= 6.0 else (0 if pvalue < 5.0 else -1)
+
+
+def missing_inputs() -> list[str]:
+    """Every required input that is absent, named relative to the repository root."""
+    absent_dirs = [d for d in (CHEMBL_CACHE, BDB_CACHE) if not d.is_dir()]
+    if absent_dirs:
+        return [f"{d.relative_to(ROOT).as_posix()}/  (the whole cache directory is absent)"
+                for d in absent_dirs]
+    missing = []
+    for name in TARGETS:
+        for path in (CHEMBL_CACHE / f"{name}_y.json", BDB_CACHE / f"{name}_labelled.csv"):
+            if not path.exists():
+                missing.append(path.relative_to(ROOT).as_posix())
+    if not (ENDPOINTS / "BBB.csv").exists():
+        missing.append((ENDPOINTS / "BBB.csv").relative_to(ROOT).as_posix())
+    return missing
+
+
+def check_plausible(name: str, df: pd.DataFrame, allow_shrink: bool) -> None:
+    """Stop before overwriting a populated table with an empty or drastically smaller one."""
+    if len(df) < MIN_ROWS:
+        raise SystemExit(
+            f"[{name}] the rebuild produced {len(df)} rows, below the {MIN_ROWS}-row floor. "
+            "That indicates a broken or partial cache rather than a result. Nothing was written."
+        )
+    existing = ENDPOINTS / f"{name}.csv"
+    if existing.exists() and not allow_shrink:
+        n_old = len(pd.read_csv(existing))
+        if n_old and len(df) < SHRINK_LIMIT * n_old:
+            raise SystemExit(
+                f"[{name}] the rebuild produced {len(df)} rows against {n_old} already on disk, a "
+                f"drop of more than {int((1 - SHRINK_LIMIT) * 100)} per cent. Refusing to overwrite. "
+                "Re-run with --allow-shrink if the reduction is intended. Nothing was written."
+            )
 
 
 def chembl_compound_level(name: str) -> pd.DataFrame:
     """Per-compound median pChEMBL from the cached ChEMBL activities."""
     cache = CHEMBL_CACHE / f"{name}_y.json"
     if not cache.exists():
-        return pd.DataFrame(columns=["inchikey", "smiles", "pchembl", "year"])
+        raise FileNotFoundError(
+            f"cached ChEMBL activities for {name} are missing: {cache.relative_to(ROOT)}"
+        )
     recs = []
     for r in json.loads(cache.read_text()):
         csmi, ik = standardise(r.get("smiles"))
@@ -63,7 +115,10 @@ def bindingdb_compound_level(name: str) -> pd.DataFrame:
     """Per-compound median potency already standardised by fetch_bindingdb.py."""
     path = BDB_CACHE / f"{name}_labelled.csv"
     if not path.exists():
-        return pd.DataFrame(columns=["inchikey", "smiles", "pchembl"])
+        raise FileNotFoundError(
+            f"cached BindingDB measurements for {name} are missing: {path.relative_to(ROOT)}. "
+            "Regenerate with src/brainsafe/data/fetch_bindingdb.py"
+        )
     df = pd.read_csv(path)
     df["year"] = np.nan
     return df[["inchikey", "smiles", "pchembl", "year"]]
@@ -103,17 +158,39 @@ def bbb_stats() -> dict:
             "inactive": int((bbb.label == 0).sum()), "fda_added": 0}
 
 
-def main() -> None:
-    backup = ROOT / "archive" / "legacy" / "endpoints_chembl_only_2026-07-21"
-    if not backup.exists():
-        shutil.copytree(ENDPOINTS, backup)
-        print(f"backed up ChEMBL-only endpoints -> {backup.relative_to(ROOT)}")
+def main(argv: list[str] | None = None) -> None:
+    ap = argparse.ArgumentParser(description="Rebuild the endpoint training tables.")
+    ap.add_argument("--allow-shrink", action="store_true",
+                    help="permit a rebuilt table smaller than half the one it replaces")
+    args = ap.parse_args(argv)
 
-    prov = []
+    missing = missing_inputs()
+    if missing:
+        raise SystemExit(
+            "rebuild_endpoints.py rewrites the training tables and cannot run without the cached\n"
+            "source responses. Missing:\n"
+            + "\n".join(f"  {m}" for m in missing)
+            + "\n\nThese caches are not committed (see .gitignore). Regenerate them with the\n"
+              "acquisition scripts in src/brainsafe/data/, or restore them from the archived\n"
+              "download, then re-run. Nothing has been written and data/endpoints/ is untouched."
+        )
+
+    # Rebuild and check everything before writing anything, so a failure part way through cannot
+    # leave data/endpoints/ half rebuilt and half stale.
+    built, prov = {}, []
     for name in TARGETS:
         df, p = rebuild_target(name)
-        df.to_csv(ENDPOINTS / f"{name}.csv", index=False)
+        check_plausible(name, df, args.allow_shrink)
+        built[name] = df
         prov.append(p)
+
+    backup = ROOT / "archive" / "legacy" / f"endpoints_before_rebuild_{datetime.now():%Y-%m-%dT%H%M%S}"
+    backup.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copytree(ENDPOINTS, backup)
+    print(f"backed up current endpoints -> {backup.relative_to(ROOT)}")
+
+    for name, p in zip(built, prov):
+        built[name].to_csv(ENDPOINTS / f"{name}.csv", index=False)
         print(f"[{name}] total {p['total']:>6}  (ChEMBL {p['chembl_only']}, "
               f"BindingDB {p['bindingdb_only']}, both {p['both']}; {p['active']} active)")
     bbb = bbb_stats()
