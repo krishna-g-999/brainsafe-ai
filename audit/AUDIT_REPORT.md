@@ -309,6 +309,10 @@ Do not average a specificity and a sensitivity measured on different populations
 
 ## BS-C-06 · Feature-identical duplicates are split across random CV folds; BBB is 48% duplicates `[verified]`
 
+> **STATUS: FIXED in code; shipped models not retrained.** Full 13-endpoint before/after in
+> [`FIXES.md`](FIXES.md). The effect is almost entirely BBB: random-split mean 0.9604 to 0.9534,
+> scaffold 0.9186 to 0.9168, and **excluding BBB the panel is unchanged or slightly better**.
+
 **Component:** training pipeline / feature generation
 
 No deduplication happens anywhere between loading an endpoint table and splitting it. The featuriser
@@ -735,7 +739,15 @@ decision.
 
 ## BS-C-16 · Two incompatible deduplication keys; 48 of 59 endpoints deduplicate on the raw SMILES string `[verified]`
 
-**Component:** data assembly — **this is the root cause of BS-C-06**
+> **STATUS: FIXED in code; shipped tables not regenerated.** See [`FIXES.md`](FIXES.md).
+>
+> **Correction to this entry.** It claimed to be the root cause of BS-C-06. That is wrong, and the
+> measurement says so: keying on the parent InChIKey removes **411 rows of 198,499 (0.21%)**, not the
+> 13,846 duplicates BS-C-06 concerns. The two are independent. BS-C-06 arises because the featuriser
+> is stereo-blind while the tables correctly keep stereoisomers distinct, which no InChIKey policy
+> would change. Severity here should be read as Major, not Critical.
+
+**Component:** data assembly
 
 Only the 11 core targets and the BindingDB pool deduplicate by InChIKey
 (`rebuild_endpoints.py:57`, `fetch_bindingdb.py:115`). Every expansion fetcher groups on the **raw

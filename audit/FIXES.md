@@ -243,3 +243,90 @@ fixing, but its practical severity is far below Critical. BS-C-15, which concern
 ### Awaiting approval
 The shipped `data/endpoints/*.csv` are untouched. Regenerating them costs 1,104 rows and would
 require retraining every affected model.
+
+---
+
+## BS-C-06 — feature-identical duplicates split across cross-validation folds
+
+**Status: FIXED in code; shipped models not retrained** · `src/brainsafe/models/train_rf.py`,
+`src/brainsafe/features/featurize.py`
+
+### The defect
+
+Nothing deduplicated the endpoint tables before splitting. The featuriser folds a molecule to a
+stereo-blind 1024-bit fingerprint over its desalted parent, so stereoisomers, salt forms and
+protonation variants of one compound become byte-identical vectors, and `StratifiedKFold` has no way
+to keep them together. Invisible at the SMILES level: all 7,807 BBB strings are distinct, with zero
+string-level duplicates and zero string-level conflicts.
+
+### What changed
+
+`_dedup_features` collapses rows by feature vector before the split **and before the deployed
+refit**. Classification groups whose members disagree on the label are dropped (288 across the
+panel); regression takes the group median. Two related repairs in the same path: the scaffold is now
+computed on the same desalted parent the featuriser uses, and acyclic compounds share one group
+instead of each receiving their own (which had turned the scaffold split into a random split for
+that part of the set). `featurize._mol_from_smiles` became public as `parent_mol` so the two agree by
+construction.
+
+### Quantified impact: all 13 endpoints, both splits
+
+| | Before | After |
+|---|---|---|
+| Random 10-fold AUROC (8 classifiers) | 0.947–0.969, mean **0.9604** | 0.899–0.979, mean **0.9534** |
+| Scaffold 10-fold AUROC | 0.868–0.956, mean **0.9186** | 0.874–0.967, mean **0.9168** |
+| Random 10-fold R² (5 regressors) | mean 0.6381 | mean 0.6377 |
+| Scaffold 10-fold R² | mean 0.4743 | mean **0.4842** |
+
+Per endpoint, random split:
+
+| Endpoint | n before | n after | Before | After | Δ |
+|---|---|---|---|---|---|
+| **BBB** | 7,805 | **3,901** | 0.9605 | **0.8990** | **−0.0615** |
+| BACE1 | 8,501 | 7,832 | 0.9667 | 0.9787 | **+0.0120** |
+| hERG | 5,875 | 5,706 | 0.9541 | 0.9516 | −0.0025 |
+| BChE | 2,621 | 2,533 | 0.9684 | 0.9661 | −0.0023 |
+| AChE | 4,387 | 4,216 | 0.9626 | 0.9619 | −0.0007 |
+| MAO_A, MAO_B, GSK3B | | | | | ≤0.0005 |
+| SERT (R²) | 4,572 | 4,142 | 0.6016 | 0.6216 | **+0.0200** |
+
+Scaffold split: BBB 0.9197 → **0.8777** (−0.0420); every other classifier moves by ≤0.0114 and most
+move **up**; all four receptor regressions improve.
+
+### The honest reading
+
+**The duplication problem is BBB, and only BBB.** Excluding it, the panel after deduplication is
+0.946–0.979 mean **0.9612** random and 0.874–0.967 mean **0.9224** scaffold, which is at or above
+what was published. BACE1 improves because 41 contradictory groups had been pulling against it.
+
+So the README's "Random 10-fold 0.95–0.97 (mean 0.96)" and "Scaffold 0.87–0.96 (mean 0.92)" remain
+defensible **for the target panel**. What cannot stand is the BBB figure, and BBB is the gate that
+multiplies into every per-disease score.
+
+### Awaiting approval
+No model retrained, no results table rewritten.
+
+---
+
+## BS-C-16 — expansion fetchers deduplicated on the raw SMILES string
+
+**Status: FIXED in code; shipped tables not regenerated** · `build_compound_library.py` and seven fetchers
+
+### What changed
+
+`add_parent_key` standardises to the desalted parent and attaches its InChIKey; `fetch_batch2-5`,
+`fetch_new_targets`, `fetch_readacross_targets` and `fetch_pka` now group on that instead of the raw
+SMILES. It deliberately does **not** merge stereoisomers: enantiomers are different compounds whose
+potencies can differ by orders of magnitude. Verified on a constructed case: caffeine and caffeine
+HCl merge; two alanine enantiomers stay separate.
+
+### Correction to the audit's own claim
+
+`AUDIT_REPORT.md` called this **the root cause of BS-C-06**. That is wrong. Applying parent-InChIKey
+keying to the shipped tables removes **411 rows of 198,499 (0.21%)** across 31 endpoints, not the
+13,846 duplicates BS-C-06 concerns. The 4,012 salted SMILES mostly carry a parent appearing nowhere
+else, so collapsing them creates few duplicates.
+
+The two findings are independent. BS-C-06 exists because the featuriser is stereo-blind while the
+tables correctly keep stereoisomers distinct, and no InChIKey policy would change that. Severity here
+should be read as **Major**, not Critical. The report has been corrected.
