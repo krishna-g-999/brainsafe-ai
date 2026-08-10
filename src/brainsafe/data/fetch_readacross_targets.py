@@ -19,12 +19,16 @@ Output: data/readacross/<TARGET>.csv
 from __future__ import annotations
 
 import time
+import sys
 from pathlib import Path
 
 import pandas as pd
 import requests
 
 requests.packages.urllib3.disable_warnings()
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from build_compound_library import add_parent_key  # noqa: E402
+
 ROOT = Path(__file__).resolve().parents[3]
 OUT = ROOT / "data" / "readacross"
 OUT.mkdir(parents=True, exist_ok=True)
@@ -94,7 +98,8 @@ def main():
         if df.empty:
             print(f"[{name}] no data", flush=True)
             continue
-        med = df.groupby("smiles")["pchembl"].median().reset_index()
+        med = add_parent_key(df).groupby("inchikey").agg(
+            smiles=("smiles", "first"), pchembl=("pchembl", "median")).reset_index(drop=True)
         act = med[med.pchembl >= ACTIVE_P]
         act.to_csv(dest, index=False)
         print(f"[{name}] {len(act):,} actives at pChEMBL>={ACTIVE_P:.0f}  ({pref})", flush=True)

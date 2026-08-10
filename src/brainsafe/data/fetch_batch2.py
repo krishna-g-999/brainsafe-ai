@@ -9,12 +9,16 @@ Writes data/endpoints/<TARGET>.csv in the existing schema.
 from __future__ import annotations
 
 import time
+import sys
 from pathlib import Path
 
 import pandas as pd
 import requests
 
 requests.packages.urllib3.disable_warnings()
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from build_compound_library import add_parent_key  # noqa: E402
+
 ROOT = Path(__file__).resolve().parents[3]
 OUT = ROOT / "data" / "endpoints"
 BASE = "https://www.ebi.ac.uk/chembl/api/data"
@@ -89,7 +93,9 @@ def main():
         if df.empty:
             print(f"[{name}] no data", flush=True)
             continue
-        med = df.groupby("smiles").agg(pchembl=("pchembl", "median"), year=("year", "max")).reset_index()
+        med = add_parent_key(df).groupby("inchikey").agg(
+            smiles=("smiles", "first"), pchembl=("pchembl", "median"),
+            year=("year", "max")).reset_index(drop=True)
         med["label"] = med["pchembl"].apply(lambda p: 1 if p >= 6 else (0 if p < 5 else None))
         med = med.dropna(subset=["label"])
         med["label"] = med["label"].astype(int)
