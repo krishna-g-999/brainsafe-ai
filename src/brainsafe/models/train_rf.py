@@ -39,7 +39,7 @@ from sklearn.metrics import (average_precision_score, balanced_accuracy_score, f
 from scipy.stats import spearmanr
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from features.featurize import featurize, feature_names, N_FEATURES  # noqa: E402
+from features.featurize import featurize, feature_names, parent_mol, N_FEATURES  # noqa: E402
 
 RDLogger.DisableLog("rdApp.*")
 ROOT = Path(__file__).resolve().parents[3]
@@ -59,15 +59,72 @@ def _load(endpoint: str) -> pd.DataFrame:
 
 
 def _scaffold_groups(smiles: list[str]) -> np.ndarray:
-    """Integer group id per compound from its generic Bemis-Murcko scaffold."""
+    """Integer group id per compound from its Bemis-Murcko scaffold.
+
+    The scaffold retains atom and bond types; it is not the generic carbon framework, which would
+    require MakeScaffoldGeneric and would group more loosely. It is computed on the same desalted
+    parent the featuriser uses, so a salt and its free base cannot land in different folds while
+    being identical to the model.
+
+    Acyclic compounds have no scaffold and are all placed in one shared group, so a fold boundary
+    never runs through them. Giving each its own group, as this once did, quietly turned the
+    scaffold split into a random split for that part of the set.
+    """
     codes, mapping = [], {}
     for smi in smiles:
         try:
-            scaf = MurckoScaffold.MurckoScaffoldSmiles(mol=Chem.MolFromSmiles(str(smi)), includeChirality=False)
+            mol = parent_mol(str(smi))
+            scaf = "" if mol is None else MurckoScaffold.MurckoScaffoldSmiles(
+                mol=mol, includeChirality=False)
         except Exception:
             scaf = ""
-        codes.append(mapping.setdefault(scaf or f"_none_{len(mapping)}", len(mapping)))
+        codes.append(mapping.setdefault(scaf or "_ACYCLIC_", len(mapping)))
     return np.asarray(codes)
+
+
+def _dedup_features(X, y, groups, smiles, task):
+    """Collapse rows that are the same input as far as the model is concerned.
+
+    The featuriser folds a molecule to a stereo-blind 1024-bit fingerprint over its desalted parent,
+    so stereoisomers, salt forms and protonation variants of one compound produce byte-identical
+    feature vectors. Left in place, any random splitter puts copies of one compound on both sides of
+    a fold and the model is scored on rows it has memorised. Deduplication has to happen here, on the
+    feature vector, because that is the level at which the rows are indistinguishable: neither the
+    SMILES string nor the InChIKey collapses them, and both are unique for every BBB row.
+
+    Classification groups whose members disagree on the label are dropped rather than voted on. The
+    same input carrying both labels cannot be learned from, and choosing one is an arbitrary decision
+    dressed as data. Regression takes the median of the group.
+
+    Returns (X, y, groups, smiles, report).
+    """
+    seen: dict[bytes, list[int]] = {}
+    for i, vec in enumerate(X):
+        seen.setdefault(vec.tobytes(), []).append(i)
+
+    keep, conflicts, merged = [], 0, 0
+    y_out = []
+    for idxs in seen.values():
+        if len(idxs) > 1:
+            merged += len(idxs) - 1
+        if task == "classification":
+            labels = {int(y[i]) for i in idxs}
+            if len(labels) > 1:
+                conflicts += 1
+                continue
+            keep.append(idxs[0])
+            y_out.append(y[idxs[0]])
+        else:
+            keep.append(idxs[0])
+            y_out.append(float(np.median([y[i] for i in idxs])))
+
+    order = np.argsort(keep)
+    keep_sorted = np.asarray(keep)[order]
+    y_new = np.asarray(y_out, dtype=y.dtype)[order]
+    report = {"rows_in": int(len(y)), "duplicate_rows_removed": int(merged),
+              "conflicting_groups_dropped": int(conflicts), "rows_out": int(len(keep_sorted))}
+    return (X[keep_sorted], y_new, groups[keep_sorted],
+            [smiles[i] for i in keep_sorted], report)
 
 
 def _clf_metrics(y, proba) -> dict:
@@ -150,11 +207,21 @@ def run(endpoints: list[str]) -> None:
         y = df[target].to_numpy()
         y = y.astype(int) if task == "classification" else y.astype(float)
         groups = _scaffold_groups(df["smiles"].tolist())
-        print(f"[{endpoint}] {X.shape[0]} valid compounds, {X.shape[1]} features, "
+        smiles = df["smiles"].tolist()
+
+        # Before any split, and before the deployed refit: collapse rows the model cannot tell
+        # apart. Doing this after the split would be pointless, and doing it only for the CV would
+        # leave the shipped model fitted on a set where some compounds are silently weighted twice.
+        X, y, groups, smiles, dedup = _dedup_features(X, y, groups, smiles, task)
+        if dedup["duplicate_rows_removed"] or dedup["conflicting_groups_dropped"]:
+            print(f"[{endpoint}] deduplicated: {dedup['rows_in']} -> {dedup['rows_out']} rows "
+                  f"({dedup['duplicate_rows_removed']} duplicates of another row, "
+                  f"{dedup['conflicting_groups_dropped']} groups dropped for contradictory labels)")
+        print(f"[{endpoint}] {X.shape[0]} distinct compounds, {X.shape[1]} features, "
               f"{len(set(groups))} scaffolds"
               + (f", {int(y.sum())} active" if task == "classification" else ""))
 
-        rows, oof = _cv(endpoint, task, X, y, groups, df["smiles"].tolist())
+        rows, oof = _cv(endpoint, task, X, y, groups, smiles)
         fold_rows.extend(rows)
         oof_dir = ROOT / "data" / "processed" / "cv_predictions"
         oof_dir.mkdir(parents=True, exist_ok=True)
@@ -181,6 +248,7 @@ def run(endpoints: list[str]) -> None:
             "endpoint": endpoint, "task": task, "n_compounds": int(X.shape[0]),
             "n_features": int(N_FEATURES), "feature_layout": "ecfp4_1024 + 12 descriptors",
             "n_scaffolds": int(len(set(groups))),
+            "deduplication": dedup,
             "positives": int(y.sum()) if task == "classification" else None,
             "hyperparameters": {**RF_COMMON,
                                 "class_weight": "balanced" if task == "classification" else None},

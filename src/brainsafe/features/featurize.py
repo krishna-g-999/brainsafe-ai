@@ -53,7 +53,12 @@ def feature_names() -> list[str]:
     return [f"ecfp4_{i}" for i in range(MORGAN_BITS)] + list(_DESCRIPTORS)
 
 
-def _mol_from_smiles(smiles: str):
+def parent_mol(smiles: str):
+    """The largest fragment of a structure, sanitised: the molecule the model actually sees.
+
+    Public because the scaffold grouping in training must desalt exactly as this does, or a salt
+    and its free base become identical inputs assigned to different cross-validation folds.
+    """
     mol = Chem.MolFromSmiles(str(smiles))
     if mol is None:
         return None
@@ -69,7 +74,7 @@ def _mol_from_smiles(smiles: str):
 
 def featurize_one(smiles: str) -> np.ndarray | None:
     """Return the numeric feature vector for one SMILES, or None if it cannot be parsed."""
-    mol = _mol_from_smiles(smiles)
+    mol = parent_mol(smiles)
     if mol is None:
         return None
     fp = _MORGAN.GetFingerprintAsNumPy(mol).astype(np.float32)
