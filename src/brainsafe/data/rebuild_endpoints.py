@@ -128,6 +128,13 @@ def rebuild_target(name: str) -> tuple[pd.DataFrame, dict]:
     ch = chembl_compound_level(name); ch["src"] = "ChEMBL"
     bd = bindingdb_compound_level(name); bd["src"] = "BindingDB"
     long = pd.concat([ch, bd], ignore_index=True)
+    # A source with no measurements for this target arrives as an all-object frame, and concatenating
+    # it makes the pooled numeric columns object as well, which silently turns the .round() below into
+    # a no-op. hERG is the one target where BindingDB contributes nothing, so without this coercion it
+    # is the one table written with unrounded potencies. Coerce so every target is pooled and rounded
+    # on the same numeric dtype.
+    for col in ("pchembl", "year"):
+        long[col] = pd.to_numeric(long[col], errors="coerce")
     g = long.groupby("inchikey").agg(
         smiles=("smiles", "first"),
         pchembl=("pchembl", "median"),
