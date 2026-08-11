@@ -401,3 +401,65 @@ Three endpoints of 49 were retrained, to measure rather than to replace. Nothing
 regenerated. `train_receptor_binders.py`, `train_new_binders.py` and `train_batch2.py` still report
 sensitivity on training positives and still draw decoys from the whole library; they need the same
 treatment before the panel is consistent.
+
+---
+
+## BS-C-02 / BS-C-04 — the remaining three training scripts
+
+**Status: FIXED in code; shipped models not retrained** · `train_receptor_binders.py`,
+`train_new_binders.py`, `train_batch2.py`, `models/pools.py`
+
+### Why this mattered beyond the three files
+
+These twelve endpoints were left on the old basis after the rest of the panel moved off it: every
+active trained on and then scored, decoys from the whole background library, and the false-positive
+rate sampled from that same library. A panel mean that mixes two bases is worse than either alone,
+because no single sentence describes it.
+
+### What changed
+
+All three now draw decoys from the `decoy` pool, measure the background rate on the disjoint
+`evaluation` pool, withhold a fifth of the active scaffold groups, report sensitivity on those, and
+persist the holdout so `final_thresholds.py` honours it.
+
+`scaffold_holdout` and `write_holdout` moved into `pools.py` instead of being written three more
+times. `scaffold_holdout` withholds whole groups and returns an empty mask on degenerate scaffold
+structure, rather than silently withholding everything or nothing.
+
+### A further defect, fixed here and not previously recorded
+
+All three computed the hard-decoy AUROC from `Xc[yc == 1]`, under a comment describing it as
+held-out actives:
+
+```python
+pa = cal.predict_proba(Xc[yc == 1])[:, 1]     # "held-out actives"
+```
+
+`Xc` is the calibration split and `cal` was fitted on it, so those positives were not held out in any
+sense. Every `auroc_hard_decoys` in the panel is optimistic for this reason, independently of
+BS-C-02. It now reads the withheld actives.
+
+### Validation
+
+Exercised end to end against a shrunken background pool, so the logic is tested in seconds rather
+than after featurising 95,000 decoys:
+
+```
+n_active                 513          n_active_holdout    86
+auroc_hard_decoys        1.0          sensitivity_at_0.5  1.0
+sensitivity_basis        held_out_actives_by_scaffold
+background_fpr_basis     held_out_evaluation_pool
+```
+The holdout is written and read back, the metric fields are emitted, and the evaluation pool is the
+one sampled. **Those metric values come from a truncated pool and are not real numbers** — the test
+proves the plumbing, not the performance.
+
+The test earned its place: it caught a bug introduced in this very change.
+`background_pools(with_fingerprints=True)` returns `(smiles, fingerprints)`, and all three scripts
+initially indexed the tuple rather than unpacking it, which would have failed on the first real run.
+
+### Still open
+The panel is now internally consistent in code, but **no model has been retrained**, so every shipped
+`sensitivity_at_threshold` and `auroc_hard_decoys` still rests on the old basis. On the three
+endpoints measured under BS-C-01 to BS-C-05, sensitivity fell by between 0.07 and 0.36. Table 2 and
+the abstract's panel-mean sensitivity will move once the full panel is regenerated.
