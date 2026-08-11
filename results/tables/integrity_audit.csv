@@ -1,13 +1,13 @@
 section,metric,value,note
 determinism,repeated prediction is bit-identical,PASS,
 determinism,disease score reproducible,PASS,
-calibration,mean expected calibration error,0.032,"across 32 targets, 0 is perfect"
-calibration,worst expected calibration error,0.195,TAAR1
-calibration,mean Brier score,0.035,lower is better; 0.25 is uninformative
-decision,mean sensitivity at deployed threshold,0.899,
+calibration,mean expected calibration error,0.095,"across 27 targets, held-out compounds only, 0 is perfect"
+calibration,worst expected calibration error,0.223,COX2
+calibration,mean Brier score,0.101,lower is better; 0.25 is uninformative
+decision,mean sensitivity at deployed threshold,0.866,
 decision,false-positive rate on non-CNS compounds,0.125,
-decision,precision (PPV) at 50% prevalence,0.878,NPV 0.896; 0.1 false leads per true hit
-decision,precision (PPV) at 10% prevalence,0.444,NPV 0.987; 1.3 false leads per true hit
-decision,precision (PPV) at 1% prevalence,0.068,NPV 0.999; 13.8 false leads per true hit
-leakage,targets checked for scaffold overlap,8,
+decision,precision (PPV) at 50% prevalence,0.874,NPV 0.867; 0.1 false leads per true hit
+decision,precision (PPV) at 10% prevalence,0.435,NPV 0.983; 1.3 false leads per true hit
+decision,precision (PPV) at 1% prevalence,0.065,NPV 0.998; 14.3 false leads per true hit
+leakage,targets checked for scaffold overlap,49,
 leakage,targets with any shared scaffold,0,PASS

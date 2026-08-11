@@ -121,6 +121,10 @@ def check_reproducible():
     df = df.loc[mask].reset_index(drop=True)
     y = df["label"].to_numpy().astype(int)
     g = _scaffold_groups(df["smiles"].tolist())
+    # Reproduce the pipeline, which deduplicates before splitting. Without this the check retrains
+    # on a different set from the one the reported score came from and fails for that reason alone,
+    # which is a fault in the check rather than a failure to reproduce.
+    X, y, g, _s, _r = _dedup_features(X, y, g, df["smiles"].astype(str).tolist(), "classification")
     scores = []
     for tr, te in GroupKFold(N_SPLITS).split(X, y, g):
         m = RandomForestClassifier(class_weight="balanced", **RF_COMMON).fit(X[tr], y[tr])

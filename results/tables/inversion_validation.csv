@@ -1,7 +1,7 @@
 check,result,detail
-"No scaffold leakage (MAO_A, 10 folds)",PASS,0 folds with a shared scaffold (want 0)
-No duplicate compounds in master library,PASS,"61,317 rows, 61,317 unique InChIKeys (0 duplicates)"
-Reproducible retrain (MAO_A scaffold AUROC),PASS,retrained 0.868 vs reported 0.868
-Predictions are not constant (BBB over 200 drugs),PASS,"probability std 0.316, range 0.00-1.00"
-BBB ranks CNS drugs above polar peripheral molecules,PASS,mean CNS 0.97 vs peripheral 0.25
-Out-of-domain molecule is flagged (max Tanimoto < 0.30),PASS,max Tanimoto of PFOA to BBB training 0.20 (flagged out-of-domain)
+"No test compound is feature-identical to a training compound (MAO_A, BBB)",PASS,worst fold shares 0 compound(s) with its training set (want 0)
+No duplicate compound survives into training,PASS,"0 duplicate rows reach a model; 13,732 exist in the tables before deduplication (worst BBB at 3,773), which is correct chemistry, since stereoisomers are distinct compounds the stereo-blind featuriser cannot separate"
+Reproducible retrain (MAO_A scaffold AUROC),FAIL,retrained 0.873 vs reported 0.864
+Predictions are not constant (BBB over 200 drugs),PASS,"probability std 0.292, range 0.01-0.99"
+"BBB ranks permeable drugs above non-permeable ones (external, unseen)",PASS,"n=241 (171 permeable), AUROC 0.788, Mann-Whitney p=1.10e-12"
+The domain flag separates non-drug-like chemistry from unseen drugs,FAIL,"median max-similarity: unseen drugs 0.44 vs non-drug-like 0.48 (n=32), Mann-Whitney p=8.75e-01; only 22% of non-drug-like structures fall below the AD_THRESHOLD of 0.3"
