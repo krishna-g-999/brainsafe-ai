@@ -2,12 +2,23 @@
 
 Each check is written as a way the tool could be wrong; a PASS means that failure mode is absent.
 
-  1. Leakage      no scaffold is shared between train and test under the scaffold split.
-  2. Deduplication  no compound is counted twice (unique InChIKeys).
+  1. Leakage        no test compound is feature-identical to one in its training fold.
+  2. Deduplication  no duplicate row survives into a model.
   3. Reproducible   retraining an endpoint with the fixed seed reproduces the reported score.
   4. Not trivial    predictions vary across compounds (the model is not a constant).
-  5. Known answers  BBB penetration ranks CNS drugs above polar peripheral molecules.
-  6. Knows-its-limits  a molecule far from training is flagged out of the applicability domain.
+  5. Known answers  BBB ranks permeable approved drugs above non-permeable ones, on unseen compounds.
+  6. Knows-its-limits  the domain flag separates non-drug-like chemistry from unseen drugs.
+
+A check that cannot fail is worse than no check, because it is quoted as evidence. Four of these were
+rewritten for that reason. Check 1 asserted that GroupKFold returns disjoint groups, which it
+guarantees by contract; it now asks the question that matters, whether any test compound is
+indistinguishable from a training one. Check 2 audited compound_library.csv, which no model trains
+on, and so passed while the endpoint tables carried 13,846 feature-duplicate rows. Check 5 compared
+two CNS compounds against two peripheral ones, n=4, one of them a training compound. Check 6 tested a
+single molecule against a hard-coded cut.
+
+Checks are not tuned until they pass. Check 6 currently FAILS, and that failure is a finding about
+the applicability domain rather than a fault in the test: see docs and audit/FIXES.md.
 
 Output: results/tables/inversion_validation.csv (check, result, detail)
 """
@@ -18,6 +29,7 @@ from pathlib import Path
 
 import joblib
 import numpy as np
+from scipy.stats import mannwhitneyu
 import pandas as pd
 from rdkit import Chem, DataStructs, RDLogger
 from rdkit.Chem import rdFingerprintGenerator
@@ -27,7 +39,10 @@ from sklearn.metrics import roc_auc_score
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from features.featurize import featurize, featurize_one  # noqa: E402
-from models.train_rf import RF_COMMON, SEED, N_SPLITS, _load, _scaffold_groups  # noqa: E402
+from models.train_rf import (RF_COMMON, SEED, N_SPLITS, _load, _scaffold_groups,
+                             _dedup_features)  # noqa: E402
+
+AD_THRESHOLD = 0.30   # the cut app.assess_domain uses to call a compound out of domain
 
 RDLogger.DisableLog("rdApp.*")
 ROOT = Path(__file__).resolve().parents[3]
@@ -41,23 +56,63 @@ def record(check, ok, detail):
 
 
 def check_leakage():
-    df = _load("MAO_A").dropna(subset=["smiles", "label"]).reset_index(drop=True)
-    g = _scaffold_groups(df["smiles"].tolist())
-    y = df["label"].to_numpy().astype(int)
-    X = np.zeros((len(y), 1))
-    bad = 0
-    for tr, te in GroupKFold(N_SPLITS).split(X, y, g):
-        if set(g[tr]) & set(g[te]):
-            bad += 1
-    record("No scaffold leakage (MAO_A, 10 folds)", bad == 0,
-           f"{bad} folds with a shared scaffold (want 0)")
+    """Assert a property of the data, not of GroupKFold.
+
+    This used to check that GroupKFold produced disjoint groups, which it guarantees by contract, so
+    it could not fail for any input. It also could not detect the defect that was present: the
+    scaffold was computed on the raw SMILES while the features were computed on the desalted parent,
+    so a salt and its free base were one input placed in different folds. The question worth asking
+    is whether any test compound is indistinguishable from a training one, answered in feature space.
+    """
+    worst = 0
+    for ep in ("MAO_A", "BBB"):
+        df = _load(ep).dropna(subset=["smiles", "label"]).reset_index(drop=True)
+        X, mask = featurize(df["smiles"].astype(str).tolist())
+        smiles = [s for s, k in zip(df["smiles"].astype(str), mask) if k]
+        y = df.loc[mask, "label"].to_numpy().astype(int)
+        g = _scaffold_groups(smiles)
+        for tr, te in GroupKFold(N_SPLITS).split(X, y, g):
+            train_vectors = {X[i].tobytes() for i in tr}
+            worst = max(worst, sum(1 for i in te if X[i].tobytes() in train_vectors))
+    record("No test compound is feature-identical to a training compound (MAO_A, BBB)",
+           worst == 0,
+           f"worst fold shares {worst} compound(s) with its training set (want 0)")
 
 
 def check_dedup():
-    lib = pd.read_csv(ROOT / "data" / "processed" / "compound_library.csv")
-    dup = len(lib) - lib["inchikey"].nunique()
-    record("No duplicate compounds in master library", dup == 0,
-           f"{len(lib):,} rows, {lib['inchikey'].nunique():,} unique InChIKeys ({dup} duplicates)")
+    """Audit the tables the models are trained from, not the catalogue.
+
+    This used to read data/processed/compound_library.csv, which is deduplicated by InChIKey and is
+    not any model's training set, so it passed while the endpoint tables carried 13,846 rows
+    byte-identical to another row in the same table, 3,773 of them in BBB. Two changes: the tables
+    actually trained on, and the feature vector rather than the InChIKey, which separates
+    stereoisomers the featuriser cannot distinguish.
+    """
+    raw_dup, surviving, worst_ep, worst_raw = 0, 0, None, 0
+    for f in sorted((ROOT / "data" / "endpoints").glob("*.csv")):
+        df = pd.read_csv(f).dropna(subset=["smiles", "label"]).reset_index(drop=True)
+        if "smiles" not in df.columns or "label" not in df.columns:
+            continue
+        X, mask = featurize(df["smiles"].astype(str).tolist())
+        smiles = [s for s, k in zip(df["smiles"].astype(str), mask) if k]
+        y = df.loc[mask, "label"].to_numpy().astype(int)
+        seen = {}
+        for i, row in enumerate(X):
+            seen.setdefault(row.tobytes(), []).append(i)
+        dup = sum(len(v) - 1 for v in seen.values() if len(v) > 1)
+        raw_dup += dup
+        if dup > worst_raw:
+            worst_ep, worst_raw = f.stem, dup
+        # What matters is what survives into training, which is where the collapse happens.
+        Xd, _, _, _, _rep = _dedup_features(X, y, _scaffold_groups(smiles), smiles, "classification")
+        after = {}
+        for row in Xd:
+            after.setdefault(row.tobytes(), 0)
+        surviving += len(Xd) - len(after)
+    record("No duplicate compound survives into training", surviving == 0,
+           f"{surviving} duplicate rows reach a model; {raw_dup:,} exist in the tables before "
+           f"deduplication (worst {worst_ep} at {worst_raw:,}), which is correct chemistry, since "
+           f"stereoisomers are distinct compounds the stereo-blind featuriser cannot separate")
 
 
 def check_reproducible():
@@ -87,25 +142,90 @@ def check_not_trivial():
 
 
 def check_known_answers():
+    """Rank the whole external approved-drug set, with a statistic.
+
+    This used to compare two CNS compounds against two peripheral ones, n=4, with no test, and one
+    of the four (donepezil) is a BBB training compound. A model that had learned only that large
+    lipophilic molecules cross would have passed. The external FDA-curated set carries a measured
+    label and is the natural population to ask instead.
+    """
     model = joblib.load(ROOT / "models_rf" / "BBB.joblib")
-    cns = {"donepezil": "COc1cc2c(cc1OC)C(=O)C(CC1CCN(Cc3ccccc3)CC1)C2",
-           "diazepam": "CN1C(=O)CN=C(c2ccccc2)c2cc(Cl)ccc21"}
-    peripheral = {"glucose": "OCC1OC(O)C(O)C(O)C1O", "atenolol": "CC(C)NCC(O)COc1ccc(CC(N)=O)cc1"}
-    pc = np.mean([model.predict_proba(featurize_one(s).reshape(1, -1))[0, 1] for s in cns.values()])
-    pp = np.mean([model.predict_proba(featurize_one(s).reshape(1, -1))[0, 1] for s in peripheral.values()])
-    record("BBB ranks CNS drugs above polar peripheral molecules", pc > pp,
-           f"mean CNS {pc:.2f} vs peripheral {pp:.2f}")
+    ext = pd.read_csv(ROOT / "data" / "external" / "processed" / "external_bbb_test.csv")
+    sub = (ext[ext["novel_to_model"]] if "novel_to_model" in ext.columns
+           else ext[~ext["in_b3db_training"]]).reset_index(drop=True)
+    X, mask = featurize(sub["canonical_smiles"].astype(str).tolist())
+    y = sub.loc[mask, "bbb_status"].to_numpy().astype(int)
+    p = model.predict_proba(X)[:, 1]
+    if len(set(y)) < 2:
+        record("BBB ranks permeable drugs above non-permeable ones", False, "one class only")
+        return
+    u = mannwhitneyu(p[y == 1], p[y == 0], alternative="greater")
+    auc = float(roc_auc_score(y, p))
+    record("BBB ranks permeable drugs above non-permeable ones (external, unseen)",
+           bool(u.pvalue < 0.001 and auc > 0.70),
+           f"n={len(y)} ({int(y.sum())} permeable), AUROC {auc:.3f}, "
+           f"Mann-Whitney p={u.pvalue:.2e}")
 
 
 def check_applicability():
-    train = _load("BBB").dropna(subset=["smiles"])["smiles"].tolist()[:2000]
-    ref = [_GEN.GetFingerprint(Chem.MolFromSmiles(s)) for s in train if Chem.MolFromSmiles(s)]
-    # perfluorooctanoic acid: a fluorinated surfactant, chemically alien to drug-like training data
-    weird = "OC(=O)C(F)(F)C(F)(F)C(F)(F)C(F)(F)C(F)(F)C(F)(F)C(F)(F)F"
-    q = _GEN.GetFingerprint(Chem.MolFromSmiles(weird))
-    maxsim = max(DataStructs.BulkTanimotoSimilarity(q, ref))
-    record("Out-of-domain molecule is flagged (max Tanimoto < 0.30)", maxsim < 0.30,
-           f"max Tanimoto of PFOA to BBB training {maxsim:.2f} (flagged out-of-domain)")
+    """Ask whether the domain flag separates a population, not whether it fires for one molecule.
+
+    This used to test a single compound, PFOA, against a 2,000-row truncation of BBB training,
+    against a hard-coded cut. One molecule cannot distinguish a working domain flag from a broken
+    one. A panel of non-drug-like structures can, and the whole training set is used as reference
+    rather than the first two thousand rows.
+    """
+    train = _load("BBB").dropna(subset=["smiles"])["smiles"].astype(str).tolist()
+    ref = [_GEN.GetFingerprint(m) for m in (Chem.MolFromSmiles(s) for s in train) if m]
+    # A panel, not a molecule. Eight structures could not distinguish a working domain flag from a
+    # broken one at any sensible significance level; the earlier version of this check used one.
+    alien = [
+        # perfluorinated surfactants and industrial fluorochemicals
+        "OC(=O)C(F)(F)C(F)(F)C(F)(F)C(F)(F)C(F)(F)C(F)(F)C(F)(F)F",
+        "C(F)(F)(F)C(F)(F)C(F)(F)C(F)(F)S(=O)(=O)O",
+        "OC(=O)C(F)(F)C(F)(F)C(F)(F)F",
+        "FC(F)(F)C(F)(F)C(F)(F)C(F)(F)C(F)(F)C(F)(F)F",
+        # polymers and oligomers
+        "OCCOCCOCCOCCOCCOCCO", "OCCOCCOCCO", "CC(C)(C)CC(C)(C)c1ccc(O)cc1",
+        "OCC(O)CO", "C(CO)(CO)(CO)CO",
+        # simple inorganics and mineral species
+        "O=[Si]=O", "O=S(=O)(O)O", "OP(=O)(O)O", "O=[N+]([O-])O", "OB(O)O",
+        # sugars and polyols
+        "OCC1OC(O)C(O)C(O)C1O", "OCC(O)C(O)C(O)C(O)CO", "OC1C(O)C(O)C(O)C(O)C1O",
+        # fatty acids, lipids, waxes
+        "CCCCCCCCCCCCCCCCCC(=O)O", "CCCCCCCCCCCCCCCC(=O)O",
+        "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCC", "CCCCCCCCCCCCOS(=O)(=O)O",
+        "CCCCCCCCCCCCCCCCCC(=O)OCC(O)CO",
+        # small aliphatic amines, acids and sulfonates
+        "NCCNCCNCCN", "O=S(=O)(O)CCS(=O)(=O)O", "NCCS(=O)(=O)O",
+        "OC(=O)CCCCC(=O)O", "OC(=O)C(O)C(O)C(=O)O", "NCCCCN",
+        "OP(=O)(O)OP(=O)(O)O", "OCCN(CCO)CCO",
+        # chelators and buffers
+        "OC(=O)CN(CC(=O)O)CCN(CC(=O)O)CC(=O)O",
+        "OC(=O)CC(O)(CC(=O)O)C(=O)O",
+    ]
+
+    def _maxsim(smiles_list):
+        out = []
+        for s in smiles_list:
+            m = Chem.MolFromSmiles(s)
+            if m is not None:
+                out.append(max(DataStructs.BulkTanimotoSimilarity(_GEN.GetFingerprint(m), ref)))
+        return np.array(out)
+
+    # Drug-like comparator: approved drugs the model has not been trained on.
+    ext = pd.read_csv(ROOT / "data" / "external" / "processed" / "external_bbb_test.csv")
+    drugs = (ext[ext["novel_to_model"]] if "novel_to_model" in ext.columns
+             else ext[~ext["in_b3db_training"]])["canonical_smiles"].astype(str).tolist()[:300]
+    s_alien, s_drug = _maxsim(alien), _maxsim(drugs)
+    u = mannwhitneyu(s_drug, s_alien, alternative="greater")
+    flagged = float((s_alien < AD_THRESHOLD).mean())
+    record("The domain flag separates non-drug-like chemistry from unseen drugs",
+           bool(u.pvalue < 0.01 and np.median(s_alien) < np.median(s_drug)),
+           f"median max-similarity: unseen drugs {np.median(s_drug):.2f} vs non-drug-like "
+           f"{np.median(s_alien):.2f} (n={len(s_alien)}), Mann-Whitney p={u.pvalue:.2e}; "
+           f"only {flagged:.0%} of non-drug-like structures fall below the "
+           f"AD_THRESHOLD of {AD_THRESHOLD}")
 
 
 def main():
