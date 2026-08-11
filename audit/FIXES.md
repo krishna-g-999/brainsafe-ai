@@ -330,3 +330,74 @@ else, so collapsing them creates few duplicates.
 The two findings are independent. BS-C-06 exists because the featuriser is stereo-blind while the
 tables correctly keep stereoisomers distinct, and no InChIKey policy would change that. Severity here
 should be read as **Major**, not Critical. The report has been corrected.
+
+---
+
+## BS-C-01 to BS-C-05 — the threshold and specificity family
+
+**Status: FIXED in code; shipped models and thresholds not regenerated** ·
+`models/pools.py` (new), `train_binders_hybrid.py`, `final_thresholds.py`,
+`train_measured_label_holdout.py`, `noncns_specificity_fast.py`, `build_reviewer_package.py`,
+`_train_nav17.py`, `_train_ox.py`, `_train_small.py`, `.gitignore`
+
+### The defect, as one thing rather than five
+
+The pipeline asked the background library for three different jobs and took all three from the same
+place. Decoys were **trained on** as negatives; the threshold was a **quantile** of a sample from the
+same library; the false-positive rate was then **reported on that same sample**, which makes it the
+quantile restated. Separately, `final_thresholds.py` re-read the endpoint table and set the threshold
+from *every* measured inactive, including the half training had withheld, on **40 of 49** deployed
+endpoints. And every reported sensitivity was measured on positives the model had been fitted to,
+beneath five docstrings asserting the opposite.
+
+### What changed
+
+`models/pools.py` splits the applicability-domain library once into **disjoint** `decoy` (95,515),
+`threshold` (31,694) and `evaluation` (31,681) pools, by a stable hash of the structure so the
+partition survives library growth and does not depend on file order. Verified: pairwise overlap 0.
+
+| Fix | Where |
+|---|---|
+| Decoys drawn only from the decoy pool, and the target's own measured inactives excluded from decoy eligibility | `train_binders_hybrid.py` |
+| A fifth of **active scaffold groups** withheld and never trained on; sensitivity reported on those | `train_binders_hybrid.py`, `train_measured_label_holdout.py` |
+| Both halves of every split persisted to `models_rf/holdout/<T>_binder_holdout.json` | both training scripts |
+| Threshold read from the persisted holdout, never from the endpoint table; endpoints with no record are named in a warning rather than silently thresholded on seen data | `final_thresholds.py` |
+| False-positive rate measured on the **evaluation** pool, disjoint from decoys and from the threshold pool; the in-sample value retained under an honest name | `final_thresholds.py`, `train_binders_hybrid.py` |
+| Non-CNS negatives drawn from the 8,418 approved drugs **absent** from the AD reference (overlap verified 0) instead of from the reference itself | `noncns_specificity_fast.py` |
+| Full exclusion set canonicalised instead of an order-dependent 40,000 slice | `noncns_specificity_fast.py` |
+| Three verbatim clones reduced to wrappers, and un-ignored so they exist in a clone at all | `_train_nav17/_train_ox/_train_small.py`, `.gitignore` |
+
+### Quantified on three endpoints, retrained in an isolated tree
+
+| | COX2 | OPRM1 | LRRK2 |
+|---|---|---|---|
+| Inactives setting the threshold | 693 → **347** | 366 → **183** | 18 → **9, below minimum** |
+| Actives train / holdout | all → 967 / **215** | all → 3003 / **715** | all → 988 / 185 |
+| **Sensitivity** | 0.752 → **0.391** | 0.972 → **0.906** | 0.974 → **cannot report** |
+| AUROC vs measured inactives | 0.923 → **0.767** | 0.981 → **0.951** | — |
+| Threshold | 0.909 → 0.920 | 0.849 → 0.921 | 0.872 → **0.40 fallback** |
+| FPR on the threshold set (in-sample) | 0.101 → 0.101 | 0.104 → 0.104 | — |
+| **FPR on the disjoint pool** (n=31,681) | not measured → **0.0087** | not measured → **0.041** | — |
+
+### The honest reading: sensitivity was inflated, specificity was not
+
+The **sensitivity** claims do not survive. COX2 loses 0.36, and LRRK2 turns out not to support a
+data-driven threshold at all: only 9 of its 18 measured inactives are held out, below the minimum, so
+it falls back to 0.40 and can report no sensitivity, where it previously reported **0.974** from a
+threshold set on all 18.
+
+The **specificity** claims essentially do. Measured on the disjoint evaluation pool, COX2 is 0.0087
+and OPRM1 0.041, against 0.0087 and 0.0413 as shipped. Sampling 3,000 compounds from a library of
+158,890 overlapped the decoy set too little for the reported rate to have been materially inflated.
+BS-C-03 and BS-C-04 were real defects of method with, on this evidence, close to no numerical
+consequence; **BS-C-01 and BS-C-02 had a large one.**
+
+Note the drop combines two effects that this protocol cannot separate: measuring on unseen actives
+rather than trained ones, and training on 80 per cent of active scaffolds instead of all of them.
+Both are properties of an honest protocol, but the second is a real reduction in training data.
+
+### Awaiting approval, and still open
+Three endpoints of 49 were retrained, to measure rather than to replace. Nothing shipped was
+regenerated. `train_receptor_binders.py`, `train_new_binders.py` and `train_batch2.py` still report
+sensitivity on training positives and still draw decoys from the whole library; they need the same
+treatment before the panel is consistent.
