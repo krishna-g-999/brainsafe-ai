@@ -80,19 +80,26 @@ def main():
 
     print()
     print("=" * 92)
-    print("B. CALIBRATION against held-out measured inactives")
+    print("B. CALIBRATION against held-out actives and held-out measured inactives")
     print("=" * 92)
     modes = json.loads((M / "binder_modes.json").read_text())
     eces, briers, per = [], [], []
+    skipped_no_holdout = []
     for ep, v in list(modes.items()):
         f = ROOT / "data" / "endpoints" / f"{ep}.csv"
         mp = M / f"{ep}_binder.joblib"
         if not (f.exists() and mp.exists()):
             continue
-        df = pd.read_csv(f).dropna(subset=["smiles"])
-        pv = pd.to_numeric(df.get("pchembl"), errors="coerce")
-        act = df.loc[pv >= 7, "smiles"].astype(str).tolist()
-        ina = df.loc[df["label"] == 0, "smiles"].astype(str).tolist()
+        # Read what training withheld. This block used to take every active at pChEMBL >= 7 and
+        # every measured inactive straight from the endpoint table, which is exactly the data the
+        # model was fitted to, and reported the result under a heading saying "held-out".
+        hp = M / "holdout" / f"{ep}_binder_holdout.json"
+        if not hp.exists():
+            skipped_no_holdout.append(ep)
+            continue
+        h = json.loads(hp.read_text())
+        act = list(h.get("active_holdout") or [])
+        ina = list(h.get("measured_inactive_holdout") or [])
         if len(act) < 40 or len(ina) < 40:
             continue
         mdl = joblib.load(mp)
@@ -103,8 +110,16 @@ def main():
         e, b = ece(y, p), brier_score_loss(y, p)
         eces.append(e); briers.append(b)
         per.append({"endpoint": ep, "ece": round(e, 3), "brier": round(b, 3)})
+    if skipped_no_holdout:
+        print(f"  {len(skipped_no_holdout)} endpoint(s) skipped for want of a holdout record: "
+              f"{', '.join(skipped_no_holdout[:8])}"
+              + (" ..." if len(skipped_no_holdout) > 8 else ""))
+    if not eces:
+        add("calibration", "mean expected calibration error", None,
+            "no endpoint had a holdout record; retrain the panel first")
+        return
     add("calibration", "mean expected calibration error", round(float(np.mean(eces)), 3),
-        f"across {len(eces)} targets, 0 is perfect")
+        f"across {len(eces)} targets, held-out compounds only, 0 is perfect")
     add("calibration", "worst expected calibration error", round(float(np.max(eces)), 3),
         max(per, key=lambda x: x["ece"])["endpoint"])
     add("calibration", "mean Brier score", round(float(np.mean(briers)), 3),
@@ -136,7 +151,10 @@ def main():
     if hp.exists():
         held = json.loads(hp.read_text())
         checked, bad = 0, 0
-        for ep, smis in list(held.items())[:8]:
+        # Every target, not the first eight. The truncation was undocumented, and json
+        # preserves insertion order, so the same eight were checked every run and
+        # thirty-eight were never checked at all while the output implied a panel sweep.
+        for ep, smis in held.items():
             f = ROOT / "data" / "endpoints" / f"{ep}.csv"
             if not f.exists() or not smis:
                 continue
