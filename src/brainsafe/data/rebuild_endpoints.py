@@ -111,6 +111,32 @@ def chembl_compound_level(name: str) -> pd.DataFrame:
                                       year=("year", "min")).reset_index()
 
 
+def chembl_inactive_level(name: str) -> pd.DataFrame:
+    """Per-compound measured non-binders, from the censored ChEMBL records.
+
+    Absent when the cache predates fetch_endpoints.fetch_inactive_activities, in which case the
+    endpoint keeps the composition it had and the run says so rather than failing.
+    """
+    cache = CHEMBL_CACHE / f"{name}_inactive.json"
+    if not cache.exists():
+        return pd.DataFrame(columns=["inchikey", "smiles", "pchembl", "year"])
+    recs = []
+    for r in json.loads(cache.read_text()):
+        csmi, ik = standardise(r.get("smiles"))
+        if ik is None:
+            continue
+        recs.append({"inchikey": ik, "smiles": csmi,
+                     "pchembl": float(r["pchembl_bound"]),
+                     "year": pd.to_numeric(r.get("year"), errors="coerce")})
+    if not recs:
+        return pd.DataFrame(columns=["inchikey", "smiles", "pchembl", "year"])
+    df = pd.DataFrame(recs)
+    # The bound is an upper limit on potency, so the weakest bound is the safest summary.
+    return df.groupby("inchikey").agg(smiles=("smiles", "first"),
+                                      pchembl=("pchembl", "min"),
+                                      year=("year", "min")).reset_index()
+
+
 def bindingdb_compound_level(name: str) -> pd.DataFrame:
     """Per-compound median potency already standardised by fetch_bindingdb.py."""
     path = BDB_CACHE / f"{name}_labelled.csv"
@@ -127,7 +153,13 @@ def bindingdb_compound_level(name: str) -> pd.DataFrame:
 def rebuild_target(name: str) -> tuple[pd.DataFrame, dict]:
     ch = chembl_compound_level(name); ch["src"] = "ChEMBL"
     bd = bindingdb_compound_level(name); bd["src"] = "BindingDB"
-    long = pd.concat([ch, bd], ignore_index=True)
+    # Measured non-binders, which the pchembl_value filter excludes. A compound with an exact
+    # measurement keeps it; these only supply compounds that would otherwise be absent entirely.
+    ina = chembl_inactive_level(name)
+    if len(ina):
+        ina = ina[~ina.inchikey.isin(set(ch.inchikey) | set(bd.inchikey))].copy()
+        ina["src"] = "ChEMBL_inactive"
+    long = pd.concat([ch, bd, ina], ignore_index=True)
     # A source with no measurements for this target arrives as an all-object frame, and concatenating
     # it makes the pooled numeric columns object as well, which silently turns the .round() below into
     # a no-op. hERG is the one target where BindingDB contributes nothing, so without this coercion it
@@ -146,6 +178,7 @@ def rebuild_target(name: str) -> tuple[pd.DataFrame, dict]:
     prov = {
         "endpoint": name,
         "chembl_only": int((g.source == "ChEMBL").sum()),
+        "chembl_measured_inactive": int((g.source == "ChEMBL_inactive").sum()),
         "bindingdb_only": int((g.source == "BindingDB").sum()),
         "both": int((g.source == "BindingDB+ChEMBL").sum()),
         "total": len(g),
