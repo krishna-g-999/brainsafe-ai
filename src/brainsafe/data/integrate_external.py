@@ -146,6 +146,26 @@ def training_bbb_inchikeys() -> set[str]:
     return keys
 
 
+def training_bbb_feature_vectors() -> set[bytes]:
+    """Feature vectors of the BBB training compounds.
+
+    The InChIKey is the wrong granularity for deciding whether the model has seen a compound. It
+    separates stereoisomers, salts and protonation states; the featuriser folds a stereo-blind
+    fingerprint over the desalted parent and does not. A compound can therefore pass the InChIKey
+    check and still be, to the model, a training compound it has memorised. Measured on the shipped
+    set: 65 of the 306 compounds flagged novel by InChIKey are byte-identical in feature space to a
+    training compound, so a fifth of the external test was not external.
+    """
+    import sys as _sys
+    _sys.path.insert(0, str(ROOT / "src" / "brainsafe"))
+    from features.featurize import featurize as _featurize
+    bbb = ROOT / "data" / "endpoints" / "BBB.csv"
+    if not bbb.exists():
+        return set()
+    X, _ = _featurize(pd.read_csv(bbb)["smiles"].astype(str).tolist())
+    return {row.tobytes() for row in X}
+
+
 def main() -> None:
     summary = []
 
@@ -162,6 +182,7 @@ def main() -> None:
     print("[2/5] FDA-curated BBB set")
     bbb = pd.read_csv(EXT / "BBB_Final_GNN_Dataset_2026_CLEAN_v5.csv")
     train_keys = training_bbb_inchikeys()
+    train_vectors = training_bbb_feature_vectors()
     recs = []
     for r in bbb.itertuples(index=False):
         row = r._asdict()
@@ -172,9 +193,27 @@ def main() -> None:
                      "bbb_status": int(row["bbb_status"]), "orig_source": row.get("source"),
                      "in_b3db_training": ik in train_keys, "role": "evaluation"})
     bbb_out = pd.DataFrame(recs).drop_duplicates("inchikey").reset_index(drop=True)
+
+    # Second, stricter flag: is this compound distinguishable from a training compound by the model?
+    import sys as _sys
+    _sys.path.insert(0, str(ROOT / "src" / "brainsafe"))
+    from features.featurize import featurize as _featurize
+    Xe, me = _featurize(bbb_out["canonical_smiles"].astype(str).tolist())
+    seen, j = [], 0
+    for ok in me:
+        if not ok:
+            seen.append(True)          # unparseable: treat as not novel rather than as evidence
+            continue
+        seen.append(Xe[j].tobytes() in train_vectors)
+        j += 1
+    bbb_out["feature_identical_to_training"] = seen
+    bbb_out["novel_to_model"] = (~bbb_out.in_b3db_training) & (~bbb_out.feature_identical_to_training)
     bbb_out.to_csv(OUT / "external_bbb_test.csv", index=False)
+
     novel = int((~bbb_out.in_b3db_training).sum())
-    print(f"BBB set: {len(bbb_out):,} unique ({novel:,} not in B3DB training; "
+    novel_model = int(bbb_out.novel_to_model.sum())
+    print(f"BBB set: {len(bbb_out):,} unique ({novel:,} not in B3DB training by InChIKey; "
+          f"{novel_model:,} also distinguishable from training in feature space; "
           f"{int(bbb_out.bbb_status.sum())} permeable / {int((bbb_out.bbb_status==0).sum())} non-permeable)")
     summary.append({"source": "BBB_FDA_curated", "role": "evaluation",
                     "unique_structures": len(bbb_out), "flavonoid_core": None})

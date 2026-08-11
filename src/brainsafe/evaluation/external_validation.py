@@ -36,17 +36,14 @@ MODELS = ROOT / "models_rf"
 CLASSIFICATION = ["BBB", "AChE", "BChE", "BACE1", "GSK3B", "MAO_A", "MAO_B", "hERG"]
 
 
-def bbb_external() -> pd.DataFrame:
-    model = joblib.load(MODELS / "BBB.joblib")
-    ext = pd.read_csv(ROOT / "data" / "external" / "processed" / "external_bbb_test.csv")
-    novel = ext[~ext["in_b3db_training"]].reset_index(drop=True)
-    X, mask = featurize(novel["canonical_smiles"].tolist())
-    y = novel.loc[mask, "bbb_status"].to_numpy().astype(int)
+def _metrics(label: str, model, frame: pd.DataFrame) -> dict:
+    X, mask = featurize(frame["canonical_smiles"].tolist())
+    y = frame.loc[mask, "bbb_status"].to_numpy().astype(int)
     proba = model.predict_proba(X)[:, 1]
     pred = (proba >= 0.5).astype(int)
     tn, fp, fn, tp = confusion_matrix(y, pred).ravel()
-    row = {
-        "set": "FDA-curated novel (not in B3DB)",
+    return {
+        "set": label,
         "n": int(len(y)),
         "n_permeable": int(y.sum()),
         "auroc": round(roc_auc_score(y, proba), 4),
@@ -55,11 +52,41 @@ def bbb_external() -> pd.DataFrame:
         "sensitivity": round(tp / (tp + fn), 4) if (tp + fn) else np.nan,
         "specificity": round(tn / (tn + fp), 4) if (tn + fp) else np.nan,
     }
-    out = pd.DataFrame([row])
+
+
+def bbb_external() -> pd.DataFrame:
+    """Report the external result under both novelty criteria, and say which is which.
+
+    Excluding overlap by InChIKey is not enough to call a compound unseen. The InChIKey separates
+    stereoisomers, salts and protonation states; the model's features do not, so a compound can pass
+    that check and still be one the model has memorised. Both numbers are reported because only the
+    stricter one supports the claim, and because the difference between them is itself worth seeing.
+    """
+    model = joblib.load(MODELS / "BBB.joblib")
+    ext = pd.read_csv(ROOT / "data" / "external" / "processed" / "external_bbb_test.csv")
+
+    rows = [_metrics("FDA-curated, not in B3DB by InChIKey",
+                     model, ext[~ext["in_b3db_training"]].reset_index(drop=True))]
+    if "novel_to_model" in ext.columns:
+        rows.append(_metrics("FDA-curated, also distinguishable from training in feature space",
+                             model, ext[ext["novel_to_model"]].reset_index(drop=True)))
+        memorised = ext[(~ext["in_b3db_training"]) & ext["feature_identical_to_training"]]
+        if len(memorised):
+            rows.append(_metrics("of which: feature-identical to a training compound",
+                                 model, memorised.reset_index(drop=True)))
+    else:
+        print("  note: external_bbb_test.csv predates the feature-space check; "
+              "rerun integrate_external.py to add it.")
+
+    out = pd.DataFrame(rows)
     out.to_csv(ROOT / "results" / "tables" / "external_bbb_validation.csv", index=False)
-    print("BBB external (approved drugs, not in training):")
-    print(f"  n={row['n']}  AUROC={row['auroc']}  accuracy={row['accuracy']}  "
-          f"sens={row['sensitivity']}  spec={row['specificity']}")
+    print("BBB external (approved drugs):")
+    for r in rows:
+        print(f"  n={r['n']:4d}  AUROC={r['auroc']}  acc={r['accuracy']}  "
+              f"sens={r['sensitivity']}  spec={r['specificity']}   {r['set']}")
+    if len(rows) > 1:
+        print("\n  The second row is the one that supports an external claim. The first includes "
+              "compounds the model cannot distinguish from its training set.")
     return out
 
 
