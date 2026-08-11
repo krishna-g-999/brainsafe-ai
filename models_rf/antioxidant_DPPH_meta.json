@@ -1,10 +1,16 @@
 {
   "endpoint": "antioxidant_DPPH",
   "task": "regression",
-  "n_compounds": 2862,
+  "n_compounds": 2782,
   "n_features": 1036,
   "feature_layout": "ecfp4_1024 + 12 descriptors",
-  "n_scaffolds": 919,
+  "n_scaffolds": 902,
+  "deduplication": {
+    "rows_in": 2862,
+    "duplicate_rows_removed": 80,
+    "conflicting_groups_dropped": 0,
+    "rows_out": 2782
+  },
   "positives": null,
   "hyperparameters": {
     "n_estimators": 300,
@@ -16,24 +22,24 @@
   "cv_folds": 10,
   "cv_summary": {
     "random": {
-      "r2_mean": 0.6689,
-      "r2_sd": 0.0648,
-      "rmse_mean": 0.4523,
-      "rmse_sd": 0.0551,
-      "mae_mean": 0.3037,
-      "mae_sd": 0.0327,
-      "spearman_mean": 0.8071,
-      "spearman_sd": 0.0378
+      "r2_mean": 0.6592,
+      "r2_sd": 0.0503,
+      "rmse_mean": 0.4606,
+      "rmse_sd": 0.0187,
+      "mae_mean": 0.3086,
+      "mae_sd": 0.0134,
+      "spearman_mean": 0.8069,
+      "spearman_sd": 0.0283
     },
     "scaffold": {
-      "r2_mean": 0.4337,
-      "r2_sd": 0.0995,
-      "rmse_mean": 0.5867,
-      "rmse_sd": 0.0652,
-      "mae_mean": 0.4177,
-      "mae_sd": 0.0477,
-      "spearman_mean": 0.6502,
-      "spearman_sd": 0.1014
+      "r2_mean": 0.4161,
+      "r2_sd": 0.1478,
+      "rmse_mean": 0.586,
+      "rmse_sd": 0.078,
+      "mae_mean": 0.4183,
+      "mae_sd": 0.0517,
+      "spearman_mean": 0.6398,
+      "spearman_sd": 0.1066
     }
   }
 }
