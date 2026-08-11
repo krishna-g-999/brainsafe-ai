@@ -147,9 +147,17 @@ def main():
     print("=" * 92)
     print("D. LEAKAGE: was the scaffold hold-out genuinely disjoint?")
     print("=" * 92)
-    hp = M / "holdout" / "heldout_actives.json"
-    if hp.exists():
-        held = json.loads(hp.read_text())
+    # The per-endpoint records written by the training scripts, not heldout_actives.json, which
+    # scaffold_holdout_panel.py writes on its own schedule and which goes stale the moment the panel
+    # is retrained. Checking a current panel against a previous run's holdout list reports overlaps
+    # that are an artefact of the mismatch rather than a property of either.
+    files = sorted((M / "holdout").glob("*_binder_holdout.json"))
+    if files:
+        held = {}
+        for f in files:
+            d = json.loads(f.read_text())
+            if d.get("active_holdout"):
+                held[d["endpoint"]] = d["active_holdout"]
         checked, bad = 0, 0
         # Every target, not the first eight. The truncation was undocumented, and json
         # preserves insertion order, so the same eight were checked every run and
