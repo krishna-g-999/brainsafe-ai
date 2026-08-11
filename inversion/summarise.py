@@ -34,7 +34,10 @@ def main():
         verdicts.append({"hypothesis": "H1 the disease score is informative", "verdict": v,
                          "headline": f"top-3 accuracy {obs:.3f} vs permutation null {perm:.3f} "
                                      f"(p={p:.3f}) and frequency null {freq:.3f}"})
-        notes["H1"] = (f"Scored with hold-out models only, so no compound was seen in training. The "
+        notes["H1"] = (f"Scored with hold-out models only, and restricted to compounds that are "
+                       f"training actives of no other panel target, since scaffolds were withheld "
+                       f"per target and a compound active at two targets would otherwise be "
+                       f"memorised by one of the models scoring it. The "
                        f"disease layer reaches {obs:.1%} top-3 accuracy where shuffling the "
                        f"target-to-disease map gives {perm:.1%} and always answering with the three "
                        f"commonest diseases gives {freq:.1%}. The layer carries real information.")

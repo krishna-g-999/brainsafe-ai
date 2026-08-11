@@ -51,6 +51,40 @@ def main():
 
     modes = json.loads((HOLD / "binder_modes.json").read_text())
     held = json.loads((HOLD / "heldout_actives.json").read_text())
+
+    # A compound is held out from its own target's model, but every other model in the panel is
+    # applied to it too, and scaffolds were withheld per target rather than across the panel. A
+    # compound active at two targets is therefore withheld from one model and a training active of
+    # the other, and the disease it recovers can come from the model that memorised it. Measured
+    # across the 46 targets, 4,562 of 17,607 held-out entries are training actives elsewhere, and
+    # the pairs affected are exactly the homologous families H8 identifies: D2 and D3 both mapping
+    # to psychosis, SERT, NET and DAT to depression and ADHD, the two opioid receptors to pain.
+    # Shuffling the target-to-disease map does not control for this, because the memorisation
+    # survives the shuffle and is merely sent to the wrong disease.
+    #
+    # Restrict to compounds that are training actives of no other target, so the claim the summary
+    # makes ("no compound was seen in training") is true of the set it is made about.
+    trained_elsewhere = {}
+    for ep in held:
+        f = ROOT / "data" / "endpoints" / f"{ep}.csv"
+        if not f.exists():
+            continue
+        df = pd.read_csv(f)
+        pv = pd.to_numeric(df.get("pchembl"), errors="coerce")
+        trained_elsewhere[ep] = set(df.loc[pv >= 7, "smiles"].astype(str))
+    before = sum(len(v) for v in held.values())
+    filtered = {}
+    for ep, smis in held.items():
+        others = set()
+        for e2, acts in trained_elsewhere.items():
+            if e2 != ep:
+                others |= acts
+        filtered[ep] = [s for s in smis if s not in others]
+    after = sum(len(v) for v in filtered.values())
+    print(f"held-out entries: {before:,} -> {after:,} after removing those that are training "
+          f"actives of another panel target ({before - after:,} removed, "
+          f"{100 * (before - after) / max(before, 1):.1f}%)", flush=True)
+    held = {ep: smis for ep, smis in filtered.items() if smis}
     KG = app.KNOWLEDGE_GRAPH
     DIS = list(app.DISEASE_ORDER)
 
