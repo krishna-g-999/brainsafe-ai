@@ -103,6 +103,43 @@ def external_negatives() -> list[str]:
     return sorted({s for s in drugs[col].astype(str) if s not in ref})
 
 
+def scaffold_holdout(groups, frac: float = 0.20, rng=None):
+    """Boolean mask selecting whole scaffold groups to withhold from training.
+
+    Whole groups rather than individual compounds, so a withheld active is a structurally different
+    compound and not a close analogue of one the model was fitted to. Returns an all-False mask when
+    the scaffold structure is degenerate (one group, or every compound its own), because withholding
+    everything or nothing are both useless and silently doing either is worse.
+    """
+    import numpy as np
+    rng = rng if rng is not None else np.random.default_rng(42)
+    groups = np.asarray(groups)
+    uniq = np.unique(groups)
+    if len(uniq) < 2:
+        return np.zeros(len(groups), dtype=bool)
+    held = set(rng.permutation(uniq)[:max(1, int(round(frac * len(uniq))))])
+    mask = np.array([g in held for g in groups])
+    if mask.all() or not mask.any():
+        return np.zeros(len(groups), dtype=bool)
+    return mask
+
+
+def write_holdout(endpoint: str, **sets) -> Path:
+    """Persist what was withheld, so a later step cannot reach past it by re-reading the source.
+
+    final_thresholds.py reads this instead of the endpoint table. Without it the threshold is set
+    from every measured inactive, including the half that was trained on.
+    """
+    import json
+    d = M / "holdout"
+    d.mkdir(parents=True, exist_ok=True)
+    path = d / f"{endpoint}_binder_holdout.json"
+    payload = {"endpoint": endpoint}
+    payload.update({k: list(v) for k, v in sets.items()})
+    path.write_text(json.dumps(payload), encoding="utf-8")
+    return path
+
+
 def summary() -> pd.DataFrame:
     """Sizes of every pool, for the run log and for the record."""
     pools = background_pools()

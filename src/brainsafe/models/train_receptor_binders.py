@@ -17,7 +17,6 @@ honest than the flat regressor. Run:  python src/brainsafe/models/train_receptor
 from __future__ import annotations
 
 import json
-import pickle
 import sys
 from pathlib import Path
 
@@ -37,10 +36,12 @@ ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / "src" / "brainsafe"))
 from features.featurize import featurize, featurize_one  # noqa: E402
 from models.train_rf import _scaffold_groups  # noqa: E402
+from models.pools import background_pools, scaffold_holdout, write_holdout  # noqa: E402
 
 RECEPTORS = ["D2", "A2A", "HT2A", "SERT"]
 ACTIVE_PCHEMBL = 7.0
 DECOY_RATIO = 3
+ACTIVE_HOLDOUT = 0.20
 TANIMOTO_MAX = 0.35
 _GEN = rdFingerprintGenerator.GetMorganGenerator(radius=2, fpSize=2048)
 rng = np.random.default_rng(42)
@@ -53,8 +54,12 @@ def _fp(smi):
 
 def main():
     # background library (smiles + fps) from the applicability-domain reference
-    with (ROOT / "models_rf" / "ad_reference.pkl").open("rb") as fh:
-        bg_smiles, bg_fps = pickle.load(fh)
+    # Decoys from the decoy pool only. Drawing them from the whole library, and then sampling the
+    # background false-positive rate from that same library, measured the model on compounds it had
+    # been trained to score as zero.
+    pools = background_pools(with_fingerprints=True)
+    bg_smiles, bg_fps = pools["decoy"]
+    eval_pool, _ = pools["evaluation"]   # (smiles, fingerprints); only smiles needed here
     bg_smiles = np.array(bg_smiles)
     # descriptors for property matching (MW, clogP) for the background
     bgX, bg_mask = featurize(list(bg_smiles))
@@ -101,8 +106,16 @@ def main():
             if len(decoys) >= need and len(hard) >= len(actives):
                 break
 
-        smiles = actives + decoys
-        y = np.array([1] * len(actives) + [0] * len(decoys))
+        # Withhold whole active scaffold groups and never train on them, so the metrics below are
+        # about compounds the model has not seen.
+        a_groups = _scaffold_groups(actives)
+        a_hold = scaffold_holdout(a_groups, ACTIVE_HOLDOUT, rng)
+        act_train = [s for s, h in zip(actives, a_hold) if not h]
+        act_hold = [s for s, h in zip(actives, a_hold) if h]
+        write_holdout(ep, active_holdout=act_hold, active_train=act_train)
+
+        smiles = act_train + decoys
+        y = np.array([1] * len(act_train) + [0] * len(decoys))
         X, mask = featurize(smiles)
         y = y[mask]; smiles = [s for s, ok in zip(smiles, mask) if ok]
         groups = _scaffold_groups(smiles)
@@ -122,20 +135,30 @@ def main():
 
         # HONEST realistic metrics ---------------------------------------------------------
         # (a) hard-decoy AUROC: held-out actives vs near-miss (0.35-0.55 Tanimoto) negatives
-        auroc_hard = None
-        if len(hard) >= 30:
+        auroc_hard, sens = None, None
+        paX, _ = featurize(act_hold) if act_hold else (None, None)
+        if len(hard) >= 30 and paX is not None and len(paX):
             hX, hm = featurize(hard)
-            pa = cal.predict_proba(Xc[yc == 1])[:, 1]
+            # Actives withheld from training. This used to read Xc[yc == 1], the calibration split,
+            # which cal was fitted on, so the comment claiming held-out actives was not true of the
+            # data it described.
+            pa = cal.predict_proba(paX)[:, 1]
             ph = cal.predict_proba(hX)[:, 1]
             auroc_hard = float(roc_auc_score(np.r_[np.ones(len(pa)), np.zeros(len(ph))], np.r_[pa, ph]))
-        # (b) background false-positive rate: random library compounds predicted as binders
-        bg_idx = rng.choice(len(bg_smiles_ok), size=min(2500, len(bg_smiles_ok)), replace=False)
-        bg_samp = [str(bg_smiles_ok[i]) for i in bg_idx if str(bg_smiles_ok[i]) not in active_sets[ep]]
+            sens = float((pa >= 0.5).mean())
+        # (b) background false-positive rate, on the evaluation pool: disjoint from the decoys this
+        # model trained on, so the rate is an observation rather than a restatement of the training set
+        bg_idx = rng.choice(len(eval_pool), size=min(2500, len(eval_pool)), replace=False)
+        bg_samp = [eval_pool[i] for i in bg_idx if eval_pool[i] not in active_sets[ep]]
         bX, bm = featurize(bg_samp)
         bp = cal.predict_proba(bX)[:, 1]
         fpr = float((bp >= 0.5).mean())
 
         meta = {"endpoint": ep, "task": "binder_vs_decoy", "n_active": int((y == 1).sum()),
+                "n_active_holdout": len(act_hold),
+                "sensitivity_at_0.5": round(sens, 3) if sens is not None else None,
+                "sensitivity_basis": "held_out_actives_by_scaffold" if sens is not None else None,
+                "background_fpr_basis": "held_out_evaluation_pool",
                 "n_decoy": int((y == 0).sum()), "active_pchembl_cut": ACTIVE_PCHEMBL,
                 "auroc_easy_decoys": round(float(auroc_easy), 3),
                 "auroc_hard_decoys": round(auroc_hard, 3) if auroc_hard else None,
