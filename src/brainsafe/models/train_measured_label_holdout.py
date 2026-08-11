@@ -41,6 +41,12 @@ rng = np.random.default_rng(42)
 
 
 def main():
+    # Targets may be named on the command line, so an addition can be trained without refitting the
+    # rest. _train_small.py existed only to carry a different TARGETS list and is superseded by this.
+    global TARGETS
+    if len(sys.argv) > 1:
+        TARGETS = sys.argv[1:]
+        print(f"training only: {', '.join(TARGETS)}", flush=True)
     modes = json.loads((M / "binder_modes.json").read_text())
     for ep in TARGETS:
         f = ROOT / "data" / "endpoints" / f"{ep}.csv"
