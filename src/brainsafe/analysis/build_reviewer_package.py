@@ -312,8 +312,15 @@ def main():
             "decision_threshold": v.get("threshold"),
             "threshold_basis": v.get("threshold_basis"),
             "sensitivity_at_threshold": v.get("sensitivity_at_threshold"),
-            "fpr_on_measured_inactives": v.get("fpr_at_threshold"),
+            "sensitivity_basis": v.get("sensitivity_basis"),
+            # The threshold is a quantile of the held-out inactives, so the rate on that same set is
+            # that quantile by construction. It is carried for continuity and named for what it is;
+            # background_fpr_at_threshold, measured on a disjoint pool, is the informative one.
+            "fpr_in_sample_on_threshold_set": v.get("fpr_in_sample_on_threshold_set",
+                                                    v.get("fpr_at_threshold")),
             "background_fpr_at_threshold": v.get("background_fpr_at_threshold"),
+            "background_fpr_basis": ("held_out_evaluation_pool"
+                                     if v.get("background_fpr_in_sample") is not None else None),
             "high_precision_threshold": v.get("screening_threshold"),
             "withdrawn_reason": v.get("withdrawn_reason"),
         })
