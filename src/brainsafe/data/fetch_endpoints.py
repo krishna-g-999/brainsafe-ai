@@ -16,11 +16,15 @@ Query and labelling are unchanged from the archived version, so a regenerated ca
 the shipped tables were built from: activities with a non-null pchembl_value, standard_type in
 IC50/Ki/Kd/EC50/Potency, per-compound median potency and earliest document_year taken downstream.
 ChEMBL assigns a pchembl_value only where standard_relation is '=', so censored measurements are
-excluded by the query rather than silently treated as exact.
+excluded by that query rather than silently treated as exact. They are not discarded: a second query
+retrieves the '>' records, which are the measured non-binders, and keeps those whose bound settles
+the compound as inactive whatever the true value is. Excluding them by construction is why most of
+this panel is over 90 per cent active.
 
 Outputs:
-  data/_chembl_cache/<target>_y.json   raw activities per target, consumed by rebuild_endpoints.py
-  data/endpoints/BBB.csv               smiles,label from B3DB classification
+  data/_chembl_cache/<target>_y.json          exact activities, consumed by rebuild_endpoints.py
+  data/_chembl_cache/<target>_inactive.json   measured non-binders, pooled in as label 0
+  data/endpoints/BBB.csv                      smiles,label from B3DB classification
 
 Run:  python src/brainsafe/data/fetch_endpoints.py
       python src/brainsafe/data/fetch_endpoints.py --refresh   (ignore existing caches and refetch)
@@ -30,6 +34,7 @@ from __future__ import annotations
 import argparse
 import io
 import json
+import math
 import time
 from pathlib import Path
 
@@ -63,6 +68,9 @@ MAX_PAGES, PAGE = 16, 1000
 # A B3DB download smaller than this is a failed or truncated fetch, not a result. The shipped set
 # has 7,807 rows, so the floor is far below any real outcome.
 MIN_BBB_ROWS = 1000
+# Potency at or below this is inactive under the project label rule, so a ">" bound
+# reaching it settles the compound whatever the true value is.
+INACTIVE_CUT = 5.0
 
 
 def chembl_version() -> dict:
@@ -112,6 +120,61 @@ def fetch_target_activities(name: str, tid: str, refresh: bool = False) -> list[
     return rows
 
 
+def fetch_inactive_activities(name: str, tid: str, refresh: bool = False) -> list[dict]:
+    """Retrieve the measured non-binders, which the pchembl_value filter excludes by construction.
+
+    ChEMBL assigns a pchembl_value only where standard_relation is '=', so a query filtered on
+    pchembl_value__isnull=false silently drops every record of the form "no inhibition up to 10 uM".
+    Those records are not missing data, they are the measured negative class, and dropping them is
+    why most endpoints in this panel are over 90 per cent active and five have fewer than 25
+    inactives. For AChE alone the filter discards 2,210 measured inactives.
+
+    This asks for the complement: standard_relation '>' with a concentration in nM. The bound is
+    converted to a potency bound, and only records whose bound is at or below the inactive cut are
+    usable, because those are inactive whatever the true value is. A ">100 nM" record bounds potency
+    at pX 7 and is consistent with active or inactive, so it is counted and discarded rather than
+    guessed at.
+    """
+    cache = CHEMBL_CACHE / f"{name}_inactive.json"
+    if cache.exists() and not refresh:
+        rows = json.loads(cache.read_text())
+        print(f"  [{name}] inactive cache: {len(rows)}")
+        return rows
+    rows, offset, undecidable = [], 0, 0
+    for page in range(MAX_PAGES):
+        url = (f"{CHEMBL}/activity.json?target_chembl_id={tid}"
+               f"&standard_relation=%3E&standard_units=nM&limit={PAGE}&offset={offset}")
+        try:
+            j = requests.get(url, timeout=45).json()
+        except Exception as exc:
+            raise RuntimeError(f"[{name}] ChEMBL inactive page {page} failed: {exc}") from exc
+        for a in j.get("activities", []):
+            smi, val, st = a.get("canonical_smiles"), a.get("standard_value"), a.get("standard_type")
+            if not (smi and val and st in KEEP_TYPES):
+                continue
+            try:
+                nm = float(val)
+            except (TypeError, ValueError):
+                continue
+            if nm <= 0:
+                continue
+            bound = 9.0 - math.log10(nm)          # potency is strictly below this
+            if bound > INACTIVE_CUT:
+                undecidable += 1                   # e.g. ">100 nM": could still be active
+                continue
+            rows.append({"smiles": smi, "pchembl_bound": bound, "relation": ">",
+                         "year": a.get("document_year")})
+        offset += PAGE
+        if not j.get("page_meta", {}).get("next"):
+            break
+        time.sleep(0.25)
+    CHEMBL_CACHE.mkdir(parents=True, exist_ok=True)
+    cache.write_text(json.dumps(rows))
+    print(f"  [{name}] measured non-binders: {len(rows)} usable "
+          f"({undecidable} bounds too weak to decide, discarded)")
+    return rows
+
+
 def fetch_b3db() -> None:
     """Write data/endpoints/BBB.csv from the B3DB classification table."""
     df = pd.read_csv(io.StringIO(requests.get(B3DB_URL, timeout=60).text), sep="\t")
@@ -158,9 +221,11 @@ def main(argv: list[str] | None = None) -> None:
     summary = {}
     for name, (tid, meaning) in TARGETS.items():
         rows = fetch_target_activities(name, tid, refresh=args.refresh)
+        inactive = fetch_inactive_activities(name, tid, refresh=args.refresh)
         years = pd.to_numeric(pd.DataFrame(rows).get("year"), errors="coerce") if rows else None
         summary[name] = {
             "target_chembl_id": tid, "meaning": meaning, "n_activities": len(rows),
+            "n_measured_inactive": len(inactive),
             "year_min": int(years.min()) if years is not None and years.notna().any() else None,
             "year_max": int(years.max()) if years is not None and years.notna().any() else None,
             **version,
