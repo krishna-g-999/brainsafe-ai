@@ -435,7 +435,6 @@ O=C(CCc1cc[n+](Cc2ccccc2)cc1)c1ccc2c(c1)OCO2,1,6.62,2004.0,BindingDB+ChEMBL
 O=C(CCC1CCN(Cc2cccc([N+](=O)[O-])c2)CC1)c1cc2c3c(ccn3C(=O)CC2)c1,1,8.54,2011.0,ChEMBL
 Cc1ccc(C(C)C)cc1OCC(O)CNCc1cccnc1,1,6.868,2024.0,BindingDB+ChEMBL
 COc1cc2oc(-c3ccc(NCCNc4c5c(nc6cc(Cl)ccc46)CCCC5)cc3)cc(=O)c2c(OC)c1OC,1,8.79,2019.0,ChEMBL
-CCCCCCSc1nc(-c2ccc(Cl)cc2)nn1C(=O)N1CCCCC1,1,8.0,,BindingDB
 c1ccc2c(c1)ccc[n+]2CCCCCC[n+]1cccc2ccccc21,0,4.6,2011.0,ChEMBL
 COc1cccc(CCCCCCCCNc2c3c(nc4ccccc24)CCCC3)c1,1,7.4,2021.0,ChEMBL
 COc1cc(CCc2ccc(Nc3c4c(nc5cc(Cl)ccc35)CCCC4)cc2)cc(OC)c1,1,6.098,2017.0,BindingDB+ChEMBL
@@ -877,7 +876,6 @@ COc1cc2c(cc1OC)C(=O)C(Cc1cc[n+](Cc3ccccc3)cc1C(C)=O)CC2,1,7.62,2018.0,BindingDB+
 C[Si](C)(C)c1cccc(C(=O)C(F)(F)F)c1,1,7.031,2015.0,BindingDB+ChEMBL
 CCN(CCCCCCOc1ccc2c(C)c(C)c(=O)oc2c1)Cc1ccccc1,1,6.358,2015.0,BindingDB+ChEMBL
 C/C(NCCCCNc1c2c(nc3ccccc13)CCCC2)=C(/N=N/c1ccc(C)cc1)C(=O)c1ccccc1,1,6.05,2024.0,ChEMBL
-Oc1ccc([C@@H]2CC(c3c4ccccc4cc4ccccc34)N=N2)cc1,1,7.0,,BindingDB
 CCOc1ccc(Cc2nc3cc(C(=O)N(CC)CC)ccc3n2CCCCN2CCCCC2)cc1,0,4.21,2018.0,ChEMBL
 COC(=O)C(C)CC(=O)C[C@@H](C)[C@H]1C[C@H](O)[C@@]2(C)C3=C(C(=O)C[C@]12C)[C@@]1(C)CCC(=O)C(C)(C)[C@@H]1C[C@@H]3O,0,4.52,2011.0,ChEMBL
 COc1cc2c(cc1OC)C(=O)/C(=C/c1ccc(N3CC[N+](C)(Cc4ccccc4Cl)CC3)cc1)C2,1,6.32,2020.0,ChEMBL
@@ -2024,7 +2022,6 @@ Cc1ccccc1NC(=O)Oc1ccc2c(c1)[C@@]1(C)COC(C1)O2,1,7.42,,BindingDB
 COc1cc2c(cc1OC)C[N+](C)(CCCCCc1cccc(OC)[n+]1C)CC2,1,6.32,2013.0,ChEMBL
 CCCCCCCNC(=O)Oc1ccc2c(c1)[C@]1(C)CCN(C)[C@@H]1C2,1,6.942,2010.0,BindingDB+ChEMBL
 CCCCCCCNC(=O)Oc1ccc2c(c1)[C@]1(C)CCN(C)C1C2,1,6.94,1992.0,ChEMBL
-Oc1cccc2cccnc12,1,7.0,,BindingDB
 CCOC(=O)c1c(C)nc(N2CCN(S(=O)(=O)c3ccc(N)cc3)CC2)nc1-c1ccc(OC)cc1,1,7.14,2021.0,ChEMBL
 COC(=O)C(CC1=C(c2ccccc2)CC(C)(C)ON1C(C)=O)C(=O)OC,0,4.92,2014.0,ChEMBL
 O/N=C/c1cc(Cl)cc(CN2CCC(c3ccc(F)cc3)CC2)c1O,0,4.73,2024.0,ChEMBL
@@ -2104,7 +2101,6 @@ CC[N+](C)(CCCCCC(=O)Nc1ccc(CCc2ccc(NC(=O)CCCCC[N+](C)(CC)Cc3ccccc3OC)cc2)cc1)Cc1
 COc1ccccc1CN(C)CCCCCCNC1=CC(=O)C(NCCCCCCN(C)Cc2ccccc2OC)=CC1=O,1,7.11,2007.0,ChEMBL
 Cc1ccccc1F,1,6.665,1992.0,ChEMBL
 COc1cccc(CN(C)[C@@H](C)[C@H]2[C@H](O)C[C@@]3(C)[C@@H]4CC[C@H]5[C@]6(C)CSC(C(C)C)=N[C@H]6CC[C@@]56C[C@@]46C(=O)C[C@]23C)c1,1,8.52,2011.0,ChEMBL
-O=[N+]([O-])c1ccc([C@@H]2CC(c3c4ccccc4cc4ccccc34)N=N2)cc1,1,7.0,,BindingDB
 COc1cc2c(cc1OC)C(=O)C(CC1CC[N+](C)(Cc3ccccc3)CC1)C2,1,7.3,2002.0,ChEMBL
 CN(CCC1CCCCCC1)Cc1c[nH]c2c(O)cccc12,0,4.94,2023.0,ChEMBL
 CCN(C)C(=O)Oc1ccc(/C=C/C(=O)N2CCC(Cc3ccccc3)CC2)cc1,0,4.57,2020.0,ChEMBL
@@ -2483,7 +2479,6 @@ COC(=O)c1c[n+](Cc2ccccc2C)ccc1CC1Cc2cc(OC)c(OC)cc2C1=O,1,8.238,2017.0,BindingDB+
 N/C(=N\O)c1cccc(NC(=O)Nc2cccc(Br)c2)c1,0,4.84,2024.0,ChEMBL
 Cc1ccc(S(=O)(=O)SCc2ccc(C(C)(C)C)cc2)cc1,1,6.775,2021.0,ChEMBL
 COc1ccc(C(=O)Cc2ncc(C(=O)NC3CCN(Cc4ccccc4)CC3)cn2)cc1,0,4.55,2022.0,ChEMBL
-Cc1ccc([C@@H]2CC(c3c4ccccc4cc4ccccc34)N=N2)cc1,1,7.0,,BindingDB
 O=C(O)COc1ccc(C2CC(c3c[nH]c4ccccc34)=NN2C(=O)c2ccccc2)cc1,1,6.167,,BindingDB
 O=C(Nc1cc(Cl)nc(Cl)c1)OCCCCCCNCc1ccccc1,1,6.12,2017.0,BindingDB+ChEMBL
 O=C(CCc1ccc2nc(-c3ccccc3)c3c(c2c1)OCCC3)NCCCCCNc1c2c(nc3cc(Cl)ccc13)CCCC2,1,8.02,2009.0,ChEMBL
@@ -3240,7 +3235,6 @@ CSc1n[nH]c2nc3c(c(N)c12)C1CC(C)=CC(C3)C1,0,4.3,2009.0,ChEMBL
 c1cc(C[n+]2ccc(N3CCCCC3)cc2)ccc1C[n+]1ccc(N2CCCCC2)cc1,1,7.12,2011.0,ChEMBL
 COc1c(C(=O)CCC2CCN(CC3CCCCC3)CC2)cc(F)c(N)c1Br,1,6.51,2024.0,BindingDB+ChEMBL
 CC[C@H]1O[C@@H]2O[C@H](/C=C/C=C/C=C/c3oc(=O)cc(OC/C=C(\C)C(=O)OC)c3C)[C@H](O)[C@]2(C)[C@@]1(C)O,0,4.83,2015.0,ChEMBL
-O=C(NCCNc1c2c(nc3ccccc13)CCCC2)Oc1ccc(-c2cc3cccnc3[nH]2)cc1,1,9.0,,BindingDB
 COc1cc2c(cc1OC)CN(CC1CCN(Cc3cc(C)cc(/C=N/O)c3O)CC1)CC2,0,4.64,2017.0,ChEMBL
 O=C1C=C2S[C@H]3C[C@]2(C=C1Br)C1=C(N3)C(=O)c2[nH]cc3c2C1=NCC3,0,4.475,2017.0,ChEMBL
 CNC(=O)Oc1ccc2c(c1)[C@]1(C)CC[N@@+](C)(O)[C@@H]1N2C,1,7.0,,BindingDB
@@ -3559,7 +3553,6 @@ C[C@@H]1CC[C@]2(C(=O)O)CC[C@]3(C)C(=CC[C@@H]4[C@@]5(C)C[C@@H](OC(=O)c6ccc(C(F)(F
 O=C(NCCCCCCCCCCNc1c2c(nc3cc(Cl)ccc13)CCCC2)c1cc(=O)c2cc(O)c(O)cc2o1,1,10.048,2012.0,BindingDB+ChEMBL
 O=C(NCCCCCNc1c2c(nc3ccccc13)CCCC2)Oc1ccc2cc[nH]c2c1,1,6.38,2024.0,ChEMBL
 O=C1CCN(Cc2ccccc2)C/C1=C\c1cn(C(=O)c2ccccc2)c2ccccc12,0,4.16,2001.0,ChEMBL
-CCOC(=O)c1c(C)nc(N2CCN(S(=O)(=O)c3ccc(N)c(F)c3)CC2)nc1-c1ccccc1,1,6.699,,BindingDB
 O=C1c2ccccc2C(=O)C12N1CSC[C@@H]1[C@@H](c1cccc(F)c1)[C@@]21CSc2ccccc2C1=O,0,4.91,2016.0,ChEMBL
 O=C(Nc1ccccc1)OCC1CCCN(Cc2ccccc2)C1,0,4.17,2020.0,ChEMBL
 CC1=C[C@@H]2Cc3nc4cc(Cl)ccc4c(NCCCCC(=O)N4CCC(NC(=O)Nc5ccc(OC(F)(F)F)cc5)CC4)c3[C@H](C1)C2,1,8.716,2022.0,BindingDB+ChEMBL
