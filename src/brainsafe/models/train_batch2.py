@@ -13,7 +13,6 @@ Validation: scaffold-grouped 10-fold out-of-fold AUROC for measured-label classi
 from __future__ import annotations
 
 import json
-import pickle
 import sys
 from pathlib import Path
 
@@ -33,11 +32,13 @@ ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / "src" / "brainsafe"))
 from features.featurize import featurize  # noqa: E402
 from models.train_rf import _scaffold_groups  # noqa: E402
+from models.pools import background_pools, scaffold_holdout, write_holdout  # noqa: E402
 
 TARGETS = ["NLRP3", "P2X7", "COX2", "CSF1R", "PDE10A", "HDAC1", "HDAC6", "GluN2B", "mGluR5",
            "GABA_A", "OX1", "OX2", "MT1", "mTOR", "SIRT1", "KEAP1", "GBA1", "PDE4B", "Nav1_5"]
 ACTIVE_P, DECOY_RATIO, TAN_MAX = 7.0, 3, 0.35
 MIN_INACT_FRAC, MIN_INACT_N = 0.15, 150
+ACTIVE_HOLDOUT = 0.20
 _GEN = rdFingerprintGenerator.GetMorganGenerator(radius=2, fpSize=2048)
 rng = np.random.default_rng(42)
 RF = dict(n_estimators=200, min_samples_leaf=6, n_jobs=-1, random_state=42, class_weight="balanced")
@@ -49,8 +50,10 @@ def _fp(s):
 
 
 def main():
-    with (ROOT / "models_rf" / "ad_reference.pkl").open("rb") as fh:
-        bg_smiles, bg_fps = pickle.load(fh)
+    # Decoys from the decoy pool; the background rate is measured on the disjoint evaluation pool.
+    pools = background_pools(with_fingerprints=True)
+    bg_smiles, bg_fps = pools["decoy"]
+    eval_pool, _ = pools["evaluation"]   # (smiles, fingerprints); only smiles needed here
     bg_smiles = np.array(bg_smiles)
     bgX, bgm = featurize(list(bg_smiles))
     bg_ok = bg_smiles[bgm]
@@ -68,9 +71,18 @@ def main():
         frac = n_inact / max(len(df), 1)
         measured = (frac >= MIN_INACT_FRAC and n_inact >= MIN_INACT_N)
 
+        act_hold = []
         if measured:
-            smiles = df["smiles"].astype(str).tolist()
-            y = df["label"].to_numpy().astype(int)
+            all_smiles = df["smiles"].astype(str).tolist()
+            all_y = df["label"].to_numpy().astype(int)
+            pos = [s for s, lab in zip(all_smiles, all_y) if lab == 1]
+            hold = scaffold_holdout(_scaffold_groups(pos), ACTIVE_HOLDOUT, rng)
+            act_hold = [s for s, h in zip(pos, hold) if h]
+            held = set(act_hold)
+            keep = [i for i, s in enumerate(all_smiles) if s not in held]
+            smiles = [all_smiles[i] for i in keep]
+            y = all_y[keep]
+            write_holdout(ep, active_holdout=act_hold)
             mode = "measured_labels"
         else:
             act = sorted(set(df.loc[pd.to_numeric(df.pchembl, errors="coerce") >= ACTIVE_P, "smiles"].astype(str)))
@@ -99,8 +111,12 @@ def main():
                     hard.append(str(bg_ok[i]))
                 if len(dec) >= need and len(hard) >= len(act):
                     break
-            smiles = act + dec
-            y = np.array([1] * len(act) + [0] * len(dec))
+            hold = scaffold_holdout(_scaffold_groups(act), ACTIVE_HOLDOUT, rng)
+            act_train = [s for s, h in zip(act, hold) if not h]
+            act_hold = [s for s, h in zip(act, hold) if h]
+            write_holdout(ep, active_holdout=act_hold, active_train=act_train)
+            smiles = act_train + dec
+            y = np.array([1] * len(act_train) + [0] * len(dec))
             mode = "decoy_aware"
 
         X, mask = featurize(smiles)
@@ -125,14 +141,20 @@ def main():
                 "measured_inactive_fraction": round(float(frac), 3),
                 "scaffold_cv_auroc": round(auroc_scaffold, 3)}
         if mode == "decoy_aware":
-            if len(hard) >= 30:
+            paX, _ = featurize(act_hold) if act_hold else (None, None)
+            if len(hard) >= 30 and paX is not None and len(paX):
                 hX, _ = featurize(hard)
-                pa = cal.predict_proba(Xc[yc == 1])[:, 1]
+                # Withheld actives. Xc[yc == 1] is the calibration split, which cal was fitted on.
+                pa = cal.predict_proba(paX)[:, 1]
                 ph = cal.predict_proba(hX)[:, 1]
                 meta["auroc_hard_decoys"] = round(float(roc_auc_score(
                     np.r_[np.ones(len(pa)), np.zeros(len(ph))], np.r_[pa, ph])), 3)
-            bi = rng.choice(len(bg_ok), size=min(2000, len(bg_ok)), replace=False)
-            bs = [str(bg_ok[i]) for i in bi]
+                meta["sensitivity_at_0.5"] = round(float((pa >= 0.5).mean()), 3)
+                meta["sensitivity_basis"] = "held_out_actives_by_scaffold"
+            meta["n_active_holdout"] = len(act_hold)
+            meta["background_fpr_basis"] = "held_out_evaluation_pool"
+            bi = rng.choice(len(eval_pool), size=min(2000, len(eval_pool)), replace=False)
+            bs = [eval_pool[i] for i in bi]
             bX, _ = featurize(bs)
             meta["background_fpr@0.5"] = round(float((cal.predict_proba(bX)[:, 1] >= 0.5).mean()), 3)
         (ROOT / "models_rf" / f"{ep}_binder_meta.json").write_text(json.dumps(meta, indent=2))
