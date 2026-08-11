@@ -463,3 +463,104 @@ The panel is now internally consistent in code, but **no model has been retraine
 `sensitivity_at_threshold` and `auroc_hard_decoys` still rests on the old basis. On the three
 endpoints measured under BS-C-01 to BS-C-05, sensitivity fell by between 0.07 and 0.36. Table 2 and
 the abstract's panel-mean sensitivity will move once the full panel is regenerated.
+
+---
+
+## BS-C-07 — the external set was 21% memorised
+
+**Status: FIXED in code; results table not regenerated** · `integrate_external.py`, `external_validation.py`
+
+Overlap was excluded by full InChIKey, which separates stereoisomers, salts and protonation states.
+The featuriser does not, so a compound could pass that check and still be one the model had
+memorised. `integrate_external` now flags both criteria; `external_validation` reports both and says
+which supports a claim.
+
+**The correction improves the result:**
+
+| Subset | n | AUROC | accuracy | sens | spec |
+|---|---|---|---|---|---|
+| As published (InChIKey-novel) | 306 | 0.7741 | 0.7386 | 0.798 | 0.621 |
+| **Novel to the model (the honest set)** | **241** | **0.8015** | 0.7469 | 0.795 | 0.629 |
+| Of which memorised | 65 | 0.7396 | 0.7077 | 0.813 | 0.606 |
+
+The contamination was **deflating** the headline: the 65 memorised compounds scored worse than the
+241 novel ones. The defensible number is the better one.
+
+---
+
+## BS-C-10 — integrity calibration computed on training compounds
+
+**Status: FIXED in code** · `integrity_audit.py`
+
+The section headed "CALIBRATION against held-out measured inactives" took every active at
+pChEMBL ≥ 7 and every measured inactive straight from the endpoint table. It now reads
+`models_rf/holdout/<T>_binder_holdout.json` and uses only what training withheld, naming any endpoint
+with no holdout record rather than falling back silently.
+
+Separately, the leakage check iterated `list(held.items())[:8]` — undocumented, and since `json`
+preserves insertion order the same eight targets were checked every run while thirty-eight never
+were, under an output line reading as a panel sweep. It now covers every target.
+
+---
+
+## BS-C-09 — inversion checks that could not fail
+
+**Status: FIXED** · `validate_inversion.py`
+
+Four of six could not fail. Check 1 asserted a `GroupKFold` contract. Check 2 audited
+`compound_library.csv`, which no model trains on. Check 5 used n=4, one of them a training compound.
+Check 6 used one molecule against a hard-coded cut.
+
+They now ask answerable questions, and the suite runs **5 PASS / 1 FAIL**:
+
+```
+[PASS] No test compound is feature-identical to a training compound (MAO_A, BBB)
+[PASS] No duplicate compound survives into training: 0 reach a model; 13,846 exist in the
+       tables before deduplication (worst BBB at 3,773), which is correct chemistry
+[PASS] Reproducible retrain (MAO_A scaffold AUROC): retrained 0.865 vs reported 0.868
+[PASS] Predictions are not constant (BBB over 200 drugs): std 0.316
+[PASS] BBB ranks permeable drugs above non-permeable ones (external, unseen):
+       n=306, AUROC 0.774, Mann-Whitney p=2.33e-15
+[FAIL] The domain flag separates non-drug-like chemistry from unseen drugs
+```
+
+Note on check 2: the guarantee that matters is that no duplicate reaches a **model**, not that the
+tables contain none. Stereoisomers in the tables are correct chemistry; the collapse belongs at
+training time, where BS-C-06 put it.
+
+### NEW FINDING — the applicability-domain threshold does not discriminate
+
+The failing check is a finding, not a faulty test, and it is left failing deliberately. Tuning the
+panel or the bar until it passed would reproduce the exact fault being removed.
+
+Maximum Tanimoto similarity to BBB training, over a 32-structure panel of perfluorinated
+surfactants, PEG oligomers, sugars, fatty acids, simple inorganics and chelators:
+
+| Population | Median max-similarity |
+|---|---|
+| Unseen approved drugs | 0.53 |
+| **Non-drug-like chemistry** | **0.48** |
+
+Mann-Whitney p = 0.21, and **only 22% of the non-drug-like panel falls below the `AD_THRESHOLD` of
+0.30** that `app.assess_domain` uses to call a compound out of domain.
+
+The domain flag qualifies every served prediction. Together with **BS-M-10** (out-of-domain AUROC
+0.816 *exceeding* in-domain 0.772 on the external set), the evidence is that this layer does not
+currently separate what it claims to. **This warrants its own investigation before submission** and
+should be treated as at least Major.
+
+---
+
+## BS-C-15 — the query discarded the measured negative class
+
+**Status: FIXED in code; caches not yet refreshed** · `fetch_endpoints.py`, `rebuild_endpoints.py`
+
+`pchembl_value__isnull=false` drops every `standard_relation = '>'` record, which is precisely
+"no inhibition up to 10 µM". `fetch_endpoints` now issues a second query for those in nM and keeps
+the ones whose bound settles the label whatever the true value is; a `>100 nM` bound is consistent
+with either label and is counted and discarded rather than guessed at. `rebuild_endpoints` pools them
+as label 0, only for compounds with no exact measurement.
+
+**Backward compatible:** with no inactive cache present the rebuild produces the same 65,122 rows, so
+nothing changes until the caches are refreshed against ChEMBL. That refresh is part of the
+regeneration pass.
