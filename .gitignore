@@ -37,6 +37,12 @@ logs/
 *.pre_druggability_bak
 *.all529_bak
 _*.py
+# ...except the three model entry points. They are not scratch: they are the only
+# recorded way Nav1_7, OX1/OX2, TAAR1, GluA2 and Nav1_1 were produced, and ignoring
+# them meant those models could not be regenerated from a clone at all.
+!src/brainsafe/models/_train_nav17.py
+!src/brainsafe/models/_train_ox.py
+!src/brainsafe/models/_train_small.py
 scratchpad/
 .DS_Store
 
