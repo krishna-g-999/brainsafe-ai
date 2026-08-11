@@ -4,11 +4,21 @@ Same question as noncns_specificity.py: how often does the tool raise a disease 
 compound that should produce none. The construction is identical in intent but avoids canonicalising
 the whole corpus, which is the step that made the first version impractical.
 
+Where the negatives come from, and why it matters. They used to be sampled from
+models_rf/ad_reference.pkl, which is the library the applicability domain measures similarity
+against. Every compound drawn from it is therefore its own nearest neighbour: all 1,000 sampled
+compounds had a maximum Tanimoto of exactly 1.000, the in-domain stratum was numerically identical
+to the unstratified row, and the near- and out-of-domain strata were empty and silently omitted. A
+specificity measured that way describes compounds the model has already seen and cannot support a
+claim about novel chemistry.
+
+They are now drawn from the approved and experimental drugs that are absent from that reference
+(models.pools.external_negatives), so the applicability-domain stratification means something and
+the rate is about chemistry the model was not fitted to.
+
 The exclusion set is built from the raw SMILES strings recorded as active at any modelled target.
-Those strings and the applicability-domain reference library were produced by the same ingestion
-path, so string identity is a reliable match here; the sampled compounds are canonicalised and
-re-checked against a canonicalised copy of the exclusion set as a safeguard, and any that slip
-through are dropped and counted.
+The sampled compounds are canonicalised and re-checked against a canonicalised copy of the whole
+exclusion set, and any that slip through are dropped and counted.
 
 Compounds are presumed inactive rather than proven inactive, so the reported false-positive rate is
 an upper bound on the true rate.
@@ -31,6 +41,8 @@ RDLogger.DisableLog("rdApp.*")
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "src" / "brainsafe"))
+from models.pools import external_negatives  # noqa: E402
+
 TAB = ROOT / "results" / "tables"
 N_SAMPLE = 1000
 rng = np.random.default_rng(31415)
@@ -52,7 +64,6 @@ def wilson(k, n, z=1.96):
 
 
 def main():
-    import pickle
     import app
 
     # raw-string exclusion set: anything active at any modelled target, plus the antioxidant table
@@ -76,13 +87,21 @@ def main():
             continue
     print(f"exclusion set (active at a modelled target): {len(active_raw):,}", flush=True)
 
-    with (ROOT / "models_rf" / "ad_reference.pkl").open("rb") as fh:
-        lib, _ = pickle.load(fh)
+    lib = external_negatives()
     cand = [s for s in lib if s not in active_raw]
-    print(f"library {len(lib):,}; eligible negatives {len(cand):,}", flush=True)
+    print(f"external library {len(lib):,} (disjoint from the applicability-domain reference); "
+          f"eligible negatives {len(cand):,}", flush=True)
+    if len(cand) < N_SAMPLE:
+        raise SystemExit(
+            f"only {len(cand)} eligible negatives for a sample of {N_SAMPLE}. Widen the external "
+            "pool rather than falling back to the reference library, which cannot support a "
+            "specificity claim about novel chemistry."
+        )
 
     take = rng.choice(len(cand), size=min(N_SAMPLE * 2, len(cand)), replace=False)
-    active_canon = {c for c in (canon(s) for s in list(active_raw)[:40000]) if c}
+    # The whole exclusion set, canonicalised. Slicing an unordered set to 40,000, as this once did,
+    # both truncated the check and made it depend on iteration order.
+    active_canon = {c for c in (canon(s) for s in active_raw) if c}
     sel, slipped = [], 0
     for i in take:
         c = canon(cand[i])

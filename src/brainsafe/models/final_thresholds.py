@@ -1,15 +1,17 @@
 """Set every binder decision threshold from two independent requirements, computed from scratch.
 
 Requirement A, selectivity against tested non-binders: at most TARGET_FPR of the target's measured
-inactives may be called a binder. For hybrid models a portion of those inactives was seen in
-training, so this component is mildly optimistic and is not used to make performance claims.
+inactives may be called a binder. Only the half withheld at training time counts, read from
+models_rf/holdout/<T>_binder_holdout.json. This step used to re-read every inactive in the endpoint
+table, including the half the model was fitted on, which undid the holdout that training had
+constructed and set the threshold on 40 of 49 deployed endpoints from data the model had seen.
 
-Requirement B, specificity against unrelated chemistry: at most BACKGROUND_FPR of a random sample of
-the measured compound library may be called a binder. This sample is independent of every target's
-training set, so it is the component that bounds false discovery when screening arbitrary compounds.
-It exists because a prospective test found Nav1.1 assigning glucose a binder probability of 0.806
-while scoring 0.979 against its own assay's negatives: a model judged only on its own chemistry can
-be confidently wrong about everything else.
+Requirement B, specificity against unrelated chemistry: at most BACKGROUND_FPR of the threshold pool
+may be called a binder. That pool is disjoint from the decoys the model trained on and from the
+evaluation pool the reported rate is measured on, so neither the threshold nor the rate is a
+restatement of the other. It exists because a prospective test found Nav1.1 assigning glucose a
+binder probability of 0.806 while scoring 0.979 against its own assay's negatives: a model judged
+only on its own chemistry can be confidently wrong about everything else.
 
 The operating threshold is the stricter of the two, recomputed from scratch each run so repeated
 calibration cannot ratchet thresholds upward. BACKGROUND_FPR is 0.05; 0.02 was tested and rejected
@@ -20,7 +22,6 @@ Updates models_rf/binder_modes.json and writes results/tables/final_thresholds.c
 from __future__ import annotations
 
 import json
-import pickle
 import sys
 from pathlib import Path
 
@@ -31,6 +32,7 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / "src" / "brainsafe"))
 from features.featurize import featurize  # noqa: E402
+from models.pools import background_pools  # noqa: E402
 
 M = ROOT / "models_rf"
 TARGET_FPR = 0.10
@@ -40,12 +42,31 @@ MIN_SENS = 0.50
 rng = np.random.default_rng(7)
 
 
+def holdout_inactives(ep: str) -> list[str] | None:
+    """The measured inactives withheld at training time, or None if no record was kept."""
+    p = M / "holdout" / f"{ep}_binder_holdout.json"
+    if not p.exists():
+        return None
+    return json.loads(p.read_text()).get("measured_inactive_holdout") or None
+
+
+def holdout_actives(ep: str) -> list[str] | None:
+    p = M / "holdout" / f"{ep}_binder_holdout.json"
+    if not p.exists():
+        return None
+    return json.loads(p.read_text()).get("active_holdout") or None
+
+
 def main():
-    with (M / "ad_reference.pkl").open("rb") as fh:
-        bg_smiles, _ = pickle.load(fh)
-    idx = rng.choice(len(bg_smiles), size=min(N_BACKGROUND, len(bg_smiles)), replace=False)
-    Xbg, _ = featurize([str(bg_smiles[i]) for i in idx])
-    print(f"independent background sample: {Xbg.shape[0]} compounds", flush=True)
+    pools = background_pools()
+    thr_pool, eval_pool = pools["threshold"], pools["evaluation"]
+    idx = rng.choice(len(thr_pool), size=min(N_BACKGROUND, len(thr_pool)), replace=False)
+    Xbg, _ = featurize([thr_pool[i] for i in idx])
+    jdx = rng.choice(len(eval_pool), size=min(N_BACKGROUND, len(eval_pool)), replace=False)
+    Xev, _ = featurize([eval_pool[j] for j in jdx])
+    print(f"threshold pool sample: {Xbg.shape[0]} compounds; "
+          f"disjoint evaluation sample: {Xev.shape[0]}", flush=True)
+    missing_holdout = []
 
     modes = json.loads((M / "binder_modes.json").read_text())
     rows = []
@@ -58,36 +79,41 @@ def main():
         thr_bg = float(np.quantile(pbg, 1.0 - BACKGROUND_FPR))
 
         thr_in, sens, n_in = None, None, 0
-        f = ROOT / "data" / "endpoints" / f"{ep}.csv"
         pa = None
-        if f.exists():
-            df = pd.read_csv(f).dropna(subset=["smiles"])
-            p = pd.to_numeric(df.get("pchembl"), errors="coerce")
-            act = df.loc[p >= 7, "smiles"].astype(str).tolist()
-            if len(act) < 30:
-                act = df.loc[df["label"] == 1, "smiles"].astype(str).tolist()
-            ina = df.loc[df["label"] == 0, "smiles"].astype(str).tolist()
-            if len(ina) >= 15:
-                Xi, _ = featurize(ina)
-                pi = mdl.predict_proba(Xi)[:, 1]
-                thr_in = float(np.quantile(pi, 1.0 - TARGET_FPR))
-                n_in = len(pi)
-            if act:
-                Xa, _ = featurize(act)
-                pa = mdl.predict_proba(Xa)[:, 1]
+        # Only what training withheld. Reading the endpoint table here would pull back the half of
+        # the inactives the model was fitted on, and the threshold would be set on seen data.
+        ina = holdout_inactives(ep)
+        act = holdout_actives(ep)
+        if ina is None:
+            missing_holdout.append(ep)
+        if ina and len(ina) >= 15:
+            Xi, _ = featurize(ina)
+            pi = mdl.predict_proba(Xi)[:, 1]
+            thr_in = float(np.quantile(pi, 1.0 - TARGET_FPR))
+            n_in = len(pi)
+        if act:
+            Xa, _ = featurize(act)
+            pa = mdl.predict_proba(Xa)[:, 1]
 
         thr = max([t for t in (thr_in, thr_bg) if t is not None])
         thr = float(np.clip(thr, 0.05, 0.999))
         if pa is not None and len(pa):
             sens = float((pa >= thr).mean())
-        bgfpr = float((pbg >= thr).mean())
+        # Measured on the evaluation pool, not on pbg. thr is a quantile of pbg, so the rate on pbg
+        # cannot exceed BACKGROUND_FPR whatever the model does, and reporting it says nothing.
+        pev = mdl.predict_proba(Xev)[:, 1]
+        bgfpr = float((pev >= thr).mean())
+        bgfpr_in_sample = float((pbg >= thr).mean())
 
         v["threshold"] = round(thr, 4)
-        v["threshold_basis"] = ("measured_inactives_and_background" if thr_in is not None
+        v["threshold_basis"] = ("held_out_measured_inactives_and_background" if thr_in is not None
                                 else "background_only")
         v["background_fpr_at_threshold"] = round(bgfpr, 4)
+        v["background_fpr_in_sample"] = round(bgfpr_in_sample, 4)
         v["n_measured_inactive_for_threshold"] = int(n_in)
+        v["n_measured_inactive_basis"] = "held_out_only"
         if sens is not None:
+            v["sensitivity_basis"] = "held_out_actives_by_scaffold"
             v["sensitivity_at_threshold"] = round(sens, 3)
             v["reliable_call"] = bool(sens >= MIN_SENS
                                       and (v.get("auroc_vs_measured_inactives") or 1.0) >= 0.75)
@@ -102,6 +128,13 @@ def main():
                      "reliable": v.get("reliable_call")})
         print(f"[{ep:8}] thr {thr:.3f} ({rows[-1]['binding_constraint']}) | bgFPR {bgfpr:.3f} | "
               f"sens {sens if sens is None else round(sens, 3)}", flush=True)
+
+    if missing_holdout:
+        print(f"\nWARNING: no holdout record for {len(missing_holdout)} endpoint(s): "
+              f"{', '.join(missing_holdout[:8])}"
+              + (" ..." if len(missing_holdout) > 8 else ""))
+        print("Their thresholds rest on the background pool alone. Retrain them with "
+              "train_binders_hybrid.py so a held-out set exists.")
 
     (M / "binder_modes.json").write_text(json.dumps(modes, indent=2))
     out = pd.DataFrame(rows)
