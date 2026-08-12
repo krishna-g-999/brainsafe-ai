@@ -30,8 +30,16 @@ Outputs:
 from __future__ import annotations
 
 import glob
+import logging
 import sys
 from pathlib import Path
+
+# app.py is a Streamlit script, and importing it outside `streamlit run` makes every session-state
+# read log "missing ScriptRunContext" at WARNING. This scores a thousand compounds against roughly
+# seventy models each, so that warning is emitted often enough to matter: an earlier run of this
+# script wrote a 6.9 GB log and died when the disk filled. Silence the framework's own chatter and
+# keep this script's output.
+logging.getLogger("streamlit").setLevel(logging.ERROR)
 
 import numpy as np
 import pandas as pd
