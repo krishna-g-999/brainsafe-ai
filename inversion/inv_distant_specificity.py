@@ -78,6 +78,23 @@ def random_pubchem(n):
     return got[:n]
 
 
+
+def library_false_positive_rate(default: float = 0.125) -> float:
+    """The library-chemistry false-positive rate this hypothesis is compared against.
+
+    Read from results/tables/noncns_specificity_summary.csv rather than written here as a literal.
+    It was 0.125 when that figure was measured on a sample drawn from the applicability-domain
+    reference itself; measured on chemistry absent from that reference it is 0.080, and a comparator
+    frozen at the old value would keep testing against a number the project no longer reports.
+    """
+    p = ROOT / "results" / "tables" / "noncns_specificity_summary.csv"
+    if not p.exists():
+        return default
+    import pandas as _pd
+    d = _pd.read_csv(p)
+    row = d[d.metric.str.startswith("False-positive rate (any actionable")]
+    return float(row.estimate.iloc[0]) if len(row) else default
+
 def main():
     import app
 
@@ -137,7 +154,7 @@ def main():
     pd.set_option("display.width", 150)
     print()
     print(res.to_string(index=False))
-    ref_fpr = 0.125
+    ref_fpr = library_false_positive_rate()
     far = res[res.stratum == "distant (T<0.3)"]
     if len(far):
         f = float(far.false_positive_rate.iloc[0])

@@ -21,6 +21,16 @@ def read(name):
     return pd.read_csv(p) if p.exists() else None
 
 
+
+def _library_fpr(default: float = 0.125) -> float:
+    """Same comparator as inv_distant_specificity, read from the artefact rather than restated."""
+    p = ROOT / "results" / "tables" / "noncns_specificity_summary.csv"
+    if not p.exists():
+        return default
+    d = pd.read_csv(p)
+    row = d[d.metric.str.startswith("False-positive rate (any actionable")]
+    return float(row.estimate.iloc[0]) if len(row) else default
+
 def main():
     verdicts, notes = [], {}
 
@@ -75,14 +85,15 @@ def main():
         if len(far):
             f = float(far.false_positive_rate.iloc[0])
             n = int(far.n.iloc[0])
-            v = "SUPPORTED" if f <= 0.1875 else "REFUTED"
+            _ref = _library_fpr()
+            v = "SUPPORTED" if f <= _ref * 1.5 else "REFUTED"
             verdicts.append({"hypothesis": "H4 specificity transfers to novel chemistry",
                              "verdict": v,
                              "headline": f"false-positive rate {f:.3f} on {n} distant compounds "
-                                         f"against 0.125 measured on library chemistry"})
+                                         f"against {_ref:.3f} measured on library chemistry"})
             notes["H4"] = (f"Structures drawn by random PubChem identifier, independent of every set "
                            f"used to build this tool. On compounds distant from training chemistry "
-                           f"the false-positive rate is {f:.3f}, against {0.125:.3f} measured on "
+                           f"the false-positive rate is {f:.3f}, against {_library_fpr():.3f} measured on "
                            f"library compounds.")
         elif len(allr):
             notes["H4"] = "No distant stratum was populated; see H4_distant_specificity.csv."
