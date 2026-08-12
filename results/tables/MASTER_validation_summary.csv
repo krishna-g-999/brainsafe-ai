@@ -1,8 +1,8 @@
 test,statistic,k,n,estimate,ci95_low,ci95_high,design
-Prospective sensitivity (scaffold-held-out),recall,11914,15069,0.7906,0.7841,0.7971,"20% of Bemis-Murcko scaffolds withheld per target; 40 deployed targets with a usable hold-out threshold; held-out compounds share no scaffold with training. 4 excluded for a threshold at the floor: CGRP, LRRK2, OX2, RIPK1"
-Specificity (non-CNS compounds),true-negative rate,875,1000,0.875,0.8531,0.8941,"library compounds with no measured activity at any modelled target; presumed inactive rather than proven so, therefore a lower bound"
+Prospective sensitivity (scaffold-held-out),recall,11186,14263,0.7843,0.7774,0.7909,"20% of Bemis-Murcko scaffolds withheld per target; 37 deployed targets with a usable hold-out threshold; held-out compounds share no scaffold with training. 2 excluded for a threshold at the floor: LRRK2, OX2"
+Specificity (non-CNS compounds),true-negative rate,920,1000,0.92,0.9015,0.9353,"library compounds with no measured activity at any modelled target; presumed inactive rather than proven so, therefore a lower bound"
 Deployed specificity on random chemistry,median false-positive rate per endpoint,,47,0.0017,,,"every served model at its deployed threshold against 600 structures drawn by random PubChem identifier, plus molecules no CNS target plausibly binds; 0 endpoints fire on a trivial molecule"
-Balanced accuracy,(sensitivity+specificity)/2,,16069,0.8328,,,combines the two tests above
-Targets reaching >=0.80 prospective recall,count,22,40,0.55,,,"per-target, excluding 4 whose hold-out threshold collapsed"
-Targets below 0.50 prospective recall,count,6,40,0.15,,,"GluA2, KEAP1, MT1, Nav1_6, SIRT1, mGluR5"
-Binder discrimination vs measured inactives,mean AUROC,,42,0.9546,,,"compounds experimentally tested on the same target and found inactive, held out from training"
+Balanced accuracy,(sensitivity+specificity)/2,,15263,0.8521,,,combines the two tests above
+Targets reaching >=0.80 prospective recall,count,21,37,0.5676,,,"per-target, excluding 2 whose hold-out threshold collapsed"
+Targets below 0.50 prospective recall,count,3,37,0.0811,,,"COX2, GluA2, mGluR5"
+Binder discrimination vs measured inactives,mean AUROC,,42,0.8958,,,"compounds experimentally tested on the same target and found inactive, held out from training"
