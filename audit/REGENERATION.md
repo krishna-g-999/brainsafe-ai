@@ -258,3 +258,54 @@ pointing at a record serving different bytes does not.
 - manuscript tables and figures
 - deposit models v1.1 and the source-cache archive, then fill both manifests
 - the blocked ChEMBL negative-class fetch
+
+---
+
+## Step 10 — prospective panel, master summary, inversion suite
+
+### Scaffold hold-out (Table 6)
+
+40 targets retrained with whole scaffolds withheld. Pooled prospective recall **11,794/15,011 =
+0.786** over 38 non-collapsed targets, against 12,325/15,609 = 0.790 before. Mean per-target recall
+0.748 → 0.756.
+
+**This number barely moved, and that is the correct outcome.** This test always built its own hold-out
+models with scaffolds withheld, so it was a genuine prospective measurement before any fix. The
+figure that had been measuring recall of the training set was `sensitivity_at_threshold` in
+`binder_modes.json`, which fell 0.894 → 0.751. Worth stating so the two are not confused.
+
+### MASTER_validation_summary
+
+Rebuilt from this pass rather than from a mixture of runs, which is what **BS-M-02** recorded.
+
+| | Before | After |
+|---|---|---|
+| Prospective sensitivity | 11,914/15,069 = 0.7906 | **11,186/14,263 = 0.7843** [0.7774, 0.7909] |
+| Specificity, non-CNS | 0.875 | **0.9200** |
+| Balanced accuracy | 0.8328 | **0.8521** |
+| Binder AUROC vs measured inactives | 0.9546 | **0.8958** |
+| Targets ≥ 0.80 recall | 22/40 | 21/37 |
+| Targets < 0.50 recall | 6 | 3/37 |
+
+### H1 — the disease layer, with BS-C-08 applied
+
+4,173 of 16,056 held-out entries (**26.0%**, matching the 25.9% measured before the fix) removed as
+training actives of another panel target.
+
+| | Before | After |
+|---|---|---|
+| Top-3 accuracy | 0.8045 | **0.7691** [0.7591, 0.7789] |
+| n | 8,232 | 6,948 |
+| Permutation null | 0.1877 | 0.1519 |
+| Frequency null | 0.4824 | **0.5603** |
+
+The layer still carries information, p at its floor of 0.005 with 200 permutations. The honest margin
+is against the frequency null: **0.209** over always answering with the three commonest diseases.
+
+**H2 is WEAKENED**, and for a plainer reason than before: curated weights 0.7691, uniform 0.7678,
+randomly permuted 0.7670. The curation is worth **0.0013**.
+
+**H3** unchanged in kind: the BBB gate multiplies every disease equally, so it cannot change which
+disease ranks first, only what crosses the reporting threshold.
+
+**H7** regenerated. **H4, H5, H6, H8** still running or pending at the time of writing.
