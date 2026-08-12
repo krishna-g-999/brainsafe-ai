@@ -178,3 +178,83 @@ similarity 0.44 to training while non-drug-like chemistry sits at 0.48.
   which feed manuscript Table 6 and `MASTER_validation_summary.csv`.
 - The `inversion/` H1–H8 suite, including the BS-C-08 restriction.
 - Manuscript tables and figures, then `app_health.py` as the release gate.
+
+---
+
+## Step 7 — specificity on independent chemistry · DONE
+
+**BS-C-05.** The 0.875 figure was measured on a sample drawn from `ad_reference.pkl`, the library the
+applicability domain measures against, so all 1,000 compounds sat at Tanimoto 1.000 to it and the
+stratification meant to qualify the number was empty.
+
+Drawn instead from the 8,418 DrugBank structures absent from that reference (8,207 eligible):
+
+| | Before | After |
+|---|---|---|
+| False-positive rate | 0.125 | **0.0800** (95% CI 0.0647–0.0985) |
+| Specificity | 0.875 | **0.9200** (95% CI 0.9015–0.9353) |
+
+The stratification now has content, because the sample spans the domain instead of sitting on it
+(similarity 0.059–1.000, median 0.514, only 8.8% at 1.000):
+
+| Stratum | k / n | rate |
+|---|---|---|
+| in domain (T≥0.5) | 52 / 543 | 0.0958 |
+| near domain (0.3–0.5) | 25 / 398 | 0.0628 |
+| out of domain (T<0.3) | 3 / 59 | 0.0508 |
+
+The headline improves. But the rate **falls** as chemistry gets more distant, which is the reverse of
+what the applicability-domain argument predicts.
+
+---
+
+## The applicability domain: three independent measurements now disagree with the claim
+
+1. Out-of-domain AUROC **0.816** exceeds in-domain **0.772** on the external set (BS-M-10).
+2. The inversion domain check fails: non-drug-like chemistry sits **nearer** training (median 0.48)
+   than genuinely novel drugs (0.44), and only 22% of it falls below the 0.30 cut.
+3. Specificity is **better** out of domain (0.0508) than in it (0.0958).
+
+Whatever `AD_THRESHOLD = 0.30` is selecting, it is not distance from the training chemistry, and it
+qualifies every prediction the server returns. **This needs its own investigation before submission.**
+
+---
+
+## Step 8 — health gate · ONE FAILURE
+
+`app_health.py` exits 1 on a single check:
+
+```
+[FAIL] directional pharmacology: levodopa top-3 does not include Parkinson's disease:
+       ['Neuroprotection / oxidative stress', 'Epilepsy', "Alzheimer's disease"]
+```
+
+Before the regeneration levodopa read `Neuroprotection 0.34, Alzheimer's 0.14, Parkinson's 0.14` —
+Parkinson's was third **on a tie at 0.14**. It is now displaced by Epilepsy at 0.17. The margin was
+always inside noise, and levodopa is a prodrug rather than a binder, so a target-engagement panel was
+never going to score it well. That explains the fragility; it does not excuse the failure. **The gate
+fails and the release is not clean.** Either the check is testing something this panel cannot deliver
+and should say so, or the disease layer needs work for prodrugs. That is a judgement for the authors.
+
+Everything else passes: 52 targets, all probes score, distinct profiles, peripheral controls below
+threshold, exports well formed, ADME units consistent.
+
+---
+
+## Step 9 — model manifest · DONE, deposit outstanding
+
+Regeneration changed 93 of 195 files, so `model_fetch` judged them wrong and tried to re-download.
+On this network that failed; on a working one it would have **overwritten the regenerated models with
+the previous ones**. The manifest is rebuilt (244 files), version bumped to **1.1**, and `doi`/`urls`
+emptied with the old DOI kept under `supersedes_doi`. A manifest pointing nowhere fails honestly; one
+pointing at a record serving different bytes does not.
+
+---
+
+## Remaining
+
+- `scaffold_holdout_panel.py` — Table 6 and `MASTER_validation_summary.csv`
+- the `inversion/` H1–H8 suite, with the BS-C-08 restriction
+- manuscript tables and figures
+- deposit models v1.1 and the source-cache archive, then fill both manifests
+- the blocked ChEMBL negative-class fetch
