@@ -1,0 +1,8 @@
+where,blank_means
+"TRAINING_MATRIX, any <endpoint>__label or __pchembl cell","this compound was never measured against this endpoint. It is absent evidence, not a measured zero, and it was not used to train that model."
+"TRAINING_MATRIX, <endpoint>__pchembl present but __label empty","the potency fell in the 5-6 grey band, which the label rule discards, so the compound trains the regression but not the classifier."
+"OUTPUT_CATALOGUE, cv_random for a binder","binders are evaluated under a scaffold split only; no random-split figure was computed, so none is quoted."
+"OUTPUT_CATALOGUE, positives for an ADME endpoint",most ADME endpoints are regressions and have no positive class.
+"OUTPUT_CATALOGUE, rows_before_dedup for binder or ADME rows","the deduplication counter is recorded by train_rf.py only; the binder and ADME scripts do not write it, so the figure is genuinely unknown rather than zero."
+"OUTPUT_CATALOGUE, decision_threshold for a regression","regressions return a value, not a call, so no threshold applies."
+"OUTPUT_CATALOGUE, sensitivity or threshold fields for Nav1_1 and Cav3_2","withdrawn endpoints; the model exists but is not scored, so its figures describe something the tool does not report."
