@@ -1,11 +1,11 @@
 target,threshold,from_measured_inactives,from_background,binding_constraint,background_fpr,sensitivity,reliable
 A1,0.8556,0.8556,0.3417,measured inactives,0.035,0.864,True
-A2A,0.978,0.978,0.4262,measured inactives,0.0367,0.76,True
+A2A,0.9422,0.9422,0.4322,measured inactives,0.044,0.848,True
 a7nAChR,0.773,0.773,0.1073,measured inactives,0.0083,0.784,True
 CB1,0.9908,0.9908,0.137,measured inactives,0.0197,0.608,True
 COX2,0.9397,0.9397,0.1431,measured inactives,0.0077,0.289,False
 CSF1R,0.18,0.18,0.0684,measured inactives,0.0337,0.961,True
-D2,0.9798,0.9798,0.9636,measured inactives,0.0453,0.54,True
+D2,0.9739,0.9739,0.9697,measured inactives,0.0503,0.632,True
 D3,0.9688,0.9226,0.9688,background,0.057,0.788,True
 DAT,0.5368,0.5368,0.1304,measured inactives,0.023,0.89,True
 GABA_A,0.1067,,0.1067,background,0.059,0.658,True
@@ -15,7 +15,7 @@ H3,0.7995,0.7995,0.179,measured inactives,0.033,0.938,True
 HDAC1,0.8941,0.8941,0.5971,measured inactives,0.0347,0.866,True
 HDAC6,0.9839,0.9839,0.9381,measured inactives,0.031,0.804,True
 HT1A,0.953,0.7406,0.953,background,0.0523,0.791,True
-HT2A,0.9933,0.9933,0.9555,measured inactives,0.0363,0.501,True
+HT2A,0.934,0.9204,0.934,background,0.0507,0.714,True
 HT6,0.8695,0.8695,0.11,measured inactives,0.0277,0.867,True
 HT7,0.8035,0.301,0.8035,background,0.055,0.871,True
 KEAP1,0.779,0.779,0.0959,measured inactives,0.0027,0.8,True
@@ -33,7 +33,7 @@ OX2,0.1641,,0.1641,background,0.0483,0.971,True
 P2X7,0.999,0.9999,0.1371,measured inactives,0.0137,0.588,True
 PDE10A,0.9565,0.9565,0.0498,measured inactives,0.0237,0.808,True
 PDE4B,0.1319,0.1319,0.0429,measured inactives,0.0273,0.934,True
-SERT,0.627,0.4781,0.627,background,0.053,0.847,True
+SERT,0.5669,0.5097,0.5669,background,0.0563,0.892,True
 Sigma1,0.957,0.957,0.8433,measured inactives,0.0293,0.604,True
 SIRT1,0.582,0.582,0.5577,measured inactives,0.0283,0.821,True
 TAAR1,0.8934,0.8934,0.8777,measured inactives,0.0343,0.378,False
