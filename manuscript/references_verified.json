@@ -12,33 +12,57 @@
     },
     "bindingdb": {
       "title": "BindingDB in 2015: A public database for medicinal chemistry, computational chemistry and systems pharmacology",
-      "authors": "Gilson M, Liu T, Baitaluk M et al.",
-      "journal": "Nucleic Acids Research",
+      "authors": "Gilson MK, Liu T, Baitaluk M, Nicola G, Hwang L, Chong J.",
+      "journal": "Nucleic acids research",
       "year": "2016",
       "doi": "10.1093/nar/gkv1072",
-      "source": "CrossRef",
+      "pmid": "26481362",
+      "source": "EuropePMC",
       "match_score": 1.0,
       "requested_title": "BindingDB in 2015: A public database for medicinal chemistry, computational chemistry and systems pharmacology"
     },
-    "ecfp": {
-      "title": "extended connectivity fingerprints",
-      "authors": "",
-      "journal": "The IUPAC Compendium of Chemical Terminology",
-      "year": "2025",
-      "doi": "10.1351/goldbook.11443",
+    "b3db": {
+      "title": "A curated diverse molecular database of blood-brain barrier permeability with chemical descriptors",
+      "authors": "Meng F, Xi Y, Huang J et al.",
+      "journal": "Scientific Data",
+      "year": "2021",
+      "doi": "10.1038/s41597-021-01069-5",
       "source": "CrossRef",
+      "match_score": 1.0,
+      "requested_title": "A curated diverse molecular database of blood-brain barrier permeability with chemical descriptors"
+    },
+    "ecfp": {
+      "title": "Extended-Connectivity Fingerprints",
+      "registered_title": "Extended-Connectivity Fingerprints",
+      "authors": "Rogers D, Hahn M",
+      "journal": "Journal of Chemical Information and Modeling",
+      "year": "2010",
+      "doi": "10.1021/ci100050t",
+      "source": "CrossRef (by DOI)",
       "match_score": 1.0,
       "requested_title": "Extended-Connectivity Fingerprints"
     },
     "random_forest": {
       "title": "Random Forests",
-      "authors": "Genuer R, Poggi J",
-      "journal": "Use R!",
-      "year": "2020",
-      "doi": "10.1007/978-3-030-56485-8_3",
-      "source": "CrossRef",
+      "registered_title": "Random Forests",
+      "authors": "Breiman L",
+      "journal": "Machine Learning",
+      "year": "2001",
+      "doi": "10.1023/a:1010933404324",
+      "source": "CrossRef (by DOI)",
       "match_score": 1.0,
       "requested_title": "Random Forests"
+    },
+    "tdc": {
+      "title": "Artificial intelligence foundation for therapeutic science",
+      "authors": "Huang K, Fu T, Gao W, Zhao Y, Roohani Y, Leskovec J, Coley CW, Xiao C, Sun J, Zitnik M.",
+      "journal": "Nature chemical biology",
+      "year": "2022",
+      "doi": "10.1038/s41589-022-01131-2",
+      "pmid": "36131149",
+      "source": "EuropePMC",
+      "match_score": 1.0,
+      "requested_title": "Artificial intelligence foundation for therapeutic science"
     },
     "moleculenet": {
       "title": "MoleculeNet: a benchmark for molecular machine learning",
@@ -113,6 +137,27 @@
       "match_score": 1.0,
       "requested_title": "Moving beyond rules: the development of a central nervous system multiparameter optimization (CNS MPO) approach to enable alignment of druglike properties"
     },
+    "kpuu": {
+      "title": "Unbound Brain-to-Plasma Partition Coefficient, Kp,uu,brain\u2014a Game Changing Parameter for CNS Drug Discovery and Development",
+      "authors": "Loryan I, Reichel A, Feng B et al.",
+      "journal": "Pharmaceutical Research",
+      "year": "2022",
+      "doi": "10.1007/s11095-022-03246-6",
+      "source": "CrossRef",
+      "match_score": 1.0,
+      "requested_title": "Unbound Brain-to-Plasma Partition Coefficient, Kp,uu,brain-a Game Changing Parameter for CNS Drug Discovery and Development"
+    },
+    "xgboost": {
+      "title": "XGBoost: A Scalable Tree Boosting System",
+      "registered_title": "XGBoost",
+      "authors": "Chen T, Guestrin C",
+      "journal": "Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining",
+      "year": "2016",
+      "doi": "10.1145/2939672.2939785",
+      "source": "CrossRef (by DOI)",
+      "match_score": 1.0,
+      "requested_title": "XGBoost: A Scalable Tree Boosting System"
+    },
     "calibration": {
       "title": "Predicting good probabilities with supervised learning",
       "authors": "Niculescu-Mizil A, Caruana R",
@@ -123,6 +168,26 @@
       "match_score": 1.0,
       "requested_title": "Predicting good probabilities with supervised learning"
     },
+    "platt": {
+      "title": "A note on Platt\u2019s probabilistic outputs for support vector machines",
+      "authors": "Lin H, Lin C, Weng R",
+      "journal": "Machine Learning",
+      "year": "2007",
+      "doi": "10.1007/s10994-007-5018-6",
+      "source": "CrossRef",
+      "match_score": 1.0,
+      "requested_title": "A note on Platt's probabilistic outputs for support vector machines"
+    },
+    "conformal": {
+      "title": "Introducing Conformal Prediction in Predictive Modeling. A Transparent and Flexible Alternative to Applicability Domain Determination",
+      "authors": "Norinder U, Carlsson L, Boyer S et al.",
+      "journal": "Journal of Chemical Information and Modeling",
+      "year": "2014",
+      "doi": "10.1021/ci5001168",
+      "source": "CrossRef",
+      "match_score": 1.0,
+      "requested_title": "Introducing Conformal Prediction in Predictive Modeling. A Transparent and Flexible Alternative to Applicability Domain Determination"
+    },
     "ad_qsar": {
       "title": "QSAR Applicability Domain Estimation by Projection of the Training Set in Descriptor Space: A Review",
       "authors": "Jaworska J, Nikolova-Jeliazkova N, Aldenberg T",
@@ -132,6 +197,16 @@
       "source": "CrossRef",
       "match_score": 1.0,
       "requested_title": "QSAR applicability domain estimation by projection of the training set in descriptor space: a review"
+    },
+    "herg_pred": {
+      "title": "Cardiac safety, drug\u2010induced QT prolongation and torsade de pointes (TdP)",
+      "authors": "Ritter J",
+      "journal": "British Journal of Clinical Pharmacology",
+      "year": "2012",
+      "doi": "10.1111/j.1365-2125.2012.04193.x",
+      "source": "CrossRef",
+      "match_score": 1.0,
+      "requested_title": "Cardiac safety, drug-induced QT prolongation and torsade de pointes (TdP)"
     },
     "delong": {
       "title": "Comparing the Areas under Two or More Correlated Receiver Operating Characteristic Curves: A Nonparametric Approach",
@@ -152,6 +227,16 @@
       "source": "CrossRef",
       "match_score": 1.0,
       "requested_title": "Probable Inference, the Law of Succession, and Statistical Inference"
+    },
+    "cns_attrition": {
+      "title": "Drug metabolism and pharmacokinetics, the blood-brain barrier, and central nervous system drug discovery",
+      "authors": "Alavijeh M, Chishty M, Qaiser M et al.",
+      "journal": "NeuroRX",
+      "year": "2005",
+      "doi": "10.1602/neurorx.2.4.554",
+      "source": "CrossRef",
+      "match_score": 1.0,
+      "requested_title": "Drug metabolism and pharmacokinetics, the blood-brain barrier, and central nervous system drug discovery"
     },
     "ache_ad": {
       "title": "Role of Acetylcholinesterase Inhibitors and Alzheimer Disease",
@@ -184,6 +269,16 @@
       "match_score": 1.0,
       "requested_title": "Monoamine oxidase B inhibitors in Parkinson's disease"
     },
+    "lrrk2_pd": {
+      "title": "Achieving neuroprotection with LRRK2 kinase inhibitors in Parkinson disease",
+      "authors": "West A",
+      "journal": "Experimental Neurology",
+      "year": "2017",
+      "doi": "10.1016/j.expneurol.2017.07.019",
+      "source": "CrossRef",
+      "match_score": 1.0,
+      "requested_title": "Achieving neuroprotection with LRRK2 kinase inhibitors in Parkinson disease"
+    },
     "orexin_insomnia": {
       "title": "Orexin receptor antagonists: a new treatment for insomnia?",
       "authors": "Riemann D, Spiegelhalder K",
@@ -193,6 +288,16 @@
       "source": "CrossRef",
       "match_score": 0.903,
       "requested_title": "Orexin receptor antagonists for the treatment of insomnia"
+    },
+    "nlrp3_neuro": {
+      "title": "Role of the NLRP3 inflammasome in neurodegenerative diseases and therapeutic implications",
+      "authors": "Duan Y, Kelley N, He Y",
+      "journal": "Neural Regeneration Research",
+      "year": "2020",
+      "doi": "10.4103/1673-5374.272576",
+      "source": "CrossRef",
+      "match_score": 1.0,
+      "requested_title": "Role of the NLRP3 inflammasome in neurodegenerative diseases and therapeutic implications"
     },
     "nrf2_neuro": {
       "title": "Role of the Keap1/Nrf2 pathway in neurodegenerative diseases",
@@ -204,6 +309,26 @@
       "source": "EuropePMC",
       "match_score": 0.929,
       "requested_title": "The Keap1-Nrf2 pathway in neurodegenerative diseases"
+    },
+    "hdac_hd": {
+      "title": "Histone deacetylase knockouts modify transcription, CAG instability and nuclear pathology in Huntington disease mice",
+      "authors": "Kovalenko M, Erdin S, Andrew M et al.",
+      "journal": "eLife",
+      "year": "2020",
+      "doi": "10.7554/elife.55911",
+      "source": "CrossRef",
+      "match_score": 1.0,
+      "requested_title": "Histone deacetylase knockouts modify transcription, CAG instability and nuclear pathology in Huntington disease mice"
+    },
+    "riluzole_als": {
+      "title": "Riluzole for amyotrophic lateral sclerosis (ALS)/motor neuron disease (MND)",
+      "authors": "RG M, JD M, M L et al.",
+      "journal": "Amyotrophic Lateral Sclerosis and Other Motor Neuron Disorders",
+      "year": "2003",
+      "doi": "10.1080/14660820310002601",
+      "source": "CrossRef",
+      "match_score": 1.0,
+      "requested_title": "Riluzole for amyotrophic lateral sclerosis (ALS)/motor neuron disease (MND)"
     }
   },
   "software": {
@@ -216,24 +341,13 @@
       "kind": "software",
       "text": "Streamlit: an open-source app framework",
       "url": "https://streamlit.io"
+    },
+    "sklearn": {
+      "kind": "software",
+      "text": "Pedregosa F, Varoquaux G, Gramfort A et al. Scikit-learn: Machine Learning in Python. Journal of Machine Learning Research. 2011;12:2825-2830",
+      "url": "https://www.jmlr.org/papers/v12/pedregosa11a.html"
     }
   },
-  "unresolved": [
-    "b3db",
-    "sklearn",
-    "tdc",
-    "kpuu",
-    "xgboost",
-    "gin_gnn",
-    "platt",
-    "conformal",
-    "herg_pred",
-    "bbb_ml",
-    "cns_attrition",
-    "lrrk2_pd",
-    "nlrp3_neuro",
-    "hdac_hd",
-    "riluzole_als"
-  ],
+  "unresolved": [],
   "accept_threshold": 0.82
 }

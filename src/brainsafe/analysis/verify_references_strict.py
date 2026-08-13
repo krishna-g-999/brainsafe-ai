@@ -34,11 +34,12 @@ HEADERS = {"User-Agent": "BrainSafeAI/1.0 (research; mailto:krishnasalinig@sssih
 TITLES = {
     "chembl": "The ChEMBL Database in 2023: a drug discovery platform spanning multiple bioactivity data types and time periods",
     "bindingdb": "BindingDB in 2015: A public database for medicinal chemistry, computational chemistry and systems pharmacology",
-    "b3db": "B3DB: a curated blood-brain barrier dataset with unified binary and numerical experimental values",
+    # The B3DB release paper is titled by what it contains, not by the acronym; searching the acronym
+    # returns nothing. The abstract of this record names B3DB explicitly.
+    "b3db": "A curated diverse molecular database of blood-brain barrier permeability with chemical descriptors",
     "ecfp": "Extended-Connectivity Fingerprints",
     "random_forest": "Random Forests",
-    "sklearn": "Scikit-learn: Machine Learning in Python",
-    "tdc": "Therapeutics Data Commons: Machine Learning Datasets and Tasks for Drug Discovery and Development",
+    "tdc": "Artificial intelligence foundation for therapeutic science",
     "moleculenet": "MoleculeNet: a benchmark for molecular machine learning",
     "kegg": "KEGG: kyoto encyclopedia of genes and genomes",
     "reactome": "The Reactome Pathway Knowledgebase 2024",
@@ -46,31 +47,64 @@ TITLES = {
     "bemis_murcko": "The properties of known drugs. 1. Molecular frameworks",
     "dude": "Directory of useful decoys, enhanced (DUD-E): better ligands and decoys for better benchmarking",
     "cns_mpo": "Moving beyond rules: the development of a central nervous system multiparameter optimization (CNS MPO) approach to enable alignment of druglike properties",
-    "kpuu": "The use of drug transporter data in drug discovery",
+    "kpuu": "Unbound Brain-to-Plasma Partition Coefficient, Kp,uu,brain-a Game Changing Parameter for CNS Drug Discovery and Development",
     "xgboost": "XGBoost: A Scalable Tree Boosting System",
-    "gin_gnn": "How Powerful are Graph Neural Networks?",
     "calibration": "Predicting good probabilities with supervised learning",
-    "platt": "Probabilistic Outputs for Support Vector Machines and Comparisons to Regularized Likelihood Methods",
-    "conformal": "Conformal Prediction in Drug Discovery",
+    # Platt's 1999 chapter has no registered DOI. The algorithm scikit-learn actually implements is
+    # the corrected form from this paper, so this is the citation that describes the running code.
+    "platt": "A note on Platt's probabilistic outputs for support vector machines",
+    "conformal": "Introducing Conformal Prediction in Predictive Modeling. A Transparent and Flexible Alternative to Applicability Domain Determination",
     "ad_qsar": "QSAR applicability domain estimation by projection of the training set in descriptor space: a review",
-    "herg_pred": "Deep learning based prediction of hERG blockers",
-    "bbb_ml": "Prediction of blood-brain barrier penetration using machine learning",
+    "herg_pred": "Cardiac safety, drug-induced QT prolongation and torsade de pointes (TdP)",
     "delong": "Comparing the areas under two or more correlated receiver operating characteristic curves: a nonparametric approach",
     "wilson_ci": "Probable Inference, the Law of Succession, and Statistical Inference",
-    "cns_attrition": "Central nervous system drug discovery: challenges and opportunities",
+    "cns_attrition": "Drug metabolism and pharmacokinetics, the blood-brain barrier, and central nervous system drug discovery",
     "ache_ad": "Acetylcholinesterase inhibitors for Alzheimer's disease",
     "bace1_fail": "BACE1 inhibitors: attractive therapeutics for Alzheimer's disease",
     "mao_b_pd": "Monoamine oxidase B inhibitors in Parkinson's disease",
-    "lrrk2_pd": "LRRK2 inhibitors for Parkinson's disease",
+    "lrrk2_pd": "Achieving neuroprotection with LRRK2 kinase inhibitors in Parkinson disease",
     "orexin_insomnia": "Orexin receptor antagonists for the treatment of insomnia",
-    "nlrp3_neuro": "NLRP3 inflammasome in neurodegenerative diseases",
+    "nlrp3_neuro": "Role of the NLRP3 inflammasome in neurodegenerative diseases and therapeutic implications",
     "nrf2_neuro": "The Keap1-Nrf2 pathway in neurodegenerative diseases",
-    "hdac_hd": "Histone deacetylase inhibitors in Huntington's disease",
-    "riluzole_als": "Riluzole for amyotrophic lateral sclerosis",
+    # No review of HDAC *inhibitors* in Huntington's disease resolved above threshold. This is a
+    # primary study, and the manuscript claim is written to say only what it demonstrates: removing
+    # histone deacetylases modifies Huntington's pathology in mice.
+    "hdac_hd": "Histone deacetylase knockouts modify transcription, CAG instability and nuclear pathology in Huntington disease mice",
+    "riluzole_als": "Riluzole for amyotrophic lateral sclerosis (ALS)/motor neuron disease (MND)",
 }
+
+# Works whose identity is known by DOI. A title query ranks by relevance, and for conference
+# proceedings that ranking is unreliable: the query for the XGBoost paper returned an RFID article
+# at 0.53 while the record itself was registered and correct. Resolving the DOI and then checking
+# that the returned title matches is a stronger test than searching, not a weaker one, because it
+# fixes the record first and asks the registry to confirm it.
+#
+# key -> (doi, intended title, first author's family name). ACM registered the XGBoost paper under
+# the short title "XGBoost", so a similarity test against the full title scores 0.30 on a record
+# that is unambiguously right. The test applied to these entries is therefore: the registered title
+# must be a leading fragment of the intended one, and the first author must match. Both conditions
+# come from the registry, neither from this file.
+#
+# Two entries also sit here because a title match is not a work match, and both had resolved to the
+# wrong work at similarity 1.00. "Extended-Connectivity Fingerprints" returned the IUPAC Gold Book
+# terminology entry rather than the method paper that defines the descriptor this server computes,
+# and "Random Forests" returned a 2020 textbook chapter rather than the algorithm's source. Naming
+# the DOI fixes the work; the registry then confirms the title and the author.
+DOIS = {
+    "xgboost": ("10.1145/2939672.2939785", "XGBoost: A Scalable Tree Boosting System", "Chen"),
+    "ecfp": ("10.1021/ci100050t", "Extended-Connectivity Fingerprints", "Rogers"),
+    "random_forest": ("10.1023/a:1010933404324", "Random Forests", "Breiman"),
+}
+# Works with no registered DOI, so no title query can resolve them. Each is recorded with the page
+# that establishes the citation, rather than being attached to a different paper that happens to
+# mention the same words.
 SOFTWARE = {
     "rdkit": {"kind": "software", "text": "RDKit: Open-source cheminformatics", "url": "https://www.rdkit.org"},
     "streamlit": {"kind": "software", "text": "Streamlit: an open-source app framework", "url": "https://streamlit.io"},
+    "sklearn": {"kind": "software",
+                "text": "Pedregosa F, Varoquaux G, Gramfort A et al. Scikit-learn: Machine Learning "
+                        "in Python. Journal of Machine Learning Research. 2011;12:2825-2830",
+                "url": "https://www.jmlr.org/papers/v12/pedregosa11a.html"},
 }
 
 
@@ -116,6 +150,38 @@ def try_crossref(title):
         return None
 
 
+def try_doi(doi, expect_title, expect_first_author):
+    """Resolve a DOI and confirm the registry agrees on the title and the first author."""
+    try:
+        r = requests.get(f"{CROSSREF}/{doi}", timeout=15, headers=HEADERS, verify=False)
+        if r.status_code != 200:
+            return None
+        it = r.json()["message"]
+        t = (it.get("title") or [""])[0]
+        auth = it.get("author") or []
+        names = ", ".join(f"{a.get('family','')} {a.get('given','')[:1]}".strip()
+                          for a in auth[:3] if a.get("family"))
+        if len(auth) > 3:
+            names += " et al."
+        yr = ""
+        for f in ("published-print", "published-online", "issued", "created"):
+            if it.get(f, {}).get("date-parts", [[None]])[0][0]:
+                yr = str(it[f]["date-parts"][0][0]); break
+        got_first = (auth[0].get("family", "") if auth else "").lower()
+        title_ok = norm(t) and norm(expect_title).startswith(norm(t))
+        author_ok = got_first == expect_first_author.lower()
+        if not (title_ok and author_ok):
+            return None
+        # The registry confirmed both conditions, so the record is identified; report it as such
+        # rather than as a fuzzy title score that would understate a DOI-exact match.
+        return (1.0,
+                {"title": expect_title, "registered_title": t.rstrip("."), "authors": names,
+                 "journal": (it.get("container-title") or [""])[0],
+                 "year": yr, "doi": it.get("DOI", ""), "source": "CrossRef (by DOI)"})
+    except Exception:
+        return None
+
+
 def try_epmc(title):
     try:
         r = requests.get(EPMC, params={"query": f'TITLE:"{title}"', "format": "json",
@@ -141,6 +207,8 @@ def main():
     verified, unresolved = {}, []
     for key, title in TITLES.items():
         cands = [c for c in (try_crossref(title), try_epmc(title)) if c]
+        if key in DOIS:
+            cands = [c for c in (try_doi(*DOIS[key]),) if c] or cands
         best = max(cands, key=lambda c: c[0]) if cands else None
         if best and best[0] >= ACCEPT:
             rec = best[1]; rec["match_score"] = round(best[0], 3); rec["requested_title"] = title
