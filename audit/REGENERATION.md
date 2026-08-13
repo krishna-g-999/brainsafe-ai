@@ -309,3 +309,64 @@ randomly permuted 0.7670. The curation is worth **0.0013**.
 disease ranks first, only what crosses the reporting threshold.
 
 **H7** regenerated. **H4, H5, H6, H8** still running or pending at the time of writing.
+
+---
+
+## Step 11 — inversion suite, binder folds, release gate · DONE
+
+### Inversion, all eight hypotheses on the regenerated panel
+
+| | Verdict | Headline |
+|---|---|---|
+| H1 disease score is informative | SUPPORTED | 0.769 vs permutation null 0.152, frequency null 0.560 |
+| H2 curated edge weights add value | **REFUTED** | curated 0.7691, uniform 0.7678, permuted 0.7670 |
+| H3 BBB gating discriminates | REFUTED by construction | the gate multiplies every disease equally |
+| H4 specificity transfers to novel chemistry | SUPPORTED | 0.033 on 61 distant compounds vs 0.080 |
+| H5 read-across beats a frequency baseline | SUPPORTED | recall 0.973 vs 0.060 |
+| H6 disease scores match clinical indications | **WEAKENED** | 0.352 on 162 unseen drugs vs frequency null **0.654** |
+| H7 some targets are non-discriminative | REFUTED | none below AUROC 0.70; it is the operating point |
+| H8 engaged targets are independent | **REFUTED** | 38 targets span only 15 independent directions |
+
+**H6 deserves the manuscript's attention.** On drugs never seen in training, always answering with
+the commonest indications scores **0.654** against the model's **0.352**. The frequency baseline
+beats the model on that population.
+
+H4's comparator was hard-coded at 0.125 (BS-M-14) and had gone stale as well; both scripts now read
+it from the artefact, so it moves when the measurement does.
+
+### Binder per-fold table
+
+`binder_cv_per_fold.py` appends and skips endpoints already present, so running it after the retrain
+reported success while skipping all 49 and rewriting only the summary from pre-retrain folds. Removed
+and regenerated: **980 fold rows**, median agreement with the training-time AUROC of **0.0010** across
+49 endpoints, disagreeing only on four small endpoints already below the reliability gate
+(Nav1_6, TAAR1, GluA2, GBA1), where the two runs draw different decoys.
+
+### Release gate: PASSES, 21 checks, exit 0
+
+The single failure was `levodopa top-3 does not include Parkinson's disease`. Investigated rather
+than restored, and the assertion turned out never to have tested what it claimed.
+
+**Levodopa's Parkinson score is 0.1412 and its Alzheimer score is 0.1412** — the same number, both
+driven by the generic `NEURO` axis, because levodopa is a dopamine precursor that engages none of the
+panel's Parkinson targets. The check was satisfied by the tie-break between two identical scores, and
+broke when GluA2 lifted Epilepsy to 0.1645.
+
+Replaced with four assertions that name the disease **and the target that must drive it**:
+donepezil/AChE, haloperidol/D2, morphine/OPRM1, fluoxetine/SERT. A compound reaching the right disease
+by an unrelated route now fails, which the old check could not detect.
+
+**Limitation, recorded not tested:** a target-engagement panel cannot score prodrugs. Levodopa is the
+clearest case. This belongs in the manuscript's limitations rather than in a green check.
+
+Also worth noting: levodopa's Epilepsy score is driven by **GluA2 at 0.589**, and GluA2 is one of the
+six endpoints below the reliability gate.
+
+---
+
+## Regeneration complete, with three things outstanding
+
+1. **ChEMBL negative class (BS-C-15)** — blocked by TLS interception, not worked around.
+2. **Deposits** — models v1.1 and the source-cache archive, then fill both manifests.
+3. **Manuscript** — every headline number in it now differs from the artefacts. BS-C-11 (no in-text
+   citations) is untouched.
