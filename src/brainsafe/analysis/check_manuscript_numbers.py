@@ -167,6 +167,17 @@ def numbers_in(text: str) -> set[str]:
     return out
 
 
+
+def _markdown(df: pd.DataFrame) -> str:
+    """A markdown table without pulling in tabulate for one call."""
+    cols = list(df.columns)
+    lines = ["| " + " | ".join(cols) + " |",
+             "|" + "|".join("---" for _ in cols) + "|"]
+    for _, r in df.iterrows():
+        lines.append("| " + " | ".join(str(r[c]).replace("|", "/") for c in cols) + " |")
+    return chr(10).join(lines)
+
+
 def main(argv=None) -> None:
     ap = argparse.ArgumentParser(description="Check manuscript numbers against the artefacts.")
     ap.add_argument("--write-report", action="store_true", help=f"write {OUT.name}")
@@ -204,7 +215,7 @@ def main(argv=None) -> None:
                  "quantity computed from the file that owns it, and whether any document states it.",
                  "`ABSENT` means no document contains that value, so the documents still carry the",
                  "figure from before the regeneration.", "",
-                 out.to_markdown(index=False)]
+                 _markdown(out)]
         OUT.write_text("\n".join(lines), encoding="utf-8")
         print(f"\nwrote {OUT.relative_to(ROOT).as_posix()}")
 
