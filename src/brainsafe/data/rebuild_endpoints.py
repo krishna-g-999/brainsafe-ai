@@ -159,7 +159,7 @@ def rebuild_target(name: str) -> tuple[pd.DataFrame, dict]:
     if len(ina):
         ina = ina[~ina.inchikey.isin(set(ch.inchikey) | set(bd.inchikey))].copy()
         ina["src"] = "ChEMBL_inactive"
-    long = pd.concat([ch, bd, ina], ignore_index=True)
+    long = pd.concat([ch, bd], ignore_index=True)
     # A source with no measurements for this target arrives as an all-object frame, and concatenating
     # it makes the pooled numeric columns object as well, which silently turns the .round() below into
     # a no-op. hERG is the one target where BindingDB contributes nothing, so without this coercion it
@@ -173,8 +173,24 @@ def rebuild_target(name: str) -> tuple[pd.DataFrame, dict]:
         year=("year", "min"),
         source=("src", lambda s: "+".join(sorted(set(s)))),
     ).reset_index()
+    g_keys = set(g["inchikey"])
     g["label"] = g["pchembl"].apply(label_from)
     g = g[g["label"] >= 0].reset_index(drop=True)
+
+    # Censored non-binders are labelled directly and never sent through label_from, because that
+    # rule reads its argument as an exact potency and drops the 5 to 6 band as ambiguous. A bound is
+    # not a potency: ">10000 nM" means the true value lies strictly below pX 5.0, which is inactive,
+    # yet it arrives at the rule as exactly 5.0 and is discarded as grey-zone. For AChE alone that
+    # silently lost 253 measured non-binders, which is the censoring error reappearing one step
+    # further down. Only compounds with no exact measurement are added; an exact value always wins.
+    if len(ina):
+        fresh = ina[~ina.inchikey.isin(set(g_keys))].copy()
+        if len(fresh):
+            fresh["label"] = 0
+            fresh["source"] = "ChEMBL_inactive"
+            g = pd.concat([g, fresh[["smiles", "label", "pchembl", "year", "source"]]
+                           if set(["smiles", "label", "pchembl", "year", "source"]).issubset(fresh.columns)
+                           else fresh], ignore_index=True)
     prov = {
         "endpoint": name,
         "chembl_only": int((g.source == "ChEMBL").sum()),
