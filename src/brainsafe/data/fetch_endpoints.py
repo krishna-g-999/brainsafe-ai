@@ -36,15 +36,30 @@ import io
 import json
 import math
 import time
+import sys
 from pathlib import Path
 
 import pandas as pd
 import requests
 
+import _tls  # noqa: E402  (sibling module)
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 ROOT = Path(__file__).resolve().parents[3]
 CHEMBL_CACHE = ROOT / "data" / "_chembl_cache"
 ENDPOINTS = ROOT / "data" / "endpoints"
 CHEMBL = "https://www.ebi.ac.uk/chembl/api/data"
+# One verified session for the whole run. On a network that terminates TLS with a
+# malformed but administrator-installed CA, _tls keeps chain, signature and hostname
+# checks in force and clears only the RFC formatting strictness. See _tls.py.
+_SESSION = None
+
+
+def _http():
+    global _SESSION
+    if _SESSION is None:
+        _SESSION = _tls.session()
+    return _SESSION
 B3DB_URL = "https://raw.githubusercontent.com/theochem/B3DB/main/B3DB/B3DB_classification.tsv"
 
 TARGETS = {
@@ -76,7 +91,7 @@ INACTIVE_CUT = 5.0
 def chembl_version() -> dict:
     """Record which ChEMBL release answered, so a rebuild can be dated and compared."""
     try:
-        s = requests.get(f"{CHEMBL}/status.json", timeout=30).json()
+        s = _http().get(f"{CHEMBL}/status.json", timeout=30).json()
         return {"chembl_db_version": s.get("chembl_db_version"),
                 "chembl_release_date": s.get("chembl_release_date")}
     except Exception as exc:
@@ -96,7 +111,7 @@ def fetch_target_activities(name: str, tid: str, refresh: bool = False) -> list[
         url = (f"{CHEMBL}/activity.json?target_chembl_id={tid}"
                f"&pchembl_value__isnull=false&limit={PAGE}&offset={offset}")
         try:
-            j = requests.get(url, timeout=45).json()
+            j = _http().get(url, timeout=45).json()
         except Exception as exc:
             raise RuntimeError(f"[{name}] ChEMBL page {page} failed: {exc}") from exc
         for a in j.get("activities", []):
@@ -145,7 +160,7 @@ def fetch_inactive_activities(name: str, tid: str, refresh: bool = False) -> lis
         url = (f"{CHEMBL}/activity.json?target_chembl_id={tid}"
                f"&standard_relation=%3E&standard_units=nM&limit={PAGE}&offset={offset}")
         try:
-            j = requests.get(url, timeout=45).json()
+            j = _http().get(url, timeout=45).json()
         except Exception as exc:
             raise RuntimeError(f"[{name}] ChEMBL inactive page {page} failed: {exc}") from exc
         for a in j.get("activities", []):
@@ -177,7 +192,7 @@ def fetch_inactive_activities(name: str, tid: str, refresh: bool = False) -> lis
 
 def fetch_b3db() -> None:
     """Write data/endpoints/BBB.csv from the B3DB classification table."""
-    df = pd.read_csv(io.StringIO(requests.get(B3DB_URL, timeout=60).text), sep="\t")
+    df = pd.read_csv(io.StringIO(_http().get(B3DB_URL, timeout=60).text), sep="\t")
     col = "BBB+/BBB-" if "BBB+/BBB-" in df.columns else [c for c in df.columns if "BBB" in c][0]
     smi = "SMILES" if "SMILES" in df.columns else [c for c in df.columns if c.lower() == "smiles"][0]
     out = pd.DataFrame({
