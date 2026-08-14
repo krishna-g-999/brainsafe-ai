@@ -56,7 +56,9 @@ TITLES = {
     "conformal": "Introducing Conformal Prediction in Predictive Modeling. A Transparent and Flexible Alternative to Applicability Domain Determination",
     "ad_qsar": "QSAR applicability domain estimation by projection of the training set in descriptor space: a review",
     "herg_pred": "Cardiac safety, drug-induced QT prolongation and torsade de pointes (TdP)",
-    "delong": "Comparing the areas under two or more correlated receiver operating characteristic curves: a nonparametric approach",
+    # No DeLong test is run anywhere in this pipeline. An earlier manuscript draft claimed one; the
+    # claim was removed rather than the test added, so the reference goes with it. A bibliography
+    # entry for a method that is not used is padding.
     "wilson_ci": "Probable Inference, the Law of Succession, and Statistical Inference",
     "cns_attrition": "Drug metabolism and pharmacokinetics, the blood-brain barrier, and central nervous system drug discovery",
     "ache_ad": "Acetylcholinesterase inhibitors for Alzheimer's disease",
