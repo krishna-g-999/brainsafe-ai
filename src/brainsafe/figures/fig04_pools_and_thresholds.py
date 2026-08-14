@@ -33,6 +33,7 @@ ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(ROOT / "src" / "brainsafe"))
 import style as S  # noqa: E402
+from models import pools  # noqa: E402
 from models.pools import SHARES  # noqa: E402
 
 BM = ROOT / "models_rf" / "binder_modes.json"
@@ -40,31 +41,29 @@ BACKGROUND_TARGET = 0.05          # the intended background false-positive rate
 
 
 def pool_sizes() -> dict[str, int]:
-    """Actual pool sizes, taken from a binder record rather than recomputed.
+    """The pool sizes as the partition actually produced them.
 
-    Every endpoint scores the same evaluation pool, so any record carries its size; the other two
-    follow from the fixed share and are reported as such rather than as separate measurements.
+    An earlier version of this figure inferred the decoy and threshold pools from the evaluation
+    pool and the nominal 60/20/20 share. That is wrong by a few hundred compounds, because the
+    shares are bands of a hash and the library does not divide evenly across them: it printed 95,043
+    decoys where the partition holds 95,515. The counts are read from the partition instead.
     """
-    bm = json.loads(BM.read_text(encoding="utf-8"))
-    n_eval = next((v["n_background_evaluation"] for v in bm.values()
-                   if v.get("n_background_evaluation")), None)
-    if n_eval is None:
-        raise SystemExit("no endpoint records n_background_evaluation; nothing to draw")
-    total = round(n_eval / (SHARES["evaluation"] / sum(SHARES.values())))
-    return {k: round(total * v / sum(SHARES.values())) for k, v in SHARES.items()} | {
-        "evaluation": n_eval, "total": total}
+    df = pools.summary()
+    sizes = {row["pool"]: int(row["n"]) for _, row in df.iterrows()}
+    sizes["total"] = sum(sizes[r] for r in SHARES)
+    return sizes
 
 
 def panel_a(ax, sizes) -> None:
     """The hash partition, and what each pool is used for."""
     ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.axis("off")
 
-    ax.add_patch(FancyBboxPatch((0.02, 0.80), 0.96, 0.155,
+    ax.add_patch(FancyBboxPatch((0.02, 0.815), 0.96, 0.170,
                                 boxstyle="round,pad=0,rounding_size=0.02",
                                 facecolor="#F4F7F9", edgecolor=S.HAIR, lw=0.7))
-    ax.text(0.5, 0.915, f"background library, {sizes['total']:,} compounds",
-            ha="center", fontsize=7.2, color=S.INK, fontweight="bold")
-    ax.text(0.5, 0.845, "assigned by blake2b(salt + canonical SMILES) mod 100, so a compound's pool "
+    ax.text(0.5, 0.945, f"background library, {sizes['total']:,} compounds",
+            ha="center", va="center", fontsize=7.2, color=S.INK, fontweight="bold")
+    ax.text(0.5, 0.868, "assigned by blake2b(salt + canonical SMILES) mod 100, so a compound's pool "
                         "is a property of the\nstructure: it never depends on run order, and "
                         "re-running the split cannot move one",
             ha="center", va="center", fontsize=5.7, color=S.MUTED, linespacing=1.7)
@@ -79,27 +78,28 @@ def panel_a(ax, sizes) -> None:
     ]
     for name, key, col, x, sub in pools:
         w = 0.294
-        ax.add_patch(FancyBboxPatch((x, 0.30), w, 0.40,
+        ax.add_patch(FancyBboxPatch((x, 0.245), w, 0.465,
                                     boxstyle="round,pad=0,rounding_size=0.02",
                                     facecolor=col, alpha=0.10, edgecolor=col, lw=0.8))
-        ax.add_patch(Rectangle((x, 0.30), w, 0.014, facecolor=col, edgecolor="none"))
-        ax.text(x + w / 2, 0.640, name, ha="center", fontsize=6.4, color=col, fontweight="bold")
-        ax.text(x + w / 2, 0.545, f"{sizes[key]:,}", ha="center", fontsize=13, color=col,
+        ax.add_patch(Rectangle((x, 0.245), w, 0.013, facecolor=col, edgecolor="none"))
+        ax.text(x + w / 2, 0.655, name, ha="center", va="center", fontsize=6.4, color=col,
                 fontweight="bold")
-        ax.text(x + w / 2, 0.495, f"{SHARES[key]} per cent", ha="center", fontsize=5.6,
-                color=S.MUTED)
-        ax.text(x + w / 2, 0.435, sub, ha="center", va="top", fontsize=5.6, color=S.MUTED,
-                linespacing=1.7)
-        ax.add_patch(FancyArrowPatch((0.5, 0.795), (x + w / 2, 0.706), arrowstyle="-|>",
+        ax.text(x + w / 2, 0.565, f"{sizes[key]:,}", ha="center", va="center", fontsize=13,
+                color=col, fontweight="bold")
+        ax.text(x + w / 2, 0.495, f"{SHARES[key]} per cent of the library", ha="center",
+                va="center", fontsize=5.6, color=S.MUTED)
+        ax.text(x + w / 2, 0.430, sub, ha="center", va="top", fontsize=5.6, color=S.MUTED,
+                linespacing=1.8)
+        ax.add_patch(FancyArrowPatch((0.5, 0.810), (x + w / 2, 0.716), arrowstyle="-|>",
                                      mutation_scale=7, color=S.FAINT, lw=0.9, shrinkA=0, shrinkB=0))
 
-    ax.text(0.5, 0.215, "no compound appears in more than one pool, and the overlap was measured "
+    ax.text(0.5, 0.170, "no compound appears in more than one pool, and the overlap was measured "
                         "rather than assumed",
-            ha="center", fontsize=5.9, color=S.INK, fontweight="bold")
-    ax.text(0.5, 0.145, "A threshold chosen on a sample and scored on that same sample returns the "
+            ha="center", va="center", fontsize=5.9, color=S.INK, fontweight="bold")
+    ax.text(0.5, 0.108, "A threshold chosen on a sample and scored on that same sample returns the "
                         "quantile it was given.\nSeparating the two is what allows the measurement "
                         "to disagree with the target.",
-            ha="center", va="top", fontsize=5.7, color=S.MUTED, linespacing=1.7)
+            ha="center", va="top", fontsize=5.7, color=S.MUTED, linespacing=1.8)
 
 
 def panel_b(ax, bm) -> None:
@@ -121,9 +121,11 @@ def panel_b(ax, bm) -> None:
     ax.plot(xs[~over], ys[~over], "o", ms=3.4, mfc=S.TARGET, mec="white", mew=0.5, alpha=0.85,
             zorder=3)
     ax.plot(xs[over], ys[over], "o", ms=4.6, mfc=S.WARN, mec="white", mew=0.6, zorder=4)
-    for i in np.flatnonzero(over):
-        ax.annotate(names[i], (xs[i], ys[i]), textcoords="offset points", xytext=(4.5, -1.2),
-                    fontsize=5.3, color=S.WARN)
+    # Label the exceedances in descending order with a fixed step, so endpoints within a few
+    # thousandths of each other do not print on top of one another.
+    for rank, i in enumerate(sorted(np.flatnonzero(over), key=lambda k: -ys[k])):
+        ax.annotate(names[i], (xs[i], ys[i]), textcoords="offset points",
+                    xytext=(5.0, 3.0 - rank * 5.6), fontsize=5.3, color=S.WARN)
 
     ax.set_xlabel("false-positive rate on the pool the threshold was set on")
     ax.set_ylabel("measured on the held-out\nevaluation pool", linespacing=1.6)

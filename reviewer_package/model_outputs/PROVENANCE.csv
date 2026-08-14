@@ -1,8 +1,8 @@
 sheet,source,written,rows
-04_FOLDS_core,results/tables/rf_cv_folds.csv,2026-08-11 18:34,260
+04_FOLDS_core,results/tables/rf_cv_folds.csv,2026-08-13 19:09,260
 05_FOLDS_binders,results/tables/binder_cv_folds.csv,2026-08-12 21:41,980
-06_FOLDS_adme,results/tables/adme_cv_folds.csv,2026-08-11 20:35,180
-"(summary, not included)",results/tables/rf_cv_summary.csv,2026-08-11 18:34,26
-"(summary, not included)",results/tables/binder_cv_summary.csv,2026-08-12 21:41,98
-"(summary, not included)",results/tables/adme_cv_summary.csv,2026-08-11 20:35,18
-03_MODEL_INDEX,"models_rf/*_meta.json, binder_modes.json",2026-08-12 18:33,71
+06_FOLDS_adme,results/tables/adme_cv_folds.csv,2026-08-13 22:14,180
+"(summary, not included)",results/tables/rf_cv_summary.csv,2026-08-13 19:09,26
+"(summary, not included)",results/tables/binder_cv_summary.csv,2026-08-13 22:22,98
+"(summary, not included)",results/tables/adme_cv_summary.csv,2026-08-13 22:14,18
+03_MODEL_INDEX,"models_rf/*_meta.json, binder_modes.json",2026-08-13 21:57,71
