@@ -63,20 +63,39 @@ def check_leakage():
     scaffold was computed on the raw SMILES while the features were computed on the desalted parent,
     so a salt and its free base were one input placed in different folds. The question worth asking
     is whether any test compound is indistinguishable from a training one, answered in feature space.
+
+    It must be asked of the pipeline that produces the deployed model. A first version of this check
+    split the raw endpoint table, while train_rf.py splits the table after collapsing rows that are
+    byte-identical in feature space. The two differ, and once the measured negative class was
+    recovered the difference became visible: the recovered rows include stereoisomers of compounds
+    already present, so the raw table gained feature-duplicates and the check reported four of them
+    in MAO_A as leakage into a model that never saw them. Both numbers are now reported, because the
+    pre-deduplication figure is the leak that would exist if that step were removed.
     """
-    worst = 0
+    def worst_shared(X, y, groups):
+        w = 0
+        for tr, te in GroupKFold(N_SPLITS).split(X, y, groups):
+            train_vectors = {X[i].tobytes() for i in tr}
+            w = max(w, sum(1 for i in te if X[i].tobytes() in train_vectors))
+        return w
+
+    worst, worst_raw = 0, 0
     for ep in ("MAO_A", "BBB"):
         df = _load(ep).dropna(subset=["smiles", "label"]).reset_index(drop=True)
         X, mask = featurize(df["smiles"].astype(str).tolist())
         smiles = [s for s, k in zip(df["smiles"].astype(str), mask) if k]
         y = df.loc[mask, "label"].to_numpy().astype(int)
         g = _scaffold_groups(smiles)
-        for tr, te in GroupKFold(N_SPLITS).split(X, y, g):
-            train_vectors = {X[i].tobytes() for i in tr}
-            worst = max(worst, sum(1 for i in te if X[i].tobytes() in train_vectors))
+        worst_raw = max(worst_raw, worst_shared(X, y, g))
+        # Split the deduplicated matrix, because that is what train_rf.py splits. Checking the raw
+        # table measured a pipeline no model uses and reported its duplicates as leakage.
+        Xd, yd, gd, _sd, _rep = _dedup_features(X, y, g, smiles, "classification")
+        worst = max(worst, worst_shared(Xd, yd, gd))
     record("No test compound is feature-identical to a training compound (MAO_A, BBB)",
            worst == 0,
-           f"worst fold shares {worst} compound(s) with its training set (want 0)")
+           f"worst fold shares {worst} compound(s) with its training set (want 0); "
+           f"before deduplication the same folds would share {worst_raw}, which is the leak "
+           f"deduplication exists to remove")
 
 
 def check_dedup():

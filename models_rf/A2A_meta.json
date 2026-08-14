@@ -1,15 +1,15 @@
 {
   "endpoint": "A2A",
   "task": "regression",
-  "n_compounds": 6382,
+  "n_compounds": 6756,
   "n_features": 1036,
   "feature_layout": "ecfp4_1024 + 12 descriptors",
-  "n_scaffolds": 2575,
+  "n_scaffolds": 2746,
   "deduplication": {
-    "rows_in": 6625,
-    "duplicate_rows_removed": 243,
+    "rows_in": 7001,
+    "duplicate_rows_removed": 245,
     "conflicting_groups_dropped": 0,
-    "rows_out": 6382
+    "rows_out": 6756
   },
   "positives": null,
   "hyperparameters": {
@@ -22,24 +22,24 @@
   "cv_folds": 10,
   "cv_summary": {
     "random": {
-      "r2_mean": 0.7053,
-      "r2_sd": 0.025,
-      "rmse_mean": 0.6667,
-      "rmse_sd": 0.025,
-      "mae_mean": 0.4759,
-      "mae_sd": 0.0155,
-      "spearman_mean": 0.8284,
-      "spearman_sd": 0.021
+      "r2_mean": 0.7243,
+      "r2_sd": 0.0309,
+      "rmse_mean": 0.6858,
+      "rmse_sd": 0.029,
+      "mae_mean": 0.4945,
+      "mae_sd": 0.0144,
+      "spearman_mean": 0.8445,
+      "spearman_sd": 0.0187
     },
     "scaffold": {
-      "r2_mean": 0.6036,
-      "r2_sd": 0.041,
-      "rmse_mean": 0.7672,
-      "rmse_sd": 0.064,
-      "mae_mean": 0.5652,
-      "mae_sd": 0.04,
-      "spearman_mean": 0.7676,
-      "spearman_sd": 0.0335
+      "r2_mean": 0.6118,
+      "r2_sd": 0.0453,
+      "rmse_mean": 0.8087,
+      "rmse_sd": 0.0494,
+      "mae_mean": 0.6001,
+      "mae_sd": 0.0396,
+      "spearman_mean": 0.7705,
+      "spearman_sd": 0.0328
     }
   }
 }
