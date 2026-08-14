@@ -1,50 +1,50 @@
 target,threshold,from_measured_inactives,from_background,binding_constraint,background_fpr,sensitivity,reliable
-A1,0.8556,0.8556,0.3417,measured inactives,0.035,0.864,True
-A2A,0.9422,0.9422,0.4322,measured inactives,0.044,0.848,True
-a7nAChR,0.773,0.773,0.1073,measured inactives,0.0083,0.784,True
-CB1,0.9908,0.9908,0.137,measured inactives,0.0197,0.608,True
-COX2,0.9397,0.9397,0.1431,measured inactives,0.0077,0.289,False
-CSF1R,0.18,0.18,0.0684,measured inactives,0.0337,0.961,True
-D2,0.9739,0.9739,0.9697,measured inactives,0.0503,0.632,True
-D3,0.9688,0.9226,0.9688,background,0.057,0.788,True
-DAT,0.5368,0.5368,0.1304,measured inactives,0.023,0.89,True
-GABA_A,0.1067,,0.1067,background,0.059,0.658,True
-GBA1,0.2912,0.2912,0.0859,measured inactives,0.0023,0.333,False
-GluN2B,0.9902,0.9902,0.0426,measured inactives,0.01,0.858,True
-H3,0.7995,0.7995,0.179,measured inactives,0.033,0.938,True
-HDAC1,0.8941,0.8941,0.5971,measured inactives,0.0347,0.866,True
-HDAC6,0.9839,0.9839,0.9381,measured inactives,0.031,0.804,True
-HT1A,0.953,0.7406,0.953,background,0.0523,0.791,True
-HT2A,0.934,0.9204,0.934,background,0.0507,0.714,True
-HT6,0.8695,0.8695,0.11,measured inactives,0.0277,0.867,True
-HT7,0.8035,0.301,0.8035,background,0.055,0.871,True
-KEAP1,0.779,0.779,0.0959,measured inactives,0.0027,0.8,True
-LRRK2,0.05,,0.0417,background,0.0457,0.978,True
-mGluR5,0.9969,0.9969,0.0388,measured inactives,0.0083,0.547,True
-MT1,0.9768,0.9768,0.0285,measured inactives,0.004,0.681,True
-mTOR,0.6666,0.6666,0.0226,measured inactives,0.0243,0.971,True
-Nav1_5,0.4947,0.4339,0.4947,background,0.0453,0.826,True
-NET,0.6257,0.6257,0.1249,measured inactives,0.0297,0.839,True
-NLRP3,0.0967,0.082,0.0967,background,0.051,0.922,True
-OPRK1,0.9505,0.9505,0.352,measured inactives,0.033,0.817,True
-OPRM1,0.7694,0.7694,0.557,measured inactives,0.044,0.888,True
-OX1,0.9694,0.9694,0.0253,measured inactives,0.03,0.893,True
-OX2,0.1641,,0.1641,background,0.0483,0.971,True
-P2X7,0.999,0.9999,0.1371,measured inactives,0.0137,0.588,True
-PDE10A,0.9565,0.9565,0.0498,measured inactives,0.0237,0.808,True
-PDE4B,0.1319,0.1319,0.0429,measured inactives,0.0273,0.934,True
-SERT,0.5669,0.5097,0.5669,background,0.0563,0.892,True
-Sigma1,0.957,0.957,0.8433,measured inactives,0.0293,0.604,True
-SIRT1,0.582,0.582,0.5577,measured inactives,0.0283,0.821,True
-TAAR1,0.8934,0.8934,0.8777,measured inactives,0.0343,0.378,False
-GluA2,0.7169,0.6935,0.7169,background,0.049,0.318,False
-Nav1_1,0.8296,0.3877,0.8296,background,0.0507,0.3,False
-Nav1_7,0.9651,0.9651,0.0248,measured inactives,0.0203,0.841,True
-a4b2nAChR,0.9344,0.9344,0.1027,measured inactives,0.001,0.532,True
-a3b4nAChR,0.2379,0.2379,0.1241,measured inactives,0.0157,0.941,True
-Nav1_6,0.9721,0.9721,0.0283,measured inactives,0.0013,0.275,False
-Nav1_8,0.4075,0.4075,0.0408,measured inactives,0.0007,0.918,True
-Cav3_2,0.0664,0.0664,0.0623,measured inactives,0.0487,1.0,True
-CGRP,0.05,,0.0075,background,0.0063,1.0,True
-DHODH,0.9941,0.9941,0.0277,measured inactives,0.0003,0.62,True
-RIPK1,0.05,0.0063,0.0264,background,0.0193,0.985,True
+A1,0.9223,0.9223,0.2296,measured inactives,0.0257,0.701,True
+A2A,0.8951,0.8951,0.4345,measured inactives,0.0427,0.81,True
+a7nAChR,0.7801,0.7801,0.0712,measured inactives,0.0047,0.662,True
+CB1,0.203,0.203,0.0632,measured inactives,0.0367,0.849,True
+COX2,0.7501,0.7501,0.0981,measured inactives,0.008,0.368,False
+CSF1R,0.5681,0.5681,0.0793,measured inactives,0.0183,0.941,True
+D2,0.9375,0.8987,0.9375,background,0.0517,0.648,True
+D3,0.976,0.976,0.957,measured inactives,0.05,0.836,True
+DAT,0.2143,0.2143,0.0891,measured inactives,0.0297,0.895,True
+GABA_A,0.7896,0.7896,0.1297,measured inactives,0.0023,0.452,False
+GBA1,0.2005,0.2005,0.1086,measured inactives,0.005,0.618,True
+GluN2B,0.9915,0.9915,0.0195,measured inactives,0.008,0.399,False
+H3,0.8,0.8,0.1831,measured inactives,0.0343,0.919,True
+HDAC1,0.7628,0.7628,0.5233,measured inactives,0.0383,0.908,True
+HDAC6,0.848,0.7085,0.848,background,0.039,0.924,True
+HT1A,0.918,0.8236,0.918,background,0.0517,0.755,True
+HT2A,0.9269,0.8169,0.9269,background,0.0523,0.74,True
+HT6,0.7156,0.7156,0.1118,measured inactives,0.0313,0.901,True
+HT7,0.747,0.747,0.6824,measured inactives,0.053,0.782,True
+KEAP1,0.5529,0.5529,0.0834,measured inactives,0.0053,0.647,True
+LRRK2,0.1615,0.1615,0.0496,measured inactives,0.0207,0.967,True
+mGluR5,0.9041,0.9041,0.0548,measured inactives,0.0117,0.732,True
+MT1,0.9523,0.9523,0.0319,measured inactives,0.0033,0.576,True
+mTOR,0.1735,0.1735,0.0181,measured inactives,0.0263,0.991,True
+Nav1_5,0.2221,0.1246,0.2221,background,0.0447,0.8,True
+NET,0.3281,0.3281,0.0803,measured inactives,0.0323,0.895,True
+NLRP3,0.3858,0.3858,0.089,measured inactives,0.0023,0.769,True
+OPRK1,0.8733,0.8733,0.1903,measured inactives,0.0287,0.751,True
+OPRM1,0.7456,0.7456,0.4386,measured inactives,0.0443,0.9,True
+OX1,0.8838,0.8838,0.014,measured inactives,0.0283,0.897,True
+OX2,0.856,0.856,0.0564,measured inactives,0.0383,0.862,True
+P2X7,0.999,0.9997,0.112,measured inactives,0.013,0.512,True
+PDE10A,0.8325,0.8325,0.0432,measured inactives,0.0283,0.903,True
+PDE4B,0.5402,0.5402,0.0399,measured inactives,0.0137,0.941,True
+SERT,0.7033,0.7033,0.4272,measured inactives,0.0403,0.81,True
+Sigma1,0.9364,0.9364,0.8278,measured inactives,0.0337,0.527,True
+SIRT1,0.4719,0.3755,0.4719,background,0.047,0.432,False
+TAAR1,0.9191,0.9191,0.8863,measured inactives,0.0183,0.327,False
+GluA2,0.6135,0.6135,0.5791,measured inactives,0.0097,0.034,False
+Nav1_1,0.6458,0.2803,0.6458,background,0.0563,0.222,False
+Nav1_7,0.7573,0.7573,0.013,measured inactives,0.0247,0.877,True
+a4b2nAChR,0.7229,0.7229,0.116,measured inactives,0.0013,0.782,True
+a3b4nAChR,0.4379,0.4379,0.1892,measured inactives,0.01,0.881,True
+Nav1_6,0.9735,0.9735,0.0521,measured inactives,0.0013,0.088,False
+Nav1_8,0.9735,0.9735,0.0515,measured inactives,0.0,0.629,True
+Cav3_2,0.155,0.155,0.0399,measured inactives,0.0013,0.907,True
+CGRP,0.412,0.412,0.0058,measured inactives,0.001,0.993,True
+DHODH,0.2166,0.2166,0.0205,measured inactives,0.0007,0.908,True
+RIPK1,0.05,0.0497,0.0205,measured inactives,0.0063,0.979,True

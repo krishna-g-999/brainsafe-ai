@@ -150,8 +150,10 @@ Cross-validation here fits models in order to measure, not in order to deploy. E
 twenty times during evaluation, ten in each regime, and each of those twenty models is scored once on
 the fold withheld from it and then discarded. The model that is served is a twenty-first, refitted on
 the endpoint's full set after the estimate is fixed, so no compound used to report a score was in the
-training set of the model that scored it. Across the 67 cross-validated endpoints this is 1,420
-evaluation fits standing behind the deployed panel.
+training set of the model that scored it. The panel holds 71 cross-validated models over 67
+endpoint names, four targets (D2, A2A, 5-HT2A and SERT) carrying both a potency regressor and a
+binder classifier, so the evaluation comes to 71 x 2 x 10 = 1,420 fits standing behind the deployed
+panel.
 
 A third, more demanding regime is also reported. In the **temporal** split the model is trained only on
 compounds published before a cutoff year and tested on compounds published after it (Table 5), which is
