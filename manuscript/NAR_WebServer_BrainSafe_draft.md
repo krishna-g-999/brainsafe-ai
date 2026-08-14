@@ -18,37 +18,55 @@ Deciding whether a small molecule is likely to act on the brain requires answeri
 questions at once: can it cross the blood-brain barrier, which disease-relevant targets does it
 engage, does an achievable dose deliver free drug to the central nervous system, and is it safe.
 BrainSafe AI is an open web server that answers these questions from chemical structure alone. It
-integrates 69 models trained on measured public bioactivity data (ChEMBL, BindingDB and the B3DB
-blood-brain-barrier database): 53 molecular-target endpoints spanning blood-brain-barrier
-penetration, the principal neurodegenerative, psychiatric, neuroinflammatory, epileptic, analgesic,
-migraine, demyelinating and sleep-related target classes, and two cardiac safety liabilities, together with a nine-endpoint
-ADME and exposure layer that includes a directly modelled unbound brain-to-plasma partition
-coefficient. Every endpoint is validated under 10-fold cross-validation in two regimes, a random
-split and a scaffold-grouped split that holds out entire chemical series. Predictions are
-probability-calibrated, carry an endpoint-specific applicability-domain flag with the nearest
-measured analogue, and are combined into per-disease relevance scores, filtered by blood-brain-barrier
-exposure and traced through a curated target-to-pathway-to-disease knowledge graph of 52 targets
-spanning sixteen brain conditions. The measured-label classifier panel reaches a mean scaffold-split
-AUROC of 0.92. The binder panel is validated not against the decoys used to train it but against
-compounds experimentally tested on the same target and found inactive, giving a mean AUROC of 0.955
-across 43 targets, with a mean sensitivity of 0.897 at thresholds constrained simultaneously by
-held-out measured inactives and by the false-positive rate on unrelated chemistry.
+integrates 72 deployed estimators trained on 227,146 measured compound-endpoint records drawn from
+ChEMBL [@chembl], BindingDB [@bindingdb] and the B3DB blood-brain-barrier database [@b3db]: 60 molecular-target
+endpoints spanning blood-brain-barrier penetration, the principal neurodegenerative, psychiatric,
+neuroinflammatory, epileptic, analgesic, migraine, demyelinating and sleep-related target classes,
+and two cardiac safety liabilities, together with a nine-endpoint ADME and exposure layer that
+includes a directly modelled unbound brain-to-plasma partition coefficient [@kpuu]. Every compound is
+represented by one fixed 1,036-column vector, a 1,024-bit folded ECFP-4 fingerprint [@ecfp] with twelve
+physicochemical descriptors, and every endpoint is a random forest [@random_forest] validated under 10-fold
+cross-validation in two regimes: a random split, and a split grouped on Bemis-Murcko scaffolds [@bemis_murcko]
+that withholds entire chemical series. Across 71 cross-validated endpoints this is 1,420 fitted
+models behind the 72 that are deployed. Predictions are probability-calibrated, carry an
+endpoint-specific applicability-domain flag with the nearest measured analogue, and are combined into
+per-disease relevance scores, filtered by blood-brain-barrier exposure and traced through a curated
+target-to-pathway-to-disease knowledge graph. The measured-label classifier panel reaches a mean
+AUROC of 0.958 on the random split and 0.925 on the scaffold split, and mean expected calibration
+error falls from 0.0795 to 0.0161 after isotonic calibration [@calibration]. The 49 binder classifiers are validated
+not against the decoys used to train them [@dude] but against compounds experimentally tested on the same
+target and found inactive, giving a mean AUROC of 0.904 and a mean sensitivity of 0.866 on actives
+withheld by scaffold, at thresholds constrained simultaneously by held-out measured inactives and by
+the false-positive rate on a disjoint pool of unrelated chemistry.
+
+A negative class recovered from censored measurements is central to these figures. Public databases
+record what bound; a compound assayed and found inactive is often stored only as a bound such as
+"IC50 > 10 uM", which the standard potency query discards. Recovering the bounds that settle a label
+whatever the true value is added 21,994 measured non-binders and reduced the endpoints exceeding 90
+per cent active from 35 to 13. Classification became marginally harder as a result and regression
+improved, both reported here rather than only the improvement.
 
 Beyond conventional validation, the server was subjected to a systematic falsification analysis in
 which each of its central claims was paired with a null model capable of reproducing the same
 apparent success by accident. This recovered results in both directions. The disease layer is
-informative (top-3 accuracy 0.804 against a permutation null of 0.188), but its curated edge weights
-are not: uniform and randomly permuted weights score 0.8036 and 0.8025 against 0.8045, so the
-predictive content lies in the graph topology and the weights are reported as structure rather than
-as tuned parameters. Validated against clinical indications drawn from ChEMBL rather than against the
-tool's own target-to-disease map, the disease scores exceed a permutation null decisively but do not
-exceed a constant baseline naming the three commonest indications, and this is stated rather than
-omitted. The same analysis identified a deployed endpoint, Nav1.1, that assigned binder probabilities
-between 0.801 and 0.816 to glucose, urea, acetate and glycine against a threshold of 0.796; it was
-withdrawn. The server returns an auditable, mechanistically interpretable brain-relevance profile
-rather than a single opaque score, exportable as a tidy data table, a self-contained report, a
-structured record or a vector figure, and supports batch screening of compound sets. BrainSafe AI is
-freely available at [URL].
+informative: top-3 accuracy 0.804 against a permutation null of 0.157 and a frequency null of 0.548.
+Its curated edge weights are not: uniform and randomly permuted weights score 0.8025 and 0.8023
+against 0.8043, so the predictive content lies in the graph topology and the weights are reported as
+structure rather than as tuned parameters. Validated against clinical indications drawn from ChEMBL
+rather than against the tool's own target-to-disease map, and restricted to the 162 approved drugs
+whose structure appears nowhere in the training chemistry, top-3 accuracy is 0.352 (95% CI
+0.283-0.428) against a permutation null of 0.145 (p=0.0005) and a frequency null of 0.654. The
+output therefore depends on the compound and is not memorisation, but it does not beat a constant
+answer naming the commonest CNS indications, and this is stated rather than omitted. The same
+analysis identified a deployed endpoint, Nav1.1, that assigned binder probabilities between 0.80 and
+0.82 to glucose, urea, acetate and glycine against a threshold of 0.796; it was withdrawn, as was
+Cav3.2, leaving 47 of 49 binder endpoints deployed. Of six adversarial checks designed so that each
+could fail, five pass; the sixth shows that the applicability-domain flag does not separate
+non-drug-like chemistry from unseen drugs, and it is reported as a limitation rather than retuned.
+The server returns an auditable, mechanistically interpretable brain-relevance profile rather than a
+single opaque score, exportable as a tidy data table, a self-contained report, a structured record or
+a vector figure, and supports batch screening of compound sets. Source code, trained models and the
+raw source caches are available at https://github.com/krishna-g-999/brainsafe-ai.
 
 ---
 
@@ -56,11 +74,16 @@ freely available at [URL].
 
 Central-nervous-system drug discovery has a distinctive failure profile: a candidate can be potent
 against its intended target yet never reach the brain, or reach it but carry an unacceptable safety
-liability, or engage unintended targets that reshape its clinical profile. Answering "will this
-molecule affect the brain, how, and is it safe" therefore means combining blood-brain-barrier (BBB)
-penetration, disease-relevant target engagement, free-brain exposure, and safety into one readout.
-Existing public tools typically address one of these axes in isolation, and large language models,
-while fluent, fabricate measured identifiers and cannot supply a calibrated, auditable answer.
+liability, or engage unintended targets that reshape its clinical profile. Pharmacokinetics and the
+barrier itself, rather than target affinity, account for a large share of central attrition
+[@cns_attrition], and the parameter that governs central action is not total brain concentration but
+the unbound brain-to-plasma ratio [@kpuu]. Answering "will this molecule affect the brain, how, and
+is it safe" therefore means combining blood-brain-barrier (BBB) penetration, disease-relevant target
+engagement, free-brain exposure, and safety into one readout. Property-based schemes such as CNS MPO
+[@cns_mpo] score the first of these well but do not name a mechanism; single-endpoint QSAR models name
+one mechanism but not exposure. Existing public tools typically address one of these axes in
+isolation, and large language models, while fluent, fabricate measured identifiers and cannot supply
+a calibrated, auditable answer.
 
 BrainSafe AI is a web server that unifies these axes for any user-supplied structure. Its design
 priorities are three. First, every machine-learning endpoint is trained only on *measured*
@@ -80,12 +103,19 @@ The endpoint panel is organised around the four sequential questions a CNS candi
 (Figure 1). *Exposure*: a molecule that reaches no free concentration in brain tissue cannot act
 centrally however potent it is, so BBB penetration, the unbound brain-to-plasma ratio (K_p,uu), total
 brain distribution (logBB), P-glycoprotein efflux and passive permeability are modelled first.
-*Target engagement*: the panel covers the cholinergic axis (AChE, BChE, alpha-7 nicotinic receptor)
-and the amyloid and tau axes (BACE1, GSK-3beta) central to Alzheimer's disease; monoamine oxidase B
-and LRRK2 for Parkinson's disease, the latter being the most common genetic cause; the serotonergic,
-dopaminergic, noradrenergic, opioid, cannabinoid, histaminergic, adenosine and sigma-1 systems that
-underlie depression, anxiety, psychosis, addiction, attention deficit, chronic pain, and sleep
-regulation. *Safety*: hERG blockade is a leading cause of late-stage cardiovascular attrition and is
+*Target engagement*: the panel covers the cholinergic axis (AChE, BChE, alpha-7 nicotinic receptor),
+where acetylcholinesterase inhibition remains the mainstay symptomatic treatment in Alzheimer's
+disease [@ache_ad], and the amyloid and tau axes (BACE1, GSK-3beta) [@bace1_fail]; monoamine oxidase
+B [@mao_b_pd] and LRRK2 [@lrrk2_pd] for Parkinson's disease; the serotonergic, dopaminergic,
+noradrenergic, opioid, cannabinoid, histaminergic, adenosine and sigma-1 systems that underlie
+depression, anxiety, psychosis, addiction, attention deficit, chronic pain and sleep regulation, the
+last including the orexin receptors [@orexin_insomnia]. Three axes are included because they are
+mechanistically implicated across several neurodegenerative conditions rather than tied to one:
+NLRP3-driven neuroinflammation [@nlrp3_neuro], KEAP1-NRF2 antioxidant signalling [@nrf2_neuro], and
+histone deacetylase activity, whose genetic removal modifies pathology in Huntington's disease models
+[@hdac_hd]. Glutamatergic targets are included on the same basis, riluzole being the long-standing
+example of an approved agent acting on that axis [@riluzole_als]. *Safety*: hERG blockade is a
+leading cause of late-stage cardiovascular attrition through QT prolongation [@herg_pred] and is
 modelled as an explicit liability. *Developability*: solubility, lipophilicity, plasma protein binding
 and hepatocyte clearance determine whether an achievable dose sustains exposure, and a measured
 antioxidant endpoint captures the oxidative-stress axis common to neurodegeneration.
@@ -98,41 +128,67 @@ after deployment testing and are not counted here; the reasons are given in the 
 
 ### Training data
 
-Protein-target activity is pooled from ChEMBL (pChEMBL values) and BindingDB at the compound level;
-BBB penetration uses the B3DB database augmented with FDA-curated approved drugs; the antioxidant
-endpoint uses measured DPPH pIC50 values; and the nine ADME endpoints use measured sets from
-Therapeutics Data Commons, MoleculeNet, B3DB and ChEMBL. The core target panel draws on 67,984
-measured records over 61,226 unique compounds by InChIKey, and the full panel, including the binder
-endpoints, on 203,884 records over 160,365 unique compounds. No value is imputed and no source
-overrides a measurement.
+Protein-target activity is pooled from ChEMBL [@chembl] (pChEMBL values) and BindingDB [@bindingdb]
+at the compound level; BBB penetration uses the B3DB database [@b3db] augmented with FDA-curated
+approved drugs; the antioxidant endpoint uses measured DPPH pIC50 values; and the nine ADME endpoints
+use measured sets from Therapeutics Data Commons [@tdc], MoleculeNet [@moleculenet], B3DB and ChEMBL.
+The full panel holds 227,146 measured compound-endpoint records over 193,536 unique compounds keyed
+by the InChIKey of the desalted parent; the thirteen core target endpoints account for 76,850 of
+those records. No value is imputed and no source overrides a measurement.
 
 These totals are sums across endpoints and are not the size of any training set. Each endpoint is
-trained and cross-validated on its own measured set alone, and those sets span two orders of
-magnitude, from 183 compounds at GluA2 to 8,501 at BACE1. A compound measured at several targets
+trained and cross-validated on its own measured set alone, and those sets span nearly two orders of
+magnitude, from 234 compounds at GluA2 to 10,276 at hERG. A compound measured at several targets
 contributes one record to each and is counted once per endpoint. Per-endpoint compound counts,
 scaffold counts and class balance are given in Tables 1 to 3, and the complete per-endpoint
 accounting is in the Supplementary training record.
 
+**The negative class.** A public bioactivity record describes what was found to bind. A compound
+assayed and found inactive is frequently deposited only as a censored bound, `standard_relation` `>`
+with no pChEMBL value, and the conventional query, which filters on pChEMBL, discards precisely those
+rows. Training on what survives that filter yields a positive class drawn from measurement and a
+negative class drawn from property-matched decoys, and it left 35 of the 60 endpoints above 90 per
+cent active, which is a property of the query rather than of the chemistry. A censored bound settles
+a label whenever the entire interval it defines falls on one side of the activity cut: `IC50 > 10 uM`
+places the true potency strictly below pChEMBL 5.0 and is therefore a measured non-binder, whereas
+`IC50 > 100 nM` spans both classes and is discarded as undecidable rather than guessed at (Figure 5).
+Applying this recovered 21,994 measured non-binders across 57 endpoints and reduced the endpoints
+above 90 per cent active from 35 to 13. Bounds are never converted to potencies: a bound is used only
+to assign a class, never as a value in any regression.
+
 ### Methods compared and model selection
 
-Molecules are represented by a 1024-bit ECFP-4 fingerprint plus twelve interpretable physicochemical
-descriptors (molecular weight, cLogP, topological polar surface area, hydrogen-bond donors and
-acceptors, rotatable bonds, aromatic rings, fraction sp3, ring count, heavy-atom count, formal charge,
-and QED drug-likeness). We benchmarked five model families under identical 10-fold cross-validation on
-both split regimes (Figure 4a). Two are baselines: a k-nearest-neighbour Tanimoto read-across, and
-L2-regularised logistic regression. Two are gradient-boosted tree ensembles: XGBoost and histogram
-gradient boosting. The fifth is a random forest. Separately, we trained a graph isomorphism network
-(GIN) directly on molecular graphs to test whether a learned representation would beat fixed
-descriptors (Figure 4b).
+Molecules are represented by a 1,024-bit ECFP-4 fingerprint [@ecfp] plus twelve interpretable
+physicochemical descriptors (molecular weight, cLogP, topological polar surface area, hydrogen-bond
+donors and acceptors, rotatable bonds, aromatic rings, fraction sp3, ring count, heavy-atom count,
+formal charge, and QED drug-likeness), giving the 1,036-column vector shown in Figure 2. Five model
+families were benchmarked under identical 5-fold cross-validation on both split regimes, on the
+deduplicated matrix the deployed pipeline fits, using scikit-learn [@sklearn]. Two are baselines a
+reader is entitled to demand: a five-nearest-neighbour read-across on Tanimoto similarity, which is
+what a medicinal chemist does by eye and which any model must beat to justify itself, and
+L2-regularised logistic regression. Three are ensembles: a random forest [@random_forest], XGBoost
+[@xgboost], and histogram gradient boosting.
 
-On the scaffold split the random forest gave the highest mean classifier AUROC (0.914), ahead of
-XGBoost (0.905), histogram gradient boosting (0.901), the k-nearest-neighbour read-across (0.867) and
-logistic regression (0.808); paired DeLong and bootstrap tests confirm the random forest exceeds the
-read-across on every endpoint. The graph neural network did not outperform the random forest on any
-tested endpoint (Figure 4b), consistent with the fingerprint-plus-descriptor representation being
-sufficient at this data scale. We therefore deploy a probability-calibrated random forest for every
-endpoint: it gives the best scaffold-split accuracy, calibrates stably, is interpretable through
-feature importance, and needs no GPU, which keeps the web server lightweight.
+On the scaffold split the random forest gives the highest mean classifier AUROC, 0.9228, ahead of
+histogram gradient boosting (0.9160), XGBoost (0.9144), the read-across (0.8844) and logistic
+regression (0.8338). It exceeds the read-across on all eight classifier endpoints and all five
+regression endpoints, and it is the single best classifier on seven of eight. The margin over the
+boosted ensembles is small, 0.007 mean AUROC, and on regression the random forest is not the leader:
+XGBoost and histogram gradient boosting reach mean scaffold R2 of 0.5453 and 0.5452 against 0.5186
+for the random forest, an advantage of about 0.027 that holds on four of five endpoints.
+
+The random forest is therefore deployed for every endpoint as a considered choice rather than as a
+clean win. It leads decisively where the panel's principal claims are made, calibrates stably under
+isotonic regression, supplies the out-of-bag vote distribution that the conformal layer consumes, is
+interpretable through feature importance, and needs no GPU, which keeps the server lightweight. One
+estimator across all endpoints also means a single well-characterised failure mode rather than five.
+The cost of that uniformity is roughly 0.03 R2 on the potency regressions, and it is stated here
+rather than left for a reader to discover.
+
+A graph isomorphism network trained directly on molecular graphs was compared against the random
+forest on four endpoints during an earlier build of the panel (2026-07-21) and did not exceed it on
+any of them. That comparison has not been repeated on the current models, so it is reported as
+indicative of the representation question at this data scale rather than as a current result.
 
 ### Cross-validation design
 
@@ -225,13 +281,15 @@ The receptor, transporter and kinase targets are reported in ChEMBL almost entir
 99% of records), so a naive potency regressor learns to predict the training median for any input and
 cannot discriminate a real binder from an arbitrary molecule. We therefore model each as a
 binder-versus-decoy classifier: positives are measured binders (pChEMBL >= 7); negatives are
-property-matched decoys sampled from a 75,000-compound background library with a maximum ECFP-4
+property-matched decoys sampled from a 158,890-compound background library with a maximum ECFP-4
 Tanimoto below 0.35 to any positive, so the model must learn structure rather than a similarity
-shortcut. Each classifier is a compact random forest with prefit sigmoid calibration. Validated
-against held-out near-miss decoys (Tanimoto 0.35 to 0.55) rather than the easy training decoys, these
-models reach AUROC 0.86 to 0.99 with a background false-positive rate of 0.6% to 9.8% at a 0.5
-threshold (Table 2, Figure 6b). We report the near-miss figure as the honest metric because the
-easy-decoy AUROC (0.99 throughout) is inflated by the dissimilarity of the negatives.
+shortcut. Decoys are drawn only from the 95,515-compound decoy pool, one of three disjoint
+partitions of that library (Figure 4A); the other two carry the threshold and the evaluation sets,
+so no compound used to train a classifier can later be used to set or to test its threshold. Each classifier is a compact random forest with prefit sigmoid calibration [@platt], which is used
+in place of isotonic regression here because the withheld set for a binder endpoint is often too
+small to fit a step function without overfitting it. Decoy-based validation is reported here only for completeness; the figures the panel is judged on
+are those against measured non-binders in the next section, because an AUROC against decoys measures
+separation from chemistry chosen to be dissimilar and is inflated by that choice.
 
 ### Validation against experimentally measured inactives, and threshold calibration
 
@@ -261,10 +319,15 @@ machinery to mark a low-sensitivity target as possibly under-called should futur
 
 ### Calibration, applicability domain and exposure
 
-Every classifier is isotonically calibrated (mean expected calibration error 0.072 to 0.012). For
-every prediction the server computes the maximum ECFP-4 Tanimoto similarity of the query to each
-endpoint's own measured chemistry and reports an endpoint-specific in-domain, near-domain or
-out-of-domain flag together with the nearest measured analogue and its structure. The ADME layer
+Every classifier is isotonically calibrated [@calibration] on out-of-fold predictions, so the
+calibrator never sees a compound in its own fit; mean expected calibration error falls from 0.0795
+to 0.0161 (Figure 6A). Each prediction additionally carries a Mondrian conformal interval, which
+turns the applicability domain from a caveat into a coverage statement [@conformal]; empirical
+coverage is 0.887 to 0.920 against a 0.90 target. For every prediction the server also computes the
+maximum ECFP-4 Tanimoto similarity of the query to each endpoint's own measured chemistry, a
+nearest-neighbour definition of the applicability domain [@ad_qsar], and reports an endpoint-specific
+in-domain, near-domain or out-of-domain flag together with the nearest measured analogue and its
+structure. The ADME layer
 provides a free-brain-exposure verdict; on known drugs this correctly separates central compounds
 (diazepam K_p,uu 0.94, donepezil 0.84) from peripheral or efflux-limited ones (atenolol 0.07,
 loperamide 0.04).
@@ -277,8 +340,8 @@ therefore scores each target by its *enrichment* over the endpoint base rate, an
 floored binder probability, so that a prediction near chance contributes nothing. A curated, versioned
 knowledge graph maps each target through a biological pathway to the diseases it informs, anchored to
 KEGG synapse and disease maps (hsa04725, hsa04726, hsa04728, hsa04723, hsa05032, hsa04080, hsa05010,
-hsa05012), the Reactome KEAP1-NFE2L2 oxidative-stress response (R-HSA-9755511) and IUPHAR Guide to
-Pharmacology associations. A per-disease relevance score is the strongest engaged target for that
+hsa05012) [@kegg], the Reactome KEAP1-NFE2L2 oxidative-stress response (R-HSA-9755511) [@reactome]
+and IUPHAR/BPS Guide to Pharmacology associations [@iuphar]. A per-disease relevance score is the strongest engaged target for that
 disease, scaled by predicted BBB penetration; taking the strongest rather than an average prevents
 unrelated mechanisms from diluting a real signal. Coverage spans fourteen brain conditions (Figure 1).
 
@@ -293,12 +356,12 @@ retained as a mechanistic prior expressing directness of linkage rather than as 
 
 ### Web implementation
 
-The server is a single-page application built with Streamlit and RDKit. The user submits either a
-compound name, resolved to a structure through PubChem, or a SMILES string. Models are loaded once and
-cached; a complete profile across all 40 models, including both applicability-domain calculations,
-returns in approximately 3.3 seconds on a single CPU core, of which the domain calculations against the
-75,000-compound reference library account for under 0.05 seconds. The interface is self-contained and
-requires no installation or GPU.
+The server is a single-page application built with Streamlit [@streamlit] and RDKit [@rdkit]. The
+user submits either a compound name, resolved to a structure through PubChem, or a SMILES string.
+Models are loaded once and cached; a complete profile across all 72 deployed estimators, including
+both applicability-domain calculations against the 158,890-compound reference library, returns in a
+few seconds on a single CPU core. The interface is self-contained and requires no installation or
+GPU.
 
 ## Results
 
@@ -309,13 +372,16 @@ class balance where applicable, the training and test set size per fold, and the
 deviation of the appropriate metric under both cross-validation regimes. Figure 6 summarises the same
 results graphically.
 
-The eight target classifiers reach a mean AUROC of 0.960 (random) and 0.919 (scaffold); BACE1 is the
-most robust to chemotype change (0.967 to 0.956) and MAO-A the least (0.947 to 0.868). An external
-test of the BBB model on 306 FDA-curated approved drugs absent from training gives AUROC 0.774. The
-receptor potency regressions reach R2 0.60 to 0.68 (random) and 0.39 to 0.58 (scaffold). The 18
-decoy-aware binder classifiers reach 0.86 to 0.99 against near-miss decoys. Within the ADME layer,
-performance ranges from strong (solubility R2 0.76, P-gp inhibition AUROC 0.94 under the scaffold
-split) to weak and explicitly disclosed (hepatocyte clearance R2 0.19, K_p,uu R2 0.35).
+The eight target classifiers reach a mean AUROC of 0.958 (random) and 0.925 (scaffold). BACE1 is the
+most robust to chemotype change, losing 0.012 between the two splits (0.978 to 0.965), and MAO-A the
+least, losing 0.065 (0.964 to 0.899). An external test of the BBB model on 306 FDA-curated approved
+drugs absent from B3DB by InChIKey gives AUROC 0.761; restricted to the 241 of those that are also
+distinguishable from the training set in feature space, which is the subset that supports an external
+claim, it gives 0.788. The receptor potency regressions reach R2 0.64 to 0.72 (random) and 0.46 to
+0.61 (scaffold). The 49 binder classifiers reach a mean AUROC of 0.904 against measured non-binders,
+reported in place of any decoy-based figure. Within the ADME layer, performance ranges from strong
+(solubility R2 0.73, P-gp inhibition AUROC 0.94 under the scaffold split) to weak and explicitly
+disclosed (hepatocyte clearance R2 0.21, K_p,uu R2 0.35).
 
 <!-- TABLES -->
 
@@ -711,120 +777,122 @@ use-dependent block or a phenotypic outcome, not a further binding target.
 
 ## Data availability
 
-All code, trained models, the curated knowledge graph, per-fold validation artifacts and the scripts
-that regenerate every table and figure in this manuscript are available at
-https://github.com/krishna-g-999/brainsafe-ai under [license]. The server is freely accessible at
-[URL] with no login requirement.
+All code, the curated knowledge graph, per-fold validation artefacts and the scripts that regenerate
+every table and figure in this manuscript are available at https://github.com/krishna-g-999/brainsafe-ai
+under the MIT licence. The trained estimators (0.78 GB) and the raw API responses retrieved from
+ChEMBL, BindingDB and PubChem are too large for version control and are deposited separately; both
+archives carry a manifest, committed with the code, recording the SHA-256 of the archive and of every
+file inside it, so a download is verified rather than trusted. The models archive supersedes
+doi:10.5281/zenodo.21858576, which holds the pre-audit models and describes different bytes from the
+ones this manuscript reports; the manifest records that superseded identifier explicitly rather than
+pointing at a record that would serve the wrong models.
+
+Reproducing the panel from the repository requires only the endpoint tables and
+`src/brainsafe/models/train_rf.py`; every random seed is fixed at 42, and the adversarial suite
+includes a check that retraining an endpoint reproduces its reported score, which it does to three
+decimal places (Figure 6D).
+
+**[TO BE SUPPLIED BEFORE SUBMISSION]** the public server URL, the deposit DOI for version 1.1, the
+author list, the corresponding author's address, and the funding statement. These are the only
+placeholders in this manuscript; every other value is computed from an artefact in the repository.
 
 ## Funding
 
-[To be completed.]
+[TO BE SUPPLIED BEFORE SUBMISSION]
 
 ## Figure legends
 
-![Figure 1](figures/Figure1_endpoint_rationale.png)
+![Figure 1](figures/Figure1_architecture.png)
 
-**Figure 1.** Endpoint selection rationale. Left, the four sequential questions a CNS candidate must
-satisfy and the endpoints modelled in each layer, with measured compound counts. Right, the eleven
-conditions the panel informs, the targets that drive each, and the mechanisms not yet modelled.
+**Figure 1.** How a prediction is assembled. (A) A query structure is reduced to its largest organic
+fragment, sanitised, and represented as one fixed 1,036-column vector. That vector is scored by four
+model families: nine exposure and ADME endpoints, twelve target potency and activity endpoints, the
+49-endpoint binder panel, and two auxiliary regressions. Every target score is then admitted only in
+proportion to the predicted probability that the compound reaches the brain, and the surviving scores
+are ranked by base-rate enrichment rather than by raw probability, so an endpoint that fires often
+across the library cannot dominate. Every reported score carries a calibrated probability, a
+conformal interval and an applicability-domain distance. (B) The counts in (A) are deployed
+estimators. Each was preceded by twenty fits that never serve a prediction and exist only to measure
+how the twenty-first behaves on compounds withheld from it: ten random folds and ten scaffold folds.
+Across the panel that is 1,420 cross-validation fits over 71 cross-validated endpoints, behind 72
+deployed estimators and eight isotonic calibrators.
 
-**Figure 2.** The BrainSafe AI report for a query compound (screenshot to be inserted): summary card,
-mechanistic map, brain-relevance panel, target and receptor tables, ADME panel, and the applicability
-and confidence card.
+![Figure 2](figures/Figure2_feature_vector.png)
 
-![Figure 3](figures/Figure2_mechanism.png)
+**Figure 2.** The model input, computed for donepezil by the same featuriser the models use. (A) The
+structure, after standardisation. (B) All 1,024 fingerprint bits drawn as a 32 x 32 grid, 47 of them
+set. Two properties of this representation bound what the models can do and are stated rather than
+left implicit: folding means a set bit reports that some substructure environment hashing to that
+index is present, not which one, and excluding chirality means two enantiomers produce byte-identical
+rows. The second is why rows identical in feature space are collapsed before any split rather than
+left to fall on both sides of one. (C) The twelve descriptors with the values this molecule has.
+They are unscaled, because a random forest splits on thresholds and is unchanged by any monotone
+rescaling, so no scaler is fitted and none can leak across a split.
 
-**Figure 3.** The mechanistic map, shown for haloperidol. A four-tier diagram (compound, target,
-pathway, disease) in which only engaged targets are drawn, connector weight encodes engagement
-strength, node order is arranged to minimise crossings, and pathways are anchored to KEGG and Reactome
-identifiers.
+![Figure 3](figures/Figure3_cv_design.png)
 
-![Figure 4](figures/Figure3_model_selection.png)
+**Figure 3.** Two cross-validation schemes and the distance between them. (A) The same compounds
+partitioned two ways. Under a random split the held-out fold is scattered through every scaffold
+class, so a test compound usually has a close analogue in training and the score reports
+interpolation. Under a scaffold split the held-out fold is a whole Bemis-Murcko class absent from
+training, so the score reports generalisation to chemistry the model has no near neighbour for.
+(B) Both scores for every classifier endpoint; the median cost of withholding a scaffold class is
+0.027 AUROC. (C) All ten folds behind each mean, because a mean over ten tight folds and a mean over
+ten dispersed folds are not the same claim.
 
-**Figure 4.** Model selection. (a) Mean scaffold-split AUROC across the classifier panel for the five
-model families compared: logistic regression, k-nearest-neighbour read-across, histogram gradient
-boosting, XGBoost, and the deployed random forest (gold). (b) Held-out comparison of a graph
-isomorphism network against the random forest per endpoint.
+![Figure 4](figures/Figure4_pools_and_thresholds.png)
 
-![Figure 5](figures/Figure5_cv_design_and_errorbars.png)
+**Figure 4.** Why the decision thresholds are measured on a pool they were not set on. (A) The
+background library is partitioned into three pools by a stable hash of the canonical structure, so a
+compound's pool is a property of the molecule and never depends on run order. Decoys are drawn from
+the first, thresholds are set on the second, and the false-positive rate is measured on the third; no
+compound appears in more than one. (B) A threshold chosen as a quantile of a sample and then scored
+on that same sample returns the quantile it was given, and cannot exceed it. Measured on the disjoint
+evaluation pool, three endpoints exceed the 0.05 target, which under the previous procedure was
+arithmetically impossible. That the number can now disagree with its target is the evidence that it
+is a measurement. (C) Each deployed endpoint carries two operating points, a sensitive triage
+threshold and a stricter screening threshold, with sensitivity measured on actives withheld by
+scaffold.
 
-**Figure 5.** Cross-validation design and the origin of the error bars. (a) Random 10-fold: every fold
-contains all chemical series, so test compounds have close training analogues. (b) Scaffold-grouped
-10-fold: each fold holds out whole chemical series, so test compounds are unseen chemotypes.
-(c) Decomposition of the between-fold standard deviation into sampling noise and genuine chemotype
-heterogeneity for each endpoint (left bar of each pair, random split; right bar, scaffold split).
-Percentages give the heterogeneity share of the scaffold variance.
+![Figure 5](figures/Figure5_negative_class.png)
 
-![Figure 6](figures/Figure6_all_endpoints.png)
+**Figure 5.** Recovering the measured negative class. (A) A censored bound settles a label whenever
+the whole interval it defines falls on one side of the activity cut. "IC50 > 10 uM" places the true
+potency strictly below pChEMBL 5.0 and is a measured non-binder; "IC50 > 100 nM" spans both classes
+and is discarded as undecidable rather than guessed at. (B) Class balance for the 57 endpoints
+extended, before and after: 21,994 measured non-binders were added and the endpoints above 90 per
+cent active fell from 35 to 13. (C) The effect on cross-validated performance, per endpoint, against
+the panel as it stood immediately before the merge. Classification becomes slightly harder (median
+-0.0040) and regression improves (median +0.0202). Both are the expected direction: real non-binders
+are harder negatives than the decoys they join, and a censored bound is a real low-potency anchor
+where a regression previously had nothing. BBB and antioxidant_DPPH are flat at exactly zero, not
+missing, because neither draws from a ChEMBL target.
 
-![Figure 7](figures/Figure7_temporal_by_domain.png)
+![Figure 6](figures/Figure6_validation.png)
 
-**Figure 7.** Prospective performance is governed by the applicability domain. Models are trained on
-compounds published before a cutoff year and tested on those published after it, with the future
-compounds stratified by maximum Tanimoto similarity to the training set. (a) Classifier AUROC per
-endpoint. (b) Rank correlation for the potency and antioxidant models, the decision-relevant metric for
-triage. (c) Summary across endpoints: predictive power is retained inside the domain and lost outside
-it. The server reports which regime each query falls into.
+**Figure 6.** Four validations that a cross-validated score cannot substitute for. (A) Expected
+calibration error before and after isotonic regression fitted on out-of-fold predictions, so the
+calibrator never sees a compound in its own fit; mean ECE falls from 0.0795 to 0.0161. (B) Recall on
+whole scaffold classes withheld before training, with 95 per cent Wilson intervals [@wilson_ci] and marker area
+proportional to the number of withheld actives, so an interval that is wide because the evidence is
+thin looks thin. (C) Specificity on chemistry the server should stay quiet about, and external
+discrimination on approved drugs absent from the training source. (D) The adversarial suite, in which
+each check is written so that it can fail. Five of six pass. The sixth is shown at the same size as
+the rest: the applicability-domain flag does not separate non-drug-like chemistry from unseen drugs,
+and it is reported rather than retuned until it passes.
 
-**Figure 6.** Complete per-endpoint performance. (a) Target classifiers under both cross-validation
-regimes (bars, mean; whiskers, standard deviation across the ten folds). (b) Decoy-aware binder
-classifiers evaluated against near-miss decoys. (c) ADME regression endpoints under the scaffold split;
-the dotted line marks R2 = 0.3, below which an endpoint is reported as weak.
+![Figure 7](figures/Figure7_binder_panel.png)
 
-![Figure 8](figures/Figure8_scaffold_holdout.png)
+**Figure 7.** The binder panel, all 49 endpoints. (A) Each endpoint placed by what it discriminates,
+AUROC against compounds measured and found inactive at the same target, and what it recovers,
+sensitivity on actives withheld by scaffold. Marker area is the number of measured actives, and
+performance tracks it. (B) Every endpoint named, so a reader can look up a target rather than accept
+a panel average. The two endpoints withdrawn after specificity testing and those below the
+reliability gate are marked, not omitted. An endpoint is withdrawn when its probability band is too
+compressed for any threshold to separate real ligands from trivial metabolites; Nav1.1 scored glucose,
+urea, acetate and glycine between 0.80 and 0.82 against a threshold of 0.796.
 
-**Figure 8.** Prospective sensitivity under a scaffold hold-out. Twenty per cent of Bemis-Murcko
-scaffolds were withheld per target and all 39 trainable binder models retrained on the remainder, so
-no held-out compound shares a scaffold with anything its model saw. (a) Recall per target with 95%
-Wilson intervals, coloured green at 0.80 or above, amber between 0.50 and 0.80, red below 0.50; the
-dashed line is the pooled estimate. (b) Distribution across targets. Three targets whose thresholds
-collapsed to the floor are excluded.
+**[TO BE SUPPLIED BEFORE SUBMISSION]** a screenshot of the server interface for a worked example, and
+the mechanistic map for a single compound, both of which require the deployed instance.
 
-![Figure 9](figures/Figure9_specificity.png)
-
-**Figure 9.** Specificity on 1000 compounds with no recorded activity at any modelled target. (a)
-Distribution of the highest disease score, with the 0.30 actionable threshold marked. (b) Proportion
-silent against proportion firing, with the 95% Wilson interval. (c) Conditions to which the false
-positives are assigned.
-
-![Figure 10](figures/Figure10_performance.png)
-
-**Figure 10.** (a) The deployed operating point, sensitivity from the scaffold hold-out against
-specificity from the non-CNS set, with 95% intervals on both axes. (b) Distribution of AUROC against
-held-out measured inactives across the binder panel.
-
-## References
-
-[To be completed. Anchor citations: ChEMBL; BindingDB; B3DB; RDKit; Therapeutics Data Commons;
-KEGG; Reactome; IUPHAR/BPS Guide to Pharmacology; scikit-learn; Streamlit; Bemis and Murcko scaffolds;
-isotonic calibration; DeLong test.]
-
-Each entry was resolved by exact-title query against CrossRef or Europe PMC and accepted only above a normalised title-similarity of 0.82. The requested title, the matched title and the similarity score are recorded in `references_verified.json`, so every entry can be re-checked mechanically. None is written from memory.
-
-1. Wilson E. Probable Inference, the Law of Succession, and Statistical Inference. Journal of the American Statistical Association. 1927. doi:10.1080/01621459.1927.10502953
-2. DeLong E, DeLong D, Clarke-Pearson D. Comparing the Areas under Two or More Correlated Receiver Operating Characteristic Curves: A Nonparametric Approach. Biometrics. 1988. doi:10.2307/2531595
-3. Bemis G, Murcko M. The Properties of Known Drugs. 1. Molecular Frameworks. Journal of Medicinal Chemistry. 1996. doi:10.1021/jm9602928
-4. Kanehisa M, Goto S. KEGG: kyoto encyclopedia of genes and genomes. Nucleic acids research. 2000. doi:10.1093/nar/28.1.27
-5. Niculescu-Mizil A, Caruana R. Predicting good probabilities with supervised learning. Proceedings of the 22nd international conference on Machine learning  - ICML '05. 2005. doi:10.1145/1102351.1102430
-6. Jaworska J, Nikolova-Jeliazkova N, Aldenberg T. QSAR Applicability Domain Estimation by Projection of the Training Set in Descriptor Space: A Review. Alternatives to Laboratory Animals. 2005. doi:10.1177/026119290503300508
-7. Wager T, Hou X, Verhoest P et al. Moving beyond Rules: The Development of a Central Nervous System Multiparameter Optimization (CNS MPO) Approach To Enable Alignment of Druglike Properties. ACS Chemical Neuroscience. 2010. doi:10.1021/cn100008c
-8. Mysinger M, Carchia M, Irwin J et al. Directory of Useful Decoys, Enhanced (DUD-E): Better Ligands and Decoys for Better Benchmarking. Journal of Medicinal Chemistry. 2012. doi:10.1021/jm300687e
-9. Saify Z, Sultana N. Role of Acetylcholinesterase Inhibitors and Alzheimer Disease. Drug Design and Discovery in Alzheimer's Disease. 2014. doi:10.1016/b978-0-12-803959-5.50007-6
-10. Decourt B, Macias M, Sabbagh M et al. BACE1 Inhibitors: Attractive Therapeutics for Alzheimer’s Disease. Drug Design and Discovery in Alzheimer's Disease. 2014. doi:10.1016/b978-0-12-803959-5.50010-6
-11. Riemann D, Spiegelhalder K. Orexin receptor antagonists: a new treatment for insomnia?. The Lancet Neurology. 2014. doi:10.1016/s1474-4422(13)70311-9
-12. Yamazaki H, Tanji K, Wakabayashi K, Matsuura S, Itoh K. Role of the Keap1/Nrf2 pathway in neurodegenerative diseases. Pathology international. 2015. doi:10.1111/pin.12261
-13. Gilson M, Liu T, Baitaluk M et al. BindingDB in 2015: A public database for medicinal chemistry, computational chemistry and systems pharmacology. Nucleic Acids Research. 2016. doi:10.1093/nar/gkv1072
-14. Dezsi L, Vecsei L. Monoamine Oxidase B Inhibitors in Parkinson's Disease. CNS & neurological disorders drug targets. 2017. doi:10.2174/1871527316666170124165222
-15. Wu Z, Ramsundar B, Feinberg E et al. MoleculeNet: a benchmark for molecular machine learning. Chemical Science. 2018. doi:10.1039/c7sc02664a
-16. Genuer R, Poggi J. Random Forests. Use R!. 2020. doi:10.1007/978-3-030-56485-8_3
-17. Zdrazil B, Felix E, Hunter F et al. The ChEMBL Database in 2023: a drug discovery platform spanning multiple bioactivity data types and time periods. Nucleic Acids Research. 2024. doi:10.1093/nar/gkad1004
-18. Milacic M, Beavers D, Conley P, Gong C, Gillespie M, Griss J, Haw R, Jassal B, Matthews L, May B, Petryszak R, Ragueneau E, Rothfels K, Sevilla C, Shamovsky V, Stephan R, Tiwari K, Varusai T, Weiser J, Wright A, Wu G, Stein L, Hermjakob H, D'Eustachio P. The Reactome Pathway Knowledgebase 2024. Nucleic acids research. 2024. doi:10.1093/nar/gkad1025
-19. Harding SD, Armstrong JF, Faccenda E, Southan C, Alexander SPH, Davenport AP, Spedding M, Davies JA. The IUPHAR/BPS Guide to PHARMACOLOGY in 2024. Nucleic acids research. 2024. doi:10.1093/nar/gkad944
-20. extended connectivity fingerprints. The IUPAC Compendium of Chemical Terminology. 2025. doi:10.1351/goldbook.11443
-
-## Software
-
-- RDKit: Open-source cheminformatics. https://www.rdkit.org
-- Streamlit: an open-source app framework. https://streamlit.io
-
-Requested but not resolved above the similarity threshold, and therefore not cited: b3db, sklearn, tdc, kpuu, xgboost, gin_gnn, platt, conformal, herg_pred, bbb_ml, cns_attrition, lrrk2_pd, nlrp3_neuro, hdac_hd, riluzole_als.
+<!-- REFERENCES -->

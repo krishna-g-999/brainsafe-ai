@@ -12,12 +12,11 @@
     },
     "bindingdb": {
       "title": "BindingDB in 2015: A public database for medicinal chemistry, computational chemistry and systems pharmacology",
-      "authors": "Gilson MK, Liu T, Baitaluk M, Nicola G, Hwang L, Chong J.",
-      "journal": "Nucleic acids research",
+      "authors": "Gilson M, Liu T, Baitaluk M et al.",
+      "journal": "Nucleic Acids Research",
       "year": "2016",
       "doi": "10.1093/nar/gkv1072",
-      "pmid": "26481362",
-      "source": "EuropePMC",
+      "source": "CrossRef",
       "match_score": 1.0,
       "requested_title": "BindingDB in 2015: A public database for medicinal chemistry, computational chemistry and systems pharmacology"
     },
@@ -207,16 +206,6 @@
       "source": "CrossRef",
       "match_score": 1.0,
       "requested_title": "Cardiac safety, drug-induced QT prolongation and torsade de pointes (TdP)"
-    },
-    "delong": {
-      "title": "Comparing the Areas under Two or More Correlated Receiver Operating Characteristic Curves: A Nonparametric Approach",
-      "authors": "DeLong E, DeLong D, Clarke-Pearson D",
-      "journal": "Biometrics",
-      "year": "1988",
-      "doi": "10.2307/2531595",
-      "source": "CrossRef",
-      "match_score": 1.0,
-      "requested_title": "Comparing the areas under two or more correlated receiver operating characteristic curves: a nonparametric approach"
     },
     "wilson_ci": {
       "title": "Probable Inference, the Law of Succession, and Statistical Inference",

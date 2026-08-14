@@ -6,9 +6,14 @@ predictions. This guarantees that no number in the manuscript can drift from the
 """
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
 import pypandoc
+
+import cite
 
 ROOT = Path(__file__).resolve().parents[3]
 MS = ROOT / "manuscript"
@@ -26,7 +31,20 @@ def main():
     if "<!-- TABLES -->" not in text:
         raise SystemExit("marker <!-- TABLES --> not found in manuscript source")
     text = text.replace("<!-- TABLES -->", tbl.strip())
+
+    # Citations are keys in the source and numbers only in the built file, so moving a paragraph
+    # renumbers the bibliography instead of silently invalidating it.
+    text, order, unknown, uncited = cite.resolve(text)
+    if unknown:
+        raise SystemExit("cited but not verified, so no number can be assigned: "
+                         + ", ".join(unknown))
+    if "<!-- REFERENCES -->" not in text:
+        raise SystemExit("marker <!-- REFERENCES --> not found in manuscript source")
+    text = text.replace("<!-- REFERENCES -->", cite.reference_section(order))
     BUILT.write_text(text, encoding="utf-8")
+    print(f"citations resolved: {len(order)}")
+    if uncited:
+        print(f"verified but uncited ({len(uncited)}): {', '.join(sorted(uncited))}")
 
     pypandoc.convert_file(str(BUILT), "docx", outputfile=str(DOCX),
                           extra_args=[f"--resource-path={MS}", "--toc", "--toc-depth=2"])

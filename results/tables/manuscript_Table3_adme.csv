@@ -1,10 +1,10 @@
 endpoint,property,task,compounds,metric,random_10fold,scaffold_10fold,rationale
 kpuu,"Unbound brain/plasma ratio (Kp,uu)",regression,566,R2,0.404 ± 0.099,0.352 ± 0.158,Free drug available to CNS targets
-logbb,Total brain/plasma ratio (logBB),regression,"1,058",R2,0.577 ± 0.081,0.455 ± 0.145,Bulk brain distribution
-caco2_permeability,Caco-2 permeability,regression,897,R2,0.734 ± 0.051,0.593 ± 0.126,Passive membrane permeability
-pgp_substrate,P-glycoprotein substrate,classification,"1,371",AUROC,0.858 ± 0.032,0.808 ± 0.054,Active efflux out of the brain
-pgp_inhibition,P-glycoprotein inhibition,classification,"1,212",AUROC,0.955 ± 0.018,0.937 ± 0.024,Efflux-mediated drug interactions
-solubility,Aqueous solubility (logS),regression,"9,573",R2,0.804 ± 0.017,0.763 ± 0.066,Formulation and absorption
-lipophilicity,Lipophilicity (logD),regression,"4,200",R2,0.639 ± 0.028,0.564 ± 0.054,Permeability/promiscuity balance
-plasma_protein_binding,Plasma protein binding,regression,"1,797",R2,0.434 ± 0.090,0.374 ± 0.104,Determines free fraction
-clearance_hepatocyte,Hepatocyte clearance,regression,"1,020",R2,0.230 ± 0.104,0.193 ± 0.048,"Metabolic stability, exposure duration"
+logbb,Total brain/plasma ratio (logBB),regression,"1,058",R2,0.577 ± 0.081,0.423 ± 0.150,Bulk brain distribution
+caco2_permeability,Caco-2 permeability,regression,897,R2,0.734 ± 0.051,0.584 ± 0.158,Passive membrane permeability
+pgp_substrate,P-glycoprotein substrate,classification,"1,371",AUROC,0.858 ± 0.032,0.806 ± 0.038,Active efflux out of the brain
+pgp_inhibition,P-glycoprotein inhibition,classification,"1,212",AUROC,0.955 ± 0.018,0.935 ± 0.029,Efflux-mediated drug interactions
+solubility,Aqueous solubility (logS),regression,"9,573",R2,0.804 ± 0.017,0.728 ± 0.077,Formulation and absorption
+lipophilicity,Lipophilicity (logD),regression,"4,200",R2,0.639 ± 0.028,0.566 ± 0.042,Permeability/promiscuity balance
+plasma_protein_binding,Plasma protein binding,regression,"1,797",R2,0.434 ± 0.090,0.364 ± 0.056,Determines free fraction
+clearance_hepatocyte,Hepatocyte clearance,regression,"1,020",R2,0.230 ± 0.104,0.206 ± 0.064,"Metabolic stability, exposure duration"

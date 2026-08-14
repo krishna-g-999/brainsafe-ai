@@ -1,0 +1,74 @@
+## Figure legends
+
+![Figure 1](figures/Figure1_endpoint_rationale.png)
+
+**Figure 1.** Endpoint selection rationale. Left, the four sequential questions a CNS candidate must
+satisfy and the endpoints modelled in each layer, with measured compound counts. Right, the eleven
+conditions the panel informs, the targets that drive each, and the mechanisms not yet modelled.
+
+**Figure 2.** The BrainSafe AI report for a query compound (screenshot to be inserted): summary card,
+mechanistic map, brain-relevance panel, target and receptor tables, ADME panel, and the applicability
+and confidence card.
+
+![Figure 3](figures/Figure2_mechanism.png)
+
+**Figure 3.** The mechanistic map, shown for haloperidol. A four-tier diagram (compound, target,
+pathway, disease) in which only engaged targets are drawn, connector weight encodes engagement
+strength, node order is arranged to minimise crossings, and pathways are anchored to KEGG and Reactome
+identifiers.
+
+![Figure 4](figures/Figure3_model_selection.png)
+
+**Figure 4.** Model selection. (a) Mean scaffold-split AUROC across the classifier panel for the five
+model families compared: logistic regression, k-nearest-neighbour read-across, histogram gradient
+boosting, XGBoost, and the deployed random forest (gold). (b) Held-out comparison of a graph
+isomorphism network against the random forest per endpoint.
+
+![Figure 5](figures/Figure5_cv_design_and_errorbars.png)
+
+**Figure 5.** Cross-validation design and the origin of the error bars. (a) Random 10-fold: every fold
+contains all chemical series, so test compounds have close training analogues. (b) Scaffold-grouped
+10-fold: each fold holds out whole chemical series, so test compounds are unseen chemotypes.
+(c) Decomposition of the between-fold standard deviation into sampling noise and genuine chemotype
+heterogeneity for each endpoint (left bar of each pair, random split; right bar, scaffold split).
+Percentages give the heterogeneity share of the scaffold variance.
+
+![Figure 6](figures/Figure6_all_endpoints.png)
+
+![Figure 7](figures/Figure7_temporal_by_domain.png)
+
+**Figure 7.** Prospective performance is governed by the applicability domain. Models are trained on
+compounds published before a cutoff year and tested on those published after it, with the future
+compounds stratified by maximum Tanimoto similarity to the training set. (a) Classifier AUROC per
+endpoint. (b) Rank correlation for the potency and antioxidant models, the decision-relevant metric for
+triage. (c) Summary across endpoints: predictive power is retained inside the domain and lost outside
+it. The server reports which regime each query falls into.
+
+**Figure 6.** Complete per-endpoint performance. (a) Target classifiers under both cross-validation
+regimes (bars, mean; whiskers, standard deviation across the ten folds). (b) Decoy-aware binder
+classifiers evaluated against near-miss decoys. (c) ADME regression endpoints under the scaffold split;
+the dotted line marks R2 = 0.3, below which an endpoint is reported as weak.
+
+![Figure 8](figures/Figure8_scaffold_holdout.png)
+
+**Figure 8.** Prospective sensitivity under a scaffold hold-out. Twenty per cent of Bemis-Murcko
+scaffolds were withheld per target and all 39 trainable binder models retrained on the remainder, so
+no held-out compound shares a scaffold with anything its model saw. (a) Recall per target with 95%
+Wilson intervals, coloured green at 0.80 or above, amber between 0.50 and 0.80, red below 0.50; the
+dashed line is the pooled estimate. (b) Distribution across targets. Three targets whose thresholds
+collapsed to the floor are excluded.
+
+![Figure 9](figures/Figure9_specificity.png)
+
+**Figure 9.** Specificity on 1000 compounds with no recorded activity at any modelled target. (a)
+Distribution of the highest disease score, with the 0.30 actionable threshold marked. (b) Proportion
+silent against proportion firing, with the 95% Wilson interval. (c) Conditions to which the false
+positives are assigned.
+
+![Figure 10](figures/Figure10_performance.png)
+
+**Figure 10.** (a) The deployed operating point, sensitivity from the scaffold hold-out against
+specificity from the non-CNS set, with 95% intervals on both axes. (b) Distribution of AUROC against
+held-out measured inactives across the binder panel.
+
+<!-- REFERENCES -->
