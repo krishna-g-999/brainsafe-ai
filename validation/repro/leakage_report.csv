@@ -1,0 +1,33 @@
+endpoint,stage,split,n_rows,worst_fold_shared_inchikey,worst_fold_shared_feature_vector,worst_fold_shared_scaffold,duplicate_rows_removed
+BBB,raw table,random,7805,1,544,689,3773
+BBB,raw table,scaffold,7805,0,0,0,3773
+BBB,as trained (deduplicated),random,3901,0,0,243,3773
+BBB,as trained (deduplicated),scaffold,3901,0,0,0,3773
+AChE,raw table,random,5318,0,41,372,188
+AChE,raw table,scaffold,5318,0,2,0,188
+AChE,as trained (deduplicated),random,5125,0,0,348,188
+AChE,as trained (deduplicated),scaffold,5125,0,0,0,188
+BChE,raw table,random,3386,0,26,239,103
+BChE,raw table,scaffold,3386,0,1,0,103
+BChE,as trained (deduplicated),random,3278,0,0,226,103
+BChE,as trained (deduplicated),scaffold,3278,0,0,0,103
+BACE1,raw table,random,8962,0,125,702,686
+BACE1,raw table,scaffold,8962,0,2,0,686
+BACE1,as trained (deduplicated),random,8213,0,0,603,686
+BACE1,as trained (deduplicated),scaffold,8213,0,0,0,686
+GSK3B,raw table,random,5640,0,39,400,190
+GSK3B,raw table,scaffold,5640,0,4,0,190
+GSK3B,as trained (deduplicated),random,5443,0,0,363,190
+GSK3B,as trained (deduplicated),scaffold,5443,0,0,0,190
+MAO_A,raw table,random,3789,0,36,293,189
+MAO_A,raw table,scaffold,3789,0,4,0,189
+MAO_A,as trained (deduplicated),random,3595,0,0,273,189
+MAO_A,as trained (deduplicated),scaffold,3595,0,0,0,189
+MAO_B,raw table,random,4806,0,48,392,245
+MAO_B,raw table,scaffold,4806,0,5,0,245
+MAO_B,as trained (deduplicated),random,4548,0,0,348,245
+MAO_B,as trained (deduplicated),scaffold,4548,0,0,0,245
+hERG,raw table,random,10276,0,65,626,340
+hERG,raw table,scaffold,10276,0,0,0,340
+hERG,as trained (deduplicated),random,9934,0,0,574,340
+hERG,as trained (deduplicated),scaffold,9934,0,0,0,340

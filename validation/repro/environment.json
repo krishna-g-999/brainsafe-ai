@@ -1,0 +1,170 @@
+{
+  "captured_utc": "2026-08-15T02:18:10Z",
+  "commit": "5c7114d331cb2cc7d7ecbd87425526770c2798bb",
+  "commit_subject": "Rewrite the manuscript on the current results, with citations that resolve to real works",
+  "branch": "main",
+  "tracked_files_clean": true,
+  "modified_tracked_files": [],
+  "untracked_files": [
+    "?? validation/"
+  ],
+  "python": "3.13.13 | packaged by Anaconda, Inc. | (main, Apr 14 2026, 06:12:50) [MSC v.1942 64 bit (AMD64)]",
+  "executable": "D:\\BRAINSAFE_AI\\brainsafe_env\\Scripts\\python.exe",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "processor": "Intel64 Family 6 Model 198 Stepping 2, GenuineIntel",
+  "machine": "AMD64",
+  "cpu_count": 24,
+  "key_packages": {
+    "joblib": "joblib==1.5.3",
+    "matplotlib": "matplotlib==3.10.9",
+    "numpy": "numpy==2.4.6",
+    "pandas": "pandas==3.0.3",
+    "rdkit": "rdkit==2026.3.2",
+    "scikit-learn": "scikit-learn==1.8.0",
+    "scipy": "scipy==1.17.1",
+    "streamlit": "streamlit==1.58.0",
+    "xgboost": "xgboost==3.3.0"
+  },
+  "declared_seeds": {
+    "src/brainsafe/adme/train_adme.py": [
+      "28: from models.train_rf import (RF_COMMON, SEED, N_SPLITS, _scaffold_groups,  # noqa: E402",
+      "43: \"random\": (StratifiedKFold(N_SPLITS, shuffle=True, random_state=SEED) if task == \"classification\"",
+      "44: else KFold(N_SPLITS, shuffle=True, random_state=SEED)),"
+    ],
+    "src/brainsafe/analysis/build_reviewer_matrix.py": [
+      "220: \"class_weight\": \"balanced\", \"random_state\": 42}),"
+    ],
+    "src/brainsafe/analysis/build_reviewer_package.py": [
+      "536: panel: `n_estimators=300, min_samples_leaf=4, class_weight='balanced', random_state=42`, fixed in"
+    ],
+    "src/brainsafe/analysis/build_reviewer_workbook.py": [
+      "256: \"n_estimators=300, min_samples_leaf=4, class_weight=balanced, random_state=42. The core \""
+    ],
+    "src/brainsafe/analysis/figures_validation.py": [
+      "35: rng = np.random.default_rng(3)"
+    ],
+    "src/brainsafe/analysis/temporal_diagnosis.py": [
+      "46: RF = dict(n_estimators=300, min_samples_leaf=2, n_jobs=-1, random_state=42)",
+      "108: rng = np.random.default_rng(0)",
+      "134: rng = np.random.default_rng(0)"
+    ],
+    "src/brainsafe/analysis/variance_decomposition.py": [
+      "35: rng = np.random.default_rng(7)"
+    ],
+    "src/brainsafe/evaluation/binder_cv_per_fold.py": [
+      "61: RF = dict(n_estimators=300, min_samples_leaf=4, n_jobs=-1, random_state=42,",
+      "108: rng = np.random.default_rng(zlib.crc32(ep.encode()) % (2 ** 31))",
+      "183: for split, splitter in ((\"random\", StratifiedKFold(N_SPLITS, shuffle=True, random_state=42)),"
+    ],
+    "src/brainsafe/evaluation/external_100_stats.py": [
+      "35: rng = np.random.default_rng(20260802)"
+    ],
+    "src/brainsafe/evaluation/feature_analysis.py": [
+      "37: from models.train_rf import (CLASSIFICATION, REGRESSION, RF_COMMON, SEED, _load,  # noqa: E402",
+      "65: splitter = (StratifiedKFold(5, shuffle=True, random_state=SEED) if task == \"classification\"",
+      "66: else KFold(5, shuffle=True, random_state=SEED))",
+      "96: Xtr, Xte, ytr, yte = train_test_split(X, y, test_size=0.25, random_state=SEED, stratify=strat)",
+      "100: pi = permutation_importance(model, Xte, yte, n_repeats=10, random_state=SEED,"
+    ],
+    "src/brainsafe/evaluation/learning_curve.py": [
+      "28: from models.train_rf import CLASSIFICATION, REGRESSION, SEED, _load, _scaffold_groups  # noqa: E402",
+      "34: RNG = np.random.RandomState(SEED)",
+      "39: n_jobs=-1, random_state=SEED) if task == \"classification\"",
+      "41: random_state=SEED))"
+    ],
+    "src/brainsafe/evaluation/model_comparison.py": [
+      "39: from models.train_rf import (CLASSIFICATION, REGRESSION, SEED, _dedup_features,  # noqa: E402",
+      "49: class_weight=\"balanced\", n_jobs=-1, random_state=SEED),",
+      "52: scale_pos_weight=pos_weight, n_jobs=-1, random_state=SEED),",
+      "54: random_state=SEED),",
+      "61: random_state=SEED)),",
+      "73: random_state=SEED),",
+      "75: colsample_bytree=0.8, tree_method=\"hist\", n_jobs=-1, random_state=SEED),",
+      "77: random_state=SEED),",
+      "80: random_state=SEED)),",
+      "86: (StratifiedKFold(N_SPLITS, shuffle=True, random_state=SEED) if task == \"classification\"",
+      "87: else KFold(N_SPLITS, shuffle=True, random_state=SEED)))"
+    ],
+    "src/brainsafe/evaluation/noncns_specificity.py": [
+      "42: rng = np.random.default_rng(31415)"
+    ],
+    "src/brainsafe/evaluation/noncns_specificity_fast.py": [
+      "56: rng = np.random.default_rng(31415)"
+    ],
+    "src/brainsafe/evaluation/rf_conformal_temporal.py": [
+      "30: from models.train_rf import (CLASSIFICATION, REGRESSION, RF_COMMON, SEED, _load)  # noqa: E402",
+      "41: rng = np.random.RandomState(SEED)"
+    ],
+    "src/brainsafe/evaluation/scaffold_holdout_panel.py": [
+      "47: rng = np.random.default_rng(2026)",
+      "143: random_state=42, class_weight=\"balanced\").fit(X, y)"
+    ],
+    "src/brainsafe/evaluation/validate_inversion.py": [
+      "42: from models.train_rf import (RF_COMMON, SEED, N_SPLITS, _load, _scaffold_groups,"
+    ],
+    "src/brainsafe/figures/fig03_cv_design.py": [
+      "38: rng = np.random.default_rng(11)"
+    ],
+    "src/brainsafe/gnn/train_gnn.py": [
+      "28: from models.train_rf import CLASSIFICATION, REGRESSION, SEED, _load, _scaffold_groups  # noqa: E402",
+      "38: torch.manual_seed(SEED)",
+      "39: np.random.seed(SEED)",
+      "58: rng = np.random.RandomState(SEED)",
+      "91: rng = np.random.RandomState(SEED)",
+      "141: n_jobs=-1, random_state=SEED).fit(X_ecfp[tr], y[tr].astype(int))",
+      "147: random_state=SEED).fit(X_ecfp[tr], y[tr])"
+    ],
+    "src/brainsafe/models/calibrate.py": [
+      "33: from models.train_rf import CLASSIFICATION, RF_COMMON, SEED, _load  # noqa: E402"
+    ],
+    "src/brainsafe/models/calibrate_background_specificity.py": [
+      "44: rng = np.random.default_rng(7)"
+    ],
+    "src/brainsafe/models/final_thresholds.py": [
+      "42: rng = np.random.default_rng(7)"
+    ],
+    "src/brainsafe/models/pools.py": [
+      "115: rng = rng if rng is not None else np.random.default_rng(42)"
+    ],
+    "src/brainsafe/models/screening_thresholds.py": [
+      "39: rng = np.random.default_rng(11)"
+    ],
+    "src/brainsafe/models/train_batch2.py": [
+      "43: rng = np.random.default_rng(42)",
+      "44: RF = dict(n_estimators=200, min_samples_leaf=6, n_jobs=-1, random_state=42, class_weight=\"balanced\")",
+      "134: Xt, Xc, yt, yc = train_test_split(X, y, test_size=0.2, stratify=y, random_state=42)"
+    ],
+    "src/brainsafe/models/train_binders_hybrid.py": [
+      "60: rng = np.random.default_rng(42)",
+      "61: RF = dict(n_estimators=300, min_samples_leaf=4, n_jobs=-1, random_state=42, class_weight=\"balanced\")",
+      "168: Xt, Xc, yt, yc = train_test_split(X, y, test_size=0.2, stratify=y, random_state=42)"
+    ],
+    "src/brainsafe/models/train_measured_label_holdout.py": [
+      "39: RF = dict(n_estimators=300, min_samples_leaf=4, n_jobs=-1, random_state=42, class_weight=\"balanced\")",
+      "40: rng = np.random.default_rng(42)",
+      "84: Xt, Xc, yt, yc = train_test_split(X, y, test_size=0.2, stratify=y, random_state=42)"
+    ],
+    "src/brainsafe/models/train_new_binders.py": [
+      "42: rng = np.random.default_rng(42)",
+      "108: RandomForestClassifier(200, min_samples_leaf=6, n_jobs=-1, random_state=42, class_weight=\"balanced\"),",
+      "112: Xt, Xc, yt, yc = train_test_split(X, y, test_size=0.2, stratify=y, random_state=42)",
+      "113: forest = RandomForestClassifier(200, min_samples_leaf=6, n_jobs=-1, random_state=42,"
+    ],
+    "src/brainsafe/models/train_pka.py": [
+      "42: RF = dict(n_estimators=500, min_samples_leaf=2, n_jobs=-1, random_state=42)",
+      "63: for name, cv, g in [(\"random 10-fold\", KFold(10, shuffle=True, random_state=42), None),"
+    ],
+    "src/brainsafe/models/train_receptor_binders.py": [
+      "47: rng = np.random.default_rng(42)",
+      "125: RandomForestClassifier(200, min_samples_leaf=6, n_jobs=-1, random_state=42, class_weight=\"balanced\"),",
+      "130: Xt, Xc, yt, yc = train_test_split(X, y, test_size=0.2, stratify=y, random_state=42)",
+      "131: forest = RandomForestClassifier(200, min_samples_leaf=6, n_jobs=-1, random_state=42,"
+    ],
+    "src/brainsafe/models/train_rf.py": [
+      "46: SEED = 42",
+      "48: RF_COMMON = dict(n_estimators=300, min_samples_leaf=2, n_jobs=-1, random_state=SEED)",
+      "158: \"random\": (StratifiedKFold(N_SPLITS, shuffle=True, random_state=SEED) if task == \"classification\"",
+      "159: else KFold(N_SPLITS, shuffle=True, random_state=SEED)),"
+    ]
+  }
+}

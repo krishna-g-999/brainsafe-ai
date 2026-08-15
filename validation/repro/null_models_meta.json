@@ -1,0 +1,7 @@
+{
+  "commit": "5c7114d331cb2cc7d7ecbd87425526770c2798bb",
+  "seed": 42,
+  "repeats": 3,
+  "n_estimators": 120,
+  "wall_clock_s": 392.3
+}

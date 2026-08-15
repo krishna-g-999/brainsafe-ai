@@ -1,0 +1,30 @@
+{
+  "commit": "5c7114d331cb2cc7d7ecbd87425526770c2798bb",
+  "endpoints_checked": [
+    "BBB",
+    "AChE",
+    "BChE",
+    "BACE1",
+    "GSK3B",
+    "MAO_A",
+    "MAO_B",
+    "hERG"
+  ],
+  "L1_identity_overlap_as_trained_max": 0,
+  "L2_feature_overlap_as_trained_max": 0,
+  "L3_scaffold_overlap_scaffold_split_max": 0,
+  "L2_feature_overlap_raw_table_max": 544,
+  "L4_featurisation_purity": {
+    "identical_alone_vs_batch": true,
+    "identical_under_reversed_order": true,
+    "n_sampled": 40
+  },
+  "L5_L6_static": {
+    "fit_calls_outside_estimator": [],
+    "scaler_imports": [
+      "src/brainsafe/evaluation/model_comparison.py: StandardScaler"
+    ],
+    "featurize_sees_label": []
+  },
+  "wall_clock_s": 186.4
+}

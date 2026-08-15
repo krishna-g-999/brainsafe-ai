@@ -1,0 +1,247 @@
+# Reproduction and discrepancy report
+
+Independent reproduction of the reported performance numbers for BrainSafe AI, run against commit
+`5c7114d331cb2cc7d7ecbd87425526770c2798bb` with a clean tracked tree. Nothing in the manuscript was
+edited in this session and no scientific behaviour was changed.
+
+| | |
+|---|---|
+| Commit | `5c7114d` "Rewrite the manuscript on the current results, with citations that resolve to real works" |
+| Tracked tree | clean (only `validation/`, added by this reproduction, is untracked) |
+| Python | 3.13.13 |
+| Key packages | scikit-learn 1.8.0, numpy 2.4.6, pandas 3.0.3, rdkit 2026.3.2, scipy 1.17.1, xgboost 3.3.0 |
+| Hardware | 24 logical CPU, Windows-11-10.0.26200 |
+| Seed | 42 throughout, declared at 78 sites across 31 source files |
+| Ledger | `validation/REPRO_LEDGER.csv`, 106 rows |
+
+Every row of the ledger records an evidence tier, because "reproduced" and "read from the pipeline's
+own output file" are not the same claim:
+
+- **A — independent re-run.** The pipeline was executed again and scored by metric code written for
+  this reproduction. 89 rows.
+- **C — artefact read.** The value was read from an artefact; no independent computation was possible
+  in this session. 17 rows, labelled `MATCHES (artefact read, not re-run)` so they cannot be mistaken
+  for reproductions.
+
+---
+
+## Headline result
+
+**All 26 core cross-validation values reproduce exactly.** Maximum absolute deviation 4.8 × 10⁻⁵ for
+AUROC and 5.0 × 10⁻⁵ for R², which is the rounding in the stored summary (4 dp) and nothing else. The
+pipeline is deterministic under its declared seed.
+
+```bash
+python validation/repro/r02_recompute_cv.py
+```
+
+| Metric | Split | Manuscript | Reproduced | Status |
+|---|---|---|---|---|
+| Classifier AUROC, mean over 8 endpoints | random | 0.958 | **0.9580** | MATCHES |
+| Classifier AUROC, mean over 8 endpoints | scaffold | 0.925 | **0.9250** | MATCHES |
+| Receptor potency R², min / max | random | 0.64 / 0.72 | **0.6436 / 0.7243** | MATCHES |
+| Receptor potency R², min / max | scaffold | 0.46 / 0.61 | **0.4612 / 0.6118** | MATCHES |
+| Compound-endpoint records | n/a | 227,146 | **227,146** | MATCHES |
+
+Metrics the manuscript does not state were reproduced anyway and are in the ledger as `NOT_STATED`:
+AUPRC, sensitivity, specificity, balanced accuracy, MCC and Brier per endpoint per split, and
+bootstrap 95% confidence intervals on the pooled out-of-fold predictions (2,000 resamples, seed 42).
+
+---
+
+## 1. Leakage and split integrity — PASS
+
+```bash
+python validation/repro/r01_leakage.py
+```
+
+Folds were rebuilt from the endpoint tables and the actual index sets interrogated. Both the raw
+table and the deduplicated matrix the pipeline fits are reported, because they answer different
+questions.
+
+| Check | As trained | Verdict |
+|---|---|---|
+| L1 InChIKey in both halves of a fold | **0** | PASS |
+| L2 byte-identical feature vector across a fold | **0** | PASS |
+| L3 scaffold on both sides of a scaffold-grouped fold | **0** | PASS |
+| L4 featurisation purity | vector identical alone vs in batch, and under reversed input order | PASS |
+| L5 fitted transform on test data | none in any deployed path | PASS |
+| L6 featuriser sees a label | no label-shaped argument in `featurize.py` | PASS |
+
+**L2 on the raw table reaches 544** (BBB), and BBB's raw table also contains one InChIKey appearing
+on both sides of a random fold. Both are removed by the deduplication step that runs before any
+split. This is the leak deduplication exists to remove, not a leak in any trained model, and the
+distinction is recorded per endpoint in `validation/repro/leakage_report.csv`.
+
+The one L5 hit is `StandardScaler` in `src/brainsafe/evaluation/model_comparison.py:58`, inside a
+`make_pipeline` used only for the logistic-regression baseline. `clone()` is called per fold and
+`fit()` receives `X[tr]` only, so it is fitted on training data alone; it appears in no deployed
+path (`models/`, `features/`, `app.py`, `api.py`).
+
+---
+
+## 2. Null and permutation models — PASS, and newly run
+
+```bash
+python validation/repro/r04_null_models.py --repeats 3
+```
+
+These had never been run. They are the check that decides whether a 0.93 AUROC means anything.
+
+| Null | Random split | Scaffold split |
+|---|---|---|
+| Permuted labels | 0.5016 | 0.5055 |
+| Labels permuted within training folds only | 0.4953 | 0.4950 |
+| Predictor that ignores the molecule | 0.4990 | 0.4986 |
+
+Highest permuted-label AUROC on any single endpoint: **0.5253**. Every null sits at chance on both
+splits. The scaffold-split result is the one that matters: whole scaffold classes do not carry enough
+class-frequency information for a label-free model to score above chance, so the reported scaffold
+numbers are not inflated by that route.
+
+---
+
+## 3. Calibration — DIFFERS, with an identified cause
+
+```bash
+python validation/repro/r05_calibration_importance.py
+```
+
+| | Manuscript | Reproduced | Status |
+|---|---|---|---|
+| Mean ECE before calibration | 0.0795 | **0.0795** | MATCHES (max per-endpoint deviation 0.0001) |
+| Mean ECE after calibration | 0.0161 | **0.0077** | **DIFFERS** |
+
+The pre-calibration figure reproduces exactly. The post-calibration figure does not, and the cause is
+a protocol difference, not an error:
+
+- **Pipeline** (`src/brainsafe/models/calibrate.py:59`): `cross_val_predict(IsotonicRegression(), p, y, cv=5)`
+  over the pooled out-of-fold vector.
+- **This reproduction**: isotonic fitted on the other nine folds' out-of-fold predictions and applied
+  to the held-out fold, aligned with the 10-fold CV structure.
+
+Both are honest nested schemes and neither lets a compound calibrate itself. They are different
+estimators, and with 10 folds the calibrator sees 90 per cent of the data rather than 80, which is
+the expected direction of the gap. Per-endpoint the difference is largest for BBB (0.0412 pipeline
+vs 0.0092 here) and smallest for MAO_A (0.0141 vs 0.0136).
+
+**The manuscript's number is the more conservative of the two**, so this is not an overstatement.
+The recommendation is that the manuscript state the calibration protocol explicitly, because the
+value depends on it and a reader cannot currently tell which scheme produced 0.0161.
+
+Reliability curves for all eight classifiers, with bin counts shown, are in
+`validation/repro/calibration_curve.png`.
+
+---
+
+## 4. BLOCKERS — three numbers cannot be reproduced
+
+These are blockers, not footnotes.
+
+### 4.1 Non-CNS specificity rests on an artefact older than the models, and the manuscript is older still
+
+Three generations of this number exist and no two agree:
+
+| Source | Value | Date |
+|---|---|---|
+| Manuscript, Results | specificity **0.875** (95% CI 0.853–0.894), sensitivity 0.790, balanced accuracy 0.832 | — |
+| `results/tables/noncns_specificity_summary.csv` | specificity **0.920** (95% CI 0.9015–0.9353) | 2026-08-12 13:00 |
+| Current deployed models | **never measured** | models retrained 2026-08-13 18:56 |
+
+The manuscript states a value that the current artefact already contradicts, and the artefact itself
+describes estimators that no longer exist. Regenerate with:
+
+```bash
+python src/brainsafe/evaluation/noncns_specificity.py
+```
+
+### 4.2 Prospective recall rests on a table that was not regenerated
+
+`scaffold_holdout_panel.py` **was** re-run on 2026-08-13 and rewrote the withheld sets under
+`models_rf/holdout` (51 records, reported mean recall 0.781). But the table the manuscript and Figure
+6B actually read, `results/tables/scaffold_holdout_results.csv`, is written by a *different* script,
+`scaffold_holdout_report.py`, which was not run. That file is dated 2026-08-12 15:05 and reports mean
+0.756, median 0.8215.
+
+The regeneration therefore refreshed the inputs and left the output stale, which is the failure mode
+hardest to notice: every command exited 0.
+
+```bash
+python src/brainsafe/evaluation/scaffold_holdout_report.py
+```
+
+### 4.3 SHAP was not computed
+
+The `shap` package is not installed in this environment. Installing it would change the environment
+recorded for this reproduction, so it was not installed and SHAP was **not** computed. Permutation
+importance was run instead and is reported as permutation importance, not as a SHAP substitute.
+
+```bash
+pip install shap    # then re-run r05 with a SHAP stage added
+```
+
+**Feature importance that was computed** (`validation/repro/feature_importance.csv`), as mean AUROC
+drop under permutation across the eight classifiers: TPSA 0.0035, cLogP 0.0034, HBD 0.0024, fraction
+sp3 0.0021, QED 0.0021, MW 0.0016. No single fingerprint bit exceeds 0.0045. The model is not resting
+on one or two features.
+
+---
+
+## 5. Scientifically weak validations, with proposed stronger designs
+
+Nothing below was implemented; the task was reproduction.
+
+**5.1 Fold-mean AUROC versus pooled out-of-fold AUROC.** The manuscript reports the mean of ten
+per-fold AUROCs. The pooled out-of-fold AUROC is a different estimator and differs materially for
+MAO_A on the scaffold split: **0.8990 fold-mean versus 0.9064 pooled**. Neither is wrong, but the
+fold-mean has no straightforward confidence interval, which is why the intervals in this reproduction
+are computed on the pooled predictions. *Proposal:* report both, or report the pooled estimate with
+its bootstrap interval as the primary figure.
+
+**5.2 The operating point is fixed at 0.5 for the core classifiers.** Sensitivity, specificity,
+balanced accuracy and MCC all depend on it, and 0.5 on a class-weighted forest vote is a convention
+rather than a decision. *Proposal:* select the threshold on the training folds only and report the
+held-out metrics at that threshold, as the binder panel already does.
+
+**5.3 The non-CNS specificity set is presumed-inactive, not measured-inactive**, and is drawn from
+the training library so every compound is inside the applicability domain. The manuscript states both
+caveats. *Proposal:* add a second specificity set drawn from outside the reference library, so the
+number bounds behaviour on distant chemistry as well.
+
+**5.4 Temporal validation is available but under-used.** 59 of 60 endpoint tables carry a `year`
+column (only BBB does not), yet `rf_temporal.csv` covers 12 endpoints. *Proposal:* extend the temporal
+split across the panel; it is the closest available analogue of prospective use.
+
+---
+
+## 6. Files produced
+
+| Path | Contents |
+|---|---|
+| `validation/REPRO_LEDGER.csv` | 106 rows: metric, split, manuscript value, reproduced value, abs diff, status, tier, script, output path, seed, commit |
+| `validation/DISCREPANCY_REPORT.md` | this file |
+| `validation/repro/environment.json`, `pip_freeze.txt` | commit, packages, hardware, seed sites |
+| `validation/repro/leakage_report.csv`, `leakage_summary.json` | per-endpoint overlap counts, both stages, both splits |
+| `validation/repro/recomputed_folds.csv`, `recomputed_summary.csv` | every fold and every metric from the independent re-run |
+| `validation/repro/recomputed_bootstrap.csv` | pooled estimates with 95% intervals |
+| `validation/repro/null_models.csv` | three nulls, two splits, eight endpoints |
+| `validation/repro/calibration_curve.csv`, `.png`, `calibration_summary.csv` | reliability curves and ECE |
+| `validation/repro/feature_importance.csv` | impurity and permutation importance |
+
+Each number regenerates with one command; the command is in the `script` column of the ledger.
+
+---
+
+## 7. Status
+
+| Status | Rows |
+|---|---|
+| MATCHES (tier A, independent re-run) | 11 |
+| MATCHES (tier C, artefact read, not re-run) | 13 |
+| NOT_STATED (reproduced, not claimed in the manuscript) | 78 |
+| **DIFFERS** | **1** — post-calibration ECE, protocol difference identified |
+| **CANNOT_REPRODUCE** | **3** — non-CNS specificity, deployed operating point, prospective recall |
+
+No leakage was found. No reported cross-validation number failed to reproduce. The three blockers are
+all the same underlying defect: analyses whose artefacts were not regenerated after the 2026-08-13
+retrain, one of them because a two-script sequence was only half re-run.

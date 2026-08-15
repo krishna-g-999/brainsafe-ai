@@ -1,0 +1,9 @@
+{
+  "commit": "5c7114d331cb2cc7d7ecbd87425526770c2798bb",
+  "seed": 42,
+  "n_bins": 10,
+  "permutation_repeats": 3,
+  "top_k_by_impurity": 25,
+  "shap": "NOT COMPUTED: package 'shap' is not installed in this environment; installing it would change the recorded environment. Reported as a blocker.",
+  "wall_clock_s": 189.9
+}

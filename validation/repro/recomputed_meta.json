@@ -1,0 +1,23 @@
+{
+  "commit": "5c7114d331cb2cc7d7ecbd87425526770c2798bb",
+  "seed": 42,
+  "n_splits": 10,
+  "threshold": 0.5,
+  "bootstrap_n": 2000,
+  "endpoints": [
+    "BBB",
+    "AChE",
+    "BChE",
+    "BACE1",
+    "GSK3B",
+    "MAO_A",
+    "MAO_B",
+    "hERG",
+    "D2",
+    "A2A",
+    "HT2A",
+    "SERT",
+    "antioxidant_DPPH"
+  ],
+  "wall_clock_s": 961.9
+}
