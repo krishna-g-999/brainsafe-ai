@@ -1,0 +1,18 @@
+{
+  "data/endpoints/*.csv": "sha256:4e305348ff20271d11a066531dbfefc60e71f2ea4e85fe48194a1713bd4093ad",
+  "manuscript/NAR_WebServer_BrainSafe_draft.md": "sha256:d0acdeb27ece50a5672ad1dab14089c31b178cacec0727f9a4aeb0e2d0ab280a",
+  "manuscript/figures/Figure6_validation.png": "sha256:1bd3de97f14a09c1752cd5412bb4e2e69182113a411ed46568c8df9730fecf05",
+  "manuscript/references_verified.json": "sha256:adcabc1bc4646b8715fccb242edce39c7a67e1221a1472bb487000667a09c496",
+  "manuscript/tables_generated.md": "sha256:2c8af13c362682624f09f804ae4053127f8ea6e817f6041909f9e5e186e5bb6e",
+  "models_rf/BBB.joblib": "sha256:27f38003f4a2512acd1ed50d1e523dd32cd08c31bcb167ed305d23e8439bbad9",
+  "models_rf/binder_modes.json": "sha256:660b8e7024d43cc226fb22a0b64ff4428cd42bd97b859930f1269f64ef37c9d2",
+  "models_rf/holdout": "count-size:101:153951628",
+  "results/tables/calibration.csv": "sha256:d83425bee5b6d1d79e5549da2987d918c6bc7910ae32f8979ad394b2f99708d4",
+  "results/tables/external_bbb_validation.csv": "sha256:388c955a35bf5f4b064bfd094e268394246c6699effac088ae5865041cb80521",
+  "results/tables/inversion_validation.csv": "sha256:f7fa17dc27dad3481f0e1cb64e3250c0abf89821e76e4c3a594e40387840e554",
+  "results/tables/noncns_specificity_summary.csv": "sha256:a5a155a10de5534b4d9c6c4cf8f3ffeb4bc9f4e71ffc10b4567dbbd087bcc701",
+  "results/tables/rf_cv_folds.csv": "sha256:570289c800b544da196883dba9f8a66443c4514de92ba13acde18d2417b0f99a",
+  "results/tables/rf_cv_summary.csv": "sha256:3be872ab8dd143677b507e462fe08d563502f5e05d91f393f2a5bc2fbcb9061c",
+  "results/tables/scaffold_holdout_results.csv": "sha256:6833bb067c8e1d8fe2a613670884ff60b97fc3b2f7b75c351725862de2ffe7b0",
+  "reviewer_package/model_outputs/TRAINING_MATRIX.csv": "count-size:1:42719789"
+}
