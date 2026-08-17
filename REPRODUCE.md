@@ -50,6 +50,7 @@ estimates.
 |---|---|
 | Full reproduction (13 steps) | 74.4 s |
 | Test suite, 33 tests | 84 s |
+| Test suite under coverage instrumentation | 980 s (16 min 20 s) |
 | Core cross-validation, 13 endpoints, independent re-run | 962 s |
 | Binder panel retrain, 49 endpoints | ~95 min |
 | Non-CNS specificity, 1,000 compounds through the full pipeline | ~28 min |
