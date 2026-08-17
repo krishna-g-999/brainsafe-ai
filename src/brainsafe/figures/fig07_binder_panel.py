@@ -80,7 +80,7 @@ def panel_a(ax, d) -> None:
                   for px, py in placed):
             dy -= 7.0
         ax.annotate(r.endpoint, (r.auroc, r.sens), textcoords="offset points", xytext=(5.5, dy),
-                    fontsize=5.2, color=style_of(r)[0])
+                    fontsize=6.5, color=style_of(r)[0])
         placed.append((r.auroc, r.sens + dy / 260))
     ax.set_xlabel("AUROC against measured non-binders")
     ax.set_ylabel("sensitivity at the triage threshold,\nheld-out actives by scaffold",
@@ -90,7 +90,7 @@ def panel_a(ax, d) -> None:
     ax.legend(loc="lower right", handletextpad=0.2, borderpad=0.3, labelspacing=0.35,
               scatterpoints=1)
     ax.text(0.02, 0.97, "marker area is the number of measured actives",
-            transform=ax.transAxes, fontsize=5.5, color=S.MUTED, va="top")
+            transform=ax.transAxes, fontsize=6.5, color=S.MUTED, va="top")
 
 
 def panel_b(ax, d) -> None:
@@ -108,25 +108,27 @@ def panel_b(ax, d) -> None:
         if r.deployed and not r.reliable:
             mark = "  (below gate)"
         labels.append(f"{r.endpoint}{mark}")
-    ax.set_yticks(ys); ax.set_yticklabels(labels, fontsize=4.9)
+    ax.set_yticks(ys); ax.set_yticklabels(labels, fontsize=6.5)
     for tick, r in zip(ax.get_yticklabels(), d.itertuples()):
         tick.set_color(style_of(r)[0] if (not r.deployed or not r.reliable) else S.MUTED)
     ax.set_xlabel("AUROC (coloured) and sensitivity (violet)")
     ax.set_xlim(-0.02, 1.02); ax.set_ylim(-0.8, len(d) - 0.2)
     S.strip(ax, x=True, y=False)
+    # Below the axis, not inside it: at the foot of the data area this sat on top of the four
+    # weakest endpoints, which are the rows a reader most needs to be able to read.
     n_dep = int(d.deployed.sum())
-    ax.text(0.02, 0.012, f"{len(d)} endpoints trained, {n_dep} deployed\n"
-                         f"mean AUROC {d.auroc.mean():.3f}, mean sensitivity {d.sens.mean():.3f}\n"
-                         f"median background false-positive rate {d.bg_fpr.median():.4f}",
-            transform=ax.transAxes, fontsize=5.4, color=S.INK, va="bottom", linespacing=1.8)
+    ax.text(0.0, -0.075, f"{len(d)} endpoints trained, {n_dep} deployed.   "
+                         f"Mean AUROC {d.auroc.mean():.3f}, mean sensitivity {d.sens.mean():.3f}.   "
+                         f"Median background false-positive rate {d.bg_fpr.median():.4f}.",
+            transform=ax.transAxes, fontsize=6.5, color=S.INK, va="top")
 
 
 def main() -> None:
     S.use()
     d = table()
-    fig = plt.figure(figsize=(S.DOUBLE, 5.6))
+    fig = plt.figure(figsize=(S.DOUBLE, 6.83))
     gs = fig.add_gridspec(1, 2, width_ratios=[1.16, 1.0], wspace=0.30,
-                          left=0.085, right=0.985, top=0.905, bottom=0.085)
+                          left=0.085, right=0.985, top=0.905, bottom=0.115)
     a = fig.add_subplot(gs[0]); b = fig.add_subplot(gs[1])
     S.panel(a, "A", "what each endpoint discriminates, and what it recovers", dx=-0.16, dy=1.045,
             gap=0.038)

@@ -66,7 +66,7 @@ def panel_a(ax, sizes) -> None:
     ax.text(0.5, 0.868, "assigned by blake2b(salt + canonical SMILES) mod 100, so a compound's pool "
                         "is a property of the\nstructure: it never depends on run order, and "
                         "re-running the split cannot move one",
-            ha="center", va="center", fontsize=5.7, color=S.MUTED, linespacing=1.7)
+            ha="center", va="center", fontsize=6.5, color=S.MUTED, linespacing=1.7)
 
     pools = [
         ("DECOY POOL", "decoy", S.BINDER, 0.02,
@@ -82,32 +82,37 @@ def panel_a(ax, sizes) -> None:
                                     boxstyle="round,pad=0,rounding_size=0.02",
                                     facecolor=col, alpha=0.10, edgecolor=col, lw=0.8))
         ax.add_patch(Rectangle((x, 0.245), w, 0.013, facecolor=col, edgecolor="none"))
-        ax.text(x + w / 2, 0.655, name, ha="center", va="center", fontsize=6.4, color=col,
+        ax.text(x + w / 2, 0.655, name, ha="center", va="center", fontsize=6.5, color=col,
                 fontweight="bold")
         ax.text(x + w / 2, 0.565, f"{sizes[key]:,}", ha="center", va="center", fontsize=13,
                 color=col, fontweight="bold")
         ax.text(x + w / 2, 0.495, f"{SHARES[key]} per cent of the library", ha="center",
-                va="center", fontsize=5.6, color=S.MUTED)
-        ax.text(x + w / 2, 0.430, sub, ha="center", va="top", fontsize=5.6, color=S.MUTED,
+                va="center", fontsize=6.5, color=S.MUTED)
+        ax.text(x + w / 2, 0.430, sub, ha="center", va="top", fontsize=6.5, color=S.MUTED,
                 linespacing=1.8)
         ax.add_patch(FancyArrowPatch((0.5, 0.810), (x + w / 2, 0.716), arrowstyle="-|>",
                                      mutation_scale=7, color=S.FAINT, lw=0.9, shrinkA=0, shrinkB=0))
 
     ax.text(0.5, 0.170, "no compound appears in more than one pool, and the overlap was measured "
                         "rather than assumed",
-            ha="center", va="center", fontsize=5.9, color=S.INK, fontweight="bold")
+            ha="center", va="center", fontsize=6.5, color=S.INK, fontweight="bold")
     ax.text(0.5, 0.108, "A threshold chosen on a sample and scored on that same sample returns the "
                         "quantile it was given.\nSeparating the two is what allows the measurement "
                         "to disagree with the target.",
-            ha="center", va="top", fontsize=5.7, color=S.MUTED, linespacing=1.8)
+            ha="center", va="top", fontsize=6.5, color=S.MUTED, linespacing=1.8)
 
 
 def panel_b(ax, bm) -> None:
     """In-sample against held-out false-positive rate, per endpoint."""
-    xs, ys, names = [], [], []
+    xs, ys, names, absent = [], [], [], []
     for ep, v in bm.items():
         a, b = v.get("background_fpr_in_sample"), v.get("background_fpr_held_out")
         if a is None or b is None:
+            # No in-sample rate exists for these, and the reason is principled rather than a gap:
+            # they are the measured-label endpoints, trained without decoys, so there is no
+            # decoy-drawn sample for a threshold to have been set on. Named rather than dropped
+            # silently, because a panel of 44 where the text says 49 invites the wrong inference.
+            absent.append(ep)
             continue
         xs.append(a); ys.append(b); names.append(ep)
     xs, ys = np.asarray(xs, float), np.asarray(ys, float)
@@ -125,7 +130,7 @@ def panel_b(ax, bm) -> None:
     # thousandths of each other do not print on top of one another.
     for rank, i in enumerate(sorted(np.flatnonzero(over), key=lambda k: -ys[k])):
         ax.annotate(names[i], (xs[i], ys[i]), textcoords="offset points",
-                    xytext=(5.0, 3.0 - rank * 5.6), fontsize=5.3, color=S.WARN)
+                    xytext=(5.0, 3.0 - rank * 5.6), fontsize=6.5, color=S.WARN)
 
     ax.set_xlabel("false-positive rate on the pool the threshold was set on")
     ax.set_ylabel("measured on the held-out\nevaluation pool", linespacing=1.6)
@@ -134,10 +139,13 @@ def panel_b(ax, bm) -> None:
     ax.text(0.03, 0.955, f"{int(over.sum())} of {len(xs)} endpoints exceed the "
                          f"{BACKGROUND_TARGET:.2f} target\nwhen measured on a pool they were "
                          "not tuned on",
-            transform=ax.transAxes, fontsize=5.7, color=S.WARN, va="top", linespacing=1.7)
-    ax.text(0.97, 0.06, "points above the diagonal are\nendpoints the in-sample rate flattered",
-            transform=ax.transAxes, fontsize=5.5, color=S.MUTED, ha="right", va="bottom",
-            linespacing=1.7)
+            transform=ax.transAxes, fontsize=6.5, color=S.WARN, va="top", linespacing=1.7)
+    note = "points above the diagonal are\nendpoints the in-sample rate flattered"
+    if absent:
+        note += (f"\n\n{len(absent)} measured-label endpoints are absent:\n"
+                 "trained without decoys, so no in-sample\nrate exists to compare against")
+    ax.text(0.97, 0.06, note, transform=ax.transAxes, fontsize=6.5, color=S.MUTED, ha="right",
+            va="bottom", linespacing=1.7)
 
 
 def panel_c(ax, bm) -> None:
@@ -163,7 +171,7 @@ def panel_c(ax, bm) -> None:
     ax.legend(loc="upper left", handletextpad=0.3, borderpad=0.2)
     ax.text(0.97, 0.06, f"median {np.median(tri):.2f} at triage,\n"
                         f"{np.median(scr):.2f} at screening",
-            transform=ax.transAxes, fontsize=5.6, color=S.MUTED, ha="right", va="bottom",
+            transform=ax.transAxes, fontsize=6.5, color=S.MUTED, ha="right", va="bottom",
             linespacing=1.7)
 
 
@@ -172,9 +180,9 @@ def main() -> None:
     bm = json.loads(BM.read_text(encoding="utf-8"))
     sizes = pool_sizes()
 
-    fig = plt.figure(figsize=(S.DOUBLE, 5.0))
-    gs = fig.add_gridspec(2, 2, height_ratios=[1.02, 1.0], width_ratios=[1.0, 1.0],
-                          hspace=0.42, wspace=0.30,
+    fig = plt.figure(figsize=(S.DOUBLE, 6.10))
+    gs = fig.add_gridspec(2, 2, height_ratios=[0.86, 1.0], width_ratios=[1.0, 1.0],
+                          hspace=0.30, wspace=0.30,
                           left=0.075, right=0.985, top=0.925, bottom=0.085)
     a = fig.add_subplot(gs[0, :]); b = fig.add_subplot(gs[1, 0]); c = fig.add_subplot(gs[1, 1])
     S.panel(a, "A", "one background library, three pools that never overlap", dx=-0.012, dy=1.02,

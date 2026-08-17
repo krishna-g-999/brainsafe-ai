@@ -70,27 +70,27 @@ def main() -> None:
     bits, desc = vec[:MORGAN_BITS], vec[MORGAN_BITS:]
     on = np.flatnonzero(bits)
 
-    fig = plt.figure(figsize=(S.DOUBLE, 4.05))
+    fig = plt.figure(figsize=(S.DOUBLE, 4.94))
     gs = fig.add_gridspec(1, 3, width_ratios=[1.06, 1.30, 0.92], wspace=0.20,
                           left=0.035, right=0.985, top=0.855, bottom=0.075)
 
     # ---- A: the molecule -------------------------------------------------------------------
     a = fig.add_subplot(gs[0]); a.axis("off")
-    S.panel(a, "A", f"the molecule: {NAME}", dx=-0.02, dy=1.035, gap=0.075)
+    S.panel(a, "A", f"the molecule: {NAME}", dx=-0.02, dy=1.075, gap=0.075)
     img = structure_image()
     if img is not None:
         a.imshow(img)
-    a.text(0.5, -0.045, SMILES, transform=a.transAxes, ha="center", fontsize=5.2, color=S.MUTED,
+    a.text(0.5, -0.045, SMILES, transform=a.transAxes, ha="center", fontsize=6.5, color=S.MUTED,
            family="monospace", wrap=True)
     a.text(0.5, -0.135, "standardised first: largest organic fragment, salts stripped,\n"
                         "sanitised, then keyed by the InChIKey of that parent",
-           transform=a.transAxes, ha="center", va="top", fontsize=5.6, color=S.MUTED,
+           transform=a.transAxes, ha="center", va="top", fontsize=6.5, color=S.MUTED,
            linespacing=1.6)
 
     # ---- B: the fingerprint, all 1,024 bits ------------------------------------------------
     b = fig.add_subplot(gs[1]); b.axis("off")
     S.panel(b, "B", f"the fingerprint: {MORGAN_BITS} bits, {int(bits.sum())} set",
-            dx=-0.03, dy=1.035, gap=0.052)
+            dx=-0.03, dy=1.075, gap=0.052)
     side = int(np.sqrt(MORGAN_BITS))                       # 32 x 32
     grid = bits.reshape(side, side)
     b.imshow(grid, cmap=plt.matplotlib.colors.ListedColormap(["#EDF1F4", S.EXPOSURE]),
@@ -98,8 +98,8 @@ def main() -> None:
     for k in range(0, side + 1, 8):
         b.axhline(k, color="white", lw=0.7); b.axvline(k, color="white", lw=0.7)
     b.set_xlim(0, side); b.set_ylim(side, 0)
-    b.text(0.0, 1.008, "each cell is one bit, read left to right, top to bottom",
-           transform=b.transAxes, fontsize=5.6, color=S.MUTED, va="bottom")
+    b.text(0.0, 1.002, "each cell is one bit, read left to right, top to bottom",
+           transform=b.transAxes, fontsize=6.5, color=S.MUTED, va="bottom")
     b.text(0.0, -0.045, f"Morgan / ECFP-4, radius {MORGAN_RADIUS}, folded to {MORGAN_BITS} "
                         "bits, chirality NOT included.\n"
                         "Folding means a set bit reports that some environment hashing\n"
@@ -107,26 +107,26 @@ def main() -> None:
                         "share a bit. Excluding chirality means two enantiomers produce\n"
                         "identical rows, which is why identical rows are collapsed before\n"
                         "any split rather than left to fall on both sides of one.",
-           transform=b.transAxes, fontsize=5.6, color=S.MUTED, va="top", linespacing=1.7)
+           transform=b.transAxes, fontsize=6.5, color=S.MUTED, va="top", linespacing=1.7)
 
     # ---- C: the descriptors, with the values this molecule has -----------------------------
     c = fig.add_subplot(gs[2]); c.axis("off")
-    S.panel(c, "C", f"the descriptors: {len(_DESCRIPTORS)} values", dx=-0.06, dy=1.035,
+    S.panel(c, "C", f"the descriptors: {len(_DESCRIPTORS)} values", dx=-0.06, dy=1.075,
             gap=0.085)
     names = list(_DESCRIPTORS)          # dict, ordered as the featuriser concatenates them
     for i, (nm, val) in enumerate(zip(names, desc)):
         y = 0.945 - i * 0.0645
         c.add_patch(Rectangle((0.0, y - 0.020), 1.0, 0.052, transform=c.transAxes,
                               facecolor="#F4F7F9" if i % 2 == 0 else "white", edgecolor="none"))
-        c.text(0.03, y, DESC_LABEL.get(nm, nm), transform=c.transAxes, fontsize=5.9,
+        c.text(0.03, y, DESC_LABEL.get(nm, nm), transform=c.transAxes, fontsize=6.5,
                color=S.MUTED, va="center")
         c.text(0.97, y, f"{val:,.2f}" if abs(val) < 1e4 else f"{val:,.0f}",
-               transform=c.transAxes, fontsize=5.9, color=S.TARGET, va="center", ha="right",
+               transform=c.transAxes, fontsize=6.5, color=S.TARGET, va="center", ha="right",
                fontweight="bold")
     c.text(0.0, 0.108, "Unscaled. A random forest splits on thresholds\nand is unchanged by any "
                        "monotone rescaling, so\nno scaler is fitted and none can leak across a\n"
                        "split.",
-           transform=c.transAxes, fontsize=5.6, color=S.MUTED, va="top", linespacing=1.7)
+           transform=c.transAxes, fontsize=6.5, color=S.MUTED, va="top", linespacing=1.7)
     c.add_patch(FancyBboxPatch((0.0, -0.115), 1.0, 0.078, transform=c.transAxes,
                                boxstyle="round,pad=0,rounding_size=0.02", clip_on=False,
                                facecolor="#F4F7F9", edgecolor=S.HAIR, lw=0.6))
