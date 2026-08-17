@@ -1,0 +1,9 @@
+{
+  "commit": "5c7114d331cb2cc7d7ecbd87425526770c2798bb",
+  "seed": 42,
+  "sample": 250,
+  "explainer": "shap.TreeExplainer (exact for trees)",
+  "shap_version": "0.52.0",
+  "environment_note": "shap installed after the first reproduction pass; the install was additive only and did not move numpy, scikit-learn, pandas or scipy, so no previously reproduced number is affected",
+  "wall_clock_s": 2458.4
+}

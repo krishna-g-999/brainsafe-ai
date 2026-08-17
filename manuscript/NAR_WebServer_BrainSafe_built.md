@@ -595,17 +595,18 @@ Candidates were selected because the clinical-indication test identified epileps
 
 Cross-validated performance answers how well a model interpolates within the chemistry it has seen.
 The question that matters for a triage tool is how it behaves on a chemical series it has never
-seen. We therefore withheld 20% of Bemis-Murcko scaffolds for each target, retrained all 39
+seen. We therefore withheld 20% of Bemis-Murcko scaffolds for each target, retrained all 40
 trainable binder models on the remaining scaffolds, and recalibrated each decision threshold using
 only held-out negatives and an independent background sample, so no held-out compound influenced
-either the model or the threshold that scores it. The evaluation set comprises **16,874 held-out
-compounds across 6,435 withheld scaffolds**.
+either the model or the threshold that scores it. The evaluation set comprises **17,172 held-out
+compounds across 6,392 withheld scaffolds**.
 
-Pooled recall is **0.790 (95% CI 0.783 to 0.796)**; the median per-target recall is 0.807 and 19 of
-36 targets reach 0.80 or better (Figure 8, Table 6). Recall varies substantially and informatively
-across the panel: mTOR (0.977), histamine H3 (0.926), PDE4B (0.923) and the dopamine transporter
-(0.903) generalise well to unseen scaffolds, whereas five targets fall below 0.50 (SIRT1, mGluR5,
-melatonin MT1, KEAP1 and AMPA GluA2), all of them endpoints with small measured-active sets.
+Pooled recall is **0.811 (95% CI 0.805 to 0.817)**, that is 13,858 of 17,092 withheld actives
+recovered once the one target with a collapsed threshold is excluded; the median per-target recall is
+0.814, the mean is 0.778, and 22 of 39 targets reach 0.80 or better (Figure 6B, Table 6). Recall
+varies substantially and informatively across the panel: mTOR (0.972), histamine H3 (0.964), orexin
+OX1 (0.962) and HDAC6 (0.960) generalise well to unseen scaffolds, whereas three targets fall below
+0.50 (GABA-A, SIRT1 and P2X7), all of them endpoints with small measured-active sets.
 
 Three targets, orexin OX2, LRRK2 and NLRP3, produced thresholds that collapsed to the permitted
 floor, meaning the model could not separate its actives from background chemistry at any cut. Their
@@ -618,19 +619,22 @@ being allowed to flatter the headline figure.
 A tool that fires indiscriminately can achieve high recall while being useless, so specificity was
 measured on a scale sufficient to bound it. We sampled 1000 compounds from the measured library that
 carry no recorded activity at any modelled target, and scored them through the deployed pipeline.
-**875 of 1000 returned no actionable disease signal, a specificity of 0.875 (95% CI 0.853 to 0.894)**
-and a false-positive rate of 12.5% (Figure 9). An independently drawn replicate sample gave 12.3%,
-so the estimate is stable. False positives concentrate in the neurodegenerative classes, with median
-scores of 0.35 to 0.40, only just above the 0.30 actionable threshold, and 80 of the 125 fired on a
-single condition rather than producing a diffuse profile.
+**948 of 1000 returned no actionable disease signal, a specificity of 0.948 (95% CI 0.932 to 0.960)**
+and a false-positive rate of 5.2% (Figure 6C). The 52 false positives are spread thinly rather than
+concentrated: the largest single group is neuroprotection and oxidative stress at 12 compounds,
+followed by Parkinson's disease and depression or anxiety at 11 each. Their median top score is
+0.426, close to the 0.30 actionable threshold rather than confidently wrong, and 36 of the 52 fired
+on one condition only rather than producing a diffuse profile.
 
 Two caveats bound the interpretation. These compounds are presumed inactive because no activity is
-recorded, not proven inactive by measurement, so 0.875 is a lower bound on the true specificity.
-Second, all sampled compounds fall inside the applicability domain because they are drawn from the
-training library, so this test does not probe specificity on distant chemistry.
+recorded, not proven inactive by measurement, so 0.948 is a lower bound on the true specificity.
+Second, all 1000 fall inside the applicability domain, every one at a maximum Tanimoto of 0.30 or
+above to the reference library, because they are drawn from that library; this test therefore does
+not probe specificity on distant chemistry, and the applicability-domain limitation reported below
+is the relevant caveat there.
 
-Taken together the two tests place the deployed operating point at a sensitivity of 0.790 and a
-specificity of 0.875, a balanced accuracy of 0.832 (Figure 10).
+Taken together the two tests place the deployed operating point at a pooled prospective sensitivity
+of 0.811 (95% CI 0.805 to 0.817) and a specificity of 0.948, a balanced accuracy of 0.880.
 
 ### Validation on reference compounds
 
@@ -783,9 +787,8 @@ occurs for about 12% of random compounds at each endpoint, whereas the 43 binder
 calibrated threshold to be crossed and fire for about 0.6%. Pooling the two counts an ordinary
 above-average probability as an event. The quantity that reaches the user is whether any condition
 crosses the reporting threshold, which occurs for 11.5% of 600 random structures, against 55.8% of
-approved drugs. That rate sits close to the 12.5% measured on library compounds and above the 5.1%
-measured on chemistry most distant from training, as expected for a sample drawn without regard to
-similarity. Correlation among the endpoints slightly reduces rather than inflates the aggregate: at
+approved drugs. That rate is above the 5.2% measured on the 1000 presumed-inactive library compounds,
+as expected for a sample drawn without regard to similarity. Correlation among the endpoints slightly reduces rather than inflates the aggregate: at
 least one binder endpoint fires for 22.2% of random structures, against 23.9% for a hypothetical
 panel with the same per-endpoint rates firing independently.
 

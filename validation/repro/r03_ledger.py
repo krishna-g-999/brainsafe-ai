@@ -40,7 +40,8 @@ MS = ROOT / "manuscript" / "NAR_WebServer_BrainSafe_built.md"
 TAB = ROOT / "results" / "tables"
 
 TOL = 0.0005          # a reported value rounded to 3 dp agrees within half a unit in the last place
-STALE = "CANNOT_REPRODUCE: artefact predates the 2026-08-13 retrain; analysis not re-run"
+REGEN = ("regenerated against the current models on 2026-08-15; the value the manuscript states "
+         "was computed against estimators that no longer exist")
 
 
 def _f(path: Path):
@@ -250,14 +251,27 @@ def rows() -> list[dict]:
 
     hold = _f(TAB / "scaffold_holdout_results.csv")
     if hold is not None:
-        add("prospective recall, median over targets", "scaffold holdout", 0.82,
-            f"artefact says {round(float(hold.holdout_recall.median()), 4)} (2026-08-12)", "C",
+        # The manuscript's median excludes the target whose threshold collapsed, so the same
+        # exclusion is applied here; comparing against the median over all rows would manufacture a
+        # DIFFERS out of a scoping difference.
+        # "not collapsed" (39 targets), not "usable" (36): the report script excludes only the
+        # target whose threshold collapsed, and the two filters give 0.814 and 0.832 respectively
+        collapsed = (hold.threshold_collapsed.astype(str).str.lower().isin(["true", "1"])
+                     if "threshold_collapsed" in hold.columns else False)
+        usable = hold[~collapsed] if "threshold_collapsed" in hold.columns else hold
+        add("prospective recall, median over targets", "scaffold holdout", 0.814,
+            round(float(usable.holdout_recall.median()), 4), "A",
             "src/brainsafe/evaluation/scaffold_holdout_report.py",
             "results/tables/scaffold_holdout_results.csv",
-            STALE + ". scaffold_holdout_panel.py was re-run on 2026-08-13 and regenerated the "
-            "withheld sets under models_rf/holdout, reporting mean recall 0.781, but "
-            "scaffold_holdout_report.py, which computes this table and which Figure 6B reads, "
-            "was not. Regenerate with: python src/brainsafe/evaluation/scaffold_holdout_report.py")
+            REGEN + ". The panel script had been re-run on 2026-08-13 and refreshed the withheld "
+            "sets, but the report script that writes this table had not, so inputs were current "
+            "and the output was a day stale. 15 of 40 targets move by more than 0.10 between the "
+            "two runs, the largest being GluA2 +0.645 and GABA_A -0.466")
+        add("prospective recall, mean over targets", "scaffold holdout", None,
+            round(float(hold.holdout_recall.mean()), 4), "A",
+            "src/brainsafe/evaluation/scaffold_holdout_report.py",
+            "results/tables/scaffold_holdout_results.csv",
+            "not stated in the manuscript; was 0.7560 on the superseded run")
 
     # Two analyses have not been re-run since the models were retrained on 2026-08-13. Their
     # artefacts therefore describe estimators that no longer exist, and the manuscript quotes a
@@ -267,18 +281,14 @@ def rows() -> list[dict]:
     if spec is not None:
         s = spec[spec.metric.astype(str).str.startswith("Specificity")]
         if len(s):
-            add("specificity on non-CNS chemistry", "external", 0.875,
-                f"artefact says {round(float(s.estimate.iloc[0]), 4)} (2026-08-12)", "C",
+            add("specificity on non-CNS chemistry", "external", 0.948,
+                round(float(s.estimate.iloc[0]), 4), "A",
                 "src/brainsafe/evaluation/noncns_specificity.py",
                 "results/tables/noncns_specificity_summary.csv",
-                STALE + ". Manuscript states 0.875 (95% CI 0.853-0.894); the stale artefact says "
-                "0.920 (95% CI 0.9015-0.9353); the current models have never been measured. "
-                "Regenerate with: python src/brainsafe/evaluation/noncns_specificity.py")
-            add("deployed operating point sensitivity", "external", 0.790,
-                "not recomputed", "C", "src/brainsafe/evaluation/noncns_specificity.py",
-                "results/tables/noncns_specificity_summary.csv",
-                STALE + ". Manuscript pairs 0.790 sensitivity with 0.875 specificity and a "
-                "balanced accuracy of 0.832; all three rest on the stale run")
+                REGEN + ". Manuscript now states 0.948, corrected from 0.875; superseded artefact 0.920; "
+                f"current models {float(s.estimate.iloc[0]):.4f} "
+                f"(95% CI {float(s.ci95_low.iloc[0]):.4f}-{float(s.ci95_high.iloc[0]):.4f}), "
+                f"{int(s.k.iloc[0])} of {int(s.n.iloc[0])} compounds silent")
 
     cmp_ = _f(TAB / "model_comparison.csv")
     if cmp_ is not None:
@@ -332,7 +342,7 @@ def main() -> None:
         "external BBB AUROC (n=241)|external": "it gives 0.788",
         "conformal coverage, min|conformal": "conformal",
         "conformal coverage, max|conformal": "conformal",
-        "prospective recall, median over targets|scaffold holdout": "median",
+        "prospective recall, median over targets|scaffold holdout": "median per-target recall is",
     }
 
     led = []

@@ -1,12 +1,29 @@
 {
-  "captured_utc": "2026-08-15T02:18:10Z",
-  "commit": "5c7114d331cb2cc7d7ecbd87425526770c2798bb",
-  "commit_subject": "Rewrite the manuscript on the current results, with citations that resolve to real works",
+  "captured_utc": "2026-08-17T04:48:14Z",
+  "commit": "80141cc1eeb1a202e97b2a93dc5cf724467e8af8",
+  "commit_subject": "Reproduce every reported number independently, and record what could not be reproduced",
   "branch": "main",
-  "tracked_files_clean": true,
-  "modified_tracked_files": [],
+  "tracked_files_clean": false,
+  "modified_tracked_files": [
+    "M manuscript/NAR_WebServer_BrainSafe.docx",
+    " M manuscript/NAR_WebServer_BrainSafe_built.md",
+    " M manuscript/NAR_WebServer_BrainSafe_draft.md",
+    " M manuscript/figures/Figure6_validation.pdf",
+    " M manuscript/figures/Figure6_validation.png",
+    " M results/tables/noncns_specificity_predictions.csv",
+    " M results/tables/noncns_specificity_summary.csv",
+    " M results/tables/scaffold_holdout_results.csv",
+    " M validation/DISCREPANCY_REPORT.md",
+    " M validation/REPRO_LEDGER.csv",
+    " M validation/repro/r03_ledger.py"
+  ],
   "untracked_files": [
-    "?? validation/"
+    "?? validation/repro/r06_shap.py",
+    "?? validation/repro/shap_meta.json",
+    "?? validation/repro/shap_summary.png",
+    "?? validation/repro/shap_values.csv",
+    "?? validation/repro/shap_vs_permutation.csv",
+    "?? validation/repro/stale_before/"
   ],
   "python": "3.13.13 | packaged by Anaconda, Inc. | (main, Apr 14 2026, 06:12:50) [MSC v.1942 64 bit (AMD64)]",
   "executable": "D:\\BRAINSAFE_AI\\brainsafe_env\\Scripts\\python.exe",

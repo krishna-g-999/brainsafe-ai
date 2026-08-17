@@ -1,8 +1,14 @@
 # Reproduction and discrepancy report
 
 Independent reproduction of the reported performance numbers for BrainSafe AI, run against commit
-`5c7114d331cb2cc7d7ecbd87425526770c2798bb` with a clean tracked tree. Nothing in the manuscript was
-edited in this session and no scientific behaviour was changed.
+`5c7114d331cb2cc7d7ecbd87425526770c2798bb` with a clean tracked tree.
+
+**Two passes.** The reproduction pass changed nothing: it regenerated, compared, and recorded. A
+second pass then cleared the blockers it had found, which required re-running two analyses whose
+artefacts predated the models, and correcting the manuscript passages that quoted them. No model was
+retrained, no threshold was moved, and no scientific behaviour was changed; what changed is that the
+record now describes the estimators that are actually deployed. Every before and after is in section
+4, and the superseded artefacts are kept at `validation/repro/stale_before/`.
 
 | | |
 |---|---|
@@ -134,58 +140,106 @@ Reliability curves for all eight classifiers, with bin counts shown, are in
 
 ---
 
-## 4. BLOCKERS — three numbers cannot be reproduced
+## 4. Blockers — all three cleared, and what changed
 
-These are blockers, not footnotes.
+The three blockers from the first pass were resolved by regenerating the analyses whose artefacts
+predated the 2026-08-13 retrain. The stale artefacts were copied to `validation/repro/stale_before/`
+first, so the before and after are evidence rather than a silent overwrite.
 
-### 4.1 Non-CNS specificity rests on an artefact older than the models, and the manuscript is older still
+### 4.1 Non-CNS specificity — regenerated, and the manuscript was understating it
 
-Three generations of this number exist and no two agree:
-
-| Source | Value | Date |
-|---|---|---|
-| Manuscript, Results | specificity **0.875** (95% CI 0.853–0.894), sensitivity 0.790, balanced accuracy 0.832 | — |
-| `results/tables/noncns_specificity_summary.csv` | specificity **0.920** (95% CI 0.9015–0.9353) | 2026-08-12 13:00 |
-| Current deployed models | **never measured** | models retrained 2026-08-13 18:56 |
-
-The manuscript states a value that the current artefact already contradicts, and the artefact itself
-describes estimators that no longer exist. Regenerate with:
+| Source | Specificity | 95% CI | Date |
+|---|---|---|---|
+| Manuscript, before this pass | 0.875 | 0.853–0.894 | pre-audit |
+| Stale artefact | 0.920 | 0.9015–0.9353 | 2026-08-12 |
+| **Regenerated against the deployed models** | **0.948** | **0.9324–0.9601** | now |
 
 ```bash
 python src/brainsafe/evaluation/noncns_specificity.py
 ```
 
-### 4.2 Prospective recall rests on a table that was not regenerated
+948 of 1000 presumed-inactive compounds returned no actionable disease signal; the false-positive
+rate is 5.2%, down from the 12.5% the manuscript reported. The 52 false positives are spread thinly
+rather than concentrated: neuroprotection 12, Parkinson's 11, depression or anxiety 11, and 36 of the
+52 fire on one condition only. Their median top score is 0.426, close to the 0.30 reporting threshold
+rather than confidently wrong.
 
-`scaffold_holdout_panel.py` **was** re-run on 2026-08-13 and rewrote the withheld sets under
-`models_rf/holdout` (51 records, reported mean recall 0.781). But the table the manuscript and Figure
-6B actually read, `results/tables/scaffold_holdout_results.csv`, is written by a *different* script,
-`scaffold_holdout_report.py`, which was not run. That file is dated 2026-08-12 15:05 and reports mean
-0.756, median 0.8215.
+The manuscript was **understating** the system by 0.073 specificity. It has been corrected, and the
+caveat strengthened: all 1000 compounds sit at a maximum Tanimoto of 0.30 or above to the reference
+library, so every one is inside the applicability domain and this test says nothing about distant
+chemistry.
 
-The regeneration therefore refreshed the inputs and left the output stale, which is the failure mode
-hardest to notice: every command exited 0.
+### 4.2 Prospective recall — regenerated; the headline holds, the per-target picture moved
 
 ```bash
 python src/brainsafe/evaluation/scaffold_holdout_report.py
 ```
 
-### 4.3 SHAP was not computed
+| | Stale (2026-08-12) | Regenerated |
+|---|---|---|
+| Pooled recall | 0.790 (CI 0.783–0.796) | **0.811 (CI 0.805–0.817)** |
+| Mean per target | 0.756 | **0.778** |
+| Median per target | 0.8215 | **0.814** (0.8195 over all 40 rows) |
+| Targets ≥ 0.80 | 19 of 36 | **22 of 39** |
+| Targets < 0.50 | 5 (SIRT1, mGluR5, MT1, KEAP1, GluA2) | **3 (GABA-A, SIRT1, P2X7)** |
 
-The `shap` package is not installed in this environment. Installing it would change the environment
-recorded for this reproduction, so it was not installed and SHAP was **not** computed. Permutation
-importance was run instead and is reported as permutation importance, not as a SHAP substitute.
+**15 of 40 targets moved by more than 0.10**, several dramatically: GluA2 +0.645, GABA-A −0.466,
+mGluR5 +0.377, SIRT1 −0.255. The panel median barely moves, which is exactly why the stale table was
+dangerous: the aggregate looked stable while half the per-target claims were wrong. Figure 6B has
+been regenerated and the manuscript paragraph rewritten.
+
+### 4.3 SHAP — computed
+
+`shap` 0.52.0 was installed after a dry run confirmed the install was **purely additive**: it added
+cloudpickle, llvmlite, numba, shap and slicer and moved none of numpy 2.4.6, scikit-learn 1.8.0,
+pandas 3.0.3 or scipy 1.17.1. No previously reproduced number is affected.
 
 ```bash
-pip install shap    # then re-run r05 with a SHAP stage added
+python validation/repro/r06_shap.py --sample 250
 ```
 
-**Feature importance that was computed** (`validation/repro/feature_importance.csv`), as mean AUROC
-drop under permutation across the eight classifiers: TPSA 0.0035, cLogP 0.0034, HBD 0.0024, fraction
-sp3 0.0021, QED 0.0021, MW 0.0016. No single fingerprint bit exceeds 0.0045. The model is not resting
-on one or two features.
+TreeExplainer is exact for a random forest. One correction was made during this work: the first
+version summarised direction as the mean signed SHAP, which is wrong, because contributions from
+high-value and low-value molecules cancel and a strongly bidirectional feature averages to nearly
+zero. Direction is now the Spearman correlation between a feature's value and its SHAP value.
 
----
+The result is a genuine external sanity check on the models, because it can be checked against known
+medicinal chemistry:
+
+| Endpoint | Direction of the leading descriptors |
+|---|---|
+| **BBB** | TPSA −0.93, MW −0.95, HBD −0.90, HBA −0.90, QED +0.93 |
+| **hERG** | cLogP +0.95, TPSA −0.92, HBD −0.91 |
+
+Higher polar surface area, higher molecular weight and more hydrogen-bond donors all push *away*
+from predicted brain penetration, and drug-likeness pushes towards it. Lipophilicity is the dominant
+positive driver of predicted hERG liability. Both are textbook, and neither was supplied to the
+model as a rule; they were recovered from measured data.
+
+SHAP and permutation importance agree only moderately (Spearman +0.73 MAO_B, +0.52 BBB, +0.42 hERG,
+−0.01 GSK3B). They answer different questions and neither is presented as the truth; both are
+reported per endpoint in `shap_vs_permutation.csv`.
+
+### 4.4 NEW FINDING — the model manifest describes bytes that no longer exist
+
+Surfaced by the specificity run, then verified independently by recomputing every SHA-256:
+
+```
+manifest entries 246: verified 75, checksum mismatch 171, missing 0
+```
+
+`models_manifest.json` was written before the 2026-08-13 retrain, so **171 of 246 entries no longer
+match the files they name**. A fresh clone running `model_fetch.py` would reject them. It fails
+honestly rather than dangerously, because `doi` and `urls` are deliberately empty, so it cannot
+download the superseded models over the current ones. Regenerating the manifest is part of the
+deposit step, which is blocked on Zenodo credentials:
+
+```bash
+python src/brainsafe/models/package_models.py 1.1
+```
+
+This is recorded as a **deployment blocker**, not a manuscript blocker: no reported number depends
+on it.
 
 ## 5. Scientifically weak validations, with proposed stronger designs
 
@@ -236,12 +290,24 @@ Each number regenerates with one command; the command is in the `script` column 
 
 | Status | Rows |
 |---|---|
-| MATCHES (tier A, independent re-run) | 11 |
+| MATCHES (tier A, independent re-run) | 12 |
 | MATCHES (tier C, artefact read, not re-run) | 13 |
-| NOT_STATED (reproduced, not claimed in the manuscript) | 78 |
-| **DIFFERS** | **1** — post-calibration ECE, protocol difference identified |
-| **CANNOT_REPRODUCE** | **3** — non-CNS specificity, deployed operating point, prospective recall |
+| NOT_STATED (reproduced, not claimed in the manuscript) | 79 |
+| **DIFFERS** | **2** |
+| CANNOT_REPRODUCE | **0** |
 
-No leakage was found. No reported cross-validation number failed to reproduce. The three blockers are
-all the same underlying defect: analyses whose artefacts were not regenerated after the 2026-08-13
-retrain, one of them because a two-script sequence was only half re-run.
+No leakage was found. No reported cross-validation number failed to reproduce. Every null model sits
+at chance. All three blockers from the first pass are cleared.
+
+The two remaining DIFFERS are both understood and neither is an overstatement by the manuscript:
+
+1. **Post-calibration ECE**, 0.0161 reported against 0.0077 here, a calibration-protocol difference
+   identified to the line. The reported figure is the more conservative one. The recommendation
+   stands that the manuscript state the protocol, since the value depends on it.
+2. **Non-CNS specificity**, 0.875 reported against 0.948 regenerated. The manuscript was
+   *understating* the system because it quoted a measurement of superseded models. The manuscript has
+   been corrected to 0.948 and the ledger will show MATCHES on the next run.
+
+One deployment blocker remains and is not a manuscript issue: `models_manifest.json` mismatches 171
+of its 246 entries, and regenerating it is part of the deposit, which is blocked on Zenodo
+credentials.
