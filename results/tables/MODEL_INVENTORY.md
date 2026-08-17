@@ -1,6 +1,6 @@
 # Model inventory, 2026-08-17
 
-Commit `e78764b`. One row per deployed estimator, taken from the estimators and their metadata on disk. Four receptors carry both a potency regression and a binder classifier, so the model count exceeds the endpoint count.
+Commit `7db07bd`. One row per deployed estimator, taken from the estimators and their metadata on disk. Four receptors carry both a potency regression and a binder classifier, so the model count exceeds the endpoint count.
 
 **72 estimators, 70 deployed.** Fitted between 2026-08-04 10:01 and 2026-08-13 22:14.
 

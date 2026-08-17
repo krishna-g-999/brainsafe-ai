@@ -89,3 +89,7 @@ models_rf_uncompressed/
 # legacy archive, build intermediates, run logs and the unused literature. Roughly 4 GB, all of it
 # either regenerable or already in git history, so the folder stays local and the manifest travels.
 _ARCHIVE_*/
+.pytest_cache/
+repro/coverage/
+.coverage
+coverage.xml

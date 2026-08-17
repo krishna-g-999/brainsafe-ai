@@ -1,0 +1,468 @@
+{
+  "generated": "2026-08-17",
+  "commit": "7db07bd",
+  "raw_sources": [
+    {
+      "source": "ChEMBL",
+      "lands_in": "data/_chembl_cache/",
+      "script": "src/brainsafe/data/fetch_endpoints.py",
+      "contents": "measured activities and censored bounds, cached as retrieved"
+    },
+    {
+      "source": "BindingDB",
+      "lands_in": "data/_bindingdb_cache/",
+      "script": "src/brainsafe/data/fetch_bindingdb.py",
+      "contents": "measured binding affinities"
+    },
+    {
+      "source": "B3DB",
+      "lands_in": "data/endpoints/BBB.csv",
+      "script": "src/brainsafe/data/fetch_endpoints.py",
+      "contents": "blood-brain barrier labels, plus FDA-curated approved drugs"
+    },
+    {
+      "source": "Therapeutics Data Commons / MoleculeNet",
+      "lands_in": "data/adme/",
+      "script": "src/brainsafe/adme/fetch_adme.py",
+      "contents": "measured ADME and exposure endpoints"
+    }
+  ],
+  "edges": [
+    {
+      "output": "models_rf/BBB.joblib",
+      "inputs": [
+        "data/endpoints/*.csv"
+      ],
+      "script": "python src/brainsafe/models/train_rf.py",
+      "layer": "2. models"
+    },
+    {
+      "output": "results/tables/rf_cv_summary.csv",
+      "inputs": [
+        "models_rf/BBB.joblib"
+      ],
+      "script": "python src/brainsafe/models/train_rf.py",
+      "layer": "4. statistics"
+    },
+    {
+      "output": "results/tables/rf_cv_folds.csv",
+      "inputs": [
+        "models_rf/BBB.joblib"
+      ],
+      "script": "python src/brainsafe/models/train_rf.py",
+      "layer": "4. statistics"
+    },
+    {
+      "output": "results/tables/calibration.csv",
+      "inputs": [
+        "models_rf/BBB.joblib"
+      ],
+      "script": "python src/brainsafe/models/calibrate.py",
+      "layer": "3. validation"
+    },
+    {
+      "output": "models_rf/binder_modes.json",
+      "inputs": [
+        "data/endpoints/*.csv"
+      ],
+      "script": "python src/brainsafe/models/train_binders_hybrid.py",
+      "layer": "2. models"
+    },
+    {
+      "output": "results/tables/final_thresholds.csv",
+      "inputs": [
+        "models_rf/binder_modes.json"
+      ],
+      "script": "python src/brainsafe/models/final_thresholds.py && python src/brainsafe/models/screening_thresholds.py && python src/brainsafe/models/apply_specificity_decisions.py && python src/brainsafe/models/calibrate_background_specificity.py",
+      "layer": "3. validation"
+    },
+    {
+      "output": "results/tables/screening_thresholds.csv",
+      "inputs": [
+        "models_rf/binder_modes.json"
+      ],
+      "script": "python src/brainsafe/models/final_thresholds.py && python src/brainsafe/models/screening_thresholds.py && python src/brainsafe/models/apply_specificity_decisions.py && python src/brainsafe/models/calibrate_background_specificity.py",
+      "layer": "3. validation"
+    },
+    {
+      "output": "results/tables/background_specificity.csv",
+      "inputs": [
+        "models_rf/binder_modes.json"
+      ],
+      "script": "python src/brainsafe/models/final_thresholds.py && python src/brainsafe/models/screening_thresholds.py && python src/brainsafe/models/apply_specificity_decisions.py && python src/brainsafe/models/calibrate_background_specificity.py",
+      "layer": "3. validation"
+    },
+    {
+      "output": "results/tables/external_bbb_validation.csv",
+      "inputs": [
+        "models_rf/BBB.joblib"
+      ],
+      "script": "python src/brainsafe/evaluation/external_validation.py",
+      "layer": "3. validation"
+    },
+    {
+      "output": "results/tables/rf_conformal.csv",
+      "inputs": [
+        "models_rf/BBB.joblib"
+      ],
+      "script": "python src/brainsafe/evaluation/rf_conformal_temporal.py",
+      "layer": "3. validation"
+    },
+    {
+      "output": "results/tables/inversion_validation.csv",
+      "inputs": [
+        "models_rf/BBB.joblib"
+      ],
+      "script": "python src/brainsafe/evaluation/validate_inversion.py",
+      "layer": "3. validation"
+    },
+    {
+      "output": "results/tables/integrity_audit.csv",
+      "inputs": [
+        "models_rf/BBB.joblib"
+      ],
+      "script": "python src/brainsafe/evaluation/integrity_audit.py",
+      "layer": "3. validation"
+    },
+    {
+      "output": "results/tables/noncns_specificity_summary.csv",
+      "inputs": [
+        "models_rf/BBB.joblib",
+        "models_rf/binder_modes.json"
+      ],
+      "script": "python src/brainsafe/evaluation/noncns_specificity.py",
+      "layer": "3. validation"
+    },
+    {
+      "output": "results/tables/binder_cv_summary.csv",
+      "inputs": [
+        "models_rf/binder_modes.json"
+      ],
+      "script": "python src/brainsafe/evaluation/binder_cv_per_fold.py",
+      "layer": "3. validation"
+    },
+    {
+      "output": "models_rf/holdout",
+      "inputs": [
+        "models_rf/binder_modes.json"
+      ],
+      "script": "python src/brainsafe/evaluation/scaffold_holdout_panel.py",
+      "layer": "3. validation inputs"
+    },
+    {
+      "output": "results/tables/scaffold_holdout_results.csv",
+      "inputs": [
+        "models_rf/holdout"
+      ],
+      "script": "python src/brainsafe/evaluation/scaffold_holdout_report.py",
+      "layer": "3. validation"
+    },
+    {
+      "output": "reviewer_package/model_outputs/TRAINING_MATRIX.csv",
+      "inputs": [
+        "data/endpoints/*.csv"
+      ],
+      "script": "python src/brainsafe/analysis/build_reviewer_matrix.py",
+      "layer": "5. reviewer package"
+    },
+    {
+      "output": "reviewer_package/model_outputs/BrainSafe_models_inputs_and_folds.xlsx",
+      "inputs": [
+        "reviewer_package/model_outputs/TRAINING_MATRIX.csv",
+        "results/tables/rf_cv_folds.csv"
+      ],
+      "script": "python src/brainsafe/analysis/build_reviewer_workbook_full.py",
+      "layer": "5. reviewer package"
+    },
+    {
+      "output": "manuscript/figures/Figure3_cv_design.png",
+      "inputs": [
+        "results/tables/rf_cv_summary.csv"
+      ],
+      "script": "python src/brainsafe/figures/fig03_cv_design.py",
+      "layer": "6. figures"
+    },
+    {
+      "output": "manuscript/figures/Figure4_pools_and_thresholds.png",
+      "inputs": [
+        "models_rf/binder_modes.json"
+      ],
+      "script": "python src/brainsafe/figures/fig04_pools_and_thresholds.py",
+      "layer": "6. figures"
+    },
+    {
+      "output": "manuscript/figures/Figure5_negative_class.png",
+      "inputs": [
+        "results/tables/rf_cv_summary.csv"
+      ],
+      "script": "python src/brainsafe/figures/fig05_negative_class.py",
+      "layer": "6. figures"
+    },
+    {
+      "output": "manuscript/figures/Figure6_validation.png",
+      "inputs": [
+        "results/tables/calibration.csv",
+        "results/tables/scaffold_holdout_results.csv",
+        "results/tables/noncns_specificity_summary.csv",
+        "results/tables/external_bbb_validation.csv",
+        "results/tables/inversion_validation.csv"
+      ],
+      "script": "python src/brainsafe/figures/fig06_validation.py",
+      "layer": "6. figures"
+    },
+    {
+      "output": "manuscript/figures/Figure7_binder_panel.png",
+      "inputs": [
+        "models_rf/binder_modes.json"
+      ],
+      "script": "python src/brainsafe/figures/fig07_binder_panel.py",
+      "layer": "6. figures"
+    },
+    {
+      "output": "manuscript/tables_generated.md",
+      "inputs": [
+        "results/tables/rf_cv_summary.csv",
+        "models_rf/binder_modes.json"
+      ],
+      "script": "python src/brainsafe/analysis/manuscript_tables.py",
+      "layer": "7. tables"
+    },
+    {
+      "output": "manuscript/NAR_WebServer_BrainSafe_built.md",
+      "inputs": [
+        "manuscript/NAR_WebServer_BrainSafe_draft.md",
+        "manuscript/tables_generated.md",
+        "manuscript/references_verified.json",
+        "manuscript/figures/Figure6_validation.png"
+      ],
+      "script": "python src/brainsafe/analysis/build_manuscript.py",
+      "layer": "8. manuscript"
+    }
+  ],
+  "nodes": {
+    "models_rf/BBB.joblib": {
+      "path": "models_rf/BBB.joblib",
+      "layer": "2. models",
+      "exists": true,
+      "n_files": 1,
+      "bytes": 24260633,
+      "last_written": "2026-08-13 18:56"
+    },
+    "data/endpoints/*.csv": {
+      "path": "data/endpoints/*.csv",
+      "layer": "1. processed data",
+      "exists": true,
+      "n_files": 60,
+      "bytes": 18062145,
+      "last_written": "2026-08-13 18:38"
+    },
+    "results/tables/rf_cv_summary.csv": {
+      "path": "results/tables/rf_cv_summary.csv",
+      "layer": "4. statistics",
+      "exists": true,
+      "n_files": 1,
+      "bytes": 2956,
+      "last_written": "2026-08-13 19:09"
+    },
+    "results/tables/rf_cv_folds.csv": {
+      "path": "results/tables/rf_cv_folds.csv",
+      "layer": "4. statistics",
+      "exists": true,
+      "n_files": 1,
+      "bytes": 34143,
+      "last_written": "2026-08-13 19:09"
+    },
+    "results/tables/calibration.csv": {
+      "path": "results/tables/calibration.csv",
+      "layer": "3. validation",
+      "exists": true,
+      "n_files": 1,
+      "bytes": 328,
+      "last_written": "2026-08-13 19:12"
+    },
+    "models_rf/binder_modes.json": {
+      "path": "models_rf/binder_modes.json",
+      "layer": "2. models",
+      "exists": true,
+      "n_files": 1,
+      "bytes": 52364,
+      "last_written": "2026-08-17 11:08"
+    },
+    "results/tables/final_thresholds.csv": {
+      "path": "results/tables/final_thresholds.csv",
+      "layer": "3. validation",
+      "exists": true,
+      "n_files": 1,
+      "bytes": 3180,
+      "last_written": "2026-08-17 10:30"
+    },
+    "results/tables/screening_thresholds.csv": {
+      "path": "results/tables/screening_thresholds.csv",
+      "layer": "3. validation",
+      "exists": true,
+      "n_files": 1,
+      "bytes": 1947,
+      "last_written": "2026-08-17 10:33"
+    },
+    "results/tables/background_specificity.csv": {
+      "path": "results/tables/background_specificity.csv",
+      "layer": "3. validation",
+      "exists": true,
+      "n_files": 1,
+      "bytes": 2171,
+      "last_written": "2026-08-17 11:08"
+    },
+    "results/tables/external_bbb_validation.csv": {
+      "path": "results/tables/external_bbb_validation.csv",
+      "layer": "3. validation",
+      "exists": true,
+      "n_files": 1,
+      "bytes": 363,
+      "last_written": "2026-08-13 22:14"
+    },
+    "results/tables/rf_conformal.csv": {
+      "path": "results/tables/rf_conformal.csv",
+      "layer": "3. validation",
+      "exists": true,
+      "n_files": 1,
+      "bytes": 278,
+      "last_written": "2026-08-13 21:59"
+    },
+    "results/tables/inversion_validation.csv": {
+      "path": "results/tables/inversion_validation.csv",
+      "layer": "3. validation",
+      "exists": true,
+      "n_files": 1,
+      "bytes": 1104,
+      "last_written": "2026-08-14 08:18"
+    },
+    "results/tables/integrity_audit.csv": {
+      "path": "results/tables/integrity_audit.csv",
+      "layer": "3. validation",
+      "exists": true,
+      "n_files": 1,
+      "bytes": 854,
+      "last_written": "2026-08-13 22:18"
+    },
+    "results/tables/noncns_specificity_summary.csv": {
+      "path": "results/tables/noncns_specificity_summary.csv",
+      "layer": "3. validation",
+      "exists": true,
+      "n_files": 1,
+      "bytes": 1166,
+      "last_written": "2026-08-15 18:40"
+    },
+    "results/tables/binder_cv_summary.csv": {
+      "path": "results/tables/binder_cv_summary.csv",
+      "layer": "3. validation",
+      "exists": true,
+      "n_files": 1,
+      "bytes": 18749,
+      "last_written": "2026-08-13 22:22"
+    },
+    "models_rf/holdout": {
+      "path": "models_rf/holdout",
+      "layer": "3. validation inputs",
+      "exists": true,
+      "n_files": 101,
+      "bytes": 153951628,
+      "last_written": "2026-08-13 22:42"
+    },
+    "results/tables/scaffold_holdout_results.csv": {
+      "path": "results/tables/scaffold_holdout_results.csv",
+      "layer": "3. validation",
+      "exists": true,
+      "n_files": 1,
+      "bytes": 2291,
+      "last_written": "2026-08-15 16:39"
+    },
+    "reviewer_package/model_outputs/TRAINING_MATRIX.csv": {
+      "path": "reviewer_package/model_outputs/TRAINING_MATRIX.csv",
+      "layer": "5. reviewer package",
+      "exists": true,
+      "n_files": 1,
+      "bytes": 42719789,
+      "last_written": "2026-08-14 09:07"
+    },
+    "reviewer_package/model_outputs/BrainSafe_models_inputs_and_folds.xlsx": {
+      "path": "reviewer_package/model_outputs/BrainSafe_models_inputs_and_folds.xlsx",
+      "layer": "5. reviewer package",
+      "exists": true,
+      "n_files": 1,
+      "bytes": 16443928,
+      "last_written": "2026-08-14 09:08"
+    },
+    "manuscript/figures/Figure3_cv_design.png": {
+      "path": "manuscript/figures/Figure3_cv_design.png",
+      "layer": "6. figures",
+      "exists": true,
+      "n_files": 1,
+      "bytes": 293817,
+      "last_written": "2026-08-17 15:29"
+    },
+    "manuscript/figures/Figure4_pools_and_thresholds.png": {
+      "path": "manuscript/figures/Figure4_pools_and_thresholds.png",
+      "layer": "6. figures",
+      "exists": true,
+      "n_files": 1,
+      "bytes": 644184,
+      "last_written": "2026-08-17 15:29"
+    },
+    "manuscript/figures/Figure5_negative_class.png": {
+      "path": "manuscript/figures/Figure5_negative_class.png",
+      "layer": "6. figures",
+      "exists": true,
+      "n_files": 1,
+      "bytes": 518117,
+      "last_written": "2026-08-17 15:29"
+    },
+    "manuscript/figures/Figure6_validation.png": {
+      "path": "manuscript/figures/Figure6_validation.png",
+      "layer": "6. figures",
+      "exists": true,
+      "n_files": 1,
+      "bytes": 593295,
+      "last_written": "2026-08-17 15:29"
+    },
+    "manuscript/figures/Figure7_binder_panel.png": {
+      "path": "manuscript/figures/Figure7_binder_panel.png",
+      "layer": "6. figures",
+      "exists": true,
+      "n_files": 1,
+      "bytes": 502755,
+      "last_written": "2026-08-17 15:29"
+    },
+    "manuscript/tables_generated.md": {
+      "path": "manuscript/tables_generated.md",
+      "layer": "7. tables",
+      "exists": true,
+      "n_files": 1,
+      "bytes": 16164,
+      "last_written": "2026-08-17 15:30"
+    },
+    "manuscript/NAR_WebServer_BrainSafe_built.md": {
+      "path": "manuscript/NAR_WebServer_BrainSafe_built.md",
+      "layer": "8. manuscript",
+      "exists": true,
+      "n_files": 1,
+      "bytes": 38032,
+      "last_written": "2026-08-17 15:30"
+    },
+    "manuscript/NAR_WebServer_BrainSafe_draft.md": {
+      "path": "manuscript/NAR_WebServer_BrainSafe_draft.md",
+      "layer": "8. manuscript",
+      "exists": true,
+      "n_files": 1,
+      "bytes": 31458,
+      "last_written": "2026-08-17 14:13"
+    },
+    "manuscript/references_verified.json": {
+      "path": "manuscript/references_verified.json",
+      "layer": "8. manuscript",
+      "exists": true,
+      "n_files": 1,
+      "bytes": 15888,
+      "last_written": "2026-08-17 12:00"
+    }
+  }
+}

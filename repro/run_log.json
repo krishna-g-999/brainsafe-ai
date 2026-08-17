@@ -1,0 +1,90 @@
+{
+  "target": "reproduce",
+  "ok": true,
+  "finished": "2026-08-17T15:30:14",
+  "total_seconds": 74.4,
+  "python": "3.13.13",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "processor": "Intel64 Family 6 Model 198 Stepping 2, GenuineIntel",
+  "cpu_count": 24,
+  "steps": [
+    {
+      "step": "build_model_inventory.py",
+      "command": "D:\\BRAINSAFE_AI\\brainsafe_env\\Scripts\\python.exe src/brainsafe/analysis/build_model_inventory.py",
+      "exit": 0,
+      "seconds": 0.6
+    },
+    {
+      "step": "fig01_architecture.py",
+      "command": "D:\\BRAINSAFE_AI\\brainsafe_env\\Scripts\\python.exe src/brainsafe/figures/fig01_architecture.py",
+      "exit": 0,
+      "seconds": 1.5
+    },
+    {
+      "step": "fig02_feature_vector.py",
+      "command": "D:\\BRAINSAFE_AI\\brainsafe_env\\Scripts\\python.exe src/brainsafe/figures/fig02_feature_vector.py",
+      "exit": 0,
+      "seconds": 1.3
+    },
+    {
+      "step": "fig03_cv_design.py",
+      "command": "D:\\BRAINSAFE_AI\\brainsafe_env\\Scripts\\python.exe src/brainsafe/figures/fig03_cv_design.py",
+      "exit": 0,
+      "seconds": 1.7
+    },
+    {
+      "step": "fig04_pools_and_thresholds.py",
+      "command": "D:\\BRAINSAFE_AI\\brainsafe_env\\Scripts\\python.exe src/brainsafe/figures/fig04_pools_and_thresholds.py",
+      "exit": 0,
+      "seconds": 3.2
+    },
+    {
+      "step": "fig05_negative_class.py",
+      "command": "D:\\BRAINSAFE_AI\\brainsafe_env\\Scripts\\python.exe src/brainsafe/figures/fig05_negative_class.py",
+      "exit": 0,
+      "seconds": 1.9
+    },
+    {
+      "step": "fig06_validation.py",
+      "command": "D:\\BRAINSAFE_AI\\brainsafe_env\\Scripts\\python.exe src/brainsafe/figures/fig06_validation.py",
+      "exit": 0,
+      "seconds": 1.6
+    },
+    {
+      "step": "fig07_binder_panel.py",
+      "command": "D:\\BRAINSAFE_AI\\brainsafe_env\\Scripts\\python.exe src/brainsafe/figures/fig07_binder_panel.py",
+      "exit": 0,
+      "seconds": 2.3
+    },
+    {
+      "step": "fig08_use_case.py",
+      "command": "D:\\BRAINSAFE_AI\\brainsafe_env\\Scripts\\python.exe src/brainsafe/figures/fig08_use_case.py",
+      "exit": 0,
+      "seconds": 57.4
+    },
+    {
+      "step": "fig09_model_atlas.py",
+      "command": "D:\\BRAINSAFE_AI\\brainsafe_env\\Scripts\\python.exe src/brainsafe/figures/fig09_model_atlas.py",
+      "exit": 0,
+      "seconds": 1.7
+    },
+    {
+      "step": "manuscript_tables.py",
+      "command": "D:\\BRAINSAFE_AI\\brainsafe_env\\Scripts\\python.exe src/brainsafe/analysis/manuscript_tables.py",
+      "exit": 0,
+      "seconds": 0.6
+    },
+    {
+      "step": "build_manuscript.py",
+      "command": "D:\\BRAINSAFE_AI\\brainsafe_env\\Scripts\\python.exe src/brainsafe/analysis/build_manuscript.py",
+      "exit": 0,
+      "seconds": 0.4
+    },
+    {
+      "step": "build_provenance.py",
+      "command": "D:\\BRAINSAFE_AI\\brainsafe_env\\Scripts\\python.exe tools/build_provenance.py",
+      "exit": 0,
+      "seconds": 0.1
+    }
+  ]
+}
