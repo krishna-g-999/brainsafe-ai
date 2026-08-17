@@ -59,8 +59,14 @@ def parent_mol(smiles: str):
     Public because the scaffold grouping in training must desalt exactly as this does, or a salt
     and its free base become identical inputs assigned to different cross-validation folds.
     """
-    mol = Chem.MolFromSmiles(str(smiles))
-    if mol is None:
+    # RDKit parses the empty string into an empty molecule rather than returning None, so without
+    # this guard featurize_one("") returns a well-formed 1,036-column vector of zeros and the
+    # forests score it as though it were a compound. An empty field is not a molecule.
+    text = str(smiles).strip()
+    if not text:
+        return None
+    mol = Chem.MolFromSmiles(text)
+    if mol is None or mol.GetNumAtoms() == 0:
         return None
     frags = Chem.GetMolFrags(mol, asMols=True, sanitizeFrags=False)
     if len(frags) > 1:  # keep the largest organic fragment (salt / counter-ion removal)

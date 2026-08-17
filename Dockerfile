@@ -42,7 +42,17 @@ COPY docs/ ./docs/
 #
 # The download verifies the archive checksum and every extracted file, so a corrupted layer cannot
 # reach a user. BRAINSAFE_SKIP_MODEL_FETCH then stops the running server repeating the check.
-RUN python model_fetch.py && rm -f .model_fetch.lock
+#
+# SKIP_MODEL_FETCH exists for continuous integration, which needs to know that the Dockerfile and
+# the dependency set are sound but has no published archive to fetch from and no use for 0.84 GB of
+# estimators. An image built this way starts and serves the interface but cannot answer a query, so
+# it is for build verification only and must never be deployed.
+ARG SKIP_MODEL_FETCH=0
+RUN if [ "$SKIP_MODEL_FETCH" = "1" ]; then \
+        echo "SKIP_MODEL_FETCH=1: models not fetched. Build verification image only."; \
+    else \
+        python model_fetch.py && rm -f .model_fetch.lock; \
+    fi
 ENV BRAINSAFE_SKIP_MODEL_FETCH=1
 
 # Run as an unprivileged user. The application only ever reads from disk.
