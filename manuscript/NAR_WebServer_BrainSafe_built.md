@@ -359,13 +359,28 @@ rather than simulated with decoys, thresholds measured on a pool disjoint from t
 them, an applicability domain expressed as conformal coverage, and validations designed so that they
 could fail.
 
-Three limitations bound its use. The applicability-domain flag does not currently separate
+Four limitations bound its use. The applicability-domain flag does not currently separate
 non-drug-like chemistry from unseen drugs, so the conformal interval and the nearest-analogue
 distance, rather than the flag, should be read as the statement of confidence. The specificity
 estimate rests on compounds presumed inactive because nothing is recorded about them, drawn from
 within the reference library, so it does not bound behaviour on genuinely distant chemistry.
 
-The third is the disease layer, and it is a limit of the question rather than of the fitting. Clinical
+The third is natural-product chemistry, and it is stated here because a reader will reasonably ask.
+The training library has a median fraction-sp3 of 0.36 and only 3.3 per cent of it is both sp3-rich
+and free of aromatic rings, so terpenoid and steroidal natural products are largely outside it: a
+withanolide submitted to the server returns a maximum Tanimoto of 0.31 and no engagement call, with
+a bile acid as its nearest measured neighbour. Measured activity for such compounds is scarce against
+these targets and is usually recorded against cell lines rather than proteins. Assembling an external
+test set from NPASS left only three endpoints with enough genuinely external data to score, after
+1,385 nominally new compounds proved on inspection to be training compounds written as a different
+tautomer or salt, and on those three the panel returns AUROC 0.463 at AChE (n=41), 0.741 at GBA1
+(n=89) and 0.461 at hERG (n=80). With two to five actives per endpoint those intervals are far too
+wide to establish failure, but they are equally far from supporting a claim of natural-product
+capability, and none is made. The server flags such compounds as outside its domain, which is the
+correct behaviour, and extending the panel to the targets natural products are actually assayed
+against is the obvious next step rather than a caveat to be managed.
+
+The fourth is the disease layer, and it is a limit of the question rather than of the fitting. Clinical
 indication is not a function of structure: 27 of the 52 panel targets drive more than one condition,
 and what selects among them is dose, regimen, exposure and trial history. The layer does not beat a
 frequency baseline at any reporting depth, and reporting more conditions widens rather than closes

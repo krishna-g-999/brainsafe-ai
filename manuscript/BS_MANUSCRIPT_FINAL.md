@@ -1,3 +1,11 @@
+> **SUPERSEDED, 2026-08-17.** The manuscript under submission is
+> `NAR_WebServer_BrainSafe_draft.md`, written to the NAR Web Server format and carrying the current
+> numbers. This file is the longer July draft, kept for its methodological detail. Its figures
+> predate the audit retrain and should not be quoted. The phrase "or a natural product such as a
+> flavonoid" was removed from its introduction on 2026-08-17: no validation supports applying the
+> panel to natural products, and the evidence available since points the other way
+> (`results/tables/external_natural_products_summary.csv`).
+
 # BrainSafe AI: an evidence-grounded, calibrated, BBB-gated multi-endpoint predictor of small-molecule effects on the human brain
 
 *Complete methodology, results, and discussion. All figures/values are produced by the
@@ -65,8 +73,8 @@ peripheral or P-gp-effluxed ones (atenolol 0.07, loperamide 0.04). This moves th
 bind"* toward *"does an achievable dose reach the target in the brain"*. Detail: `docs/ADME_RESULTS.md`.
 
 ## 1. Introduction
-Deciding whether a small molecule, whether a drug or a natural product such as a flavonoid, is
-likely to act on the brain means answering several questions at once. Can it cross the BBB? Does
+Deciding whether a small molecule is likely to act on the brain means answering several questions
+at once. Can it cross the BBB? Does
 it engage disease-relevant CNS targets? Is it developable, is it safe, and has anything like it
 reached the clinic? The web tools in common use each answer part of this. General ADMET servers
 (SwissADME, ADMETlab, admetSAR, pkCSM) cover physicochemistry and safety; target-prediction tools
