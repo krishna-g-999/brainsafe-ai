@@ -48,9 +48,9 @@ def panel_a(ax) -> None:
     ax.axvspan(CUT, 6.0, color=S.FAINT, alpha=0.10, zorder=0)
     ax.axvline(CUT, color=S.MUTED, lw=0.8, ls=(0, (3, 2)))
     ax.axvline(6.0, color=S.MUTED, lw=0.8, ls=(0, (3, 2)))
-    ax.text(4.2, 0.955, "inactive", ha="center", fontsize=6.2, color=S.WARN, fontweight="bold")
-    ax.text(5.5, 0.955, "undecided", ha="center", fontsize=6.2, color=S.MUTED, fontweight="bold")
-    ax.text(7.8, 0.955, "active", ha="center", fontsize=6.2, color=S.TARGET, fontweight="bold")
+    ax.text(4.2, 0.955, "inactive", ha="center", fontsize=6.5, color=S.WARN, fontweight="bold")
+    ax.text(5.5, 0.955, "undecided", ha="center", fontsize=6.5, color=S.MUTED, fontweight="bold")
+    ax.text(7.8, 0.955, "active", ha="center", fontsize=6.5, color=S.TARGET, fontweight="bold")
 
     rows = [
         ("exact value, pChEMBL 8.1", 8.1, None, S.TARGET, "an active, as it always was"),
@@ -65,17 +65,17 @@ def panel_a(ax) -> None:
             ax.add_patch(FancyArrowPatch((x, y), (3.60, y), arrowstyle="-|>", mutation_scale=7,
                                          color=col, lw=1.2, shrinkA=0, shrinkB=0, zorder=3))
             ax.plot([x], [y], "|", ms=8, color=col, mew=1.4, zorder=4)
-            ax.text(x + 0.14, y, label, fontsize=5.9, color=col, fontweight="bold", va="center")
+            ax.text(x + 0.14, y, label, fontsize=6.5, color=col, fontweight="bold", va="center")
         else:
             ax.plot([x], [y], "o", ms=5.0, mfc=col, mec="white", mew=0.7, zorder=4)
-            ax.text(x - 0.16, y, label, fontsize=5.9, color=col, fontweight="bold", va="center",
+            ax.text(x - 0.16, y, label, fontsize=6.5, color=col, fontweight="bold", va="center",
                     ha="right")
-        ax.text(3.60, y - 0.088, note, fontsize=5.3, color=S.MUTED, va="center")
+        ax.text(3.60, y - 0.088, note, fontsize=6.5, color=S.MUTED, va="center")
 
     S.strip(ax, x=True, y=False)
     ax.text(0.0, 1.055, "a bound settles the label whenever the whole interval falls on one side "
                         "of the cut",
-            transform=ax.transAxes, fontsize=5.7, color=S.MUTED, va="bottom")
+            transform=ax.transAxes, fontsize=6.5, color=S.MUTED, va="bottom")
 
 
 def panel_b(ax, exp) -> None:
@@ -102,7 +102,7 @@ def panel_b(ax, exp) -> None:
     ax.legend(loc="upper left", handletextpad=0.3, borderpad=0.2, bbox_to_anchor=(0.0, 0.40))
     ax.text(0.02, 0.185, f"above 90 per cent active:\n{n_before} endpoints before, "
                          f"{n_after} after\n{int(d.added.sum()):,} measured non-binders added",
-            transform=ax.transAxes, fontsize=5.7, color=S.INK, ha="left", va="top",
+            transform=ax.transAxes, fontsize=6.5, color=S.INK, ha="left", va="top",
             linespacing=1.8)
 
 
@@ -135,7 +135,7 @@ def panel_c(ax, now, before) -> None:
     ax.axhline(0, color=S.MUTED, lw=0.8)
     ax.set_xticks(xs)
     ax.set_xticklabels([f"{e}\n{'R2' if e in set(d[d.task=='regression'].endpoint) else 'AUROC'}"
-                        for e in order], fontsize=5.5, linespacing=1.6)
+                        for e in order], fontsize=6.5, linespacing=1.6)
     ax.set_ylabel("change after recovery\n(after minus before)", linespacing=1.6)
     S.strip(ax)
     ax.legend(loc="upper left", handletextpad=0.4, borderpad=0.2, ncol=2)
@@ -145,17 +145,17 @@ def panel_c(ax, now, before) -> None:
     flat = sorted({e for e in order if abs(d[d.endpoint == e].delta).max() < 5e-4})
     ax.text(0.995, 0.95, f"classification  median {cls.median():+.4f}\n"
                          f"regression      median {reg.median():+.4f}",
-            transform=ax.transAxes, fontsize=5.8, color=S.INK, ha="right", va="top",
+            transform=ax.transAxes, fontsize=6.5, color=S.INK, ha="right", va="top",
             family="monospace", linespacing=1.8)
     ax.text(0.0, 1.185, "Classification gets slightly harder and regression gets better, both in "
                         "the expected direction: replacing decoys with compounds that were assayed\n"
                         "and did not bind removes an easy negative class from the classifiers, and "
                         "adds real low-potency anchors to the regressions.",
-            transform=ax.transAxes, fontsize=5.5, color=S.MUTED, va="top", linespacing=1.7)
+            transform=ax.transAxes, fontsize=6.5, color=S.MUTED, va="top", linespacing=1.7)
     if flat:
         ax.text(0.0, 1.075, f"{' and '.join(flat)} are flat at exactly zero, not missing: neither "
                             "draws from a ChEMBL target, so no negatives were recovered for them.",
-                transform=ax.transAxes, fontsize=5.5, color=S.MUTED, va="top")
+                transform=ax.transAxes, fontsize=6.5, color=S.MUTED, va="top")
 
 
 def main() -> None:
@@ -164,7 +164,7 @@ def main() -> None:
     now = pd.read_csv(TAB / "rf_cv_summary.csv")
     before = pd.read_csv(TAB / "rf_cv_summary_pre_expansion.csv")
 
-    fig = plt.figure(figsize=(S.DOUBLE, 5.05))
+    fig = plt.figure(figsize=(S.DOUBLE, 6.16))
     gs = fig.add_gridspec(2, 2, height_ratios=[0.86, 1.0], hspace=0.62, wspace=0.24,
                           left=0.065, right=0.985, top=0.905, bottom=0.085)
     a = fig.add_subplot(gs[0, 0]); b = fig.add_subplot(gs[0, 1]); c = fig.add_subplot(gs[1, :])

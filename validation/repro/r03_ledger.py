@@ -323,26 +323,29 @@ def rows() -> list[dict]:
 
 def main() -> None:
     text = MS.read_text(encoding="utf-8") if MS.exists() else ""
+    # Anchors are phrases from the CURRENT manuscript. They were rewritten when the manuscript was
+    # restructured to the NAR format; an anchor that no longer appears makes every row using it read
+    # MISQUOTED, which is a defect in this file rather than in the manuscript.
     anchors = {
-        "classifier AUROC, mean over endpoints|random": "mean AUROC of 0.958 on the random split",
-        "classifier AUROC, mean over endpoints|scaffold": "0.925 on the scaffold split",
+        "classifier AUROC, mean over endpoints|random": "mean AUROC 0.958 and 0.925 respectively",
+        "classifier AUROC, mean over endpoints|scaffold": "mean AUROC 0.958 and 0.925 respectively",
+        "binder panel mean AUROC vs measured inactives|holdout": "reaches a mean AUROC of 0.904",
         "binder panel mean sensitivity|scaffold holdout": "mean sensitivity of 0.866",
-        "binder panel mean AUROC vs measured inactives|holdout": "mean AUROC of 0.904",
-        "mean ECE before calibration|out-of-fold": "expected calibration",
-        "mean ECE after calibration|out-of-fold": "expected calibration",
-        "specificity on non-CNS chemistry|external": "specificity on 1000 non-CNS compounds",
-        "compound-endpoint records|n/a": "227,146 measured compound-endpoint records",
-        "binder endpoints deployed|n/a": "47 of 49 binder endpoints deployed",
-        "adversarial checks passing|n/a": "five pass",
-        "receptor potency regression R2, min|random": "R2 0.64 to 0.72 (random)",
-        "receptor potency regression R2, max|random": "R2 0.64 to 0.72 (random)",
-        "receptor potency regression R2, min|scaffold": "0.46 to\n0.61 (scaffold)",
-        "receptor potency regression R2, max|scaffold": "0.46 to\n0.61 (scaffold)",
-        "external BBB AUROC (n=306)|external": "gives AUROC 0.761",
-        "external BBB AUROC (n=241)|external": "it gives 0.788",
-        "conformal coverage, min|conformal": "conformal",
-        "conformal coverage, max|conformal": "conformal",
-        "prospective recall, median over targets|scaffold holdout": "median per-target recall is",
+        "mean ECE before calibration|out-of-fold": "expected calibration error falling from 0.0795",
+        "mean ECE after calibration|out-of-fold": "expected calibration error falling from 0.0795",
+        "specificity on non-CNS chemistry|external": "on non-CNS chemistry its specificity is 0.948",
+        "compound-endpoint records|n/a": "227,146 measured",
+        "binder endpoints deployed|n/a": "47 of 49 are deployed",
+        "adversarial checks passing|n/a": "Five pass",
+        "receptor potency regression R2, min|random": "0.64 to 0.72",
+        "receptor potency regression R2, max|random": "0.64 to 0.72",
+        "receptor potency regression R2, min|scaffold": "0.46 to 0.61 (scaffold)",
+        "receptor potency regression R2, max|scaffold": "0.46 to 0.61 (scaffold)",
+        "external BBB AUROC (n=306)|external": "absent from B3DB by InChIKey",
+        "external BBB AUROC (n=241)|external": "distinguishable from the training set in feature space",
+        "conformal coverage, min|conformal": "empirical coverage is 0.887 to 0.920",
+        "conformal coverage, max|conformal": "empirical coverage is 0.887 to 0.920",
+        "prospective recall, median over targets|scaffold holdout": "per-target median of",
     }
 
     led = []

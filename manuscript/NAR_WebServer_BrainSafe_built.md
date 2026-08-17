@@ -20,7 +20,8 @@ penetration, two cardiac safety liabilities, and a nine-endpoint ADME and exposu
 directly modelled unbound brain-to-plasma ratio. Every target score is admitted only in proportion to
 predicted brain exposure, so potency at a target a compound cannot reach contributes nothing, and
 engaged targets are traced through a curated pathway graph to the conditions they touch. The
-server is built on 72 estimators trained on 227,146 measured compound-endpoint records from ChEMBL
+server is built on 72 estimators, 70 of them deployed, trained on 227,146 measured
+compound-endpoint records from ChEMBL
 (1), BindingDB (2) and B3DB (3), and validated under both random and
 scaffold-grouped 10-fold cross-validation: mean AUROC 0.958 and 0.925 respectively across the
 measured-label classifiers, with expected calibration error falling from 0.0795 to 0.0161 after
@@ -111,7 +112,7 @@ A censored bound settles a label whenever the entire interval it defines falls o
 activity cut. `IC50 > 10 uM` places the true potency strictly below pChEMBL 5.0 and is a measured
 non-binder; `IC50 > 100 nM` spans both classes and is discarded as undecidable rather than guessed
 at. Recovering these added 21,994 measured non-binders across 57 endpoints and reduced the endpoints
-above 90 per cent active from 35 to 13 (Figure 2A, B). A bound is never used as a value: it assigns a
+above 90 per cent active from 35 to 13 (Supplementary Figure S1). A bound is never used as a value: it assigns a
 class and never enters a regression.
 
 ### Representation and model selection
@@ -144,8 +145,10 @@ for a reader to find.
 Every endpoint is cross-validated ten-fold in two regimes: a random split, and a split grouped on
 Bemis-Murcko scaffolds (23) that withholds entire structural classes. The two answer
 different questions, and the distance between them is the honest statement of how far a model
-travels. Across 71 cross-validated endpoints this is 1,420 fitted models standing behind the 72 that
-are deployed.
+travels. Across 71 cross-validated endpoints this is 1,420 fitted models standing behind the 70 that
+are deployed. A complete inventory of every estimator, with its prediction type, training-set size,
+validation scheme, calibration and fitting date, is given in Supplementary Table S1 and regenerates
+with one command.
 
 Classifiers are isotonically calibrated (24) on out-of-fold predictions, so no compound
 contributes to the calibrator that scores it; mean expected calibration error falls from 0.0795 to
@@ -187,7 +190,7 @@ a real signal.
 
 The server is a single-page application built with Streamlit (32) and RDKit (33),
 accepting a SMILES string or a compound name resolved through PubChem. Models are loaded once and
-cached; a complete profile across all 72 estimators, including both applicability-domain
+cached; a complete profile across all 70 deployed estimators, including both applicability-domain
 calculations against the 158,890-compound reference library, returns in a few seconds on one CPU
 core. No registration is required and sample compounds are provided.
 
@@ -210,7 +213,7 @@ unrelated chemistry; 47 of 49 are deployed. Measured on that disjoint pool the b
 false-positive rate has a median of 0.0249.
 
 The eight measured-label classifiers reach a mean AUROC of 0.958 under the random split and 0.925
-under the scaffold split (Figure 2C). BACE1 is most robust to chemotype change, losing 0.012 between
+under the scaffold split. BACE1 is most robust to chemotype change, losing 0.012 between
 splits, and MAO-A least, losing 0.065. The four receptor potency regressions reach R² 0.64 to 0.72
 (random) and 0.46 to 0.61 (scaffold).
 
@@ -241,7 +244,15 @@ do not carry enough class-frequency information for a label-free model to beat c
 scaffold figures are not inflated by that route.
 
 **Prospective sensitivity.** Whole scaffold classes were withheld before training. Pooled recall on
-them is 0.811 (95% CI 0.805 to 0.817), with a per-target median of 0.820 (Figure 2D).
+them is 0.811 (95% CI 0.805 to 0.817), with a per-target median of 0.814 across the 39 targets whose
+decision threshold did not collapse (Figure 3B). Targets are excluded only for a degenerate
+threshold, never for a poor recall.
+
+**External validation.** The barrier model was tested on FDA-curated approved drugs absent from B3DB
+by InChIKey: AUROC 0.761 on all 306, and 0.788 on the 241 that are also distinguishable from the
+training set in feature space, which is the subset that supports an external claim (Figure 3C). The
+65 excluded by that second criterion are feature-identical to a training compound and score 0.710,
+which is the size of the memorisation the first figure contains.
 
 **Specificity.** One thousand compounds carrying no recorded activity at any modelled target were
 scored through the deployed pipeline. 948 returned no actionable disease signal, a specificity of
@@ -404,18 +415,21 @@ conformal interval and an applicability-domain distance. (**B**) The counts in (
 estimators; each was preceded by twenty fits that never serve a prediction and exist only to measure
 how the twenty-first behaves on withheld compounds, 1,420 across the panel.
 
-![Figure 2](figures/Figure5_negative_class.png)
+![Figure 2](figures/Figure9_model_atlas.png)
 
-**Figure 2.** Recovering the measured negative class. (**A**) A censored bound settles a label
-whenever the whole interval it defines falls on one side of the activity cut; `IC50 > 10 uM` is a
-measured non-binder, while `IC50 > 100 nM` spans both classes and is discarded as undecidable rather
-than guessed at. (**B**) Class balance for the 57 endpoints extended: 21,994 measured non-binders
-added, endpoints above 90 per cent active reduced from 35 to 13. (**C**) The effect per endpoint
-against the panel as it stood immediately before the merge. Classification becomes slightly harder
-and regression improves, both in the expected direction, because real non-binders are harder
-negatives than the decoys they join while a censored bound is a real low-potency anchor. BBB and the
-antioxidant endpoint are flat at exactly zero, not missing, because neither draws from a ChEMBL
-target.
+**Figure 2.** The panel, one mark per estimator, so that no claim rests on a mean a reader cannot
+check. (**A**) Every deployed estimator placed by the number of measured compounds it was trained on
+and by the performance claimed for it, coloured by model family. Marker shape carries the metric:
+AUROC and R² both run to 1.0 and are not the same quantity, since 0.5 is chance for one and a
+respectable fit for the other, so they are distinguished rather than averaged. The two estimators
+withdrawn after specificity testing are drawn in outline, because a panel showing only what survived
+is a selection rather than an inventory. Training sets span two orders of magnitude, from 68 to 15,723 rows;
+binder training sets include property-matched decoys while the others are measured compounds only,
+which the axis states. (**B**) The same population by family, with the
+family median marked. The spread is the point: the binder classifiers have a median of 0.936 while
+the exposure and ADME regressions have a median R² of 0.575, and a single panel average would
+describe neither. The complete inventory, with training-set composition, validation scheme,
+calibration and fitting date for every estimator, is Supplementary Table S1.
 
 ![Figure 3](figures/Figure6_validation.png)
 
@@ -438,9 +452,9 @@ scores after exposure gating, and the driving target is named beside each. The t
 same design decision seen from opposite sides: a target score is admitted only in proportion to
 predicted barrier penetration, so a compound that does not arrive cannot generate a disease call.
 
-Supplementary Figures S1 to S4 give the feature vector computed for a worked molecule, the two
-cross-validation schemes, the three disjoint background pools and the complete 49-endpoint binder
-panel.
+Supplementary Figures S1 to S5 give the recovery of the measured negative class and its effect per
+endpoint, the feature vector computed for a worked molecule, the two cross-validation schemes, the
+three disjoint background pools, and the complete 49-endpoint binder panel with every endpoint named.
 
 ## References
 
