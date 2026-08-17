@@ -217,6 +217,17 @@
       "match_score": 1.0,
       "requested_title": "Probable Inference, the Law of Succession, and Statistical Inference"
     },
+    "shap_trees": {
+      "title": "From local explanations to global understanding with explainable AI for trees",
+      "registered_title": "From local explanations to global understanding with explainable AI for trees",
+      "authors": "Lundberg S, Erion G, Chen H et al.",
+      "journal": "Nature Machine Intelligence",
+      "year": "2020",
+      "doi": "10.1038/s42256-019-0138-9",
+      "source": "CrossRef (by DOI)",
+      "match_score": 1.0,
+      "requested_title": "From local explanations to global understanding with explainable AI for trees"
+    },
     "cns_attrition": {
       "title": "Drug metabolism and pharmacokinetics, the blood-brain barrier, and central nervous system drug discovery",
       "authors": "Alavijeh M, Chishty M, Qaiser M et al.",

@@ -259,15 +259,21 @@ def main(argv=None) -> None:
             if src not in current:
                 stale_by.append(f"{src} (missing)")
                 continue
+            # Staleness needs both conditions. An input touched after the output was built is
+            # suspicious, but only actually stale if its content moved: re-running a step that
+            # rewrites a file identically must not condemn everything downstream. Conversely a
+            # content change that predates the rebuild is already incorporated, which is the case
+            # every time an input is edited and its output regenerated straight afterwards.
+            in_ts, in_file = newest(src)
+            touched_after_build = bool(in_ts and in_ts > out_ts)
+            if not touched_after_build:
+                continue
             was = recorded.get(src)
             if was is None:
-                # never accepted, so fall back to the timestamp, which is all there is
-                in_ts, in_file = newest(src)
-                if in_ts and in_ts > out_ts:
-                    stale_by.append(f"{in_file.relative_to(ROOT).as_posix()} newer "
-                                    f"@ {stamp(in_ts)} (no accepted baseline)")
+                stale_by.append(f"{in_file.relative_to(ROOT).as_posix()} newer "
+                                f"@ {stamp(in_ts)} (no accepted baseline)")
             elif was != current[src]:
-                stale_by.append(f"{src} content changed since last accepted")
+                stale_by.append(f"{src} changed after this was built")
         results.append({
             "artefact": out,
             "state": "STALE" if stale_by else "OK",

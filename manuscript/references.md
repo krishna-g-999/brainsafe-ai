@@ -25,14 +25,15 @@ Each entry was resolved by exact-title query against CrossRef or Europe PMC and 
 21. Dezsi L, Vecsei L. Monoamine Oxidase B Inhibitors in Parkinson's Disease. CNS & neurological disorders drug targets. 2017. doi:10.2174/1871527316666170124165222
 22. West A. Achieving neuroprotection with LRRK2 kinase inhibitors in Parkinson disease. Experimental Neurology. 2017. doi:10.1016/j.expneurol.2017.07.019
 23. Wu Z, Ramsundar B, Feinberg E et al. MoleculeNet: a benchmark for molecular machine learning. Chemical Science. 2018. doi:10.1039/c7sc02664a
-24. Duan Y, Kelley N, He Y. Role of the NLRP3 inflammasome in neurodegenerative diseases and therapeutic implications. Neural Regeneration Research. 2020. doi:10.4103/1673-5374.272576
-25. Kovalenko M, Erdin S, Andrew M et al. Histone deacetylase knockouts modify transcription, CAG instability and nuclear pathology in Huntington disease mice. eLife. 2020. doi:10.7554/elife.55911
-26. Meng F, Xi Y, Huang J et al. A curated diverse molecular database of blood-brain barrier permeability with chemical descriptors. Scientific Data. 2021. doi:10.1038/s41597-021-01069-5
-27. Huang K, Fu T, Gao W, Zhao Y, Roohani Y, Leskovec J, Coley CW, Xiao C, Sun J, Zitnik M. Artificial intelligence foundation for therapeutic science. Nature chemical biology. 2022. doi:10.1038/s41589-022-01131-2
-28. Loryan I, Reichel A, Feng B et al. Unbound Brain-to-Plasma Partition Coefficient, Kp,uu,brain—a Game Changing Parameter for CNS Drug Discovery and Development. Pharmaceutical Research. 2022. doi:10.1007/s11095-022-03246-6
-29. Zdrazil B, Felix E, Hunter F et al. The ChEMBL Database in 2023: a drug discovery platform spanning multiple bioactivity data types and time periods. Nucleic Acids Research. 2024. doi:10.1093/nar/gkad1004
-30. Milacic M, Beavers D, Conley P, Gong C, Gillespie M, Griss J, Haw R, Jassal B, Matthews L, May B, Petryszak R, Ragueneau E, Rothfels K, Sevilla C, Shamovsky V, Stephan R, Tiwari K, Varusai T, Weiser J, Wright A, Wu G, Stein L, Hermjakob H, D'Eustachio P. The Reactome Pathway Knowledgebase 2024. Nucleic acids research. 2024. doi:10.1093/nar/gkad1025
-31. Harding SD, Armstrong JF, Faccenda E, Southan C, Alexander SPH, Davenport AP, Spedding M, Davies JA. The IUPHAR/BPS Guide to PHARMACOLOGY in 2024. Nucleic acids research. 2024. doi:10.1093/nar/gkad944
+24. Lundberg S, Erion G, Chen H et al. From local explanations to global understanding with explainable AI for trees. Nature Machine Intelligence. 2020. doi:10.1038/s42256-019-0138-9
+25. Duan Y, Kelley N, He Y. Role of the NLRP3 inflammasome in neurodegenerative diseases and therapeutic implications. Neural Regeneration Research. 2020. doi:10.4103/1673-5374.272576
+26. Kovalenko M, Erdin S, Andrew M et al. Histone deacetylase knockouts modify transcription, CAG instability and nuclear pathology in Huntington disease mice. eLife. 2020. doi:10.7554/elife.55911
+27. Meng F, Xi Y, Huang J et al. A curated diverse molecular database of blood-brain barrier permeability with chemical descriptors. Scientific Data. 2021. doi:10.1038/s41597-021-01069-5
+28. Huang K, Fu T, Gao W, Zhao Y, Roohani Y, Leskovec J, Coley CW, Xiao C, Sun J, Zitnik M. Artificial intelligence foundation for therapeutic science. Nature chemical biology. 2022. doi:10.1038/s41589-022-01131-2
+29. Loryan I, Reichel A, Feng B et al. Unbound Brain-to-Plasma Partition Coefficient, Kp,uu,brain—a Game Changing Parameter for CNS Drug Discovery and Development. Pharmaceutical Research. 2022. doi:10.1007/s11095-022-03246-6
+30. Zdrazil B, Felix E, Hunter F et al. The ChEMBL Database in 2023: a drug discovery platform spanning multiple bioactivity data types and time periods. Nucleic Acids Research. 2024. doi:10.1093/nar/gkad1004
+31. Milacic M, Beavers D, Conley P, Gong C, Gillespie M, Griss J, Haw R, Jassal B, Matthews L, May B, Petryszak R, Ragueneau E, Rothfels K, Sevilla C, Shamovsky V, Stephan R, Tiwari K, Varusai T, Weiser J, Wright A, Wu G, Stein L, Hermjakob H, D'Eustachio P. The Reactome Pathway Knowledgebase 2024. Nucleic acids research. 2024. doi:10.1093/nar/gkad1025
+32. Harding SD, Armstrong JF, Faccenda E, Southan C, Alexander SPH, Davenport AP, Spedding M, Davies JA. The IUPHAR/BPS Guide to PHARMACOLOGY in 2024. Nucleic acids research. 2024. doi:10.1093/nar/gkad944
 
 ## Software
 

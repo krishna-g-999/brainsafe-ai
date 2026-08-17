@@ -60,6 +60,7 @@ TITLES = {
     # claim was removed rather than the test added, so the reference goes with it. A bibliography
     # entry for a method that is not used is padding.
     "wilson_ci": "Probable Inference, the Law of Succession, and Statistical Inference",
+    "shap_trees": "From local explanations to global understanding with explainable AI for trees",
     "cns_attrition": "Drug metabolism and pharmacokinetics, the blood-brain barrier, and central nervous system drug discovery",
     "ache_ad": "Acetylcholinesterase inhibitors for Alzheimer's disease",
     "bace1_fail": "BACE1 inhibitors: attractive therapeutics for Alzheimer's disease",
@@ -95,6 +96,11 @@ TITLES = {
 DOIS = {
     "xgboost": ("10.1145/2939672.2939785", "XGBoost: A Scalable Tree Boosting System", "Chen"),
     "ecfp": ("10.1021/ci100050t", "Extended-Connectivity Fingerprints", "Rogers"),
+    # TreeExplainer, which is the exact-for-trees estimator actually used, rather than the 2017
+    # NeurIPS paper that introduced SHAP in general and has no registered DOI.
+    "shap_trees": ("10.1038/s42256-019-0138-9",
+                   "From local explanations to global understanding with explainable AI for trees",
+                   "Lundberg"),
     "random_forest": ("10.1023/a:1010933404324", "Random Forests", "Breiman"),
 }
 # Works with no registered DOI, so no title query can resolve them. Each is recorded with the page

@@ -28,9 +28,13 @@ def main():
     tbl = TABLES.read_text(encoding="utf-8")
     # drop the generated file's own H1 header, keep the tables
     tbl = "\n".join(l for l in tbl.splitlines() if not l.startswith("# "))
-    if "<!-- TABLES -->" not in text:
-        raise SystemExit("marker <!-- TABLES --> not found in manuscript source")
-    text = text.replace("<!-- TABLES -->", tbl.strip())
+    # Optional. The NAR Web Server format allows four to five printed pages, so the generated
+    # tables are supplementary and the main text carries the marker only if it wants them inline.
+    if "<!-- TABLES -->" in text:
+        text = text.replace("<!-- TABLES -->", tbl.strip())
+    else:
+        print("no <!-- TABLES --> marker; tables stay in manuscript/tables_generated.md "
+              "as supplementary")
 
     # Citations are keys in the source and numbers only in the built file, so moving a paragraph
     # renumbers the bibliography instead of silently invalidating it.
