@@ -52,7 +52,7 @@ def panel_a(ax) -> None:
         x0 = 0.02 + j * 0.51
         ax.add_patch(Rectangle((x0, 0.18), 0.45, 0.66, facecolor="#FBFCFD",
                                edgecolor=S.HAIR, lw=0.7))
-        ax.text(x0 + 0.225, 0.875, title, ha="center", fontsize=7.0, fontweight="bold",
+        ax.text(x0 + 0.225, 0.875, title, ha="center", fontsize=7, fontweight="bold",
                 color=S.FAINT if mode == "random" else S.WITHHELD)
         if mode == "random":
             held = rng.permutation(len(pts))[: len(pts) // 10 + 2]
@@ -71,11 +71,13 @@ def panel_a(ax) -> None:
             else:
                 ax.plot(X, Y, "o", ms=3.0, mfc=S.EXPOSURE, mec="white", mew=0.4, alpha=0.65,
                         zorder=2)
+        # Short enough to sit inside its own half: at 6.5 pt the previous wording ran past the
+        # midline and the two captions met.
         ax.text(x0 + 0.225, 0.145,
-                "the held-out fold is scattered\nthrough every scaffold class"
+                "held out: scattered\nthrough every class"
                 if mode == "random" else
-                "the held-out fold is one whole\nclass, absent from training",
-                ha="center", va="top", fontsize=5.6, color=S.MUTED, linespacing=1.7)
+                "held out: one whole\nclass, absent entirely",
+                ha="center", va="top", fontsize=6.5, color=S.MUTED, linespacing=1.7)
 
     ax.plot([], [], "o", ms=3.2, mfc=S.EXPOSURE, mec="white", label="in training this fold")
     ax.plot([], [], "o", ms=3.6, mfc=S.WITHHELD, mec="white", label="held out this fold")
@@ -83,7 +85,7 @@ def panel_a(ax) -> None:
               columnspacing=1.4)
     ax.text(0.5, 1.055, "grey discs are Bemis-Murcko scaffold classes,\n"
                         "computed on the desalted parent",
-            ha="center", va="top", fontsize=5.6, color=S.MUTED, linespacing=1.7)
+            ha="center", va="top", fontsize=6.5, color=S.MUTED, linespacing=1.7)
 
 
 def panel_b(ax, cv) -> None:
@@ -99,7 +101,7 @@ def panel_b(ax, cv) -> None:
         ax.plot(row["random"], y, "o", ms=4.2, mfc=S.FAINT, mec="white", mew=0.6, zorder=3)
         ax.plot(row["scaffold"], y, "o", ms=4.6, mfc=S.WITHHELD, mec="white", mew=0.6, zorder=3)
 
-    ax.set_yticks(ys); ax.set_yticklabels(piv.index, fontsize=6.2)
+    ax.set_yticks(ys); ax.set_yticklabels(piv.index, fontsize=6.5)
     ax.set_xlabel("AUROC, mean over 10 folds")
     ax.set_xlim(0.82, 1.0)
     ax.set_ylim(-0.8, len(piv) - 0.2)
@@ -110,7 +112,7 @@ def panel_b(ax, cv) -> None:
     ax.legend(loc="lower right", handletextpad=0.3, borderpad=0.2)
     ax.text(0.0, 1.015, f"median cost {gap.median():.3f} AUROC\n"
                         f"(range {gap.min():.3f} to {gap.max():.3f})",
-            transform=ax.transAxes, fontsize=5.8, color=S.MUTED, va="bottom", linespacing=1.6)
+            transform=ax.transAxes, fontsize=6.5, color=S.MUTED, va="bottom", linespacing=1.6)
 
 
 def panel_c(ax, folds) -> None:
@@ -127,12 +129,12 @@ def panel_c(ax, folds) -> None:
             ax.plot(v, np.full(len(v), i + off), "o", ms=2.4, mfc=col, mec="none", alpha=0.75,
                     zorder=2)
             ax.plot([v.mean()], [i + off], "|", ms=9, color=S.INK, mew=1.1, zorder=3)
-    ax.set_yticks(range(len(order))); ax.set_yticklabels(order, fontsize=6.2)
+    ax.set_yticks(range(len(order))); ax.set_yticklabels(order, fontsize=6.5)
     ax.set_xlabel("AUROC, individual folds")
     ax.set_ylim(-0.7, len(order) - 0.3)
     S.strip(ax, x=True, y=False)
     ax.text(0.0, 1.015, "each point is one fold;\nthe rule is their mean",
-            transform=ax.transAxes, fontsize=5.8, color=S.MUTED, va="bottom", linespacing=1.6)
+            transform=ax.transAxes, fontsize=6.5, color=S.MUTED, va="bottom", linespacing=1.6)
 
 
 def main() -> None:
@@ -140,7 +142,7 @@ def main() -> None:
     cv = pd.read_csv(TAB / "rf_cv_summary.csv")
     folds = pd.read_csv(TAB / "rf_cv_folds.csv")
 
-    fig = plt.figure(figsize=(S.DOUBLE, 3.35))
+    fig = plt.figure(figsize=(S.DOUBLE, 4.09))
     gs = fig.add_gridspec(1, 3, width_ratios=[1.18, 0.92, 0.92], wspace=0.42,
                           left=0.045, right=0.99, top=0.815, bottom=0.135)
     a, b, c = (fig.add_subplot(gs[i]) for i in range(3))
