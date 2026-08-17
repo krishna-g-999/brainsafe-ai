@@ -93,3 +93,7 @@ _ARCHIVE_*/
 repro/coverage/
 .coverage
 coverage.xml
+
+# NPASS 3.0 bulk download: ~330 MB of TSV, kept on disk, not in git, for the same
+# reason the model binaries are not. Re-download from https://bidd.group/NPASS/
+NPASS data/
