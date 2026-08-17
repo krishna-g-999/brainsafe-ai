@@ -12,14 +12,14 @@
 
 ## Abstract
 
-BrainSafe AI is a web server that profiles a small molecule against the human brain from structure
-alone. For a submitted SMILES string or compound name it returns, in a few seconds, predicted
-blood-brain barrier penetration, engagement of 60 molecular targets spanning the principal
-neurodegenerative, psychiatric, neuroinflammatory, analgesic and sleep-related axes, two cardiac
-safety liabilities, a nine-endpoint ADME and exposure layer including a directly modelled unbound
-brain-to-plasma ratio, and a set of disease-level scores obtained by tracing engaged targets through
-a curated target-to-pathway-to-disease graph. Every target score is admitted only in proportion to
-predicted brain exposure, so potency at a target a compound cannot reach contributes nothing. The
+BrainSafe AI is a web server that profiles the mechanism by which a small molecule may act on the
+human brain, from structure alone. For a submitted SMILES string or compound name it returns, in a
+few seconds, engagement of 60 molecular targets spanning the principal neurodegenerative,
+psychiatric, neuroinflammatory, analgesic and sleep-related axes, predicted blood-brain barrier
+penetration, two cardiac safety liabilities, and a nine-endpoint ADME and exposure layer including a
+directly modelled unbound brain-to-plasma ratio. Every target score is admitted only in proportion to
+predicted brain exposure, so potency at a target a compound cannot reach contributes nothing, and
+engaged targets are traced through a curated pathway graph to the conditions they touch. The
 server is built on 72 estimators trained on 227,146 measured compound-endpoint records from ChEMBL
 [@chembl], BindingDB [@bindingdb] and B3DB [@b3db], and validated under both random and
 scaffold-grouped 10-fold cross-validation: mean AUROC 0.958 and 0.925 respectively across the
@@ -27,7 +27,12 @@ measured-label classifiers, with expected calibration error falling from 0.0795 
 isotonic calibration. Every prediction carries a calibrated probability, a conformal interval and an
 applicability-domain distance to the nearest measured analogue, and the server reports silence rather
 than a guess for compounds outside its competence: on non-CNS chemistry its specificity is 0.948
-(95% CI 0.932 to 0.960). BrainSafe AI is freely available without registration at [SERVER URL TO BE
+(95% CI 0.932 to 0.960). The binder panel, validated against compounds measured and found inactive at
+the same target rather than against decoys, reaches a mean AUROC of 0.904 and recovers the
+pharmacologically correct driving target for reference drugs. Disease-level scores are presented as a
+route from a mechanism to the conditions it touches, not as an indication prediction, because 27 of
+52 targets drive more than one condition and structure alone does not resolve which. BrainSafe AI is
+freely available without registration at [SERVER URL TO BE
 SUPPLIED], with source code, trained models and all validation artefacts at
 https://github.com/krishna-g-999/brainsafe-ai.
 
@@ -190,14 +195,34 @@ core. No registration is required and sample compounds are provided.
 
 ## Results
 
-### Panel performance
+The server's primary output is mechanism: which targets a compound engages, with what confidence,
+and whether it reaches them. That is where the evidence is strongest, and the results are presented
+in that order. The disease layer is a navigational aid built on top of the mechanism call, and its
+weaknesses are reported in their own section rather than folded into the headline.
+
+### Target engagement, the primary output
+
+The 49 binder classifiers are validated not against the decoys used to train them but against
+compounds experimentally tested at the same target and found inactive. They reach a mean AUROC of
+0.904 and a mean sensitivity of 0.866 on actives withheld by scaffold, at thresholds constrained
+simultaneously by held-out measured inactives and by the false-positive rate on a disjoint pool of
+unrelated chemistry; 47 of 49 are deployed. Measured on that disjoint pool the background
+false-positive rate has a median of 0.0249.
 
 The eight measured-label classifiers reach a mean AUROC of 0.958 under the random split and 0.925
 under the scaffold split (Figure 2C). BACE1 is most robust to chemotype change, losing 0.012 between
 splits, and MAO-A least, losing 0.065. The four receptor potency regressions reach R² 0.64 to 0.72
-(random) and 0.46 to 0.61 (scaffold). The 49 binder classifiers, validated against compounds measured
-and found inactive at the same target rather than against the decoys used to train them, reach a mean
-AUROC of 0.904 and a mean sensitivity of 0.866 on actives withheld by scaffold; 47 are deployed.
+(random) and 0.46 to 0.61 (scaffold).
+
+The mechanism call is correct where it can be checked against pharmacology that is not in dispute.
+For donepezil, haloperidol, morphine and fluoxetine the server names acetylcholinesterase, D2, the
+mu-opioid receptor and the serotonin transporter respectively as the driving target (Figure 4A).
+Attribution supports the same conclusion from a different direction: SHAP values computed with
+TreeExplainer [@shap_trees], which is exact for a random forest rather than an approximation, recover
+known physicochemistry that was never supplied to the models. For the barrier model, larger TPSA,
+molecular weight and hydrogen-bond donor count all push away from penetration (Spearman correlation
+between feature value and SHAP value of -0.93, -0.95 and -0.90) while drug-likeness pushes towards it
+(+0.93); for hERG, lipophilicity pushes towards blockade (+0.95).
 
 An independent reproduction re-ran the entire cross-validation from the endpoint tables and scored it
 with separately written metric code. All 26 core values reproduced exactly, with a maximum deviation
@@ -249,29 +274,58 @@ brain is reported as such rather than as a hit. We are not aware of another free
 that returns exposure-gated, calibrated, mechanism-resolved profiles across this many CNS endpoints
 with an explicit applicability-domain statement on every value.
 
-### Use case: mechanism-resolved profiling, and knowing when to stay silent
+### Use case: a mechanism profile, and knowing when to stay silent
 
-Submitting donepezil returns a barrier probability of 0.99 and a top disease score of 0.99 for
-Alzheimer's disease, driven by acetylcholinesterase, with cognition (cholinergic) also at 0.99 and a
-secondary neuroprotection signal at 0.76. Haloperidol returns psychosis at 0.95 driven by D2;
-morphine returns chronic pain at 0.99 driven by the mu-opioid receptor; fluoxetine returns depression
-and anxiety at 0.99 driven by the serotonin transporter. In each case the server names the mechanism,
-not only the indication, and the mechanism is the pharmacologically correct one (Figure 4).
+Submitting donepezil returns a barrier probability of 0.99 and acetylcholinesterase as the driving
+target, surfacing Alzheimer's disease at 0.99 with cognition (cholinergic) alongside it. Haloperidol
+returns D2 and psychosis at 0.95; morphine returns the mu-opioid receptor and chronic pain at 0.99;
+fluoxetine returns the serotonin transporter and depression at 0.99 (Figure 4A). In each case the
+server names the mechanism, and the mechanism is the pharmacologically correct one.
 
-The complementary behaviour is silence. Atorvastatin, metformin, paracetamol and caffeine return a
-barrier probability consistent with their known distribution and no disease score above threshold. On
-a set of fifteen external reference compounds, the server was correctly silent on 7 of 7 non-CNS
-controls.
+The complementary behaviour is silence. Atorvastatin, metformin, losartan and hydrochlorothiazide
+return barrier probabilities between 0.18 and 0.46 and no disease score above the reporting
+threshold (Figure 4B). On a set of fifteen external reference compounds the server was correctly
+silent on 7 of 7 non-CNS controls. Silence is not a side effect: a target score is admitted only in
+proportion to predicted barrier penetration, so a compound that does not arrive cannot generate a
+call.
 
-That same set exposes the principal limitation. It named the expected indication for only 1 of 8 CNS
-drugs, the remainder falling below the reporting threshold. Validated at scale against ChEMBL phase-4
-indications on 162 approved drugs whose structures appear nowhere in training, top-3 accuracy is
-0.352 (95% CI 0.283 to 0.428) against a permutation null of 0.145 (p = 0.0005) but a frequency null
-of 0.654. The output therefore depends on the compound and is not memorisation, yet it does not beat
-a constant answer naming the commonest CNS indications. Removing the reporting threshold and judging
-the ranking alone raises accuracy to 0.451, which locates much of the gap in the decision to stay
-silent rather than in the ranking. The server is best used as mechanism-resolved triage, not as an
-indication oracle, and it is configured to under-call rather than over-call.
+### The disease layer, and why it is a navigational aid rather than a prediction
+
+The disease layer maps engaged targets onto conditions. It carries real information about its own
+map: asked to recover the disease its target graph implies, it reaches top-3 accuracy 0.804 against a
+permutation null of 0.157. It does not, however, predict clinical indication, and the evidence for
+that limit is worth stating precisely because it is easy to overstate the layer in either direction.
+
+Validated against ChEMBL phase-4 indications on the 162 approved drugs whose structures appear
+nowhere in the training chemistry, and judging the ranking alone with no reporting threshold, top-3
+accuracy is 0.451. The model beats a permutation null decisively at every depth, so its output does
+depend on the compound and is not memorisation. It does not beat a frequency null naming the
+commonest CNS indications, and, importantly, reporting more conditions does not close that gap but
+widens it:
+
+| Conditions reported | Model | Frequency null | Difference |
+|---|---|---|---|
+| top-1 | 0.296 | 0.395 | -0.099 |
+| top-3 | 0.451 | 0.654 | -0.204 |
+| top-5 | 0.549 | 0.821 | -0.272 |
+| top-8 | 0.605 | 0.969 | -0.364 |
+
+A constant answer gains from each additional slot faster than the model does, because approved CNS
+indications are concentrated in a few classes. Deepening the list is therefore not a remedy.
+
+The reason is structural rather than a deficiency of fitting, and it is visible in the graph: 27 of
+the 52 panel targets drive more than one condition. GABA-A alone contributes to depression and
+anxiety, sleep and wakefulness, and epilepsy. One molecular event genuinely underlies several
+indications, and what selects among them, dose, regimen, exposure duration, patient population and
+trial history, is not present in a structure. Consistent with this, the median rank of the true
+indication among the never-seen drugs is 4: the server places the correct condition in the right
+mechanistic neighbourhood but cannot resolve which member of that neighbourhood a compound was
+developed for.
+
+The disease scores are therefore presented as a route from a mechanism to the conditions that
+mechanism touches, useful for orientation and for deciding what to test next, and they are not
+offered as an indication prediction. The mechanism call, not the disease list, is the result this
+server stands on.
 
 ### What the falsification analysis removed
 
@@ -296,11 +350,17 @@ could fail.
 
 Three limitations bound its use. The applicability-domain flag does not currently separate
 non-drug-like chemistry from unseen drugs, so the conformal interval and the nearest-analogue
-distance, rather than the flag, should be read as the statement of confidence. Indication-level
-prediction on unseen drugs does not beat a constant answer naming the commonest CNS indications, so
-disease scores are triage rather than diagnosis. And the specificity estimate rests on compounds
-presumed inactive because nothing is recorded about them, drawn from within the reference library, so
-it does not bound behaviour on genuinely distant chemistry.
+distance, rather than the flag, should be read as the statement of confidence. The specificity
+estimate rests on compounds presumed inactive because nothing is recorded about them, drawn from
+within the reference library, so it does not bound behaviour on genuinely distant chemistry.
+
+The third is the disease layer, and it is a limit of the question rather than of the fitting. Clinical
+indication is not a function of structure: 27 of the 52 panel targets drive more than one condition,
+and what selects among them is dose, regimen, exposure and trial history. The layer does not beat a
+frequency baseline at any reporting depth, and reporting more conditions widens rather than closes
+that gap. It is offered as a route from a mechanism to the conditions that mechanism touches, and the
+mechanism call is the result the server stands on. Improving it would require the clinical covariates
+that determine indication, not a better model of the molecule.
 
 The server is designed to be extended: adding an endpoint requires a measured table and one training
 command, and every artefact in this manuscript regenerates from the repository with a single command
