@@ -3,8 +3,10 @@
 One palette and one set of typographic rules, so eleven figures read as one document rather than as
 eleven separate plots. The constraints are the journal's and the reader's, not decorative:
 
-  - every figure legible at a single column width, 89 mm, which is why the base font is 8 pt and
-    nothing smaller than 6 pt appears anywhere
+  - nothing below MIN_PT at final size. Journal figures are reproduced at the width given here and
+    not reduced further, so the point sizes in these scripts are the point sizes a reader sees. An
+    earlier version used 4.9 to 5.9 pt in fifty-four places, which is legible on screen at 400 dpi
+    and is not legible in print; the floor is enforced by pt() rather than left to each script
   - the palette is distinguishable in the three common forms of colour blindness and in greyscale,
     so category is never carried by hue alone; position, shape or a label carries it too
   - no chartjunk that encodes nothing: no gradients behind data, no 3-D, no drop shadows on marks
@@ -31,6 +33,18 @@ FIGDIR = ROOT / "manuscript" / "figures"
 
 # Column widths in inches, from the NAR author guidelines: single 89 mm, double 183 mm.
 SINGLE, DOUBLE = 3.50, 7.20
+
+# The smallest type allowed anywhere in the figure set, in points at final size.
+MIN_PT = 6.5
+
+
+def pt(size: float) -> float:
+    """Clamp a requested point size to the print floor.
+
+    Scripts ask for the size they want and get the size a reader can read. Keeping the clamp here
+    rather than editing every call site means the floor can be raised once, for the whole set.
+    """
+    return max(float(size), MIN_PT)
 
 INK = "#12181F"          # near-black; pure black reads as heavy in print
 MUTED = "#5A6672"

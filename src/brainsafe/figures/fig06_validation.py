@@ -47,7 +47,7 @@ def panel_a(ax, cal, con) -> None:
             label="raw forest vote")
     ax.plot(d.ece_calibrated, ys, "o", ms=4.0, mfc=S.TARGET, mec="white", mew=0.5, zorder=3,
             label="after isotonic")
-    ax.set_yticks(ys); ax.set_yticklabels(d.endpoint, fontsize=6.2)
+    ax.set_yticks(ys); ax.set_yticklabels(d.endpoint, fontsize=6.5)
     ax.set_xlabel("expected calibration error")
     ax.set_xlim(-0.004, max(d.ece_raw) * 1.10)
     ax.set_ylim(-0.9, len(d) - 0.1)
@@ -57,12 +57,20 @@ def panel_a(ax, cal, con) -> None:
     ax.text(0.0, 1.02, f"mean ECE {d.ece_raw.mean():.4f} to {d.ece_calibrated.mean():.4f};  "
                        f"conformal coverage {cov.min():.3f} to {cov.max():.3f} "
                        f"against a {con.target_coverage.iloc[0]:.2f} target",
-            transform=ax.transAxes, fontsize=5.6, color=S.MUTED, va="bottom")
+            transform=ax.transAxes, fontsize=6.5, color=S.MUTED, va="bottom")
 
 
 def panel_b(ax, hold) -> None:
-    """Recall on withheld scaffold classes, with intervals that show the evidence."""
-    d = hold[hold.get("usable", True).astype(bool)] if "usable" in hold.columns else hold
+    """Recall on withheld scaffold classes, with intervals that show the evidence.
+
+    Filtered on threshold_collapsed, NOT on the `usable` column. `usable` is defined in
+    scaffold_holdout_report.py as `not collapsed and recall >= 0.50`, so it conditions on the very
+    quantity being summarised: selecting on it drops the four weakest targets because they are weak
+    and then reports the median of the survivors, which reads as 0.832 where the panel's median is
+    0.814. Excluding a degenerate threshold is legitimate; excluding a poor result is not.
+    """
+    d = hold[~hold.threshold_collapsed.astype(bool)] if "threshold_collapsed" in hold.columns \
+        else hold
     d = d.dropna(subset=["holdout_recall"]).sort_values("holdout_recall").reset_index(drop=True)
     ys = np.arange(len(d))
     ax.hlines(ys, d.recall_ci95_low, d.recall_ci95_high, color=S.HAIR, lw=1.6, zorder=1)
@@ -77,7 +85,7 @@ def panel_b(ax, hold) -> None:
     ax.text(0.03, 0.955, f"median {d.holdout_recall.median():.2f}\n"
                          "marker size is the number of\nwithheld actives; bars are\n"
                          "95 per cent Wilson intervals",
-            transform=ax.transAxes, fontsize=5.6, color=S.MUTED, va="top", linespacing=1.7)
+            transform=ax.transAxes, fontsize=6.5, color=S.MUTED, va="top", linespacing=1.7)
 
 
 def panel_c(ax, spec, ext) -> None:
@@ -104,10 +112,10 @@ def panel_c(ax, spec, ext) -> None:
         if np.isfinite(lo) and np.isfinite(hi):
             ax.hlines(y, lo, hi, color=S.HAIR, lw=2.0, zorder=1)
         ax.plot(est, y, "o", ms=4.2, mfc=col, mec="white", mew=0.5, zorder=3)
-        ax.text(est, y + 0.30, f"{est:.3f}" + (f"  n={n:,}" if n else ""), fontsize=5.4,
+        ax.text(est, y + 0.30, f"{est:.3f}" + (f"  n={n:,}" if n else ""), fontsize=6.5,
                 color=S.INK, ha="center")
     ax.set_yticks(ys)
-    ax.set_yticklabels([r[0] for r in rows], fontsize=5.4, linespacing=1.5)
+    ax.set_yticklabels([r[0] for r in rows], fontsize=6.5, linespacing=1.5)
     ax.set_xlabel("estimate (specificity, or AUROC for the external sets)")
     ax.set_xlim(0.4, 1.02); ax.set_ylim(-0.8, len(rows) - 0.2)
     S.strip(ax, x=True, y=False)
@@ -115,7 +123,7 @@ def panel_c(ax, spec, ext) -> None:
     ax.text(0.5, -0.255, "teal: specificity on chemistry the server should stay quiet about.\n"
                          "blue: external discrimination on approved drugs absent from the "
                          "training source.",
-            transform=ax.transAxes, fontsize=5.4, color=S.MUTED, ha="center", va="top",
+            transform=ax.transAxes, fontsize=6.5, color=S.MUTED, ha="center", va="top",
             linespacing=1.7)
 
 
@@ -130,15 +138,15 @@ def panel_d(ax, inv) -> None:
         y = 0.80 - i * 0.135
         ok = str(r["result"]).upper() == "PASS"
         col = S.GOOD if ok else S.WARN
-        ax.text(0.0, y, "PASS" if ok else "FAIL", fontsize=5.8, color=col, fontweight="bold",
+        ax.text(0.0, y, "PASS" if ok else "FAIL", fontsize=6.5, color=col, fontweight="bold",
                 family="monospace", va="center")
         text = str(r["check"])
-        ax.text(0.085, y, text if len(text) <= 74 else text[:72] + "...", fontsize=5.6,
+        ax.text(0.085, y, text if len(text) <= 74 else text[:72] + "...", fontsize=6.5,
                 color=S.INK if ok else S.WARN, va="center")
     ax.text(0.0, 0.055, "The failing check is reported at the size of the others and is not tuned "
                         "until it passes.\nIt is a finding about the domain flag, and the "
                         "Discussion treats it as one.",
-            fontsize=5.5, color=S.MUTED, va="top", linespacing=1.7)
+            fontsize=6.5, color=S.MUTED, va="top", linespacing=1.7)
 
 
 def main() -> None:
@@ -150,7 +158,7 @@ def main() -> None:
     ext = pd.read_csv(TAB / "external_bbb_validation.csv")
     inv = pd.read_csv(TAB / "inversion_validation.csv")
 
-    fig = plt.figure(figsize=(S.DOUBLE, 5.35))
+    fig = plt.figure(figsize=(S.DOUBLE, 6.53))
     gs = fig.add_gridspec(2, 2, height_ratios=[1.0, 0.94], hspace=0.55, wspace=0.40,
                           left=0.075, right=0.985, top=0.915, bottom=0.095)
     a = fig.add_subplot(gs[0, 0]); b = fig.add_subplot(gs[0, 1])

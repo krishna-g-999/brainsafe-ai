@@ -79,7 +79,7 @@ def main() -> None:
             print(f"  NOTE {r['compound']}: expected driver {r['expected']}, "
                   f"server reports {r['driver']}", flush=True)
 
-    fig, (ax, bx) = plt.subplots(1, 2, figsize=(S.DOUBLE, 2.9),
+    fig, (ax, bx) = plt.subplots(1, 2, figsize=(S.DOUBLE, 3.54),
                                  gridspec_kw={"width_ratios": [1.35, 1.0], "wspace": 0.42})
 
     # ---- left: the disease call, gated by exposure ------------------------------------------
@@ -93,12 +93,12 @@ def main() -> None:
         called = r["score"] >= REPORT_THRESHOLD
         lab = (f"{r['top']}" + (f"  via {r['driver']}" if r["driver"] else "")) if called \
             else "no call above threshold"
-        ax.text(max(w, 0.02) + 0.02, y, lab, va="center", fontsize=5.8,
+        ax.text(max(w, 0.02) + 0.02, y, lab, va="center", fontsize=6.5,
                 color=S.INK if called else S.MUTED)
     ax.axvline(REPORT_THRESHOLD, color=S.WARN, lw=0.9, ls=(0, (3, 2)), zorder=3)
-    ax.text(REPORT_THRESHOLD, len(rows) - 0.35, " reporting threshold", fontsize=5.4,
+    ax.text(REPORT_THRESHOLD, len(rows) - 0.35, " reporting threshold", fontsize=6.5,
             color=S.WARN, va="bottom")
-    ax.set_yticks(ys); ax.set_yticklabels([r["compound"] for r in rows], fontsize=6.4)
+    ax.set_yticks(ys); ax.set_yticklabels([r["compound"] for r in rows], fontsize=6.5)
     ax.set_xlim(0, 1.45); ax.set_xticks([0, 0.25, 0.5, 0.75, 1.0])
     ax.set_xlabel("top disease score, after exposure gating")
     S.strip(ax, x=True, y=False)
@@ -116,7 +116,7 @@ def main() -> None:
             dy -= 9.0
         right = r["bbb"] < 0.6
         bx.annotate(r["compound"], (r["bbb"], r["score"]), textcoords="offset points",
-                    xytext=(7 if right else -7, dy - 1.5), fontsize=5.2,
+                    xytext=(7 if right else -7, dy - 1.5), fontsize=6.5,
                     ha="left" if right else "right",
                     color=S.INK if r["cns"] else S.MUTED)
         placed.append((r["bbb"], r["score"] + dy / 200))
