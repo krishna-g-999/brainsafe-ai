@@ -51,6 +51,7 @@ sys.path.insert(0, str(ROOT / "src" / "brainsafe"))
 from features.featurize import featurize  # noqa: E402
 from models.train_rf import _scaffold_groups  # noqa: E402
 from models.pools import background_pools  # noqa: E402
+import panel  # noqa: E402
 
 M = ROOT / "models_rf"
 ACTIVE_P, DECOY_RATIO, TAN_MAX = 7.0, 3, 0.35
@@ -60,10 +61,22 @@ _GEN = rdFingerprintGenerator.GetMorganGenerator(radius=2, fpSize=2048)
 rng = np.random.default_rng(42)
 RF = dict(n_estimators=300, min_samples_leaf=4, n_jobs=-1, random_state=42, class_weight="balanced")
 
-TARGETS = ["HT1A", "HT6", "HT7", "H3", "DAT", "NET", "Sigma1", "CB1", "OPRK1", "OPRM1", "D3", "A1",
-           "a7nAChR", "LRRK2", "NLRP3", "P2X7", "COX2", "CSF1R", "PDE10A", "HDAC1", "HDAC6",
-           "GluN2B", "mGluR5", "GABA_A", "OX1", "OX2", "MT1", "mTOR", "SIRT1", "KEAP1", "GBA1",
-           "PDE4B", "Nav1_5", "D2", "A2A", "HT2A", "SERT"]
+# Seed list, used only to bootstrap a panel with no registry yet. Everything after that first build
+# comes from panel.py, because a hardcoded list stops covering the panel the moment the panel grows
+# and does so silently: this one held 37 names while 44 endpoints used this mode, so `make train`
+# refitted 39 of 52 binders and said DONE.
+SEED_TARGETS = ["HT1A", "HT6", "HT7", "H3", "DAT", "NET", "Sigma1", "CB1", "OPRK1", "OPRM1", "D3",
+                "A1", "a7nAChR", "LRRK2", "NLRP3", "P2X7", "COX2", "CSF1R", "PDE10A", "HDAC1",
+                "HDAC6", "GluN2B", "mGluR5", "GABA_A", "OX1", "OX2", "MT1", "mTOR", "SIRT1",
+                "KEAP1", "GBA1", "PDE4B", "Nav1_5", "D2", "A2A", "HT2A", "SERT"]
+MODE = panel.HYBRID
+
+
+def _targets() -> list[str]:
+    """Every endpoint this script is responsible for, from the panel registry."""
+    if not panel.MODES.exists():
+        return list(SEED_TARGETS)
+    return panel.names(mode=MODE)
 
 
 def _fp(s):
@@ -76,10 +89,11 @@ def main():
     # Existing entries in binder_modes.json are merged, not replaced, so a partial run leaves every
     # untouched endpoint exactly as it was validated. Retraining a deployed model silently would
     # invalidate every number already reported for it.
-    global TARGETS
+    TARGETS = sys.argv[1:] if len(sys.argv) > 1 else _targets()
     if len(sys.argv) > 1:
-        TARGETS = sys.argv[1:]
         print(f"training only: {', '.join(TARGETS)}", flush=True)
+    else:
+        print(f"training all {len(TARGETS)} endpoints in mode {MODE}", flush=True)
     # Decoys come from the decoy pool only. Drawing them from the whole background library put the
     # same compounds into training and into the sample the false-positive rate is later measured on.
     pools = background_pools(with_fingerprints=True)

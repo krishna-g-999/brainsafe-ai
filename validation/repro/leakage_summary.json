@@ -1,5 +1,5 @@
 {
-  "commit": "5c7114d331cb2cc7d7ecbd87425526770c2798bb",
+  "commit": "80141cc1eeb1a202e97b2a93dc5cf724467e8af8",
   "endpoints_checked": [
     "BBB",
     "AChE",
@@ -26,5 +26,5 @@
     ],
     "featurize_sees_label": []
   },
-  "wall_clock_s": 186.4
+  "wall_clock_s": 151.4
 }

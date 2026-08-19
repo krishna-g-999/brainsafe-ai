@@ -48,12 +48,12 @@
 
 | Endpoint | Property | Task | Compounds | Metric | Random 10-fold | Scaffold 10-fold | Why this endpoint |
 |---|---|---|---|---|---|---|---|
-| kpuu | Unbound brain/plasma ratio (Kp,uu) | regression | 566 | R2 | 0.404 ± 0.099 | 0.352 ± 0.158 | Free drug available to CNS targets |
-| logbb | Total brain/plasma ratio (logBB) | regression | 1,058 | R2 | 0.577 ± 0.081 | 0.423 ± 0.150 | Bulk brain distribution |
-| caco2_permeability | Caco-2 permeability | regression | 897 | R2 | 0.734 ± 0.051 | 0.584 ± 0.158 | Passive membrane permeability |
-| pgp_substrate | P-glycoprotein substrate | classification | 1,371 | AUROC | 0.858 ± 0.032 | 0.806 ± 0.038 | Active efflux out of the brain |
+| kpuu | Unbound brain/plasma ratio (Kp,uu) | regression | 566 | R2 | 0.406 ± 0.096 | 0.352 ± 0.158 | Free drug available to CNS targets |
+| logbb | Total brain/plasma ratio (logBB) | regression | 1,058 | R2 | 0.584 ± 0.079 | 0.413 ± 0.145 | Bulk brain distribution |
+| caco2_permeability | Caco-2 permeability | regression | 897 | R2 | 0.736 ± 0.050 | 0.582 ± 0.174 | Passive membrane permeability |
+| pgp_substrate | P-glycoprotein substrate | classification | 1,371 | AUROC | 0.856 ± 0.032 | 0.807 ± 0.041 | Active efflux out of the brain |
 | pgp_inhibition | P-glycoprotein inhibition | classification | 1,212 | AUROC | 0.955 ± 0.018 | 0.935 ± 0.029 | Efflux-mediated drug interactions |
-| solubility | Aqueous solubility (logS) | regression | 9,573 | R2 | 0.804 ± 0.017 | 0.728 ± 0.077 | Formulation and absorption |
+| solubility | Aqueous solubility (logS) | regression | 9,573 | R2 | 0.801 ± 0.013 | 0.726 ± 0.084 | Formulation and absorption |
 | lipophilicity | Lipophilicity (logD) | regression | 4,200 | R2 | 0.639 ± 0.028 | 0.566 ± 0.042 | Permeability/promiscuity balance |
 | plasma_protein_binding | Plasma protein binding | regression | 1,797 | R2 | 0.434 ± 0.090 | 0.364 ± 0.056 | Determines free fraction |
 | clearance_hepatocyte | Hepatocyte clearance | regression | 1,020 | R2 | 0.230 ± 0.104 | 0.206 ± 0.064 | Metabolic stability, exposure duration |
@@ -88,21 +88,21 @@ Models are trained only on compounds published before the cutoff year and tested
 
 | Endpoint | Target | Cutoff year | Train | Test | Metric | Score |
 |---|---|---|---|---|---|---|
-| AChE | Acetylcholinesterase | 2020 | 4,141 | 1,028 | AUROC | 0.760 |
+| AChE | Acetylcholinesterase | 2020 | 4,141 | 1,028 | AUROC | 0.761 |
 | BChE | Butyrylcholinesterase | 2021 | 2,696 | 617 | AUROC | 0.801 |
 | BACE1 | Beta-secretase 1 | 2017 | 6,901 | 1,673 | AUROC | 0.910 |
-| GSK3B | Glycogen synthase kinase-3 beta | 2021 | 4,205 | 546 | AUROC | 0.776 |
+| GSK3B | Glycogen synthase kinase-3 beta | 2021 | 4,205 | 546 | AUROC | 0.764 |
 | MAO_A | Monoamine oxidase A | 2020 | 2,859 | 819 | AUROC | 0.727 |
 | MAO_B | Monoamine oxidase B | 2020 | 3,719 | 923 | AUROC | 0.843 |
-| hERG | hERG potassium channel | 2020 | 8,158 | 2,059 | AUROC | 0.715 |
+| hERG | hERG potassium channel | 2020 | 8,158 | 2,059 | AUROC | 0.720 |
 | D2 | Dopamine D2 receptor | 2019 | 6,796 | 1,556 | R2 | 0.080 |
-| A2A | Adenosine A2A receptor | 2020 | 4,600 | 1,516 | R2 | 0.226 |
-| HT2A | Serotonin 5-HT2A receptor | 2020 | 4,741 | 986 | R2 | 0.157 |
+| A2A | Adenosine A2A receptor | 2020 | 4,600 | 1,516 | R2 | 0.229 |
+| HT2A | Serotonin 5-HT2A receptor | 2020 | 4,741 | 986 | R2 | 0.155 |
 | SERT | Serotonin transporter | 2015 | 3,647 | 1,147 | R2 | 0.111 |
-| antioxidant_DPPH | Radical-scavenging capacity | 2016 | 2,340 | 522 | R2 | 0.009 |
+| antioxidant_DPPH | Radical-scavenging capacity | 2016 | 2,340 | 522 | R2 | 0.007 |
 
 
-Classifier endpoints: mean AUROC 0.790 (range 0.715 to 0.910). Regression endpoints: mean R2 0.117 (range 0.009 to 0.226).
+Classifier endpoints: mean AUROC 0.789 (range 0.720 to 0.910). Regression endpoints: mean R2 0.116 (range 0.007 to 0.229).
 
 
 ## Table 6. Prospective validation under a scaffold hold-out
@@ -112,49 +112,50 @@ Twenty per cent of Bemis-Murcko scaffolds were withheld per target and every mod
 
 | Target | Train actives | Held-out actives | Held-out scaffolds | Threshold | Recall | 95% CI | Note |
 |---|---|---|---|---|---|---|---|
-| mTOR | 2,341 | 643 | 216 | 0.165 | 0.972 | [0.956, 0.982] |  |
-| H3 | 2,537 | 675 | 308 | 0.535 | 0.964 | [0.948, 0.976] |  |
-| OX1 | 2,711 | 601 | 178 | 0.386 | 0.962 | [0.943, 0.974] |  |
-| HDAC6 | 2,805 | 910 | 335 | 0.590 | 0.960 | [0.946, 0.971] |  |
-| LRRK2 | 962 | 211 | 90 | 0.150 | 0.948 | [0.909, 0.971] |  |
-| DAT | 1,013 | 324 | 93 | 0.178 | 0.944 | [0.914, 0.965] |  |
-| KEAP1 | 105 | 17 | 15 | 0.771 | 0.941 | [0.730, 0.990] |  |
-| HDAC1 | 2,433 | 622 | 292 | 0.808 | 0.926 | [0.903, 0.944] |  |
-| PDE4B | 873 | 255 | 99 | 0.081 | 0.925 | [0.887, 0.952] |  |
-| OX2 | 3,158 | 694 | 233 | 0.679 | 0.921 | [0.898, 0.939] |  |
-| PDE10A | 3,368 | 716 | 326 | 0.866 | 0.913 | [0.891, 0.932] |  |
-| OPRM1 | 3,025 | 693 | 302 | 0.575 | 0.903 | [0.879, 0.923] |  |
-| Nav1_7 | 2,180 | 564 | 179 | 0.911 | 0.901 | [0.873, 0.923] |  |
-| Nav1_5 | 162 | 80 | 27 | 0.050 | 0.887 | [0.800, 0.940] | excluded |
-| MT1 | 529 | 168 | 48 | 0.905 | 0.869 | [0.810, 0.912] |  |
-| HT6 | 2,098 | 643 | 167 | 0.936 | 0.866 | [0.838, 0.890] |  |
-| NET | 1,189 | 383 | 90 | 0.373 | 0.854 | [0.815, 0.886] |  |
-| CB1 | 2,145 | 535 | 196 | 0.153 | 0.850 | [0.818, 0.878] |  |
-| A2A | 3,262 | 839 | 337 | 0.942 | 0.839 | [0.813, 0.862] |  |
-| HT7 | 1,187 | 291 | 133 | 0.722 | 0.825 | [0.777, 0.864] |  |
-| HT1A | 2,902 | 801 | 327 | 0.940 | 0.814 | [0.786, 0.839] |  |
-| D3 | 3,377 | 750 | 351 | 0.941 | 0.808 | [0.778, 0.835] |  |
-| SERT | 2,227 | 744 | 185 | 0.556 | 0.802 | [0.772, 0.829] |  |
-| CSF1R | 1,419 | 365 | 152 | 0.969 | 0.778 | [0.733, 0.818] |  |
-| OPRK1 | 2,581 | 478 | 234 | 0.832 | 0.776 | [0.737, 0.811] |  |
-| A1 | 1,453 | 490 | 177 | 0.856 | 0.763 | [0.724, 0.799] |  |
-| GluA2 | 81 | 16 | 9 | 0.538 | 0.750 | [0.505, 0.898] |  |
+| HDAC6 | 3,052 | 663 | 335 | 0.710 | 0.970 | [0.954, 0.980] |  |
+| mTOR | 2,354 | 630 | 216 | 0.050 | 0.968 | [0.951, 0.979] | excluded |
+| DAT | 901 | 436 | 93 | 0.223 | 0.938 | [0.911, 0.957] |  |
+| H3 | 2,578 | 634 | 308 | 0.437 | 0.931 | [0.908, 0.948] |  |
+| CSF1R | 1,406 | 378 | 152 | 0.816 | 0.921 | [0.889, 0.944] |  |
+| HDAC1 | 2,352 | 703 | 292 | 0.706 | 0.919 | [0.896, 0.937] |  |
+| PDE10A | 3,305 | 779 | 326 | 0.649 | 0.917 | [0.895, 0.934] |  |
+| OX2 | 3,136 | 716 | 233 | 0.716 | 0.911 | [0.887, 0.929] |  |
+| NET | 1,244 | 328 | 90 | 0.288 | 0.909 | [0.872, 0.935] |  |
+| PDE4B | 908 | 220 | 99 | 0.146 | 0.909 | [0.864, 0.940] |  |
+| OX1 | 2,648 | 664 | 178 | 0.413 | 0.898 | [0.872, 0.918] |  |
+| OPRM1 | 2,964 | 754 | 302 | 0.472 | 0.897 | [0.873, 0.916] |  |
+| Nav1_5 | 196 | 46 | 27 | 0.050 | 0.891 | [0.770, 0.953] | excluded |
+| Nav1_1 | 40 | 25 | 9 | 0.223 | 0.880 | [0.700, 0.958] |  |
+| LRRK2 | 936 | 237 | 90 | 0.250 | 0.878 | [0.830, 0.913] |  |
+| CB1 | 2,235 | 445 | 196 | 0.144 | 0.867 | [0.833, 0.896] |  |
+| HT6 | 2,151 | 590 | 167 | 0.921 | 0.864 | [0.834, 0.890] |  |
+| TAAR1 | 68 | 25 | 9 | 0.513 | 0.840 | [0.653, 0.936] |  |
+| D3 | 3,272 | 855 | 351 | 0.932 | 0.830 | [0.804, 0.854] |  |
+| SERT | 2,347 | 624 | 185 | 0.552 | 0.829 | [0.797, 0.856] |  |
+| a7nAChR | 260 | 77 | 35 | 0.281 | 0.818 | [0.718, 0.888] |  |
+| A2A | 3,303 | 798 | 337 | 0.917 | 0.815 | [0.786, 0.840] |  |
+| HT1A | 2,902 | 801 | 327 | 0.937 | 0.814 | [0.786, 0.839] |  |
+| Nav1_7 | 2,365 | 379 | 179 | 0.903 | 0.794 | [0.751, 0.832] |  |
+| OPRK1 | 2,501 | 558 | 234 | 0.915 | 0.767 | [0.730, 0.800] |  |
+| HT7 | 1,214 | 264 | 133 | 0.911 | 0.746 | [0.690, 0.795] |  |
 | GBA1 | 102 | 18 | 10 | 0.294 | 0.722 | [0.491, 0.875] |  |
-| NLRP3 | 169 | 53 | 27 | 0.504 | 0.717 | [0.584, 0.820] |  |
-| mGluR5 | 987 | 213 | 106 | 0.812 | 0.685 | [0.620, 0.744] |  |
-| HT2A | 3,188 | 629 | 306 | 0.950 | 0.682 | [0.645, 0.717] |  |
-| GluN2B | 661 | 243 | 35 | 0.995 | 0.654 | [0.593, 0.711] |  |
-| D2 | 2,847 | 810 | 340 | 0.931 | 0.643 | [0.610, 0.675] |  |
-| a7nAChR | 249 | 88 | 35 | 0.408 | 0.625 | [0.521, 0.719] |  |
-| Sigma1 | 1,495 | 433 | 186 | 0.958 | 0.605 | [0.558, 0.650] |  |
-| COX2 | 921 | 261 | 67 | 0.797 | 0.556 | [0.495, 0.615] |  |
-| TAAR1 | 78 | 15 | 9 | 0.397 | 0.533 | [0.301, 0.752] |  |
-| GABA_A | 172 | 29 | 16 | 0.722 | 0.448 | [0.284, 0.625] |  |
-| SIRT1 | 128 | 34 | 17 | 0.511 | 0.412 | [0.264, 0.578] |  |
-| P2X7 | 2,100 | 838 | 139 | 0.998 | 0.288 | [0.258, 0.319] |  |
+| NLRP3 | 170 | 52 | 26 | 0.409 | 0.692 | [0.557, 0.801] |  |
+| Sigma1 | 1,518 | 410 | 186 | 0.972 | 0.683 | [0.636, 0.726] |  |
+| D2 | 2,971 | 686 | 340 | 0.939 | 0.681 | [0.645, 0.715] |  |
+| HT2A | 2,983 | 834 | 306 | 0.941 | 0.676 | [0.644, 0.707] |  |
+| A1 | 1,486 | 457 | 177 | 0.951 | 0.656 | [0.612, 0.699] |  |
+| mGluR5 | 990 | 210 | 106 | 0.910 | 0.652 | [0.586, 0.714] |  |
+| P2X7 | 2,123 | 815 | 139 | 0.995 | 0.531 | [0.497, 0.565] |  |
+| SIRT1 | 141 | 21 | 17 | 0.542 | 0.476 | [0.283, 0.676] |  |
+| COX2 | 991 | 191 | 67 | 0.827 | 0.424 | [0.356, 0.495] |  |
+| GABA_A | 162 | 39 | 16 | 0.878 | 0.410 | [0.271, 0.566] |  |
+| MT1 | 570 | 127 | 48 | 0.974 | 0.315 | [0.241, 0.400] |  |
+| KEAP1 | 85 | 37 | 15 | 0.841 | 0.297 | [0.175, 0.458] |  |
+| GluN2B | 772 | 132 | 35 | 0.996 | 0.250 | [0.184, 0.330] |  |
+| GluA2 | 65 | 32 | 9 | 0.835 | 0.000 | [0.000, 0.107] |  |
 
 
-Pooled recall 13,858/17,092 = 0.811; median per-target 0.814; 22 of 39 targets at or above 0.80.
+Pooled recall 12,858/16,014 = 0.803; median per-target 0.815; 21 of 39 targets at or above 0.80.
 
 
 ## Table 7. Falsification analysis: each claim paired with a null model
@@ -199,12 +200,12 @@ Candidates were selected because the clinical-indication test identified epileps
 
 | Candidate | Actives | Scaffolds | Measured inactives | AUROC vs inactives | Sensitivity | Outcome | Reason if rejected |
 |---|---|---|---|---|---|---|---|
-| a4b2nAChR | 796 | 278 | 146 | 0.937 | 0.899 | deployed |  |
-| a3b4nAChR | 398 | 153 | 187 | 0.973 | 0.955 | deployed |  |
-| Nav1_6 | 681 | 187 | 45 | 0.634 | 0.565 | deployed |  |
-| Nav1_8 | 501 | 163 | 39 | 0.876 | 0.728 | deployed |  |
-| Cav3_2 | 633 | 201 | 33 | 0.971 | 0.907 | withdrawn after training | active band compressed near zero, calibrated threshold 0.065, atenolol scores 0.084 |
+| a4b2nAChR | 796 | 278 | 146 | 0.923 | 0.863 | deployed |  |
+| a3b4nAChR | 398 | 153 | 187 | 0.974 | 0.970 | deployed |  |
+| Nav1_6 | 681 | 187 | 45 | 0.862 | 0.764 | deployed |  |
+| Nav1_8 | 501 | 163 | 39 | 0.956 | 0.947 | deployed |  |
+| Cav3_2 | 633 | 201 | 33 | 0.982 | 0.980 | deployed |  |
 | GABAA_a5 | 672 | 284 | 4 | n/a | n/a | not trained | only 4 measured inactives, cannot set a threshold honestly |
 | CGRP | 761 | 333 | 26 | 0.985 | 0.997 | deployed | only 26 measured inactives, cannot set a threshold honestly |
-| DHODH | 1421 | 360 | 145 | 0.964 | 0.967 | deployed |  |
-| RIPK1 | 2349 | 826 | 719 | 0.983 | 0.969 | deployed |  |
+| DHODH | 1421 | 360 | 145 | 0.966 | 0.981 | deployed |  |
+| RIPK1 | 2349 | 826 | 719 | 0.966 | 0.984 | deployed |  |

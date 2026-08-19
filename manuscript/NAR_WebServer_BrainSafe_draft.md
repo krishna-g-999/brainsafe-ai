@@ -24,12 +24,12 @@ server is built on 75 estimators, 70 of them deployed, trained on 228,200 measur
 compound-endpoint records from ChEMBL
 [@chembl], BindingDB [@bindingdb] and B3DB [@b3db], and validated under both random and
 scaffold-grouped 10-fold cross-validation: mean AUROC 0.958 and 0.925 respectively across the
-measured-label classifiers, with expected calibration error falling from 0.0795 to 0.0161 after
+measured-label classifiers, with expected calibration error falling from 0.0801 to 0.0147 after
 isotonic calibration. Every prediction carries a calibrated probability, a conformal interval and an
 applicability-domain distance to the nearest measured analogue, and the server reports silence rather
-than a guess for compounds outside its competence: on non-CNS chemistry its specificity is 0.933
-(95% CI 0.916 to 0.947). The binder panel, validated against compounds measured and found inactive at
-the same target rather than against decoys, reaches a mean AUROC of 0.902 and recovers the
+than a guess for compounds outside its competence: on non-CNS chemistry its specificity is 0.949
+(95% CI 0.934 to 0.961). The binder panel, validated against compounds measured and found inactive at
+the same target rather than against decoys, reaches a mean AUROC of 0.917 and recovers the
 pharmacologically correct driving target for reference drugs. Disease-level scores are presented as a
 route from a mechanism to the conditions it touches, not as an indication prediction, because 27 of
 the 52 targets in the pathway graph drive more than one condition and structure alone does not
@@ -116,14 +116,27 @@ class and never enters a regression.
 
 ### Representation and model selection
 
-Each compound is reduced to its largest organic fragment, sanitised, and represented by a fixed
-1,036-column vector: a 1,024-bit folded ECFP-4 fingerprint [@ecfp] and twelve physicochemical
+Each compound is reduced to its largest organic fragment, neutralised, sanitised, and represented
+by a fixed 1,036-column vector: a 1,024-bit folded ECFP-4 fingerprint [@ecfp] and twelve physicochemical
 descriptors (molecular weight, cLogP, TPSA, hydrogen-bond donors and acceptors, rotatable bonds,
 aromatic rings, fraction sp3, ring count, heavy atoms, formal charge, QED). Folding means a set bit
 reports that some substructure environment hashing to that index is present, not which one, and
 chirality is excluded, so two enantiomers produce byte-identical rows. Rows identical in feature
 space are therefore collapsed before any split; leaving them in place would put copies of one
 compound on both sides of a fold.
+
+Neutralisation is part of the representation rather than a detail of it, because a drug and its
+salt are the same molecule and must give the same answer. Removing the counter-ion without it
+leaves the parent carrying the charge the salt gave it, so haloperidol hydrochloride written as
+public databases serve it is a different input from haloperidol: on the models this server
+previously deployed it returned a barrier probability of 0.613 against 0.993, and an hERG
+probability of 0.295 against 0.914, so a user who pasted the salt form lost a cardiac liability
+flag on a compound that has one. Only protonation states are undone. A permanent charge is kept,
+because a quaternary ammonium has no proton to lose and its charge is precisely what stops it
+crossing the barrier; `formal_charge` therefore reports permanent charge rather than how a
+depositor happened to write a row. Of the 170,617 unique structures in the panel, 198 change
+representation under this rule and 1,155 charged ones are correctly left alone, and the whole
+panel was refitted afterwards so that training and inference share one representation.
 
 Five model families were compared under identical 5-fold cross-validation on both split regimes using
 scikit-learn [@sklearn], on the deduplicated matrix the deployed pipeline fits. Two are baselines a
@@ -151,16 +164,16 @@ validation scheme, calibration and fitting date, is given in Supplementary Table
 with one command.
 
 Classifiers are isotonically calibrated [@calibration] on out-of-fold predictions, so no compound
-contributes to the calibrator that scores it; mean expected calibration error falls from 0.0795 to
-0.0161. The reported value is specific to how the calibrator is nested, and the nesting is therefore
+contributes to the calibrator that scores it; mean expected calibration error falls from 0.0801 to
+0.0147. The reported value is specific to how the calibrator is nested, and the nesting is therefore
 stated: isotonic regression is fitted by five-fold `cross_val_predict` over the pooled out-of-fold
 prediction vector. Fitting it instead on the other nine folds' out-of-fold predictions, an equally
-defensible nesting, gives 0.0077 on the same data. Both are honest estimates of different
+defensible nesting, gives 0.0063 on the same data. Both are honest estimates of different
 estimators, and the difference is larger than any of the calibration gains it might be used to
 compare, so the protocol is reported rather than the number alone. Each prediction additionally
 carries a Mondrian conformal interval, which converts the
 applicability domain from a caveat into a coverage statement [@conformal]: empirical coverage is
-0.887 to 0.920 against a 0.90 target. The applicability domain itself is the maximum ECFP-4 Tanimoto
+0.889 to 0.921 against a 0.90 target. The applicability domain itself is the maximum ECFP-4 Tanimoto
 similarity of the query to that endpoint's own measured chemistry [@ad_qsar], reported with the
 nearest measured analogue and its structure.
 
@@ -179,8 +192,8 @@ restates the target instead of measuring it. The 158,890-compound background lib
 partitioned into three disjoint pools by a stable hash of the canonical structure, so a compound's
 pool is a property of the molecule and never depends on run order: 95,515 compounds supply decoys,
 31,694 set thresholds, and 31,681 measure the false-positive rate. Measured on the pool it was not
-set on, the background false-positive rate has a median of 0.0264 across the 43 deployed endpoints
-that carry one, and reaches 0.0631, exceeding its 0.05 target for three endpoints, which under the
+set on, the background false-positive rate has a median of 0.0259 across the 43 deployed endpoints
+that carry one, and reaches 0.0621, exceeding its 0.05 target for four endpoints, which under the
 previous procedure was arithmetically impossible. That the number can now disagree with its target is the evidence that it is a measurement.
 
 ### Disease layer and implementation
@@ -213,17 +226,20 @@ weaknesses are reported in their own section rather than folded into the headlin
 
 The 52 binder classifiers are validated not against the decoys used to train them but against
 compounds experimentally tested at the same target and found inactive. Across the 47 that are
-deployed they reach a mean AUROC of 0.902 and a mean sensitivity of 0.878 on actives withheld by
+deployed they reach a mean AUROC of 0.917 and a mean sensitivity of 0.898 on actives withheld by
 scaffold, at thresholds constrained simultaneously by held-out measured inactives and by the
-false-positive rate on a disjoint pool of unrelated chemistry. Five are withdrawn: two for firing on
-trivial metabolites, and three added to test natural-product coverage that failed on their own
-held-out inactives and are reported in the limitations. Measured on that disjoint pool the background
-false-positive rate has a median of 0.0264.
+false-positive rate on a disjoint pool of unrelated chemistry. Five are withdrawn: Nav1.1 and GluA2
+for firing on trivial metabolites at every usable threshold, and three added to test
+natural-product coverage, reported in the limitations. Withdrawal is re-derived whenever the panel
+is refitted rather than carried forward, because it is a claim about a particular fit: when the
+panel was retrained, Cav3.2 stopped failing and was reinstated while GluA2 began failing and was
+withdrawn. Measured on that disjoint pool the background
+false-positive rate has a median of 0.0259.
 
 The eight measured-label classifiers reach a mean AUROC of 0.958 under the random split and 0.925
 under the scaffold split. BACE1 is most robust to chemotype change, losing 0.012 between
-splits, and MAO-A least, losing 0.065. The four receptor potency regressions reach R² 0.64 to 0.72
-(random) and 0.46 to 0.61 (scaffold).
+splits, and MAO-A least, losing 0.056. The four receptor potency regressions reach R² 0.64 to 0.72
+(random) and 0.46 to 0.62 (scaffold).
 
 The mechanism call is correct where it can be checked against pharmacology that is not in dispute.
 For donepezil, haloperidol, morphine and fluoxetine the server names acetylcholinesterase, D2, the
@@ -237,7 +253,7 @@ between feature value and SHAP value of -0.93, -0.95 and -0.90) while drug-liken
 
 An independent reproduction re-ran the entire cross-validation from the endpoint tables and scored it
 with separately written metric code. All 26 core values reproduced exactly, with a maximum deviation
-of 4.8 x 10⁻⁵, attributable to rounding in the stored summary.
+of 4.7 x 10⁻⁵, attributable to rounding in the stored summary.
 
 ### The validations that a cross-validated score cannot replace
 
@@ -247,25 +263,25 @@ On the raw table the feature-vector overlap reaches 544, which is precisely what
 removes.
 
 **Null models.** With labels permuted, the same pipeline on the same folds returns a mean AUROC of
-0.5016 (random) and 0.5055 (scaffold), with a worst single endpoint of 0.5253. Whole scaffold classes
+0.4938 (random) and 0.4921 (scaffold), with a worst single endpoint of 0.5174. Whole scaffold classes
 do not carry enough class-frequency information for a label-free model to beat chance, so the
 scaffold figures are not inflated by that route.
 
 **Prospective sensitivity.** Whole scaffold classes were withheld before training. Pooled recall on
-them is 0.811 (95% CI 0.805 to 0.817), with a per-target median of 0.814 across the 39 targets whose
+them is 0.803 (95% CI 0.797 to 0.809), with a per-target median of 0.815 across the 39 targets whose
 decision threshold did not collapse (Figure 3B). Targets are excluded only for a degenerate
 threshold, never for a poor recall.
 
 **External validation.** The barrier model was tested on FDA-curated approved drugs absent from B3DB
-by InChIKey: AUROC 0.761 on all 306, and 0.788 on the 241 that are also distinguishable from the
+by InChIKey: AUROC 0.764 on all 306, and 0.793 on the 241 that are also distinguishable from the
 training set in feature space, which is the subset that supports an external claim (Figure 3C). The
 65 excluded by that second criterion are feature-identical to a training compound and score 0.710,
 which is the size of the memorisation the first figure contains.
 
 **Specificity.** One thousand compounds carrying no recorded activity at any modelled target were
-scored through the deployed pipeline. 933 returned no actionable disease signal, a specificity of
-0.933 (95% CI 0.916 to 0.947). Of the 67 false positives, 44 fired on a single condition rather than
-producing a diffuse profile, and the median score among them was 0.423, only modestly above the
+scored through the deployed pipeline. 949 returned no actionable disease signal, a specificity of
+0.949 (95% CI 0.934 to 0.961). Of the 51 false positives, 28 fired on a single condition rather than
+producing a diffuse profile, and the median score among them was 0.448, only modestly above the
 actionable threshold. These compounds are presumed inactive because nothing is recorded, not proven
 inactive, so this is a lower bound.
 
@@ -305,16 +321,21 @@ server names the mechanism, and the mechanism is the pharmacologically correct o
 
 The complementary behaviour is silence. Atorvastatin, metformin, losartan and hydrochlorothiazide
 return barrier probabilities between 0.18 and 0.46 and no disease score above the reporting
-threshold (Figure 4B). On a set of fifteen external reference compounds the server was correctly
-silent on 7 of 7 non-CNS controls. Silence is not a side effect: a target score is admitted only in
+threshold (Figure 4B). On the external reference set the server is correctly silent on 3 of the 5
+non-CNS controls that are not already in its training chemistry. The two it calls are worth
+naming rather than pooling: insulin glargine, a peptide that a small-molecule descriptor set
+cannot represent and that the server should decline rather than score, and allopurinol at 0.395,
+just above the reporting threshold. The control set is smaller than it was because desalting and
+neutralisation made the in-training test stricter, moving two compounds that had been counted as
+external into the training set where they belong. Silence is not a side effect: a target score is admitted only in
 proportion to predicted barrier penetration, so a compound that does not arrive cannot generate a
 call.
 
 ### The disease layer, and why it is a navigational aid rather than a prediction
 
 The disease layer maps engaged targets onto conditions. It carries real information about its own
-map: asked to recover the disease its target graph implies, it reaches top-3 accuracy 0.804 against a
-permutation null of 0.157. It does not, however, predict clinical indication, and the evidence for
+map: asked to recover the disease its target graph implies, it reaches top-3 accuracy 0.786 against a
+permutation null of 0.154. It does not, however, predict clinical indication, and the evidence for
 that limit is worth stating precisely because it is easy to overstate the layer in either direction.
 
 Validated against ChEMBL phase-4 indications on the 162 approved drugs whose structures appear
@@ -351,12 +372,17 @@ server stands on.
 ### What the falsification analysis removed
 
 Every result above was produced by first attempting to break it. The analysis returned findings in
-both directions. The disease layer carries real information: top-3 accuracy 0.804 against a
-permutation null of 0.157. Its curated edge weights do not: uniform and randomly permuted weights
-score 0.8025 and 0.8023 against 0.8043, so the predictive content lies in the graph topology, and the
-weights are reported as structure rather than as tuned parameters. The same analysis found a deployed
-endpoint, Nav1.1, assigning binder probabilities between 0.80 and 0.82 to glucose, urea, acetate and
-glycine against a threshold of 0.796; it was withdrawn, as was Cav3.2.
+both directions. The disease layer carries real information: top-3 accuracy 0.786 against a
+permutation null of 0.154. Its curated edge weights do not: uniform and randomly permuted weights
+score 0.7861 and 0.7844 against 0.7865, so the predictive content lies in the graph topology, and the
+weights are reported as structure rather than as tuned parameters. The same analysis found a
+deployed endpoint, Nav1.1, calling glucose, urea, glycine, lactate and atenolol binders at its
+calibrated threshold, at a random-chemistry false-positive rate of 0.080 and a sensitivity of
+0.120; no cut separates a metabolite from a sodium-channel ligand, and it is withdrawn. GluA2 fails
+the same test on the current fits and is withdrawn with it. Three overrides that had been applied
+to other endpoints were removed at the same time, because the observations that justified them do
+not reproduce on the refitted models and an override whose justification has expired costs
+sensitivity for a false positive that no longer occurs.
 
 ---
 

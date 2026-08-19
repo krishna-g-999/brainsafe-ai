@@ -11,23 +11,23 @@ BChE,raw table,random,3386,0,26,239,103
 BChE,raw table,scaffold,3386,0,1,0,103
 BChE,as trained (deduplicated),random,3278,0,0,226,103
 BChE,as trained (deduplicated),scaffold,3278,0,0,0,103
-BACE1,raw table,random,8962,0,125,702,686
-BACE1,raw table,scaffold,8962,0,2,0,686
-BACE1,as trained (deduplicated),random,8213,0,0,603,686
-BACE1,as trained (deduplicated),scaffold,8213,0,0,0,686
-GSK3B,raw table,random,5640,0,39,400,190
-GSK3B,raw table,scaffold,5640,0,4,0,190
-GSK3B,as trained (deduplicated),random,5443,0,0,363,190
-GSK3B,as trained (deduplicated),scaffold,5443,0,0,0,190
-MAO_A,raw table,random,3789,0,36,293,189
-MAO_A,raw table,scaffold,3789,0,4,0,189
-MAO_A,as trained (deduplicated),random,3595,0,0,273,189
-MAO_A,as trained (deduplicated),scaffold,3595,0,0,0,189
-MAO_B,raw table,random,4806,0,48,392,245
-MAO_B,raw table,scaffold,4806,0,5,0,245
-MAO_B,as trained (deduplicated),random,4548,0,0,348,245
-MAO_B,as trained (deduplicated),scaffold,4548,0,0,0,245
-hERG,raw table,random,10276,0,65,626,340
-hERG,raw table,scaffold,10276,0,0,0,340
-hERG,as trained (deduplicated),random,9934,0,0,574,340
-hERG,as trained (deduplicated),scaffold,9934,0,0,0,340
+BACE1,raw table,random,8962,0,126,703,692
+BACE1,raw table,scaffold,8962,0,2,0,692
+BACE1,as trained (deduplicated),random,8207,0,0,604,692
+BACE1,as trained (deduplicated),scaffold,8207,0,0,0,692
+GSK3B,raw table,random,5640,0,40,400,194
+GSK3B,raw table,scaffold,5640,0,4,0,194
+GSK3B,as trained (deduplicated),random,5439,0,0,367,194
+GSK3B,as trained (deduplicated),scaffold,5439,0,0,0,194
+MAO_A,raw table,random,3789,0,37,293,199
+MAO_A,raw table,scaffold,3789,0,4,0,199
+MAO_A,as trained (deduplicated),random,3585,0,0,273,199
+MAO_A,as trained (deduplicated),scaffold,3585,0,0,0,199
+MAO_B,raw table,random,4806,0,51,392,259
+MAO_B,raw table,scaffold,4806,0,5,0,259
+MAO_B,as trained (deduplicated),random,4534,0,0,347,259
+MAO_B,as trained (deduplicated),scaffold,4534,0,0,0,259
+hERG,raw table,random,10276,0,65,626,341
+hERG,raw table,scaffold,10276,0,0,0,341
+hERG,as trained (deduplicated),random,9933,0,0,571,341
+hERG,as trained (deduplicated),scaffold,9933,0,0,0,341

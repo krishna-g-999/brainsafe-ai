@@ -1,66 +1,69 @@
 model,family,positives,total_after_dedup,rows_before_dedup,duplicate_rows_removed,contradictory_groups_dropped,n_scaffolds,decoys,actives_withheld,inactives_withheld,deployed_fit_on
-A2A,core (train_rf.py),,6756.0,7001.0,245.0,0.0,2746.0,,,,all remaining rows after deduplication
+A2A,core (train_rf.py),,6743.0,7001.0,258.0,0.0,2742.0,,,,all remaining rows after deduplication
 AChE,core (train_rf.py),3014.0,5125.0,5318.0,188.0,5.0,2395.0,,,,all remaining rows after deduplication
 antioxidant_DPPH,core (train_rf.py),,2782.0,2862.0,80.0,0.0,902.0,,,,all remaining rows after deduplication
-BACE1,core (train_rf.py),7102.0,8213.0,8962.0,686.0,63.0,3251.0,,,,all remaining rows after deduplication
+BACE1,core (train_rf.py),7096.0,8207.0,8962.0,692.0,63.0,3247.0,,,,all remaining rows after deduplication
 BBB,core (train_rf.py),2473.0,3901.0,7805.0,3773.0,131.0,2083.0,,,,all remaining rows after deduplication
 BChE,core (train_rf.py),1760.0,3278.0,3386.0,103.0,5.0,1573.0,,,,all remaining rows after deduplication
-D2,core (train_rf.py),,7907.0,8548.0,641.0,0.0,3718.0,,,,all remaining rows after deduplication
-GSK3B,core (train_rf.py),4060.0,5443.0,5640.0,190.0,7.0,2664.0,,,,all remaining rows after deduplication
-hERG,core (train_rf.py),2371.0,9934.0,10276.0,340.0,2.0,5680.0,,,,all remaining rows after deduplication
-HT2A,core (train_rf.py),,6076.0,6393.0,317.0,0.0,2417.0,,,,all remaining rows after deduplication
-MAO_A,core (train_rf.py),867.0,3595.0,3789.0,189.0,5.0,1403.0,,,,all remaining rows after deduplication
-MAO_B,core (train_rf.py),2313.0,4548.0,4806.0,245.0,13.0,1649.0,,,,all remaining rows after deduplication
+D2,core (train_rf.py),,7905.0,8548.0,643.0,0.0,3716.0,,,,all remaining rows after deduplication
+GSK3B,core (train_rf.py),4056.0,5439.0,5640.0,194.0,7.0,2664.0,,,,all remaining rows after deduplication
+hERG,core (train_rf.py),2370.0,9933.0,10276.0,341.0,2.0,5680.0,,,,all remaining rows after deduplication
+HT2A,core (train_rf.py),,6075.0,6393.0,318.0,0.0,2416.0,,,,all remaining rows after deduplication
+MAO_A,core (train_rf.py),857.0,3585.0,3789.0,199.0,5.0,1403.0,,,,all remaining rows after deduplication
+MAO_B,core (train_rf.py),2299.0,4534.0,4806.0,259.0,13.0,1649.0,,,,all remaining rows after deduplication
 SERT,core (train_rf.py),,4479.0,4924.0,445.0,0.0,1590.0,,,,all remaining rows after deduplication
-A1_binder,binder (hybrid_decoys_plus_measured_inactives),1555.0,,,,,,5469.0,388.0,360.0,"80% train split, sigmoid calibration on the remaining 20%"
-A2A_binder,binder (hybrid_decoys_plus_measured_inactives),3379.0,,,,,,11898.0,722.0,406.0,"80% train split, sigmoid calibration on the remaining 20%"
-CB1_binder,binder (hybrid_decoys_plus_measured_inactives),2204.0,,,,,,6425.0,476.0,1616.0,"80% train split, sigmoid calibration on the remaining 20%"
+A1_binder,binder (hybrid_decoys_plus_measured_inactives),1523.0,,,,,,5469.0,420.0,360.0,"80% train split, sigmoid calibration on the remaining 20%"
+A2A_binder,binder (hybrid_decoys_plus_measured_inactives),3333.0,,,,,,11898.0,768.0,406.0,"80% train split, sigmoid calibration on the remaining 20%"
+CB1_binder,binder (hybrid_decoys_plus_measured_inactives),2158.0,,,,,,6425.0,522.0,1616.0,"80% train split, sigmoid calibration on the remaining 20%"
 CGRP_binder,binder (hybrid_decoys_plus_measured_inactives),454.0,,,,,,1775.0,145.0,23.0,"80% train split, sigmoid calibration on the remaining 20%"
-COX2_binder,binder (hybrid_decoys_plus_measured_inactives),891.0,,,,,,2777.0,291.0,770.0,"80% train split, sigmoid calibration on the remaining 20%"
-CSF1R_binder,binder (hybrid_decoys_plus_measured_inactives),1426.0,,,,,,5251.0,358.0,101.0,"80% train split, sigmoid calibration on the remaining 20%"
-Cav3_2_binder,binder (hybrid_decoys_plus_measured_inactives),265.0,,,,,,984.0,86.0,70.0,"80% train split, sigmoid calibration on the remaining 20%"
-D2_binder,binder (hybrid_decoys_plus_measured_inactives),2916.0,,,,,,10400.0,741.0,572.0,"80% train split, sigmoid calibration on the remaining 20%"
-D3_binder,binder (hybrid_decoys_plus_measured_inactives),3342.0,,,,,,12165.0,785.0,216.0,"80% train split, sigmoid calibration on the remaining 20%"
-DAT_binder,binder (hybrid_decoys_plus_measured_inactives),1079.0,,,,,,3615.0,258.0,397.0,"80% train split, sigmoid calibration on the remaining 20%"
-DHODH_binder,binder (hybrid_decoys_plus_measured_inactives),670.0,,,,,,2560.0,293.0,329.0,"80% train split, sigmoid calibration on the remaining 20%"
-GABA_A_binder,binder (hybrid_decoys_plus_measured_inactives),159.0,,,,,,567.0,42.0,37.0,"80% train split, sigmoid calibration on the remaining 20%"
-GBA1_binder,binder (hybrid_decoys_plus_measured_inactives),86.0,,,,,,120.0,34.0,240.0,"80% train split, sigmoid calibration on the remaining 20%"
+COX2_binder,binder (hybrid_decoys_plus_measured_inactives),883.0,,,,,,2777.0,299.0,770.0,"80% train split, sigmoid calibration on the remaining 20%"
+CSF1R_binder,binder (hybrid_decoys_plus_measured_inactives),1420.0,,,,,,5251.0,364.0,101.0,"80% train split, sigmoid calibration on the remaining 20%"
+Cav3_2_binder,binder (hybrid_decoys_plus_measured_inactives),272.0,,,,,,984.0,79.0,70.0,"80% train split, sigmoid calibration on the remaining 20%"
+D2_binder,binder (hybrid_decoys_plus_measured_inactives),2890.0,,,,,,10400.0,767.0,572.0,"80% train split, sigmoid calibration on the remaining 20%"
+D3_binder,binder (hybrid_decoys_plus_measured_inactives),3450.0,,,,,,12165.0,677.0,216.0,"80% train split, sigmoid calibration on the remaining 20%"
+DAT_binder,binder (hybrid_decoys_plus_measured_inactives),1102.0,,,,,,3615.0,235.0,397.0,"80% train split, sigmoid calibration on the remaining 20%"
+DHODH_binder,binder (hybrid_decoys_plus_measured_inactives),730.0,,,,,,2560.0,233.0,329.0,"80% train split, sigmoid calibration on the remaining 20%"
+GABA_A_binder,binder (hybrid_decoys_plus_measured_inactives),168.0,,,,,,567.0,33.0,37.0,"80% train split, sigmoid calibration on the remaining 20%"
+GBA1_binder,binder (hybrid_decoys_plus_measured_inactives),81.0,,,,,,120.0,39.0,240.0,"80% train split, sigmoid calibration on the remaining 20%"
 GluA2_binder,binder (measured_labels_holdout),68.0,,,,,,,29.0,,"80% train split, sigmoid calibration on the remaining 20%"
-GluN2B_binder,binder (hybrid_decoys_plus_measured_inactives),706.0,,,,,,2679.0,198.0,34.0,"80% train split, sigmoid calibration on the remaining 20%"
-H3_binder,binder (hybrid_decoys_plus_measured_inactives),2597.0,,,,,,9445.0,615.0,192.0,"80% train split, sigmoid calibration on the remaining 20%"
-HDAC1_binder,binder (hybrid_decoys_plus_measured_inactives),2498.0,,,,,,8356.0,557.0,810.0,"80% train split, sigmoid calibration on the remaining 20%"
-HDAC6_binder,binder (hybrid_decoys_plus_measured_inactives),3032.0,,,,,,10578.0,683.0,568.0,"80% train split, sigmoid calibration on the remaining 20%"
+GluN2B_binder,binder (hybrid_decoys_plus_measured_inactives),749.0,,,,,,2679.0,155.0,34.0,"80% train split, sigmoid calibration on the remaining 20%"
+H3_binder,binder (hybrid_decoys_plus_measured_inactives),2659.0,,,,,,9445.0,553.0,192.0,"80% train split, sigmoid calibration on the remaining 20%"
+HDAC1_binder,binder (hybrid_decoys_plus_measured_inactives),2563.0,,,,,,8356.0,492.0,810.0,"80% train split, sigmoid calibration on the remaining 20%"
+HDAC6_binder,binder (hybrid_decoys_plus_measured_inactives),3010.0,,,,,,10578.0,705.0,568.0,"80% train split, sigmoid calibration on the remaining 20%"
 HT1A_binder,binder (hybrid_decoys_plus_measured_inactives),3070.0,,,,,,10848.0,633.0,261.0,"80% train split, sigmoid calibration on the remaining 20%"
-HT2A_binder,binder (hybrid_decoys_plus_measured_inactives),2970.0,,,,,,11132.0,847.0,319.0,"80% train split, sigmoid calibration on the remaining 20%"
-HT6_binder,binder (hybrid_decoys_plus_measured_inactives),2325.0,,,,,,8117.0,416.0,107.0,"80% train split, sigmoid calibration on the remaining 20%"
-HT7_binder,binder (hybrid_decoys_plus_measured_inactives),1180.0,,,,,,4284.0,298.0,150.0,"80% train split, sigmoid calibration on the remaining 20%"
-KEAP1_binder,binder (hybrid_decoys_plus_measured_inactives),105.0,,,,,,281.0,17.0,86.0,"80% train split, sigmoid calibration on the remaining 20%"
-LRRK2_binder,binder (hybrid_decoys_plus_measured_inactives),838.0,,,,,,3464.0,335.0,55.0,"80% train split, sigmoid calibration on the remaining 20%"
-MT1_binder,binder (hybrid_decoys_plus_measured_inactives),520.0,,,,,,2051.0,177.0,41.0,"80% train split, sigmoid calibration on the remaining 20%"
-NET_binder,binder (hybrid_decoys_plus_measured_inactives),1296.0,,,,,,4459.0,276.0,257.0,"80% train split, sigmoid calibration on the remaining 20%"
-NLRP3_binder,binder (hybrid_decoys_plus_measured_inactives),183.0,,,,,,550.0,39.0,116.0,"80% train split, sigmoid calibration on the remaining 20%"
-Nav1_1_binder,binder (measured_labels_holdout),56.0,,,,,,,9.0,,"80% train split, sigmoid calibration on the remaining 20%"
+HT2A_binder,binder (hybrid_decoys_plus_measured_inactives),2918.0,,,,,,11132.0,899.0,319.0,"80% train split, sigmoid calibration on the remaining 20%"
+HT6_binder,binder (hybrid_decoys_plus_measured_inactives),2309.0,,,,,,8117.0,432.0,107.0,"80% train split, sigmoid calibration on the remaining 20%"
+HT7_binder,binder (hybrid_decoys_plus_measured_inactives),1189.0,,,,,,4284.0,289.0,150.0,"80% train split, sigmoid calibration on the remaining 20%"
+KEAP1_binder,binder (hybrid_decoys_plus_measured_inactives),97.0,,,,,,281.0,25.0,86.0,"80% train split, sigmoid calibration on the remaining 20%"
+LRRK2_binder,binder (hybrid_decoys_plus_measured_inactives),951.0,,,,,,3464.0,222.0,55.0,"80% train split, sigmoid calibration on the remaining 20%"
+MT1_binder,binder (hybrid_decoys_plus_measured_inactives),579.0,,,,,,2051.0,118.0,41.0,"80% train split, sigmoid calibration on the remaining 20%"
+NET_binder,binder (hybrid_decoys_plus_measured_inactives),1217.0,,,,,,4459.0,355.0,257.0,"80% train split, sigmoid calibration on the remaining 20%"
+NFKB1_binder,binder (measured_labels_holdout),39.0,,,,,,,19.0,,"80% train split, sigmoid calibration on the remaining 20%"
+NLRP3_binder,binder (hybrid_decoys_plus_measured_inactives),177.0,,,,,,550.0,45.0,116.0,"80% train split, sigmoid calibration on the remaining 20%"
+NR3C1_binder,binder (measured_labels_holdout),60.0,,,,,,,6.0,,"80% train split, sigmoid calibration on the remaining 20%"
+NRF2_binder,binder (measured_labels_holdout),70.0,,,,,,,11.0,,"80% train split, sigmoid calibration on the remaining 20%"
+Nav1_1_binder,binder (measured_labels_holdout),40.0,,,,,,,25.0,,"80% train split, sigmoid calibration on the remaining 20%"
 Nav1_5_binder,binder (measured_labels_holdout),207.0,,,,,,,35.0,,"80% train split, sigmoid calibration on the remaining 20%"
-Nav1_6_binder,binder (hybrid_decoys_plus_measured_inactives),185.0,,,,,,776.0,91.0,52.0,"80% train split, sigmoid calibration on the remaining 20%"
-Nav1_7_binder,binder (hybrid_decoys_plus_measured_inactives),2264.0,,,,,,7863.0,480.0,369.0,"80% train split, sigmoid calibration on the remaining 20%"
-Nav1_8_binder,binder (hybrid_decoys_plus_measured_inactives),221.0,,,,,,816.0,62.0,33.0,"80% train split, sigmoid calibration on the remaining 20%"
-OPRK1_binder,binder (hybrid_decoys_plus_measured_inactives),2590.0,,,,,,8678.0,469.0,499.0,"80% train split, sigmoid calibration on the remaining 20%"
-OPRM1_binder,binder (hybrid_decoys_plus_measured_inactives),2980.0,,,,,,10483.0,738.0,672.0,"80% train split, sigmoid calibration on the remaining 20%"
-OX1_binder,binder (hybrid_decoys_plus_measured_inactives),2719.0,,,,,,9648.0,593.0,288.0,"80% train split, sigmoid calibration on the remaining 20%"
-OX2_binder,binder (hybrid_decoys_plus_measured_inactives),3267.0,,,,,,11213.0,585.0,344.0,"80% train split, sigmoid calibration on the remaining 20%"
-P2X7_binder,binder (hybrid_decoys_plus_measured_inactives),2377.0,,,,,,8729.0,561.0,85.0,"80% train split, sigmoid calibration on the remaining 20%"
-PDE10A_binder,binder (hybrid_decoys_plus_measured_inactives),3318.0,,,,,,12131.0,766.0,122.0,"80% train split, sigmoid calibration on the remaining 20%"
-PDE4B_binder,binder (hybrid_decoys_plus_measured_inactives),924.0,,,,,,3218.0,204.0,166.0,"80% train split, sigmoid calibration on the remaining 20%"
-RIPK1_binder,binder (hybrid_decoys_plus_measured_inactives),1156.0,,,,,,4019.0,334.0,451.0,"80% train split, sigmoid calibration on the remaining 20%"
-SERT_binder,binder (hybrid_decoys_plus_measured_inactives),2251.0,,,,,,8632.0,720.0,281.0,"80% train split, sigmoid calibration on the remaining 20%"
+Nav1_6_binder,binder (hybrid_decoys_plus_measured_inactives),199.0,,,,,,776.0,77.0,52.0,"80% train split, sigmoid calibration on the remaining 20%"
+Nav1_7_binder,binder (hybrid_decoys_plus_measured_inactives),2165.0,,,,,,7863.0,579.0,369.0,"80% train split, sigmoid calibration on the remaining 20%"
+Nav1_8_binder,binder (hybrid_decoys_plus_measured_inactives),181.0,,,,,,816.0,102.0,33.0,"80% train split, sigmoid calibration on the remaining 20%"
+OPRK1_binder,binder (hybrid_decoys_plus_measured_inactives),2465.0,,,,,,8678.0,594.0,499.0,"80% train split, sigmoid calibration on the remaining 20%"
+OPRM1_binder,binder (hybrid_decoys_plus_measured_inactives),2904.0,,,,,,10483.0,814.0,672.0,"80% train split, sigmoid calibration on the remaining 20%"
+OX1_binder,binder (hybrid_decoys_plus_measured_inactives),2788.0,,,,,,9648.0,524.0,288.0,"80% train split, sigmoid calibration on the remaining 20%"
+OX2_binder,binder (hybrid_decoys_plus_measured_inactives),3123.0,,,,,,11213.0,729.0,344.0,"80% train split, sigmoid calibration on the remaining 20%"
+P2X7_binder,binder (hybrid_decoys_plus_measured_inactives),2308.0,,,,,,8729.0,630.0,85.0,"80% train split, sigmoid calibration on the remaining 20%"
+PDE10A_binder,binder (hybrid_decoys_plus_measured_inactives),3211.0,,,,,,12131.0,873.0,122.0,"80% train split, sigmoid calibration on the remaining 20%"
+PDE4B_binder,binder (hybrid_decoys_plus_measured_inactives),948.0,,,,,,3218.0,180.0,166.0,"80% train split, sigmoid calibration on the remaining 20%"
+RIPK1_binder,binder (hybrid_decoys_plus_measured_inactives),1149.0,,,,,,4019.0,341.0,451.0,"80% train split, sigmoid calibration on the remaining 20%"
+SERT_binder,binder (hybrid_decoys_plus_measured_inactives),2516.0,,,,,,8632.0,455.0,281.0,"80% train split, sigmoid calibration on the remaining 20%"
 SIRT1_binder,binder (measured_labels_holdout),125.0,,,,,,,37.0,,"80% train split, sigmoid calibration on the remaining 20%"
-Sigma1_binder,binder (hybrid_decoys_plus_measured_inactives),1514.0,,,,,,5728.0,414.0,56.0,"80% train split, sigmoid calibration on the remaining 20%"
-TAAR1_binder,binder (measured_labels_holdout),189.0,,,,,,,49.0,,"80% train split, sigmoid calibration on the remaining 20%"
-a3b4nAChR_binder,binder (hybrid_decoys_plus_measured_inactives),156.0,,,,,,446.0,42.0,148.0,"80% train split, sigmoid calibration on the remaining 20%"
-a4b2nAChR_binder,binder (hybrid_decoys_plus_measured_inactives),389.0,,,,,,1251.0,87.0,177.0,"80% train split, sigmoid calibration on the remaining 20%"
-a7nAChR_binder,binder (hybrid_decoys_plus_measured_inactives),266.0,,,,,,819.0,71.0,193.0,"80% train split, sigmoid calibration on the remaining 20%"
-mGluR5_binder,binder (hybrid_decoys_plus_measured_inactives),954.0,,,,,,3337.0,246.0,264.0,"80% train split, sigmoid calibration on the remaining 20%"
-mTOR_binder,binder (hybrid_decoys_plus_measured_inactives),2430.0,,,,,,8395.0,554.0,557.0,"80% train split, sigmoid calibration on the remaining 20%"
+Sigma1_binder,binder (hybrid_decoys_plus_measured_inactives),1643.0,,,,,,5728.0,285.0,56.0,"80% train split, sigmoid calibration on the remaining 20%"
+TAAR1_binder,binder (measured_labels_holdout),162.0,,,,,,,76.0,,"80% train split, sigmoid calibration on the remaining 20%"
+a3b4nAChR_binder,binder (hybrid_decoys_plus_measured_inactives),166.0,,,,,,446.0,32.0,148.0,"80% train split, sigmoid calibration on the remaining 20%"
+a4b2nAChR_binder,binder (hybrid_decoys_plus_measured_inactives),407.0,,,,,,1251.0,69.0,177.0,"80% train split, sigmoid calibration on the remaining 20%"
+a7nAChR_binder,binder (hybrid_decoys_plus_measured_inactives),274.0,,,,,,819.0,63.0,193.0,"80% train split, sigmoid calibration on the remaining 20%"
+mGluR5_binder,binder (hybrid_decoys_plus_measured_inactives),911.0,,,,,,3337.0,289.0,264.0,"80% train split, sigmoid calibration on the remaining 20%"
+mTOR_binder,binder (hybrid_decoys_plus_measured_inactives),2558.0,,,,,,8395.0,426.0,557.0,"80% train split, sigmoid calibration on the remaining 20%"
 adme_caco2_permeability,ADME (train_adme.py),,897.0,,,,,,,,all rows
 adme_clearance_hepatocyte,ADME (train_adme.py),,1020.0,,,,,,,,all rows
 adme_kpuu,ADME (train_adme.py),,566.0,,,,,,,,all rows

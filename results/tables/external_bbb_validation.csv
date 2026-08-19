@@ -1,4 +1,4 @@
 set,n,n_permeable,auroc,accuracy,balanced_accuracy,sensitivity,specificity
-"FDA-curated, not in B3DB by InChIKey",306,203,0.7608,0.7288,0.7095,0.7685,0.6505
-"FDA-curated, also distinguishable from training in feature space",241,171,0.7882,0.7303,0.7087,0.7602,0.6571
+"FDA-curated, not in B3DB by InChIKey",306,203,0.7645,0.732,0.7119,0.7734,0.6505
+"FDA-curated, also distinguishable from training in feature space",241,171,0.7934,0.7344,0.7116,0.7661,0.6571
 of which: feature-identical to a training compound,65,32,0.7102,0.7231,0.7244,0.8125,0.6364

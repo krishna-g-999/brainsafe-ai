@@ -161,6 +161,90 @@ class TestDeterminism(unittest.TestCase):
         np.testing.assert_array_equal(a.predict_proba(X), b.predict_proba(X))
 
 
+class TestPanelRegistryIsConsistent(unittest.TestCase):
+    """The registry, the endpoint tables and the fitted models must describe one panel.
+
+    Three views of the panel exist on disk and nothing used to compare them, which is how `make
+    train` refitted 39 of 52 binders and reported success. panel.verify() reconciles them; this test
+    is what makes the reconciliation binding rather than advisory.
+    """
+
+    def setUp(self):
+        import panel
+        self.panel = panel
+        self.v = panel.verify()
+
+    def test_the_three_views_agree(self):
+        for kind in ("no_model", "no_table", "unregistered", "no_mode"):
+            with self.subTest(disagreement=kind):
+                self.assertEqual(self.v[kind], [], f"{kind}: {self.v[kind]}")
+
+    def test_no_model_is_older_than_the_table_it_was_fitted_from(self):
+        """A partial retrain is exactly this and nothing else reports it."""
+        self.assertEqual(self.v["stale_model"], [],
+                         f"these models predate their training tables, so the panel is part-way "
+                         f"through a retrain: {self.v['stale_model']}")
+
+    def test_no_endpoint_is_withheld_without_a_recorded_reason(self):
+        self.assertEqual(self.v["withdrawn_silent"], [],
+                         "an endpoint withheld from users with no reason recorded is an "
+                         "undocumented scientific decision")
+
+    def test_every_mode_is_owned_by_exactly_one_trainer(self):
+        counts = self.v["by_mode"]
+        self.assertEqual(sum(counts.values()), self.v["n_registered"],
+                         f"some endpoint uses a mode no trainer claims: {counts} against "
+                         f"{self.v['n_registered']} registered")
+
+    def test_assert_covers_rejects_a_list_that_has_fallen_behind(self):
+        """The guard itself must fail when it should, or it is decoration."""
+        full = self.panel.names()
+        with self.assertRaises(AssertionError):
+            self.panel.assert_covers(full[:-1], full, "a trainer that lost an endpoint")
+        with self.assertRaises(AssertionError):
+            self.panel.assert_covers(full + ["NotAnEndpoint"], full, "a trainer with a stale name")
+        self.panel.assert_covers(full, full, "the complete list")   # must not raise
+
+
+class TestEveryEndpointIsRetrainable(unittest.TestCase):
+    """`make train` must refit the whole panel, not the part of it that existed when it was written.
+
+    Both binder trainers iterated a hardcoded TARGETS list. The panel grew past both: the measured
+    label trainer still named two endpoints while eight used its mode, and the hybrid trainer named
+    37 while 44 used its. A full retrain therefore refitted 39 of 52 binders and left 13 carrying
+    weights fitted to an older featurisation, with nothing in the output saying so. The lists are
+    now derived from the panel registry, and this test is what keeps them derived.
+    """
+
+    def setUp(self):
+        import importlib.util, json
+        self.modes = json.loads((ROOT / "models_rf" / "binder_modes.json").read_text())
+
+        def load(name, path):
+            spec = importlib.util.spec_from_file_location(name, ROOT / path)
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            return mod
+
+        self.hybrid = load("_h", "src/brainsafe/models/train_binders_hybrid.py")
+        self.holdout = load("_q", "src/brainsafe/models/train_measured_label_holdout.py")
+
+    def test_every_binder_endpoint_is_claimed_by_exactly_one_trainer(self):
+        a, b = set(self.hybrid._targets()), set(self.holdout._targets())
+        panel = set(self.modes)
+        self.assertEqual(panel - (a | b), set(),
+                         "these endpoints are in the panel but no trainer would refit them")
+        self.assertEqual(a & b, set(),
+                         "these endpoints would be refitted twice, by two different procedures")
+
+    def test_each_trainer_covers_exactly_its_own_mode(self):
+        for mod, name in ((self.hybrid, "hybrid"), (self.holdout, "measured-label")):
+            want = {ep for ep, rec in self.modes.items() if rec.get("mode") == mod.MODE}
+            with self.subTest(trainer=name):
+                self.assertEqual(set(mod._targets()), want,
+                                 f"{name} trainer has drifted from the endpoints using its mode")
+
+
 class TestThresholdSequenceIsAtomic(unittest.TestCase):
     """The four threshold scripts must be treated as one unit, by the code and by the checker.
 

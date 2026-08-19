@@ -1,4 +1,4 @@
 weights,top3_accuracy
-curated,0.8043
-uniform (all 1.0),0.8025
-randomly permuted,0.8023
+curated,0.7865
+uniform (all 1.0),0.7861
+randomly permuted,0.7844

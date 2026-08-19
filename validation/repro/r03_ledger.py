@@ -147,7 +147,7 @@ def rows() -> list[dict]:
                         "validation/repro/recomputed_summary.csv",
                         f"receptors only ({', '.join(RECEPTORS)}), matching the manuscript's wording")
                     add("receptor potency regression R2, max", split,
-                        {"random": 0.72, "scaffold": 0.61}[split],
+                        {"random": 0.72, "scaffold": 0.62}[split],
                         round(float(hr.r2_mean.max()), 4), "A",
                         "validation/repro/r02_recompute_cv.py",
                         "validation/repro/recomputed_summary.csv",
@@ -181,11 +181,11 @@ def rows() -> list[dict]:
     mycal = _f(REPRO / "calibration_summary.csv")
     if mycal is not None:
         piv = mycal.pivot(index="endpoint", columns="calibration", values="ece")
-        add("mean ECE before calibration", "out-of-fold", 0.0795,
+        add("mean ECE before calibration", "out-of-fold", 0.0801,
             round(float(piv["raw"].mean()), 4), "A",
             "validation/repro/r05_calibration_importance.py",
             "validation/repro/calibration_summary.csv")
-        add("mean ECE after calibration", "out-of-fold", 0.0161,
+        add("mean ECE after calibration", "out-of-fold", 0.0147,
             round(float(piv["isotonic"].mean()), 4), "A",
             "validation/repro/r05_calibration_importance.py",
             "validation/repro/calibration_summary.csv",
@@ -227,11 +227,11 @@ def rows() -> list[dict]:
                 if v.get("sensitivity_at_threshold") is not None]
         aur = [v["auroc_vs_measured_inactives"] for v in dep
                if v.get("auroc_vs_measured_inactives") is not None]
-        artefact("binder panel mean sensitivity (deployed)", "scaffold holdout", 0.878,
+        artefact("binder panel mean sensitivity (deployed)", "scaffold holdout", 0.898,
                  round(float(np.mean(sens)), 4), "models_rf/binder_modes.json",
                  "recomputed from the per-endpoint records, but those records were written by the "
                  "training run; re-running the binder panel was not performed in this session")
-        artefact("binder panel mean AUROC vs measured inactives (deployed)", "holdout", 0.902,
+        artefact("binder panel mean AUROC vs measured inactives (deployed)", "holdout", 0.917,
                  round(float(np.mean(aur)), 4), "models_rf/binder_modes.json", "as above")
         artefact("binder endpoints deployed", "n/a", 47,
                  sum(1 for v in d.values() if v.get("deployed", True)),
@@ -240,17 +240,17 @@ def rows() -> list[dict]:
     ext = _f(TAB / "external_bbb_validation.csv")
     if ext is not None:
         for _, e in ext.iterrows():
-            ms = {306: 0.761, 241: 0.788}.get(int(e.n))
+            ms = {306: 0.764, 241: 0.793}.get(int(e.n))
             artefact(f"external BBB AUROC (n={int(e.n)})", "external", ms, round(float(e.auroc), 4),
                      "results/tables/external_bbb_validation.csv",
                      "external set held fixed; not recomputed here")
 
     con = _f(TAB / "rf_conformal.csv")
     if con is not None:
-        artefact("conformal coverage, min", "conformal", 0.887,
+        artefact("conformal coverage, min", "conformal", 0.889,
                  round(float(con.empirical_coverage.min()), 3),
                  "results/tables/rf_conformal.csv", "")
-        artefact("conformal coverage, max", "conformal", 0.920,
+        artefact("conformal coverage, max", "conformal", 0.921,
                  round(float(con.empirical_coverage.max()), 3),
                  "results/tables/rf_conformal.csv", "")
 
@@ -264,7 +264,7 @@ def rows() -> list[dict]:
         collapsed = (hold.threshold_collapsed.astype(str).str.lower().isin(["true", "1"])
                      if "threshold_collapsed" in hold.columns else False)
         usable = hold[~collapsed] if "threshold_collapsed" in hold.columns else hold
-        add("prospective recall, median over targets", "scaffold holdout", 0.814,
+        add("prospective recall, median over targets", "scaffold holdout", 0.815,
             round(float(usable.holdout_recall.median()), 4), "A",
             "src/brainsafe/evaluation/scaffold_holdout_report.py",
             "results/tables/scaffold_holdout_results.csv",
@@ -286,7 +286,7 @@ def rows() -> list[dict]:
     if spec is not None:
         s = spec[spec.metric.astype(str).str.startswith("Specificity")]
         if len(s):
-            add("specificity on non-CNS chemistry", "external", 0.933,
+            add("specificity on non-CNS chemistry", "external", 0.949,
                 round(float(s.estimate.iloc[0]), 4), "A",
                 "src/brainsafe/evaluation/noncns_specificity.py",
                 "results/tables/noncns_specificity_summary.csv",
@@ -300,9 +300,9 @@ def rows() -> list[dict]:
     cmp_ = _f(TAB / "model_comparison.csv")
     if cmp_ is not None:
         sc = cmp_[(cmp_.split == "scaffold") & (cmp_.task == "classification")]
-        for model, ms in (("RandomForest", 0.9228), ("HistGradientBoosting", 0.9160),
-                          ("XGBoost", 0.9144), ("kNN read-across", 0.8844),
-                          ("LogisticRegression", 0.8338)):
+        for model, ms in (("RandomForest", 0.9212), ("HistGradientBoosting", 0.9149),
+                          ("XGBoost", 0.9156), ("kNN read-across", 0.8829),
+                          ("LogisticRegression", 0.8352)):
             g = sc[sc.model == model]
             if len(g):
                 artefact(f"model comparison, {model}", "scaffold", ms,
@@ -337,23 +337,23 @@ def main() -> None:
         "classifier AUROC, mean over endpoints|random": "mean AUROC 0.958 and 0.925 respectively",
         "classifier AUROC, mean over endpoints|scaffold": "mean AUROC 0.958 and 0.925 respectively",
         "binder panel mean AUROC vs measured inactives (deployed)|holdout":
-            "reaches a mean AUROC of 0.902",
+            "reaches a mean AUROC of 0.917",
         "binder panel mean sensitivity (deployed)|scaffold holdout":
-            "a mean sensitivity of 0.878",
-        "mean ECE before calibration|out-of-fold": "expected calibration error falling from 0.0795",
-        "mean ECE after calibration|out-of-fold": "expected calibration error falling from 0.0795",
-        "specificity on non-CNS chemistry|external": "on non-CNS chemistry its specificity is 0.933",
+            "a mean sensitivity of 0.898",
+        "mean ECE before calibration|out-of-fold": "expected calibration error falling from 0.0801",
+        "mean ECE after calibration|out-of-fold": "expected calibration error falling from 0.0801",
+        "specificity on non-CNS chemistry|external": "on non-CNS chemistry its specificity is 0.949",
         "compound-endpoint records|n/a": "228,200 measured",
         "binder endpoints deployed|n/a": "Across the 47 that are",
         "adversarial checks passing|n/a": "Five pass",
         "receptor potency regression R2, min|random": "0.64 to 0.72",
         "receptor potency regression R2, max|random": "0.64 to 0.72",
-        "receptor potency regression R2, min|scaffold": "0.46 to 0.61 (scaffold)",
-        "receptor potency regression R2, max|scaffold": "0.46 to 0.61 (scaffold)",
+        "receptor potency regression R2, min|scaffold": "0.46 to 0.62 (scaffold)",
+        "receptor potency regression R2, max|scaffold": "0.46 to 0.62 (scaffold)",
         "external BBB AUROC (n=306)|external": "absent from B3DB by InChIKey",
         "external BBB AUROC (n=241)|external": "distinguishable from the training set in feature space",
-        "conformal coverage, min|conformal": "empirical coverage is 0.887 to 0.920",
-        "conformal coverage, max|conformal": "empirical coverage is 0.887 to 0.920",
+        "conformal coverage, min|conformal": "empirical coverage is 0.889 to 0.921",
+        "conformal coverage, max|conformal": "empirical coverage is 0.889 to 0.921",
         "prospective recall, median over targets|scaffold holdout": "per-target median of",
     }
 

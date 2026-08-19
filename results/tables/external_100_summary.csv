@@ -1,7 +1,7 @@
 metric,k,n,estimate,ci95_low,ci95_high,note
 Top-1 accuracy (CNS compounds),1,8,0.125,0.0224,0.4709,
 Top-3 accuracy (CNS compounds),1,8,0.125,0.0224,0.4709,
-Specificity (negative controls silent),7,7,1.0,0.6457,1.0,a control is correct when the tool reports no disease above threshold
+Specificity (negative controls silent),3,5,0.6,0.2307,0.8824,a control is correct when the tool reports no disease above threshold
 Permutation p (top-1 vs shuffled labels),,8,0.367981600919954,,,5 distinct expected classes present
 Cohen's kappa (top-1),,8,0.082,,,chance-corrected agreement
 "Top-1 accuracy, in domain (T>=0.5)",1,6,0.1667,0.0301,0.5635,

@@ -1,5 +1,5 @@
 test,value,ci95_low,ci95_high,n
-observed top-3 accuracy,0.8043,0.795,0.8133,7231
-permutation null (mean),0.1573,0.076,0.2526,200
+observed top-3 accuracy,0.7865,0.7768,0.7959,7040
+permutation null (mean),0.154,0.0706,0.2495,200
 permutation p-value,0.004975124378109453,,,200
-frequency null (always top-3 commonest),0.5482,,,7231
+frequency null (always top-3 commonest),0.5483,,,7040

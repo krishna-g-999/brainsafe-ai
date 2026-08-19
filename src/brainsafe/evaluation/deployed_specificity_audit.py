@@ -35,6 +35,7 @@ ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "src" / "brainsafe"))
 from features.featurize import featurize  # noqa: E402
+import panel  # noqa: E402
 
 M = ROOT / "models_rf"
 OUT = ROOT / "results"
@@ -68,11 +69,13 @@ def main():
         p = M / f"{ep}_binder.joblib"
         if not p.exists():
             continue
-        if not v.get("deployed", True):
-            # withdrawn endpoints are still measured, so the record of why they were withdrawn stays
-            # checkable, but they are not counted as deployed failures
-            print(f"  {ep:11} withdrawn: {v.get('withdrawn_reason', '')[:60]}", flush=True)
-            continue
+        # Withdrawn endpoints ARE measured. This block used to `continue` here while its comment
+        # claimed the opposite, so the reasons a withdrawal was made could never be rechecked. That
+        # matters after a retrain: a withdrawal reason cites numbers, and a refitted model may no
+        # longer produce them. They are scored and written out like any other endpoint, marked
+        # `deployed=False`, and excluded from the deployed-panel summary so a withdrawn failure is
+        # never counted as a failure of what the server offers.
+        is_deployed = bool(v.get("deployed", True))
         thr = float(v.get("threshold", 0.40))
         mdl = joblib.load(p)
         pb = mdl.predict_proba(Xbg)[:, 1]
@@ -80,7 +83,7 @@ def main():
         fired = [n for n, q in zip(names, pt) if q >= thr]
         fpr = float((pb >= thr).mean())
         rows.append({
-            "target": ep, "threshold": round(thr, 4),
+            "target": ep, "deployed": is_deployed, "threshold": round(thr, 4),
             "random_fpr": round(fpr, 4),
             "n_trivial_fired": len(fired),
             "trivial_fired": ", ".join(fired),
@@ -92,19 +95,29 @@ def main():
                         else "ok"),
         })
         flag = "" if not rows[-1]["verdict"].startswith("FAILS") else "  <-- " + rows[-1]["verdict"]
+        mark = "" if is_deployed else "  (withdrawn)"
         print(f"  {ep:11} thr {thr:6.3f}  random FPR {fpr:6.3f}  trivial fired "
-              f"{len(fired)}{flag}", flush=True)
+              f"{len(fired)}{flag}{mark}", flush=True)
 
     df = pd.DataFrame(rows).sort_values("random_fpr", ascending=False)
     df.to_csv(OUT / "deployed_specificity_audit.csv", index=False)
     pd.set_option("display.width", 220)
     pd.set_option("display.max_colwidth", 44)
-    bad = df[df.verdict != "ok"]
+    live = df[df.deployed]
+    bad = live[live.verdict != "ok"]
     print()
     print(df.head(12).drop(columns=["trivial_fired"]).to_string(index=False))
-    print(f"\nmedian random-chemistry FPR across the deployed panel: {df.random_fpr.median():.4f}")
+    print(f"\nmedian random-chemistry FPR across the deployed panel: {live.random_fpr.median():.4f}")
+    # Withdrawn endpoints are reported against their recorded reason, so a reason that a refit has
+    # made untrue is visible rather than inherited.
+    with_ = df[~df.deployed]
+    if len(with_):
+        print(f"\n{len(with_)} withdrawn endpoints, re-measured on the current fits:")
+        for _, r in with_.iterrows():
+            print(f"   {r.target:11} FPR {r.random_fpr:.3f} at threshold {r.threshold:.3f}; "
+                  f"trivial fired {r.n_trivial_fired}; verdict {r.verdict}")
     if len(bad):
-        print(f"\n{len(bad)} of {len(df)} deployed endpoints fail:")
+        print(f"\n{len(bad)} of {len(live)} deployed endpoints fail:")
         for _, r in bad.iterrows():
             extra = f" [{r.trivial_fired}]" if r.trivial_fired else ""
             print(f"   {r.target:11} FPR {r.random_fpr:.3f} at threshold {r.threshold:.3f}; "
