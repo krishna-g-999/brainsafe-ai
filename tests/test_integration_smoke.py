@@ -124,21 +124,28 @@ class TestDeployedPipeline(unittest.TestCase):
     def test_withdrawn_endpoints_are_not_offered(self):
         """Five endpoints are withdrawn; a regression that re-deploys any of them must fail here.
 
-        Nav1.1 and Cav3.2 were withdrawn by the deployed-specificity audit, for firing on trivial
-        metabolites at every threshold. NRF2, NFKB1 and NR3C1 were added later to test whether the
-        panel's natural-product gap could be closed by adding the targets natural products are
-        actually assayed against; they carry some cross-validated signal (scaffold AUROC 0.719,
-        0.711, 0.596) but cannot be given a threshold that recovers actives without firing on
-        unrelated chemistry, at sensitivities of 0.250, 0.048 and 0.000. Re-deploying any of them
-        would put an endpoint on the server that cannot answer the question it is asked.
+        Nav1.1 and GluA2 fire on trivial metabolites at every usable threshold: Nav1.1 on glucose,
+        urea, glycine, lactate and atenolol, GluA2 on glucose and atenolol, reaching 0.719 on a
+        trivial molecule at a sensitivity of 0.103. NRF2, NFKB1 and NR3C1 were added to test whether
+        the panel's natural-product gap could be closed by adding the targets natural products are
+        actually assayed against; they fail for three different reasons, listed in
+        apply_specificity_decisions.py.
 
-        This set is deliberately pinned rather than derived: the point of the test is that a change
-        to it must be argued for, not absorbed.
+        Two entries moved when the panel was retrained on the neutralised representation, which is
+        the reason this set is re-derived from the specificity audit rather than carried forward.
+        Cav3.2 was withdrawn for an active band compressed near zero; on the refit its threshold is
+        0.370, no trivial control exceeds 0.048, and it scores AUROC 0.982 at sensitivity 0.975, so
+        it is deployed. GluA2 passed before and fails now. A withdrawal is a claim about a
+        particular fit, and inheriting one across a retrain asserts something about estimators that
+        no longer exist.
+
+        The set is pinned rather than derived here on purpose: a change to it must be argued for,
+        not absorbed.
         """
         import json
         modes = json.loads((MODELS / "binder_modes.json").read_text(encoding="utf-8"))
         withdrawn = {k for k, v in modes.items() if not v.get("deployed", True)}
-        self.assertEqual(withdrawn, {"Nav1_1", "Cav3_2", "NRF2", "NFKB1", "NR3C1"},
+        self.assertEqual(withdrawn, {"Nav1_1", "GluA2", "NRF2", "NFKB1", "NR3C1"},
                          "the withdrawal set changed; if deliberate, update this test and say why")
 
     def test_every_withdrawal_records_why_and_on_what_evidence(self):

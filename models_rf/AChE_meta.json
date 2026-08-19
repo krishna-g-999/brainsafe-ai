@@ -22,28 +22,28 @@
   "cv_folds": 10,
   "cv_summary": {
     "random": {
-      "roc_auc_mean": 0.9655,
-      "roc_auc_sd": 0.0064,
-      "pr_auc_mean": 0.9747,
-      "pr_auc_sd": 0.0051,
-      "mcc_mean": 0.8072,
-      "mcc_sd": 0.0268,
-      "f1_mean": 0.9196,
-      "f1_sd": 0.0112,
-      "balanced_acc_mean": 0.9047,
-      "balanced_acc_sd": 0.0136
+      "roc_auc_mean": 0.9659,
+      "roc_auc_sd": 0.0057,
+      "pr_auc_mean": 0.975,
+      "pr_auc_sd": 0.0045,
+      "mcc_mean": 0.8084,
+      "mcc_sd": 0.0262,
+      "f1_mean": 0.9202,
+      "f1_sd": 0.011,
+      "balanced_acc_mean": 0.9051,
+      "balanced_acc_sd": 0.0135
     },
     "scaffold": {
-      "roc_auc_mean": 0.9227,
-      "roc_auc_sd": 0.0187,
-      "pr_auc_mean": 0.9473,
-      "pr_auc_sd": 0.0125,
-      "mcc_mean": 0.6616,
-      "mcc_sd": 0.0491,
-      "f1_mean": 0.8558,
-      "f1_sd": 0.0263,
-      "balanced_acc_mean": 0.8328,
-      "balanced_acc_sd": 0.0265
+      "roc_auc_mean": 0.9212,
+      "roc_auc_sd": 0.0206,
+      "pr_auc_mean": 0.9463,
+      "pr_auc_sd": 0.0131,
+      "mcc_mean": 0.6631,
+      "mcc_sd": 0.0476,
+      "f1_mean": 0.8567,
+      "f1_sd": 0.0249,
+      "balanced_acc_mean": 0.8332,
+      "balanced_acc_sd": 0.0246
     }
   }
 }

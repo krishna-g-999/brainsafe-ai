@@ -318,7 +318,35 @@ def main(argv=None) -> None:
                     seen.add(r["rebuild"])
         else:
             print("every declared artefact is newer than its inputs")
-    raise SystemExit(1 if bad else 0)
+
+    # Timestamps answer "is this file older than its inputs". They cannot answer "does the panel
+    # still consist of what everything claims it consists of", and that is the question `make train`
+    # got wrong when it refitted 39 of 52 binders and reported success. Every model file was newer
+    # than its table, so this checker was satisfied; thirteen endpoints were simply never visited.
+    # The registry reconciliation is the missing half, and it runs here because this is what the
+    # pre-commit hook already calls.
+    panel_bad = []
+    try:
+        sys.path.insert(0, str(ROOT / "src" / "brainsafe"))
+        import panel
+        v = panel.verify()
+        panel_bad = [k for k in ("no_model", "no_table", "unregistered", "stale_model", "no_mode",
+                                 "withdrawn_silent") if v[k]]
+        if not args.json:
+            print()
+            if panel_bad:
+                print("the panel is not self-consistent:")
+                for k in panel_bad:
+                    print(f"    {k:17s} {len(v[k])}: {', '.join(v[k])}")
+                print("    run: python src/brainsafe/panel.py")
+            else:
+                print(f"panel consistent: {v['n_registered']} endpoints, {v['n_deployed']} deployed, "
+                      f"registry and fitted models agree")
+    except Exception as exc:                       # never let the extra check mask the primary one
+        if not args.json:
+            print(f"\npanel check could not run: {type(exc).__name__}: {exc}")
+
+    raise SystemExit(1 if (bad or panel_bad) else 0)
 
 
 if __name__ == "__main__":

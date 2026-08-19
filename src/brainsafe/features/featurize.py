@@ -22,12 +22,15 @@ import numpy as np
 from rdkit import Chem, RDLogger
 from rdkit.Chem import Descriptors, Crippen, rdMolDescriptors, QED
 from rdkit.Chem import rdFingerprintGenerator
+from rdkit.Chem.MolStandardize import rdMolStandardize
 
 RDLogger.DisableLog("rdApp.*")
 
 MORGAN_RADIUS = 2
 MORGAN_BITS = 1024
 _MORGAN = rdFingerprintGenerator.GetMorganGenerator(radius=MORGAN_RADIUS, fpSize=MORGAN_BITS)
+# Built once: constructing it per call is the dominant cost of featurising a large table.
+_UNCHARGER = rdMolStandardize.Uncharger()
 
 # Ordered so the column layout is stable and reproducible across runs.
 _DESCRIPTORS = {
@@ -54,10 +57,27 @@ def feature_names() -> list[str]:
 
 
 def parent_mol(smiles: str):
-    """The largest fragment of a structure, sanitised: the molecule the model actually sees.
+    """The largest fragment of a structure, desalted, neutralised and sanitised.
 
     Public because the scaffold grouping in training must desalt exactly as this does, or a salt
     and its free base become identical inputs assigned to different cross-validation folds.
+
+    Neutralisation is not cosmetic. Stripping the counter-ion without it left the parent carrying
+    the charge the salt gave it, so haloperidol hydrochloride written the way PubChem serves it,
+    with a protonated amine and a chloride, scored BBB 0.613 against 0.993 for the free base and
+    hERG 0.295 against 0.914. A user who pasted the salt form lost a cardiac liability flag on a
+    compound that has one. The two forms are the same drug and must give the same answer.
+
+    What is neutralised is only what a proton can move: a carboxylate becomes an acid, a protonated
+    amine becomes an amine. A permanent charge is left alone, because it is real chemistry rather
+    than an artefact of how a depositor wrote the structure. Choline and neostigmine keep their
+    quaternary nitrogen and their +1, which is exactly the property that stops such compounds
+    crossing the barrier; erasing it would teach the model that they should. `formal_charge` stays
+    a descriptor and now means "permanently charged" rather than "however this row was written".
+
+    Measured over the training library before it was adopted: of 170,617 unique structures, 198
+    (0.12 per cent) change representation and 1,155 charged ones are correctly left untouched. The
+    panel was retrained afterwards so that training and inference share this representation.
     """
     # RDKit parses the empty string into an empty molecule rather than returning None, so without
     # this guard featurize_one("") returns a well-formed 1,036-column vector of zeros and the
@@ -75,7 +95,15 @@ def parent_mol(smiles: str):
         Chem.SanitizeMol(mol)
     except Exception:
         return None
-    return mol
+    # Uncharging can fail on exotic valences. A molecule that cannot be neutralised is still a
+    # molecule, so the un-neutralised parent is returned rather than the compound being dropped:
+    # the old behaviour is the fallback, never an error.
+    try:
+        neutral = _UNCHARGER.uncharge(Chem.Mol(mol))
+        Chem.SanitizeMol(neutral)
+        return neutral
+    except Exception:
+        return mol
 
 
 def featurize_one(smiles: str) -> np.ndarray | None:

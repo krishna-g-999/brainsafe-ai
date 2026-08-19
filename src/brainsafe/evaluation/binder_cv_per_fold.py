@@ -150,9 +150,27 @@ def main():
     modes = json.loads((M / "binder_modes.json").read_text())
     todo = sys.argv[1:] or sorted(modes)
 
+    # Resuming is only safe while the models have not moved. The skip list is keyed on endpoint
+    # name alone, so after a retrain every row in the folds file describes estimators that no
+    # longer exist and every endpoint would be skipped: the script would exit reporting a complete
+    # cross-validation of the previous panel, with nothing in the output saying so. Refuse instead,
+    # and say what to do. `--fresh` starts over, keeping the old file beside it for comparison.
+    fresh = "--fresh" in sys.argv
+    todo = [a for a in todo if not a.startswith("--")] or sorted(modes)
     done = set()
     if OUT_F.exists():
-        done = set(pd.read_csv(OUT_F)["endpoint"].astype(str))
+        newest_model = max((p.stat().st_mtime for p in M.glob("*_binder.joblib")), default=0.0)
+        if newest_model > OUT_F.stat().st_mtime and not fresh:
+            raise SystemExit(
+                f"{OUT_F.name} predates the fitted binder models, so resuming would skip every\n"
+                f"endpoint and report the previous panel's cross-validation as though it were this\n"
+                f"one. Re-run with --fresh to recompute all endpoints.")
+        if fresh:
+            keep = OUT_F.with_suffix(".pre_retrain.csv")
+            OUT_F.replace(keep)
+            print(f"starting fresh; previous folds kept at {keep.name}", flush=True)
+        else:
+            done = set(pd.read_csv(OUT_F)["endpoint"].astype(str))
 
     with (M / "ad_reference.pkl").open("rb") as fh:
         bg_smiles, bg_fps = pickle.load(fh)

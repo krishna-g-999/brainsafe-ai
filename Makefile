@@ -90,6 +90,12 @@ train:  ## refit the whole panel from the endpoint tables. Hours. Read REPRODUCE
 	$(PY) $(SRC)/models/train_rf.py
 	$(PY) $(SRC)/models/calibrate.py
 	$(PY) $(SRC)/models/train_binders_hybrid.py
+# The binder panel is trained by TWO scripts, not one. 44 endpoints are decoy-aware and come from
+# train_binders_hybrid.py; the other 8 have enough measured inactives to be trained on labels alone
+# and come from train_measured_label_holdout.py. Omitting the second is silent: the panel still
+# loads, still scores, and 8 endpoints keep weights fitted to whatever representation the previous
+# run used. It was omitted here until the featurisation changed underneath it.
+	$(PY) $(SRC)/models/train_measured_label_holdout.py
 	$(PY) $(SRC)/adme/train_adme.py
 	$(MAKE) thresholds
 

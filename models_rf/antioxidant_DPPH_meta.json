@@ -22,24 +22,24 @@
   "cv_folds": 10,
   "cv_summary": {
     "random": {
-      "r2_mean": 0.6592,
-      "r2_sd": 0.0503,
-      "rmse_mean": 0.4606,
-      "rmse_sd": 0.0187,
-      "mae_mean": 0.3086,
-      "mae_sd": 0.0134,
-      "spearman_mean": 0.8069,
-      "spearman_sd": 0.0283
+      "r2_mean": 0.6589,
+      "r2_sd": 0.0508,
+      "rmse_mean": 0.4608,
+      "rmse_sd": 0.0184,
+      "mae_mean": 0.309,
+      "mae_sd": 0.0132,
+      "spearman_mean": 0.8064,
+      "spearman_sd": 0.0286
     },
     "scaffold": {
-      "r2_mean": 0.4161,
-      "r2_sd": 0.1478,
-      "rmse_mean": 0.586,
-      "rmse_sd": 0.078,
-      "mae_mean": 0.4183,
-      "mae_sd": 0.0517,
-      "spearman_mean": 0.6398,
-      "spearman_sd": 0.1066
+      "r2_mean": 0.4153,
+      "r2_sd": 0.1491,
+      "rmse_mean": 0.5865,
+      "rmse_sd": 0.0789,
+      "mae_mean": 0.4188,
+      "mae_sd": 0.0519,
+      "spearman_mean": 0.64,
+      "spearman_sd": 0.1059
     }
   }
 }

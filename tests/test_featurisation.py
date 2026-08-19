@@ -96,28 +96,42 @@ class TestParentAndStereo(unittest.TestCase):
         self.assertNotIn("Na", parent)
         self.assertEqual(parent.count("."), 0, "the counter-ion should be gone")
 
-    def test_KNOWN_DEFECT_salt_and_free_base_differ_because_charge_is_not_neutralised(self):
-        """Pins a defect so that fixing it is a deliberate, visible act.
+    def test_a_salt_and_its_free_base_are_the_same_input(self):
+        """The same drug written two ways must score identically.
 
-        Salt stripping keeps the largest fragment but does not neutralise it, so aspirin sodium
-        reduces to the carboxyl*ate* and not to aspirin. The vectors therefore differ, and so do
-        the predictions: measured on the deployed models, haloperidol hydrochloride returns BBB
-        0.613 where haloperidol returns 0.993, and its hERG probability moves by 0.619.
+        This was a defect, pinned here for a time as one. Stripping the counter-ion without
+        neutralising the parent left aspirin sodium as the carboxyl*ate*, and haloperidol
+        hydrochloride as a protonated amine. Measured on the models of the day, that moved
+        haloperidol's BBB probability from 0.993 to 0.613 and its hERG probability from 0.914 to
+        0.295: a user who pasted the salt form, which is what public databases serve, silently lost
+        a cardiac liability flag on a compound that has one.
 
-        Training SMILES are overwhelmingly neutral parent forms, so a user who submits a salt is
-        scoring an input the models were not trained on. This test asserts the current behaviour
-        rather than the desired one: changing it alters predictions for every salt input and needs
-        re-validation, so it must not happen by accident.
+        The panel was retrained on the neutralised representation, so training and inference now
+        agree. If this test fails, salt inputs have diverged from their free bases again.
         """
-        free, salt = featurize_one(ASPIRIN), featurize_one(ASPIRIN_SODIUM)
-        self.assertFalse(np.array_equal(free, salt),
-                         "if this now passes, neutralisation has been added: that is a scientific "
-                         "change, so re-validate the panel and update this test deliberately")
+        for name, free, salt in (
+                ("aspirin", ASPIRIN, ASPIRIN_SODIUM),
+                ("haloperidol", "OC1(CCN(CCCC(=O)c2ccc(F)cc2)CC1)c1ccc(Cl)cc1",
+                                "OC1(CC[NH+](CCCC(=O)c2ccc(F)cc2)CC1)c1ccc(Cl)cc1.[Cl-]"),
+                ("diclofenac", "O=C(O)Cc1ccccc1Nc1c(Cl)cccc1Cl",
+                               "O=C([O-])Cc1ccccc1Nc1c(Cl)cccc1Cl.[Na+]")):
+            with self.subTest(compound=name):
+                np.testing.assert_array_equal(featurize_one(free), featurize_one(salt))
 
-    def test_enantiomers_collide_which_is_a_known_limitation(self):
-        # Pinned deliberately. If chirality is ever included, _dedup_features must be revisited,
-        # because its whole purpose is to collapse rows this collision creates.
-        np.testing.assert_array_equal(featurize_one(L_ALANINE), featurize_one(D_ALANINE))
+    def test_a_permanent_charge_survives_neutralisation(self):
+        """Neutralisation must move protons, not erase real chemistry.
+
+        A quaternary ammonium has no proton to lose. Its charge is the reason such compounds do not
+        cross the barrier, so neutralising it would teach the model the opposite. The uncharger is
+        only allowed to undo protonation states.
+        """
+        from features.featurize import parent_mol
+        from rdkit import Chem
+        for name, smi, want in (("choline", "C[N+](C)(C)CCO.[Cl-]", 1),
+                                ("neostigmine", "CN(C)C(=O)Oc1cccc([N+](C)(C)C)c1", 1),
+                                ("free amine", "CNCCC(Oc1ccc(C(F)(F)F)cc1)c1ccccc1", 0)):
+            with self.subTest(compound=name):
+                self.assertEqual(Chem.GetFormalCharge(parent_mol(smi)), want)
 
     def test_enantiomers_collide_which_is_a_known_limitation(self):
         # Pinned deliberately. If chirality is ever included, _dedup_features must be revisited,

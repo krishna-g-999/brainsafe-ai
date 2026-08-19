@@ -31,22 +31,41 @@ ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / "src" / "brainsafe"))
 from features.featurize import featurize  # noqa: E402
 from models.train_rf import _scaffold_groups  # noqa: E402
+import panel  # noqa: E402
 
 M = ROOT / "models_rf"
-TARGETS = ["SIRT1", "Nav1_5"]
+# Seed list, used only to bootstrap a panel that has no registry yet. Everything after that first
+# build comes from panel.py: this list still said ["SIRT1", "Nav1_5"] when eight endpoints used this
+# mode, so `make train` refitted two of them and left six carrying weights from an older
+# featurisation while the rest of the panel moved, without any error.
+SEED_TARGETS = ["SIRT1", "Nav1_5"]
+MODE = panel.MEASURED_LABEL
 TARGET_FPR = 0.10
 ACTIVE_HOLDOUT = 0.20
 RF = dict(n_estimators=300, min_samples_leaf=4, n_jobs=-1, random_state=42, class_weight="balanced")
 rng = np.random.default_rng(42)
 
 
+def _targets() -> list[str]:
+    """Every endpoint this script is responsible for, read from the panel registry.
+
+    Derived rather than declared so the list cannot fall behind the panel. Falls back to the seed
+    list only when there is no registry yet, which is the first-ever build.
+    """
+    if not panel.MODES.exists():
+        return list(SEED_TARGETS)
+    return panel.names(mode=MODE)
+
+
 def main():
     # Targets may be named on the command line, so an addition can be trained without refitting the
     # rest. _train_small.py existed only to carry a different TARGETS list and is superseded by this.
-    global TARGETS
+    TARGETS = sys.argv[1:] if len(sys.argv) > 1 else _targets()
     if len(sys.argv) > 1:
-        TARGETS = sys.argv[1:]
         print(f"training only: {', '.join(TARGETS)}", flush=True)
+    else:
+        print(f"training all {len(TARGETS)} endpoints in mode {MODE}: "
+              f"{', '.join(TARGETS)}", flush=True)
     modes = json.loads((M / "binder_modes.json").read_text())
     for ep in TARGETS:
         f = ROOT / "data" / "endpoints" / f"{ep}.csv"
