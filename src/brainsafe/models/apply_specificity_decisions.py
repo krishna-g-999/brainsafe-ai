@@ -49,6 +49,40 @@ WITHDRAW = {
     "Nav1_1": "compressed probability band; every trivial metabolite scores 0.80 to 0.82 against a "
               "0.796 threshold, so no cut separates them from real ligands",
     "Cav3_2": "active band compressed near zero, calibrated threshold 0.065, atenolol scores 0.084",
+    # The three below were added to test whether the panel's natural-product gap could be closed by
+    # adding the targets natural products are actually assayed against. They were already failing the
+    # reliability gate upstream, so the deployment decision was never in doubt; what was missing was
+    # the reason, recorded here rather than hand-written into the generated file afterwards. Each
+    # carries some cross-validated signal and still cannot be given a usable threshold, which is the
+    # distinction the reason has to preserve. Assay composition:
+    # results/tables/np_endpoint_assay_composition.csv
+    "NRF2": "added to test natural-product coverage. Cross-validated AUROC 0.719 (scaffold, sd "
+            "0.157), so not noise, but AUROC 0.539 against its own held-out measured inactives and "
+            "sensitivity 0.250 at a threshold that controls the background false-positive rate. Of "
+            "its labelled NPASS records 0.0 per cent are a direct binding constant (Ki or Kd); "
+            "1,019 of 1,029 are Potency, a pooled functional readout that does not define a binding "
+            "class a ligand fingerprint can separate",
+    "NFKB1": "added to test natural-product coverage. Cross-validated AUROC 0.711 (scaffold, sd "
+             "0.151) but AUROC 0.392 against its own held-out measured inactives and sensitivity "
+             "0.048 at a usable threshold. Of its labelled NPASS records 0.3 per cent are a direct "
+             "binding constant; 344 of 362 are Potency. Same cause as NRF2",
+    "NR3C1": "added to test natural-product coverage. Cross-validated AUROC 0.596 (scaffold, sd "
+             "0.152), AUROC 0.479 against its own held-out measured inactives, and sensitivity "
+             "0.000: no threshold recovers an active. The only one of the three with real binding "
+             "data (14.8 per cent Ki or Kd) and the one with too few compounds to fit: 140 after "
+             "deduplication",
+}
+# Nav1_1 and Cav3_2 were caught by the deployed-specificity audit and that file is their evidence.
+# The three natural-product endpoints were not: they were never deployed, so the audit never saw
+# them, and their evidence is the cross-validation, the held-out inactives and the assay
+# composition. Pointing every withdrawal at one file would misattribute three of the five.
+WITHDRAW_EVIDENCE = {
+    "NRF2": "results/tables/binder_cv_summary.csv, models_rf/binder_modes.json, "
+            "results/tables/np_endpoint_assay_composition.csv",
+    "NFKB1": "results/tables/binder_cv_summary.csv, models_rf/binder_modes.json, "
+             "results/tables/np_endpoint_assay_composition.csv",
+    "NR3C1": "results/tables/binder_cv_summary.csv, models_rf/binder_modes.json, "
+             "results/tables/np_endpoint_assay_composition.csv",
 }
 RETHRESHOLD = {
     "a3b4nAChR": (0.450, "ethanol scored 0.437 at the calibrated threshold of 0.392"),
@@ -75,7 +109,8 @@ def main():
         old = dict(modes[ep])
         modes[ep].update({"deployed": False, "reliable_call": False,
                           "withdrawn_reason": why,
-                          "withdrawn_evidence": "results/deployed_specificity_audit.csv"})
+                          "withdrawn_evidence": WITHDRAW_EVIDENCE.get(
+                              ep, "results/deployed_specificity_audit.csv")})
         rows.append({"target": ep, "action": "withdrawn",
                      "old_threshold": old.get("threshold"), "new_threshold": None, "reason": why})
         print(f"[{ep}] WITHDRAWN: {why}", flush=True)

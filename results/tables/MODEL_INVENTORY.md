@@ -1,12 +1,12 @@
-# Model inventory, 2026-08-17
+# Model inventory, 2026-08-19
 
-Commit `7db07bd`. One row per deployed estimator, taken from the estimators and their metadata on disk. Four receptors carry both a potency regression and a binder classifier, so the model count exceeds the endpoint count.
+Commit `6dd47bd`. One row per deployed estimator, taken from the estimators and their metadata on disk. Four receptors carry both a potency regression and a binder classifier, so the model count exceeds the endpoint count.
 
-**72 estimators, 70 deployed.** Fitted between 2026-08-04 10:01 and 2026-08-13 22:14.
+**75 estimators, 70 deployed.** Fitted between 2026-08-04 10:01 and 2026-08-17 21:50.
 
 | family | estimators | deployed |
 |---|---|---|
-| binder | 49 | 47 |
+| binder | 52 | 47 |
 | exposure | 10 | 10 |
 | safety | 1 | 1 |
 | target | 12 | 12 |
@@ -55,7 +55,10 @@ Commit `7db07bd`. One row per deployed estimator, taken from the estimators and 
 | LRRK2_binder | probability this compound binds this target | classification | 4357 | AUROC vs measured non-binders |  | 0.985 | sigmoid, prefit | yes | 2026-08-13 20:45 |
 | MT1_binder | probability this compound binds this target | classification | 2611 | AUROC vs measured non-binders |  | 0.867 | sigmoid, prefit | yes | 2026-08-13 20:52 |
 | NET_binder | probability this compound binds this target | classification | 6012 | AUROC vs measured non-binders |  | 0.954 | sigmoid, prefit | yes | 2026-08-13 20:39 |
+| NFKB1_binder | probability this compound binds this target | classification | 102 | AUROC vs measured non-binders |  | 0.392 | sigmoid, prefit | WITHDRAWN | 2026-08-17 21:50 |
 | NLRP3_binder | probability this compound binds this target | classification | 849 | AUROC vs measured non-binders |  | 0.872 | sigmoid, prefit | yes | 2026-08-13 20:45 |
+| NR3C1_binder | probability this compound binds this target | classification | 37 | AUROC vs measured non-binders |  | 0.479 | sigmoid, prefit | WITHDRAWN | 2026-08-17 21:50 |
+| NRF2_binder | probability this compound binds this target | classification | 285 | AUROC vs measured non-binders |  | 0.539 | sigmoid, prefit | WITHDRAWN | 2026-08-17 21:50 |
 | Nav1_1_binder | probability this compound binds this target | classification | 227 | AUROC vs measured non-binders |  | 0.918 | sigmoid, prefit | WITHDRAWN | 2026-08-13 21:04 |
 | Nav1_5_binder | probability this compound binds this target | classification | 870 | AUROC vs measured non-binders |  | 0.921 | sigmoid, prefit | yes | 2026-08-13 21:04 |
 | Nav1_6_binder | probability this compound binds this target | classification | 1013 | AUROC vs measured non-binders |  | 0.634 | sigmoid, prefit | yes | 2026-08-13 21:02 |

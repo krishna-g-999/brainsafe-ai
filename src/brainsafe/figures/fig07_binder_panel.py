@@ -85,7 +85,11 @@ def panel_a(ax, d) -> None:
     ax.set_xlabel("AUROC against measured non-binders")
     ax.set_ylabel("sensitivity at the triage threshold,\nheld-out actives by scaffold",
                   linespacing=1.6)
-    ax.set_xlim(0.55, 1.01); ax.set_ylim(-0.04, 1.04)
+    # The lower bound follows the data. Fixed at 0.55 this panel silently dropped the three
+    # endpoints withdrawn at AUROC 0.392, 0.479 and 0.539 off the left of the axis, so a panel
+    # captioned as showing every endpoint showed 49 of 52, and the three it hid were the failures.
+    lo = min(0.55, float(d.auroc.min()) - 0.03)
+    ax.set_xlim(lo, 1.01); ax.set_ylim(-0.04, 1.04)
     S.strip(ax, x=True, y=True)
     ax.legend(loc="lower right", handletextpad=0.2, borderpad=0.3, labelspacing=0.35,
               scatterpoints=1)
@@ -116,10 +120,16 @@ def panel_b(ax, d) -> None:
     S.strip(ax, x=True, y=False)
     # Below the axis, not inside it: at the foot of the data area this sat on top of the four
     # weakest endpoints, which are the rows a reader most needs to be able to read.
-    n_dep = int(d.deployed.sum())
-    ax.text(0.0, -0.075, f"{len(d)} endpoints trained, {n_dep} deployed.   "
-                         f"Mean AUROC {d.auroc.mean():.3f}, mean sensitivity {d.sens.mean():.3f}.   "
-                         f"Median background false-positive rate {d.bg_fpr.median():.4f}.",
+    # The mean is quoted over the deployed set, because that is the panel the server offers and the
+    # set the manuscript describes. Averaging in the withdrawn endpoints reports a number for a
+    # panel nobody can query, and lowers it by exactly the failures that caused the withdrawal.
+    dep = d[d.deployed]
+    n_dep = len(dep)
+    ax.text(0.0, -0.075,
+            f"{len(d)} endpoints trained, {n_dep} deployed.   "
+            f"Over the deployed set: mean AUROC {dep.auroc.mean():.3f}, "
+            f"mean sensitivity {dep.sens.mean():.3f}.   "
+            f"Median background false-positive rate {dep.bg_fpr.median():.4f}.",
             transform=ax.transAxes, fontsize=6.5, color=S.INK, va="top")
 
 

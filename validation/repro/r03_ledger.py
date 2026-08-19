@@ -218,15 +218,20 @@ def rows() -> list[dict]:
     bm = ROOT / "models_rf" / "binder_modes.json"
     if bm.exists():
         d = json.loads(bm.read_text())
-        sens = [v["sensitivity_at_threshold"] for v in d.values()
+        # Deployed endpoints only. The panel means the manuscript quotes describe what the server
+        # offers; averaging in the five withdrawn endpoints answers a question nobody asked and
+        # drags the mean down by the very failures that caused the withdrawal (0.879 against
+        # 0.902 for AUROC). The withdrawn five are reported individually instead.
+        dep = [v for v in d.values() if v.get("deployed", True)]
+        sens = [v["sensitivity_at_threshold"] for v in dep
                 if v.get("sensitivity_at_threshold") is not None]
-        aur = [v["auroc_vs_measured_inactives"] for v in d.values()
+        aur = [v["auroc_vs_measured_inactives"] for v in dep
                if v.get("auroc_vs_measured_inactives") is not None]
-        artefact("binder panel mean sensitivity", "scaffold holdout", 0.866,
+        artefact("binder panel mean sensitivity (deployed)", "scaffold holdout", 0.878,
                  round(float(np.mean(sens)), 4), "models_rf/binder_modes.json",
                  "recomputed from the per-endpoint records, but those records were written by the "
                  "training run; re-running the binder panel was not performed in this session")
-        artefact("binder panel mean AUROC vs measured inactives", "holdout", 0.904,
+        artefact("binder panel mean AUROC vs measured inactives (deployed)", "holdout", 0.902,
                  round(float(np.mean(aur)), 4), "models_rf/binder_modes.json", "as above")
         artefact("binder endpoints deployed", "n/a", 47,
                  sum(1 for v in d.values() if v.get("deployed", True)),
@@ -281,11 +286,13 @@ def rows() -> list[dict]:
     if spec is not None:
         s = spec[spec.metric.astype(str).str.startswith("Specificity")]
         if len(s):
-            add("specificity on non-CNS chemistry", "external", 0.948,
+            add("specificity on non-CNS chemistry", "external", 0.933,
                 round(float(s.estimate.iloc[0]), 4), "A",
                 "src/brainsafe/evaluation/noncns_specificity.py",
                 "results/tables/noncns_specificity_summary.csv",
-                REGEN + ". Manuscript now states 0.948, corrected from 0.875; superseded artefact 0.920; "
+                REGEN + ". History of this number: 0.875, then 0.920 on superseded models, then 0.948 "
+                "before the binder panel was retrained on the extended endpoint tables. Re-run on the "
+                "current deployed models it is "
                 f"current models {float(s.estimate.iloc[0]):.4f} "
                 f"(95% CI {float(s.ci95_low.iloc[0]):.4f}-{float(s.ci95_high.iloc[0]):.4f}), "
                 f"{int(s.k.iloc[0])} of {int(s.n.iloc[0])} compounds silent")
@@ -315,7 +322,7 @@ def rows() -> list[dict]:
         head = pd.read_csv(f, nrows=0)
         if "smiles" in head.columns:
             total += len(pd.read_csv(f, usecols=["smiles"]))
-    add("compound-endpoint records", "n/a", 227146, total, "A",
+    add("compound-endpoint records", "n/a", 228200, total, "A",
         "validation/repro/r03_ledger.py", "validation/REPRO_LEDGER.csv",
         "counted from data/endpoints/*.csv")
     return out
@@ -329,13 +336,15 @@ def main() -> None:
     anchors = {
         "classifier AUROC, mean over endpoints|random": "mean AUROC 0.958 and 0.925 respectively",
         "classifier AUROC, mean over endpoints|scaffold": "mean AUROC 0.958 and 0.925 respectively",
-        "binder panel mean AUROC vs measured inactives|holdout": "reaches a mean AUROC of 0.904",
-        "binder panel mean sensitivity|scaffold holdout": "mean sensitivity of 0.866",
+        "binder panel mean AUROC vs measured inactives (deployed)|holdout":
+            "reaches a mean AUROC of 0.902",
+        "binder panel mean sensitivity (deployed)|scaffold holdout":
+            "a mean sensitivity of 0.878",
         "mean ECE before calibration|out-of-fold": "expected calibration error falling from 0.0795",
         "mean ECE after calibration|out-of-fold": "expected calibration error falling from 0.0795",
-        "specificity on non-CNS chemistry|external": "on non-CNS chemistry its specificity is 0.948",
-        "compound-endpoint records|n/a": "227,146 measured",
-        "binder endpoints deployed|n/a": "47 of 49 are deployed",
+        "specificity on non-CNS chemistry|external": "on non-CNS chemistry its specificity is 0.933",
+        "compound-endpoint records|n/a": "228,200 measured",
+        "binder endpoints deployed|n/a": "Across the 47 that are",
         "adversarial checks passing|n/a": "Five pass",
         "receptor potency regression R2, min|random": "0.64 to 0.72",
         "receptor potency regression R2, max|random": "0.64 to 0.72",

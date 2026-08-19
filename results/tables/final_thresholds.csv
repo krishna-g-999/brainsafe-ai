@@ -48,3 +48,6 @@ Cav3_2,0.155,0.155,0.0399,measured inactives,0.0013,0.907,True
 CGRP,0.412,0.412,0.0058,measured inactives,0.001,0.993,True
 DHODH,0.2166,0.2166,0.0205,measured inactives,0.0007,0.908,True
 RIPK1,0.05,0.0497,0.0205,measured inactives,0.0063,0.979,True
+NRF2,0.3323,0.2403,0.3323,background,0.0597,0.25,False
+NFKB1,0.4714,0.3615,0.4714,background,0.0533,0.048,False
+NR3C1,0.6558,0.6558,0.6086,measured inactives,0.0017,0.0,False

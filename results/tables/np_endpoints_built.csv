@@ -1,0 +1,4 @@
+endpoint,uniprot,compounds,actives,inactives,pct_active,rationale
+NFKB1,P19838,263,58,205,22.1,canonical inflammatory transcription factor; joins NLRP3 and RIPK1 on the neuroinflammation axis
+NR3C1,P04150,140,66,74,47.1,"glucocorticoid receptor; stress and depression axis, best class balance and richest in sp3 chemistry of the candidates"
+NRF2,Q16236,651,81,570,12.4,effector of the KEAP1-NRF2 axis; the mechanism most often ascribed to withanolides and other electrophilic natural products

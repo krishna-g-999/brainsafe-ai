@@ -1,6 +1,6 @@
 {
-  "generated": "2026-08-17",
-  "commit": "7db07bd",
+  "generated": "2026-08-18",
+  "commit": "6dd47bd",
   "raw_sources": [
     {
       "source": "ChEMBL",
@@ -252,9 +252,9 @@
       "path": "data/endpoints/*.csv",
       "layer": "1. processed data",
       "exists": true,
-      "n_files": 60,
-      "bytes": 18062145,
-      "last_written": "2026-08-13 18:38"
+      "n_files": 63,
+      "bytes": 18124850,
+      "last_written": "2026-08-17 21:47"
     },
     "results/tables/rf_cv_summary.csv": {
       "path": "results/tables/rf_cv_summary.csv",
@@ -285,8 +285,8 @@
       "layer": "2. models",
       "exists": true,
       "n_files": 1,
-      "bytes": 52364,
-      "last_written": "2026-08-17 11:08"
+      "bytes": 54865,
+      "last_written": "2026-08-17 21:51"
     },
     "results/tables/final_thresholds.csv": {
       "path": "results/tables/final_thresholds.csv",
@@ -364,9 +364,9 @@
       "path": "models_rf/holdout",
       "layer": "3. validation inputs",
       "exists": true,
-      "n_files": 101,
-      "bytes": 153951628,
-      "last_written": "2026-08-13 22:42"
+      "n_files": 104,
+      "bytes": 153998171,
+      "last_written": "2026-08-17 21:50"
     },
     "results/tables/scaffold_holdout_results.csv": {
       "path": "results/tables/scaffold_holdout_results.csv",
@@ -398,15 +398,15 @@
       "exists": true,
       "n_files": 1,
       "bytes": 293817,
-      "last_written": "2026-08-17 15:29"
+      "last_written": "2026-08-18 09:34"
     },
     "manuscript/figures/Figure4_pools_and_thresholds.png": {
       "path": "manuscript/figures/Figure4_pools_and_thresholds.png",
       "layer": "6. figures",
       "exists": true,
       "n_files": 1,
-      "bytes": 644184,
-      "last_written": "2026-08-17 15:29"
+      "bytes": 644413,
+      "last_written": "2026-08-18 09:34"
     },
     "manuscript/figures/Figure5_negative_class.png": {
       "path": "manuscript/figures/Figure5_negative_class.png",
@@ -414,7 +414,7 @@
       "exists": true,
       "n_files": 1,
       "bytes": 518117,
-      "last_written": "2026-08-17 15:29"
+      "last_written": "2026-08-18 09:34"
     },
     "manuscript/figures/Figure6_validation.png": {
       "path": "manuscript/figures/Figure6_validation.png",
@@ -422,15 +422,15 @@
       "exists": true,
       "n_files": 1,
       "bytes": 593295,
-      "last_written": "2026-08-17 15:29"
+      "last_written": "2026-08-18 09:34"
     },
     "manuscript/figures/Figure7_binder_panel.png": {
       "path": "manuscript/figures/Figure7_binder_panel.png",
       "layer": "6. figures",
       "exists": true,
       "n_files": 1,
-      "bytes": 502755,
-      "last_written": "2026-08-17 15:29"
+      "bytes": 527505,
+      "last_written": "2026-08-18 09:34"
     },
     "manuscript/tables_generated.md": {
       "path": "manuscript/tables_generated.md",
@@ -438,23 +438,23 @@
       "exists": true,
       "n_files": 1,
       "bytes": 16164,
-      "last_written": "2026-08-17 15:30"
+      "last_written": "2026-08-18 09:35"
     },
     "manuscript/NAR_WebServer_BrainSafe_built.md": {
       "path": "manuscript/NAR_WebServer_BrainSafe_built.md",
       "layer": "8. manuscript",
       "exists": true,
       "n_files": 1,
-      "bytes": 38032,
-      "last_written": "2026-08-17 15:30"
+      "bytes": 39401,
+      "last_written": "2026-08-18 09:35"
     },
     "manuscript/NAR_WebServer_BrainSafe_draft.md": {
       "path": "manuscript/NAR_WebServer_BrainSafe_draft.md",
       "layer": "8. manuscript",
       "exists": true,
       "n_files": 1,
-      "bytes": 31458,
-      "last_written": "2026-08-17 14:13"
+      "bytes": 32827,
+      "last_written": "2026-08-17 20:32"
     },
     "manuscript/references_verified.json": {
       "path": "manuscript/references_verified.json",

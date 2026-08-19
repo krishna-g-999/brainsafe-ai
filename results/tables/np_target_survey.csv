@@ -1,0 +1,1689 @@
+uniprot,target_name,already_in_panel,compounds,actives,inactives,measurements,sp3_rich_non_aromatic,pct_gap_chemistry,cns_keyword,trainable
+Q16236,Nuclear factor erythroid 2-related factor 2,,652,72,580,1029,215,33.0,False,True
+O75496,Geminin,,594,274,320,789,187,31.5,False,True
+P00352,Aldehyde dehydrogenase 1A1,,540,16,524,699,106,19.6,False,True
+P10275,Androgen Receptor,,488,93,395,1194,180,36.9,True,True
+P08684,Cytochrome P450 3A4,,453,61,392,991,88,19.4,False,True
+P83916,Chromobox protein homolog 1,,413,15,398,431,119,28.8,False,True
+P10636,Microtubule-associated protein tau,,400,23,377,848,76,19.0,True,True
+Q9UNA4,DNA polymerase iota,,386,15,371,419,78,20.2,False,True
+P27695,DNA-(apurinic or apyrimidinic site) lyase,,375,123,252,483,96,25.6,False,True
+P18031,Protein-tyrosine phosphatase 1B,,374,21,353,432,137,36.6,False,True
+Q96KQ7,"Histone-lysine N-methyltransferase, H3 lysine-9 specific 3",,352,77,275,423,88,25.0,False,True
+P11473,Vitamin D receptor,,350,24,326,561,119,34.0,True,True
+O94782,Ubiquitin carboxyl-terminal hydrolase 1,,346,16,330,397,88,25.4,False,True
+P02545,Prelamin-A/C,,316,152,164,365,111,35.1,False,True
+Q03181,Peroxisome proliferator-activated receptor delta,,311,45,266,538,135,43.4,True,True
+Q96QE3,ATPase family AAA domain-containing protein 5,,306,42,264,424,73,23.9,False,True
+P22303,Acetylcholinesterase,AChE,298,42,256,755,112,37.6,True,True
+Q9UBT6,DNA polymerase kappa,,298,34,264,365,65,21.8,False,True
+P19838,Nuclear factor NF-kappa-B p105 subunit,,263,57,206,362,100,38.0,False,True
+Q99700,Ataxin-2,,263,30,233,315,57,21.7,False,True
+Q99714,Endoplasmic reticulum-associated amyloid beta-peptide-binding protein,,251,19,232,370,37,14.7,True,True
+Q9NUW8,Tyrosyl-DNA phosphodiesterase 1,,243,57,186,314,45,18.5,True,True
+N.A,Glutamate [NMDA] receptor,,242,101,141,427,92,38.0,True,True
+Q92830,Histone acetyltransferase GCN5,,230,19,211,247,63,27.4,False,True
+P04637,Cellular tumor antigen p53,,227,42,185,322,46,20.3,False,True
+P84022,Mothers against decapentaplegic homolog 3,,220,37,183,246,49,22.3,False,True
+O75874,Isocitrate dehydrogenase [NADP] cytoplasmic,,218,37,181,260,71,32.6,False,True
+P16473,Thyroid stimulating hormone receptor,,217,47,170,414,55,25.3,True,True
+P05412,Proto-oncogene c-JUN,,211,29,182,249,80,37.9,False,True
+P10635,Cytochrome P450 2D6,,210,29,181,335,28,13.3,False,True
+P43220,Glucagon-like peptide 1 receptor,,205,20,185,229,50,24.4,True,True
+P10828,Thyroid hormone receptor beta-1,,203,86,117,291,66,32.5,True,True
+P28482,MAP kinase ERK2,,190,28,162,264,23,12.1,True,True
+Q9UIF8,Bromodomain adjacent to zinc finger domain protein 2B,,190,30,160,191,28,14.7,False,True
+Q13148,TAR DNA-binding protein 43,,183,23,160,187,54,29.5,False,True
+Q16637,Survival motor neuron protein,,171,41,130,217,40,23.4,False,True
+P49798,Regulator of G-protein signaling 4,,168,50,118,183,52,31.0,False,True
+P16050,Arachidonate 15-lipoxygenase,,159,28,131,175,38,23.9,False,True
+P37231,Peroxisome proliferator-activated receptor gamma,,157,23,134,460,44,28.0,True,True
+Q96RI1,Bile acid receptor FXR,,149,46,103,222,81,54.4,True,True
+P03372,Estrogen receptor alpha,,148,40,108,580,45,30.4,True,True
+P35354,Cyclooxygenase-2,COX2,146,22,124,491,58,39.7,True,True
+P11712,Cytochrome P450 2C9,,145,22,123,183,21,14.5,False,True
+P54132,Bloom syndrome protein,,143,48,95,248,34,23.8,False,True
+P04150,Glucocorticoid receptor,,140,64,76,461,57,40.7,True,True
+P46063,ATP-dependent DNA helicase Q1,,136,16,120,188,18,13.2,False,True
+P08183,P-glycoprotein 1,,125,37,88,327,15,12.0,False,True
+P33261,Cytochrome P450 2C19,,125,25,100,153,22,17.6,False,True
+P00918,Carbonic anhydrase II,,120,29,91,325,12,10.0,True,True
+P51449,Nuclear receptor ROR-gamma,,119,27,92,152,46,38.7,True,True
+Q12809,HERG,hERG,119,17,102,220,28,23.5,False,True
+P23219,Cyclooxygenase-1,COX1,113,20,93,294,28,24.8,True,True
+P09917,Arachidonate 5-lipoxygenase,,112,38,74,200,38,33.9,False,True
+P00915,Carbonic anhydrase I,,108,16,92,321,7,6.5,True,True
+P19793,Retinoid X receptor alpha,,100,16,84,190,31,31.0,True,True
+P05177,Cytochrome P450 1A2,,92,26,66,113,16,17.4,False,True
+Q16665,Hypoxia-inducible factor 1 alpha,,89,30,59,176,24,27.0,False,True
+P21397,Monoamine oxidase A,MAO_A,86,31,55,271,2,2.3,True,True
+P11511,Cytochrome P450 19A1,,84,28,56,196,24,28.6,False,True
+P21728,Dopamine D1 receptor,D1,83,50,33,140,12,14.5,True,True
+P27338,Monoamine oxidase B,MAO_B,77,23,54,281,4,5.2,True,True
+P34913,Epoxide hydratase,,68,25,43,107,23,33.8,False,True
+P15289,Cerebroside-sulfatase,,67,32,35,67,13,19.4,False,True
+Q16790,Carbonic anhydrase IX,,66,38,28,130,6,9.1,True,True
+Q16678,Cytochrome P450 1B1,,62,47,15,100,5,8.1,False,True
+P08908,Serotonin 1a (5-HT1a) receptor,HT1A,60,18,42,136,4,6.7,True,True
+B2RXH2,Lysine-specific demethylase 4D-like,,394,11,383,502,33,8.4,False,False
+Q03164,Menin/Histone-lysine N-methyltransferase MLL,,384,13,371,599,76,19.8,False,False
+O95342,Bile salt export pump,,252,2,250,456,73,29.0,False,False
+P15428,15-hydroxyprostaglandin dehydrogenase [NAD+],,248,2,246,330,22,8.9,False,False
+O75164,Lysine-specific demethylase 4A,,241,5,236,243,26,10.8,False,False
+P04792,Heat shock protein beta-1,,195,6,189,224,90,46.2,False,False
+Q03431,Parathyroid hormone receptor,,188,3,185,188,40,21.3,True,False
+Q13526,Peptidyl-prolyl cis-trans isomerase NIMA-interacting 1,,188,7,181,200,25,13.3,False,False
+P39748,Flap endonuclease 1,,179,9,170,217,17,9.5,False,False
+O15439,Multidrug resistance-associated protein 4,,171,0,171,174,55,32.2,False,False
+O15438,Canalicular multispecific organic anion transporter 2,,168,0,168,168,47,28.0,True,False
+Q92887,Canalicular multispecific organic anion transporter 1,,164,0,164,173,46,28.0,True,False
+O94925,"Glutaminase kidney isoform, mitochondrial",,157,1,156,166,16,10.2,False,False
+P06746,DNA polymerase beta,,149,14,135,156,29,19.5,False,False
+Q9Y253,DNA polymerase eta,,146,9,137,170,23,15.8,False,False
+Q13951,Runt-related transcription factor 1/Core-binding factor subunit beta,,136,10,126,172,31,22.8,False,False
+P63092,"Guanine nucleotide-binding protein G(s), subunit alpha",,134,5,129,135,28,20.9,False,False
+P06276,Butyrylcholinesterase,BChE,132,11,121,338,64,48.5,True,False
+O95398,Rap guanine nucleotide exchange factor 3,,119,0,119,129,33,27.7,False,False
+P56817,Beta-secretase 1,BACE1,118,13,105,176,27,22.9,True,False
+P53350,Serine/threonine-protein kinase PLK1,,114,4,110,141,43,37.7,True,False
+P10253,Lysosomal alpha-glucosidase,,108,5,103,147,13,12.0,False,False
+Q9NR56,Muscleblind-like protein 1,,107,13,94,116,6,5.6,False,False
+O15296,"Arachidonate 15-lipoxygenase, type II",,102,6,96,117,20,19.6,False,False
+P04062,Beta-glucocerebrosidase,GBA1,98,4,94,139,18,18.4,False,False
+P10145,Interleukin-8,,97,8,89,102,32,33.0,False,False
+P37840,Alpha-synuclein,,92,9,83,100,19,20.7,True,False
+P17405,Sphingomyelin phosphodiesterase,,91,0,91,92,4,4.4,True,False
+Q8WZA2,Rap guanine nucleotide exchange factor 4,,86,0,86,90,24,27.9,False,False
+P15121,Aldose reductase,,80,14,66,82,34,42.5,True,False
+P47989,Xanthine dehydrogenase,,78,6,72,110,7,9.0,True,False
+P11021,78 kDa glucose-regulated protein,,72,5,67,87,11,15.3,False,False
+Q01453,Peripheral myelin protein 22,,70,3,67,70,15,21.4,False,False
+Q9Y468,Lethal(3)malignant brain tumor-like protein 1,,66,12,54,69,7,10.6,False,False
+P11388,DNA topoisomerase II alpha,,63,4,59,88,33,52.4,True,False
+P18054,Arachidonate 12-lipoxygenase,,63,10,53,73,4,6.3,False,False
+Q04206,Nuclear factor NF-kappa-B p65 subunit,,60,7,53,67,20,33.3,False,False
+O43570,Carbonic anhydrase XII,,59,47,12,101,4,6.8,True,False
+P23141,Acyl coenzyme A:cholesterol acyltransferase,,59,26,33,82,25,42.4,False,False
+P42345,Serine/threonine-protein kinase mTOR,mTOR,58,12,46,124,9,15.5,True,False
+P51151,Ras-related protein Rab-9A,,58,20,38,67,13,22.4,False,False
+Q99549,M-phase phosphoprotein 8,,57,12,45,69,6,10.5,False,False
+Q9HC16,DNA dC->dU-editing enzyme APOBEC-3G,,57,4,53,64,14,24.6,False,False
+P14679,Tyrosinase,,56,9,47,82,6,10.7,True,False
+P54710,Sodium/potassium-transporting ATPase,,56,4,52,72,20,35.7,False,False
+Q14191,Werner syndrome ATP-dependent helicase,,56,0,56,56,6,10.7,False,False
+P29466,Caspase-1,,55,3,52,70,9,16.4,False,False
+P38398,Breast cancer type 1 susceptibility protein,,55,3,52,56,2,3.6,False,False
+P43166,Carbonic anhydrase VII,,55,40,15,81,3,5.5,True,False
+Q6W5P4,Neuropeptide S receptor,,55,9,46,64,11,20.0,True,False
+O75604,Ubiquitin carboxyl-terminal hydrolase 2,,54,4,50,57,4,7.4,False,False
+P00533,Epidermal growth factor receptor erbB1,,54,14,40,457,7,13.0,True,False
+P12931,Tyrosine-protein kinase SRC,,54,9,45,110,4,7.4,True,False
+P42858,Huntingtin,,54,11,43,54,17,31.5,False,False
+O00748,Carboxylesterase 2,,53,15,38,76,31,58.5,False,False
+P11387,DNA topoisomerase I,,53,5,48,80,25,47.2,True,False
+Q04759,Protein kinase C theta,,53,16,37,103,7,13.2,True,False
+P34972,Cannabinoid CB2 receptor,CB2,52,33,19,255,20,38.5,True,False
+Q13315,Serine-protein kinase ATM,,52,4,48,56,12,23.1,True,False
+P11309,Serine/threonine-protein kinase PIM1,,51,15,36,93,11,21.6,True,False
+P22748,Carbonic anhydrase IV,,51,21,30,61,4,7.8,True,False
+P24941,Cyclin-dependent kinase 2,,51,10,41,136,2,3.9,True,False
+P49841,Glycogen synthase kinase-3 beta,GSK3B,51,14,37,140,2,3.9,True,False
+Q07869,Peroxisome proliferator-activated receptor alpha,,51,4,47,110,27,52.9,True,False
+O75762,Transient receptor potential cation channel subfamily A member 1,,48,13,35,81,14,29.2,True,False
+P04798,Cytochrome P450 1A1,,48,33,15,76,1,2.1,False,False
+P06280,Alpha-galactosidase A,,48,2,46,77,8,16.7,False,False
+P21554,Cannabinoid CB1 receptor,CB1,48,31,17,266,21,43.8,True,False
+P05067,Beta amyloid A4 protein,,47,3,44,74,15,31.9,True,False
+P08246,Leukocyte elastase,,47,13,34,68,4,8.5,False,False
+P46059,Oligopeptide transporter small intestine isoform,,47,0,47,92,21,44.7,True,False
+P08581,Hepatocyte growth factor receptor,,46,12,34,98,11,23.9,True,False
+P11308,Transcriptional regulator ERG,,45,3,42,49,8,17.8,False,False
+P27487,Dipeptidyl peptidase IV,,45,12,33,47,4,8.9,False,False
+P35869,Aryl hydrocarbon receptor,,44,3,41,55,2,4.5,True,False
+Q02750,Dual specificity mitogen-activated protein kinase kinase 1,,44,10,34,78,11,25.0,True,False
+O15118,Niemann-Pick C1 protein,,43,19,24,48,13,30.2,False,False
+P00734,Thrombin,,43,19,24,61,17,39.5,False,False
+P28335,Serotonin 2c (5-HT2c) receptor,HT2C,43,30,13,102,2,4.7,True,False
+P40763,Signal transducer and activator of transcription 3,,43,5,38,50,35,81.4,False,False
+P41143,Delta opioid receptor,OPRD1,43,13,30,200,24,55.8,True,False
+Q92731,Estrogen receptor beta,,43,29,14,273,15,34.9,True,False
+Q96GD4,Serine/threonine-protein kinase Aurora-B,,43,13,30,70,12,27.9,True,False
+Q9UNQ0,ATP-binding cassette sub-family G member 2,,43,12,31,100,3,7.0,False,False
+P35372,Mu opioid receptor,OPRM1,42,23,19,295,18,42.9,True,False
+P17252,Protein kinase C alpha,,41,20,21,76,13,31.7,True,False
+Q8NER1,Vanilloid receptor,,41,13,28,82,17,41.5,True,False
+P28223,Serotonin 2a (5-HT2a) receptor,HT2A,40,28,12,113,0,0.0,True,False
+P31749,Serine/threonine-protein kinase AKT,,40,5,35,85,11,27.5,True,False
+Q9BUF5,Tubulin,,40,12,28,79,3,7.5,False,False
+Q9ULX7,Carbonic anhydrase XIV,,40,25,15,48,3,7.5,True,False
+O00519,Anandamide amidohydrolase,,38,3,35,52,25,65.8,False,False
+O14684,Prostaglandin E synthase,,38,20,18,47,16,42.1,False,False
+P55210,Caspase-7,,38,2,36,44,2,5.3,False,False
+Q7Z2H8,Proton-coupled amino acid transporter 1,,38,0,38,38,31,81.6,True,False
+P06239,Tyrosine-protein kinase LCK,,37,9,28,79,2,5.4,True,False
+P11509,Cytochrome P450 2A6,,37,5,32,65,5,13.5,False,False
+P35968,Vascular endothelial growth factor receptor 2,,36,16,20,247,4,11.1,True,False
+O15245,Solute carrier family 22 member 1,,35,1,34,44,7,20.0,False,False
+O75116,Rho-associated protein kinase 2,,35,13,22,45,8,22.9,True,False
+P13726,Coagulation factor III,,35,18,17,45,18,51.4,False,False
+P40225,Thrombopoietin,,35,11,24,70,3,8.6,False,False
+P14416,Dopamine D2 receptor,D2,34,29,5,132,2,5.9,True,False
+P14902,"Indoleamine 2,3-dioxygenase",,34,14,20,58,0,0.0,False,False
+P23280,Carbonic anhydrase VI,,34,13,21,52,3,8.8,True,False
+P34969,Serotonin 7 (5-HT7) receptor,HT7,34,13,21,74,2,5.9,True,False
+P36888,Tyrosine-protein kinase receptor FLT3,,34,10,24,223,1,2.9,True,False
+Q13627,Dual-specificity tyrosine-phosphorylation regulated kinase 1A,,33,13,20,73,1,3.0,True,False
+P19784,Casein kinase II alpha (prime),,32,10,22,60,1,3.1,True,False
+Q8IUX4,DNA dC->dU-editing enzyme APOBEC-3F,,32,2,30,37,3,9.4,False,False
+P07900,Heat shock protein HSP 90-alpha,,31,23,8,86,17,54.8,False,False
+P08254,Matrix metalloproteinase 3,,31,3,28,33,9,29.0,False,False
+P31645,Serotonin transporter,SERT,31,15,16,200,4,12.9,True,False
+P41595,Serotonin 2b (5-HT2b) receptor,,31,30,1,73,2,6.5,True,False
+P51955,Serine/threonine-protein kinase NEK2,,31,2,29,52,11,35.5,True,False
+Q16512,Protein kinase N1,,31,5,26,51,11,35.5,True,False
+Q8TDU6,G-protein coupled bile acid receptor 1,,31,8,23,47,31,100.0,True,False
+O75469,Pregnane X receptor,,30,10,20,56,13,43.3,True,False
+P04278,Testis-specific androgen-binding protein,,30,28,2,35,25,83.3,False,False
+P08069,Insulin-like growth factor I receptor,,30,8,22,55,5,16.7,True,False
+P12821,Angiotensin-converting enzyme,,30,7,23,86,13,43.3,False,False
+P28074,Proteasome Macropain subunit MB1,,30,12,18,54,8,26.7,False,False
+P51589,Cytochrome P450 2J2,,30,1,29,31,4,13.3,False,False
+Q08499,Phosphodiesterase 4D,,30,13,17,87,5,16.7,True,False
+O14965,Serine/threonine-protein kinase Aurora-A,,29,9,20,68,1,3.4,True,False
+P02768,Serum albumin,,29,1,28,36,6,20.7,False,False
+P35610,Acyl coenzyme A:cholesterol acyltransferase 1,,29,0,29,36,6,20.7,False,False
+Q05397,Focal adhesion kinase 1,,29,5,24,60,7,24.1,True,False
+Q99720,Sigma opioid receptor,Sigma1,29,23,6,77,8,27.6,True,False
+O60285,NUAK family SNF1-like kinase 1,,28,4,24,43,10,35.7,True,False
+P17706,T-cell protein-tyrosine phosphatase,,28,1,27,31,16,57.1,False,False
+P35218,Carbonic anhydrase VA,,28,11,17,53,4,14.3,True,False
+P41145,Kappa opioid receptor,OPRK1,28,20,8,194,14,50.0,True,False
+P49327,Fatty acid synthase,,28,1,27,30,2,7.1,False,False
+Q07817,Apoptosis regulator Bcl-X,,28,2,26,87,16,57.1,False,False
+Q13133,LXR-alpha,,28,12,16,101,16,57.1,False,False
+P04406,Glyceraldehyde-3-phosphate dehydrogenase liver,,27,0,27,35,3,11.1,False,False
+P06493,Cyclin-dependent kinase 1,,27,8,19,48,2,7.4,True,False
+P18089,Alpha-2b adrenergic receptor,,27,20,7,113,3,11.1,True,False
+P49137,MAP kinase-activated protein kinase 2,,27,1,26,53,6,22.2,True,False
+Q16539,MAP kinase p38 alpha,p38a,27,10,17,126,2,7.4,True,False
+Q9HC98,Serine/threonine-protein kinase NEK6,,27,1,26,39,9,33.3,True,False
+P06241,Tyrosine-protein kinase FYN,,26,5,21,53,1,3.8,True,False
+P08913,Alpha-2a adrenergic receptor,ADRA2A,26,23,3,55,4,15.4,True,False
+P22612,"cAMP-dependent protein kinase, gamma catalytic subunit",,26,6,20,44,0,0.0,True,False
+P30530,Tyrosine-protein kinase receptor UFO,,26,7,19,40,10,38.5,True,False
+P35462,Dopamine D3 receptor,D3,26,24,2,88,2,7.7,True,False
+P49840,Glycogen synthase kinase-3 alpha,,26,10,16,43,1,3.8,True,False
+Q15078,Cyclin-dependent kinase 5/CDK5 activator 1,,26,10,16,61,0,0.0,True,False
+Q16762,Thiosulfate sulfurtransferase,,26,6,20,26,8,30.8,False,False
+O75908,Acyl coenzyme A:cholesterol acyltransferase 2,,25,0,25,27,1,4.0,False,False
+P14618,Pyruvate kinase isozymes M1/M2,,25,6,19,51,5,20.0,True,False
+P36544,Neuronal acetylcholine receptor protein alpha-7 subunit,a7nAChR,25,3,22,70,5,20.0,True,False
+P43405,Tyrosine-protein kinase SYK,,25,4,21,61,1,4.0,True,False
+P50750,Cyclin-dependent kinase 9,,25,9,16,75,1,4.0,True,False
+P53355,Death-associated protein kinase 1,,25,2,23,40,0,0.0,True,False
+Q05655,Protein kinase C delta,,25,11,14,73,9,36.0,True,False
+Q07820,Induced myeloid leukemia cell differentiation protein Mcl-1,,25,6,19,54,5,20.0,False,False
+P05771,Protein kinase C beta,,24,6,18,49,10,41.7,True,False
+P07451,Carbonic anhydrase III,,24,3,21,30,4,16.7,True,False
+P11362,Fibroblast growth factor receptor 1,,24,8,16,48,1,4.2,True,False
+P18825,Alpha-2c adrenergic receptor,,24,21,3,45,5,20.8,True,False
+P23975,Norepinephrine transporter,NET,24,12,12,101,6,25.0,True,False
+Q969S8,Histone deacetylase,,24,11,13,257,5,20.8,True,False
+Q9Y3R4,Sialidase 2,,24,0,24,27,2,8.3,False,False
+Q9Y6L6,Solute carrier organic anion transporter family member 1B1,,24,13,11,44,9,37.5,True,False
+P08238,Heat shock protein HSP90,,23,6,17,95,3,13.0,False,False
+P08253,Matrix metalloproteinase-2,,23,4,19,23,1,4.3,False,False
+P35030,Trypsin,,23,5,18,27,5,21.7,False,False
+P48147,Prolyl endopeptidase,,23,2,21,32,4,17.4,False,False
+P50406,Serotonin 6 (5-HT6) receptor,HT6,23,14,9,61,1,4.3,True,False
+P51812,Ribosomal protein S6 kinase alpha 3,,23,11,12,49,1,4.3,True,False
+Q00535,Cyclin-dependent kinase 5,,23,7,16,52,1,4.3,True,False
+Q02880,DNA topoisomerase II beta,,23,4,19,47,3,13.0,True,False
+Q9Y2D0,Carbonic anhydrase VB,,23,9,14,38,3,13.0,True,False
+O14746,Telomerase reverse transcriptase,,22,6,16,26,5,22.7,False,False
+P05186,"Alkaline phosphatase, tissue-nonspecific isozyme",,22,1,21,27,0,0.0,False,False
+P07550,Beta-2 adrenergic receptor,ADRB2,22,9,13,98,3,13.6,True,False
+P0DMS8,Adenosine A3 receptor,,22,8,14,65,2,9.1,True,False
+P48729,Casein kinase I alpha,,22,8,14,35,1,4.5,True,False
+Q02156,Protein kinase C epsilon,,22,7,15,54,10,45.5,True,False
+Q16584,Mitogen-activated protein kinase kinase kinase 11,,22,6,16,42,1,4.5,True,False
+Q8TD08,Mitogen-activated protein kinase 15,,22,5,17,43,1,4.5,True,False
+Q99683,Mitogen-activated protein kinase kinase kinase 5,,22,5,17,47,1,4.5,True,False
+Q9P1W9,Serine/threonine-protein kinase PIM2,,22,3,19,44,0,0.0,True,False
+O95067,Cyclin-dependent kinase 1/cyclin B,,21,8,13,37,0,0.0,True,False
+P07949,Tyrosine-protein kinase receptor RET,,21,9,12,102,1,4.8,True,False
+P11229,Muscarinic acetylcholine receptor M1,M1,21,14,7,63,8,38.1,True,False
+P16083,Quinone reductase 2,,21,5,16,38,1,4.8,False,False
+P42336,PI3-kinase p110-alpha subunit,,21,6,15,176,1,4.8,True,False
+P47898,Serotonin 5a (5-HT5a) receptor,,21,4,17,40,1,4.8,True,False
+Q96FL8,Multidrug and toxin extrusion protein 1,,21,5,16,25,6,28.6,False,False
+O43353,Serine/threonine-protein kinase RIPK2,,20,5,15,44,1,5.0,True,False
+O60218,Aldo-keto reductase family 1 member B10,,20,9,11,27,4,20.0,False,False
+P00519,Tyrosine-protein kinase ABL,,20,5,15,272,1,5.0,True,False
+P01215,Glycoprotein hormones alpha chain,,20,6,14,20,4,20.0,False,False
+P07947,Tyrosine-protein kinase YES,,20,3,17,48,1,5.0,True,False
+P09923,Intestinal alkaline phosphatase,,20,2,18,24,0,0.0,False,False
+P10696,Alkaline phosphatase placental-like,,20,0,20,21,0,0.0,False,False
+P12268,Inosine-5'-monophosphate dehydrogenase 2,,20,2,18,45,1,5.0,False,False
+P53779,c-Jun N-terminal kinase 3,JNK3,20,6,14,44,1,5.0,True,False
+P68871,Hemoglobin beta chain,,20,2,18,27,1,5.0,False,False
+Q01959,Dopamine transporter,DAT,20,6,14,99,4,20.0,True,False
+Q04760,Glyoxalase I,,20,3,17,27,1,5.0,False,False
+Q12851,Mitogen-activated protein kinase kinase kinase kinase 2,,20,5,15,27,1,5.0,True,False
+Q4U2R8,Solute carrier family 22 member 6,,20,4,16,28,1,5.0,False,False
+Q99816,Tumor susceptibility gene 101 protein,,20,0,20,25,1,5.0,False,False
+O00444,Serine/threonine-protein kinase PLK4,,19,7,12,37,1,5.3,True,False
+O14757,Serine/threonine-protein kinase Chk1,,19,6,13,48,1,5.3,True,False
+O43318,Mitogen-activated protein kinase kinase kinase 7,,19,7,12,36,0,0.0,True,False
+P04626,Receptor protein-tyrosine kinase erbB-2,,19,3,16,54,0,0.0,True,False
+P06213,Insulin receptor,,19,4,15,47,1,5.3,True,False
+P14780,Matrix metalloproteinase 9,,19,5,14,21,0,0.0,False,False
+P28221,Serotonin 1d (5-HT1d) receptor,,19,7,12,35,0,0.0,True,False
+P28845,11-beta-hydroxysteroid dehydrogenase 1,,19,12,7,31,17,89.5,False,False
+P29317,Ephrin type-A receptor 2,,19,1,18,36,4,21.1,True,False
+P42684,Tyrosine-protein kinase ABL2,,19,3,16,45,1,5.3,True,False
+P43681,Neuronal acetylcholine receptor; alpha4/beta2,,19,10,9,111,6,31.6,True,False
+P49759,Dual specificty protein kinase CLK1,,19,9,10,35,1,5.3,True,False
+P51681,C-C chemokine receptor type 5,,19,1,18,25,16,84.2,True,False
+P58335,Anthrax toxin receptor 2,,19,3,16,20,0,0.0,True,False
+P68400,Casein kinase II alpha,,19,8,11,35,0,0.0,True,False
+Q01650,L-type amino acid transporter 1,,19,0,19,26,8,42.1,True,False
+Q13547,Histone deacetylase 1,HDAC1,19,8,11,390,6,31.6,True,False
+Q16348,Solute carrier family 15 member 2,,19,1,18,40,5,26.3,False,False
+Q8TCC7,Solute carrier family 22 member 8,,19,3,16,20,1,5.3,False,False
+Q9H0H5,Rac GTPase-activating protein 1,,19,0,19,19,0,0.0,False,False
+Q9NPD5,Solute carrier organic anion transporter family member 1B3,,19,7,12,30,8,42.1,True,False
+Q9UM73,ALK tyrosine kinase receptor,,19,8,11,47,4,21.1,True,False
+O95819,Mitogen-activated protein kinase kinase kinase kinase 4,,18,7,11,37,1,5.6,True,False
+P07948,Tyrosine-protein kinase Lyn,,18,5,13,46,1,5.6,True,False
+P09619,Platelet-derived growth factor receptor beta,,18,6,12,86,1,5.6,True,False
+P11274,Breakpoint cluster region protein,,18,4,14,51,1,5.6,False,False
+P24385,Cyclin-dependent kinase 4/cyclin D1,,18,7,11,43,1,5.6,True,False
+P27448,Serine/threonine-protein kinase c-TAK1,,18,7,11,37,1,5.6,True,False
+P35368,Alpha-1b adrenergic receptor,,18,14,4,71,3,16.7,True,False
+P45984,c-Jun N-terminal kinase 2,,18,5,13,46,1,5.6,True,False
+P48730,Casein kinase I delta,,18,7,11,40,1,5.6,True,False
+P49356,Protein farnesyltransferase,,18,6,12,32,7,38.9,False,False
+P50613,Cyclin-dependent kinase 7,,18,5,13,53,1,5.6,True,False
+Q13188,Serine/threonine-protein kinase MST2,,18,6,12,37,1,5.6,True,False
+Q14680,Maternal embryonic leucine zipper kinase,,18,6,12,35,1,5.6,True,False
+Q15746,"Myosin light chain kinase, smooth muscle",,18,4,14,44,2,11.1,True,False
+Q16445,GABA-A receptor; anion channel,,18,6,12,38,3,16.7,True,False
+Q9Y243,Serine/threonine-protein kinase AKT3,,18,2,16,45,1,5.6,True,False
+O15244,Solute carrier family 22 member 2,,17,3,14,19,4,23.5,False,False
+O60674,Tyrosine-protein kinase JAK2,,17,7,10,55,2,11.8,True,False
+O60840,Voltage-gated L-type calcium channel,,17,2,15,21,1,5.9,True,False
+O75460,Serine/threonine-protein kinase/endoribonuclease IRE1,,17,3,14,28,1,5.9,True,False
+O75716,Serine/threonine-protein kinase 16,,17,4,13,40,1,5.9,True,False
+O94806,Protein kinase C nu,,17,5,12,33,1,5.9,True,False
+P02766,Transthyretin,,17,4,13,24,0,0.0,False,False
+P07332,Tyrosine-protein kinase FES,,17,3,14,38,1,5.9,True,False
+P07339,Cathepsin D,,17,11,6,43,9,52.9,False,False
+P08185,Corticosteroid binding globulin,,17,11,6,18,17,100.0,False,False
+P08631,Tyrosine-protein kinase HCK,,17,5,12,38,1,5.9,True,False
+P08912,Muscarinic acetylcholine receptor M5,,17,9,8,50,6,35.3,True,False
+P10721,Stem cell growth factor receptor,,17,9,8,226,0,0.0,True,False
+P17948,Vascular endothelial growth factor receptor 1,,17,8,9,44,0,0.0,True,False
+P20309,Muscarinic acetylcholine receptor M3,M3,17,14,3,36,8,47.1,True,False
+P23458,Tyrosine-protein kinase JAK1,,17,3,14,59,1,5.9,True,False
+P25100,Alpha-1d adrenergic receptor,,17,17,0,55,3,17.6,True,False
+P27361,MAP kinase ERK1,,17,0,17,39,1,5.9,True,False
+P29323,Ephrin type-B receptor 2,,17,1,16,33,1,5.9,True,False
+P31751,Serine/threonine-protein kinase AKT2,,17,3,14,38,1,5.9,True,False
+P33527,Multidrug resistance-associated protein 1,,17,6,11,28,2,11.8,False,False
+P35348,Alpha-1a adrenergic receptor,ADRA1A,17,13,4,61,2,11.8,True,False
+P45983,c-Jun N-terminal kinase 1,,17,4,13,41,1,5.9,True,False
+P49760,Dual specificity protein kinase CLK2,,17,7,10,40,1,5.9,True,False
+P53667,LIM domain kinase 1,,17,2,15,35,1,5.9,True,False
+Q00534,Cyclin-dependent kinase 6,,17,4,13,34,1,5.9,True,False
+Q00536,Serine/threonine-protein kinase PCTAIRE-1,,17,5,12,38,1,5.9,True,False
+Q02763,Tyrosine-protein kinase TIE-2,,17,6,11,36,0,0.0,True,False
+Q04771,Activin receptor type-1,,17,2,15,34,1,5.9,True,False
+Q06187,Tyrosine-protein kinase BTK,,17,3,14,42,1,5.9,True,False
+Q13557,CaM kinase II delta,,17,6,11,37,1,5.9,True,False
+Q14164,Inhibitor of nuclear factor kappa B kinase epsilon subunit,,17,5,12,34,1,5.9,True,False
+Q15759,MAP kinase p38 beta,,17,3,14,48,1,5.9,True,False
+Q16850,Cytochrome P450 51,,17,3,14,24,8,47.1,False,False
+Q2M2I8,Adaptor-associated kinase,,17,6,11,37,1,5.9,True,False
+Q5VT25,Serine/threonine-protein kinase MRCK-A,,17,1,16,36,1,5.9,True,False
+Q8IW41,MAP kinase-activated protein kinase 5,,17,1,16,37,1,5.9,True,False
+Q96RR4,CaM-kinase kinase beta,,17,5,12,34,1,5.9,True,False
+Q9H0K1,Serine/threonine-protein kinase SIK2,,17,6,11,37,1,5.9,True,False
+Q9HAZ1,Dual specificity protein kinase CLK4,,17,7,10,36,1,5.9,True,False
+Q9NSY1,BMP-2-inducible protein kinase,,17,6,11,38,1,5.9,True,False
+Q9UKE5,TRAF2- and NCK-interacting kinase,,17,5,12,39,1,5.9,True,False
+Q9Y2K2,Serine/threonine-protein kinase SIK3,,17,2,15,28,1,5.9,True,False
+Q9Y6M4,Casein kinase I isoform gamma-3,,17,2,15,33,1,5.9,True,False
+O00167,Eyes absent homolog 2,,16,0,16,17,4,25.0,False,False
+O14976,Serine/threonine-protein kinase GAK,,16,10,6,48,1,6.2,True,False
+O15530,3-phosphoinositide dependent protein kinase-1,,16,3,13,30,0,0.0,True,False
+O75582,Ribosomal protein S6 kinase alpha 5,,16,3,13,58,1,6.2,True,False
+O75676,Ribosomal protein S6 kinase alpha 4,,16,4,12,50,1,6.2,True,False
+O94804,Serine/threonine-protein kinase 10,,16,6,10,40,1,6.2,True,False
+O95835,Serine/threonine-protein kinase LATS1,,16,3,13,33,1,6.2,True,False
+O96013,Serine/threonine-protein kinase PAK 4,,16,2,14,37,1,6.2,True,False
+P00338,L-lactate dehydrogenase A chain,,16,0,16,23,3,18.8,False,False
+P00374,Dihydrofolate reductase,,16,5,11,156,1,6.2,False,False
+P01375,TNF-alpha,,16,10,6,19,10,62.5,False,False
+P04629,Nerve growth factor receptor Trk-A,,16,4,12,46,1,6.2,True,False
+P07858,Cathepsin B,CTSB,16,6,10,26,7,43.8,False,False
+P11802,Cyclin-dependent kinase 4,,16,4,12,41,1,6.2,True,False
+P15056,Serine/threonine-protein kinase B-raf,,16,3,13,112,1,6.2,True,False
+P15735,Phosphorylase kinase gamma subunit 2,,16,4,12,37,1,6.2,True,False
+P17612,cAMP-dependent protein kinase alpha-catalytic subunit,,16,3,13,35,1,6.2,True,False
+P18507,GABA-A receptor; alpha-1/beta-2/gamma-2,GABAA_a5,16,3,13,27,4,25.0,True,False
+P21709,Ephrin type-A receptor 1,,16,1,15,31,1,6.2,True,False
+P22694,cAMP-dependent protein kinase beta-1 catalytic subunit,,16,3,13,37,1,6.2,True,False
+P28222,Serotonin 1b (5-HT1b) receptor,,16,5,11,36,0,0.0,True,False
+P29597,Tyrosine-protein kinase TYK2,,16,4,12,49,1,6.2,True,False
+P30291,Serine/threonine-protein kinase WEE1,,16,1,15,29,1,6.2,True,False
+P35236,Protein-tyrosine phosphatase LC-PTP,,16,0,16,16,8,50.0,False,False
+P36897,TGF-beta receptor type I,,16,1,15,54,1,6.2,True,False
+P37173,TGF-beta receptor type II,,16,1,15,31,1,6.2,True,False
+P41240,Tyrosine-protein kinase CSK,,16,1,15,33,1,6.2,True,False
+P42680,Tyrosine-protein kinase TEC,,16,0,16,35,1,6.2,True,False
+P42685,Tyrosine-protein kinase FRK,,16,6,10,32,1,6.2,True,False
+P46734,Dual specificity mitogen-activated protein kinase kinase 3,,16,1,15,31,1,6.2,True,False
+P49674,Casein kinase I epsilon,,16,7,9,39,1,6.2,True,False
+P51452,Dual specificity protein phosphatase 3,,16,1,15,18,5,31.2,False,False
+P52564,Dual specificity mitogen-activated protein kinase kinase 6,,16,2,14,35,1,6.2,True,False
+P53671,LIM domain kinase 2,,16,1,15,33,1,6.2,True,False
+P54753,Ephrin type-B receptor 3,,16,0,16,35,1,6.2,True,False
+P54756,Ephrin type-A receptor 5,,16,2,14,35,1,6.2,True,False
+P54760,Ephrin type-B receptor 4,,16,1,15,39,1,6.2,True,False
+P54764,Ephrin type-A receptor 4,,16,1,15,34,1,6.2,True,False
+P55055,LXR-beta,,16,2,14,111,8,50.0,False,False
+P62158,Calmodulin,,16,3,13,18,0,0.0,False,False
+P78368,Casein kinase I gamma 2,,16,3,13,34,1,6.2,True,False
+P80192,Mitogen-activated protein kinase kinase kinase 9,,16,5,11,27,0,0.0,True,False
+Q07912,Tyrosine kinase non-receptor protein 2,,16,3,13,32,1,6.2,True,False
+Q13043,Serine/threonine-protein kinase MST1,,16,4,12,38,1,6.2,True,False
+Q13131,"AMP-activated protein kinase, alpha-1 subunit",,16,4,12,37,1,6.2,True,False
+Q13164,Mitogen-activated protein kinase 7,,16,2,14,32,1,6.2,True,False
+Q13177,Serine/threonine-protein kinase PAK 2,,16,1,15,35,1,6.2,True,False
+Q13470,Non-receptor tyrosine-protein kinase TNK1,,16,5,11,33,1,6.2,True,False
+Q13555,CaM kinase II gamma,,16,5,11,40,1,6.2,True,False
+Q13873,Bone morphogenetic protein receptor type-2,,16,1,15,32,1,6.2,True,False
+Q13936,Voltage-gated L-type calcium channel alpha-1C subunit,,16,6,10,29,2,12.5,True,False
+Q13976,cGMP-dependent protein kinase 1 beta,,16,2,14,39,1,6.2,True,False
+Q14289,Protein tyrosine kinase 2 beta,,16,4,12,35,1,6.2,True,False
+Q15569,Dual specificity testis-specific protein kinase 1,,16,1,15,36,1,6.2,True,False
+Q15831,Serine/threonine-protein kinase 11,,16,3,13,36,1,6.2,True,False
+Q16513,Protein kinase N2,,16,4,12,35,1,6.2,True,False
+Q6DT37,Serine/threonine-protein kinase MRCK gamma,,16,3,13,35,1,6.2,True,False
+Q7KZI7,MAP/microtubule affinity-regulating kinase 2,,16,5,11,37,1,6.2,True,False
+Q8NI60,"Chaperone activity of bc1 complex-like, mitochondrial",,16,0,16,34,1,6.2,False,False
+Q8TD19,Serine/threonine-protein kinase NEK9,,16,1,15,34,1,6.2,True,False
+Q92769,Histone deacetylase 2,,16,9,7,230,5,31.2,True,False
+Q92918,Mitogen-activated protein kinase kinase kinase kinase 1,,16,3,13,28,1,6.2,True,False
+Q96PY6,Serine/threonine-protein kinase Nek1,,16,1,15,36,1,6.2,True,False
+Q99640,Tyrosine- and threonine-specific cdc2-inhibitory kinase,,16,0,16,34,1,6.2,True,False
+Q9BZL6,Serine/threonine-protein kinase D2,,16,4,12,30,1,6.2,True,False
+Q9HBH9,MAP kinase signal-integrating kinase 2,,16,10,6,35,0,0.0,True,False
+Q9HCP0,Casein kinase I gamma 1,,16,1,15,31,1,6.2,True,False
+Q9NY46,Sodium channel protein type III alpha subunit,,16,5,11,19,7,43.8,True,False
+Q9NYL2,Mixed lineage kinase 7,,16,2,14,31,1,6.2,True,False
+Q9P289,Serine/threonine-protein kinase MST4,,16,2,14,35,1,6.2,True,False
+Q9UBE8,Serine/threonine protein kinase NLK,,16,4,12,36,1,6.2,True,False
+Q9UGP5,DNA polymerase lambda,,16,0,16,16,4,25.0,False,False
+Q9UQM7,CaM kinase II alpha,,16,6,10,40,0,0.0,True,False
+Q9Y4K4,Mitogen-activated protein kinase kinase kinase kinase 5,,16,3,13,32,1,6.2,True,False
+Q9Y616,Interleukin-1 receptor-associated kinase 3,,16,4,12,31,1,6.2,True,False
+Q9Y6E0,Serine/threonine-protein kinase 24,,16,2,14,35,1,6.2,True,False
+O14578,Citron Rho-interacting kinase,,15,4,11,27,1,6.7,True,False
+P07711,Cathepsin L,,15,5,10,24,6,40.0,False,False
+P10632,Cytochrome P450 2C8,,15,1,14,17,2,13.3,False,False
+P11413,Glucose-6-phosphate 1-dehydrogenase,,15,0,15,16,7,46.7,False,False
+P14635,Cyclin-dependent kinase 1/cyclin B1,,15,7,8,38,0,0.0,True,False
+P16591,Tyrosine-protein kinase FER,,15,3,12,31,1,6.7,True,False
+P23443,Ribosomal protein S6 kinase 1,,15,3,12,26,1,6.7,True,False
+P24723,Protein kinase C eta,,15,6,9,39,4,26.7,True,False
+P28340,DNA polymerase delta subunit 1,,15,0,15,15,3,20.0,False,False
+P29274,Adenosine A2 receptor,A2A,15,4,11,64,2,13.3,True,False
+P30542,Adenosine A1 receptor,A1,15,7,8,44,1,6.7,True,False
+P36507,Dual specificity mitogen-activated protein kinase kinase 2,,15,3,12,33,1,6.7,True,False
+P36894,Bone morphogenetic protein receptor type-1A,,15,0,15,32,1,6.7,True,False
+P36896,Activin receptor type-1B,,15,3,12,32,1,6.7,True,False
+P48736,PI3-kinase p110-gamma subunit,,15,4,11,53,1,6.7,True,False
+P52333,Tyrosine-protein kinase JAK3,,15,6,9,41,0,0.0,True,False
+P55263,Adenosine kinase,,15,2,13,22,1,6.7,True,False
+P80365,11-beta-hydroxysteroid dehydrogenase 2,,15,6,9,24,14,93.3,False,False
+Q00526,Cyclin-dependent kinase 3,,15,3,12,37,0,0.0,True,False
+Q00537,Serine/threonine-protein kinase PCTAIRE-2,,15,2,13,26,1,6.7,True,False
+Q04912,Macrophage-stimulating protein receptor,,15,1,14,29,1,6.7,True,False
+Q08345,Epithelial discoidin domain-containing receptor 1,,15,3,12,34,1,6.7,True,False
+Q15375,Ephrin type-A receptor 7,,15,3,12,34,0,0.0,True,False
+Q15418,Ribosomal protein S6 kinase alpha 1,,15,4,11,53,1,6.7,True,False
+Q16566,CaM kinase IV,,15,2,13,32,1,6.7,True,False
+Q7L7X3,Serine/threonine-protein kinase TAO1,,15,5,10,27,1,6.7,True,False
+Q8IVH8,Mitogen-activated protein kinase kinase kinase kinase 3,,15,3,12,33,1,6.7,True,False
+Q8N1Q1,Carbonic anhydrase XIII,,15,4,11,19,1,6.7,True,False
+Q96L34,MAP/microtubule affinity-regulating kinase 4,,15,4,11,32,1,6.7,True,False
+Q9H093,NUAK family SNF1-like kinase 2,,15,3,12,31,0,0.0,True,False
+Q9NWZ3,Interleukin-1 receptor-associated kinase 4,,15,5,10,26,1,6.7,True,False
+Q9UBN7,Histone deacetylase 6,HDAC6,15,8,7,316,5,33.3,True,False
+Q9UK32,Ribosomal protein S6 kinase alpha 6,,15,1,14,45,1,6.7,True,False
+Q9Y463,Dual specificity tyrosine-phosphorylation-regulated kinase 1B,,15,6,9,32,1,6.7,True,False
+Q9Y6R4,Mitogen-activated protein kinase kinase kinase 4,,15,0,15,31,1,6.7,True,False
+O75751,Solute carrier family 22 member 3,,14,3,11,15,1,7.1,False,False
+O95382,Mitogen-activated protein kinase kinase kinase 6,,14,2,12,25,1,7.1,True,False
+P08172,Muscarinic acetylcholine receptor M2,M2,14,11,3,63,6,42.9,True,False
+P11216,Brain glycogen phosphorylase,,14,0,14,18,4,28.6,True,False
+P22309,UDP-glucuronosyltransferase 1-1,,14,1,13,20,2,14.3,False,False
+P25098,G-protein coupled receptor kinase 2,,14,1,13,14,1,7.1,True,False
+P35916,Vascular endothelial growth factor receptor 3,,14,7,7,46,0,0.0,True,False
+P41743,Protein kinase C iota,,14,1,13,23,1,7.1,True,False
+P42338,PI3-kinase p110-beta subunit,,14,4,10,50,1,7.1,True,False
+P46098,Serotonin 3a (5-HT3a) receptor,HT3A,14,2,12,17,2,14.3,True,False
+P51617,Interleukin-1 receptor-associated kinase 1,,14,4,10,26,1,7.1,True,False
+P51956,Serine/threonine-protein kinase Nek3,,14,0,14,22,1,7.1,True,False
+P80404,Gamma-amino-N-butyrate transaminase,,14,0,14,14,0,0.0,False,False
+Q13153,Serine/threonine-protein kinase PAK 1,,14,1,13,30,0,0.0,True,False
+Q13464,Rho-associated protein kinase 1,ROCK1,14,3,11,26,1,7.1,True,False
+Q13705,Activin receptor type-2B,,14,0,14,29,1,7.1,True,False
+Q13882,Tyrosine-protein kinase BRK,,14,1,13,31,1,7.1,True,False
+Q16832,Discoidin domain-containing receptor 2,,14,3,11,38,1,7.1,True,False
+Q32MK0,Myosin light chain kinase,,14,3,11,19,1,7.1,True,False
+Q6PHR2,Serine/threonine-protein kinase ULK3,,14,3,11,22,1,7.1,True,False
+Q86V86,Serine/threonine-protein kinase PIM3,LRRK2,14,4,10,25,0,0.0,True,False
+Q8TBX8,Phosphatidylinositol-5-phosphate 4-kinase type-2 gamma,,14,2,12,17,1,7.1,True,False
+Q99759,Mitogen-activated protein kinase kinase kinase 3,,14,3,11,21,1,7.1,True,False
+Q9BQI3,Eukaryotic translation initiation factor 2-alpha kinase 1,,14,2,12,19,1,7.1,True,False
+Q9H2K8,Serine/threonine-protein kinase TAO3,,14,3,11,22,1,7.1,True,False
+Q9H4B4,Serine/threonine-protein kinase PLK3,,14,2,12,31,1,7.1,True,False
+Q9HC97,G-protein coupled receptor 35,,14,3,11,32,0,0.0,True,False
+Q9NQU5,Serine/threonine-protein kinase PAK6,,14,2,12,28,0,0.0,True,False
+Q9UHD2,Serine/threonine-protein kinase TBK1,,14,5,9,23,1,7.1,True,False
+Q9UL54,Serine/threonine-protein kinase TAO2,,14,3,11,22,1,7.1,True,False
+Q9UPZ9,Serine/threonine-protein kinase ICK,,14,3,11,24,1,7.1,True,False
+Q9Y5S2,Serine/threonine-protein kinase MRCK beta,,14,1,13,31,1,7.1,True,False
+O00238,Bone morphogenetic protein receptor type-1B,,13,2,11,21,1,7.7,True,False
+O00329,PI3-kinase p110-delta subunit,,13,3,10,56,1,7.7,True,False
+O00571,ATP-dependent RNA helicase DDX3X,,13,1,12,13,1,7.7,False,False
+O15197,Ephrin type-B receptor 6,,13,3,10,19,1,7.7,True,False
+O60341,Lysine-specific histone demethylase 1,,13,1,12,15,0,0.0,False,False
+O75385,Serine/threonine-protein kinase ULK1,,13,3,10,23,1,7.7,True,False
+O75643,U5 small nuclear ribonucleoprotein 200 kDa helicase,,13,0,13,13,2,15.4,False,False
+O76074,Phosphodiesterase 5A,PDE5,13,3,10,19,1,7.7,True,False
+O94768,Serine/threonine-protein kinase 17B,,13,3,10,26,0,0.0,True,False
+P06737,Liver glycogen phosphorylase,,13,1,12,14,3,23.1,True,False
+P08173,Muscarinic acetylcholine receptor M4,,13,12,1,32,5,38.5,True,False
+P08235,Mineralocorticoid receptor,,13,11,2,52,11,84.6,True,False
+P09769,Tyrosine-protein kinase FGR,,13,3,10,29,1,7.7,True,False
+P10415,Apoptosis regulator Bcl-2,,13,7,6,68,1,7.7,False,False
+P16234,Platelet-derived growth factor receptor,,13,7,6,45,0,0.0,True,False
+P20813,Cytochrome P450 2B6,,13,5,8,21,5,38.5,False,False
+P27707,Deoxycytidine kinase,,13,0,13,14,2,15.4,True,False
+P28907,Lymphocyte differentiation antigen CD38,,13,0,13,13,0,0.0,False,False
+P33981,Dual specificity protein kinase TTK,,13,5,8,29,1,7.7,True,False
+P35367,Histamine H1 receptor,H1,13,10,3,51,1,7.7,True,False
+P37023,Serine/threonine-protein kinase receptor R3,,13,0,13,24,1,7.7,True,False
+P45985,Dual specificity mitogen-activated protein kinase kinase 4,,13,2,11,27,0,0.0,True,False
+P49336,Cell division protein kinase 8,,13,5,8,27,0,0.0,True,False
+P49761,Dual specificity protein kinase CLK3,,13,2,11,25,1,7.7,True,False
+P54577,Tyrosyl-tRNA synthetase,,13,0,13,13,1,7.7,False,False
+P78527,DNA-dependent protein kinase,,13,4,9,15,1,7.7,True,False
+Q00796,Sorbitol dehydrogenase,,13,0,13,14,0,0.0,False,False
+Q06124,Protein-tyrosine phosphatase 2C,,13,1,12,16,5,38.5,False,False
+Q06418,Tyrosine-protein kinase receptor TYRO3,,13,4,9,28,0,0.0,True,False
+Q13233,Mitogen-activated protein kinase kinase kinase 1,,13,1,12,23,1,7.7,True,False
+Q14004,Cyclin-dependent kinase 13,,13,2,11,18,1,7.7,True,False
+Q86VL8,Multidrug and toxin extrusion protein 2,,13,3,10,15,1,7.7,False,False
+Q9BUB5,MAP kinase-interacting serine/threonine-protein kinase MNK1,,13,4,9,25,0,0.0,True,False
+Q9H244,Purinergic receptor P2Y12,,13,1,12,13,1,7.7,True,False
+Q9H2G2,Serine/threonine-protein kinase 2,,13,5,8,36,1,7.7,True,False
+Q9H773,dCTP pyrophosphatase 1,,13,0,13,16,2,15.4,False,False
+Q9Y2H1,Serine/threonine-protein kinase 38-like,,13,2,11,28,0,0.0,True,False
+Q9Y2U5,Mitogen-activated protein kinase kinase kinase 2,,13,3,10,21,1,7.7,True,False
+O15254,Peroxisomal acyl-coenzyme A oxidase 3,,12,0,12,12,1,8.3,False,False
+O43293,Death-associated protein kinase 3,,12,3,9,34,0,0.0,True,False
+O43451,Maltase-glucoamylase,,12,5,7,14,10,83.3,False,False
+O60313,"Dynamin-like 120 kDa protein, mitochondrial",,12,0,12,12,1,8.3,False,False
+O76039,Cyclin-dependent kinase-like 5,,12,2,10,19,1,8.3,True,False
+O95347,Structural maintenance of chromosomes protein 2,,12,0,12,12,1,8.3,False,False
+P04049,Serine/threonine-protein kinase RAF,,12,3,9,56,0,0.0,True,False
+P05141,ADP/ATP translocase 2,,12,0,12,12,1,8.3,False,False
+P07333,Macrophage colony stimulating factor  receptor,CSF1R,12,7,5,33,0,0.0,True,False
+P08574,"Cytochrome c1, heme protein, mitochondrial",,12,0,12,12,1,8.3,False,False
+P08922,Proto-oncogene tyrosine-protein kinase ROS,,12,3,9,29,0,0.0,True,False
+P10398,Serine/threonine-protein kinase A-Raf,,12,0,12,15,1,8.3,True,False
+P12236,ADP/ATP translocase 3,,12,0,12,12,1,8.3,False,False
+P13861,cAMP-dependent protein kinase type II-alpha regulatory subunit,,12,0,12,12,1,8.3,True,False
+P14091,Cathepsin E,,12,11,1,29,7,58.3,False,False
+P21918,Dopamine D5 receptor,,12,9,3,12,1,8.3,True,False
+P22234,Multifunctional protein ADE2,,12,0,12,12,1,8.3,False,False
+P22455,Fibroblast growth factor receptor 4,,12,2,10,27,0,0.0,True,False
+P22607,Fibroblast growth factor receptor 3,,12,3,9,45,0,0.0,True,False
+P25963,NF-kappaB inhibitor alpha,,12,1,11,12,12,100.0,False,False
+P26196,Probable ATP-dependent RNA helicase DDX6,,12,0,12,12,1,8.3,False,False
+P30519,Heme oxygenase 2,,12,0,12,12,1,8.3,False,False
+P31153,S-adenosylmethionine synthase isoform type-2,,12,0,12,12,1,8.3,False,False
+P31689,DnaJ homolog subfamily A member 1,,12,0,12,12,1,8.3,False,False
+P33991,DNA replication licensing factor MCM4,,12,0,12,12,1,8.3,False,False
+P35228,"Nitric oxide synthase, inducible",,12,3,9,31,8,66.7,True,False
+P38117,Electron transfer flavoprotein subunit beta,,12,0,12,12,1,8.3,False,False
+P41250,Glycine--tRNA ligase,,12,0,12,12,1,8.3,False,False
+P42285,Exosome RNA helicase MTR4,,12,0,12,12,1,8.3,False,False
+P43403,Tyrosine-protein kinase ZAP-70,,12,1,11,29,0,0.0,True,False
+P43686,26S protease regulatory subunit 6B,,12,0,12,12,1,8.3,False,False
+P49411,"Elongation factor Tu, mitochondrial",,12,0,12,12,1,8.3,False,False
+P49748,"Very long-chain specific acyl-CoA dehydrogenase, mitochondrial",,12,0,12,12,1,8.3,False,False
+P51451,Tyrosine-protein kinase BLK,,12,6,6,25,0,0.0,True,False
+P51649,Succinate semialdehyde dehydrogenase,,12,0,12,12,0,0.0,False,False
+P51813,Tyrosine-protein kinase BMX,,12,1,11,26,0,0.0,True,False
+P51817,Serine/threonine-protein kinase PRKX,,12,3,9,26,0,0.0,True,False
+P54819,Adenylate kinase 2,,12,0,12,12,1,8.3,True,False
+P61026,Ras-related protein Rab-10,,12,0,12,12,1,8.3,False,False
+P61158,Actin-related protein 3,,12,0,12,12,1,8.3,False,False
+P61160,Actin-related protein 2,,12,0,12,12,1,8.3,False,False
+P62826,GTP-binding nuclear protein Ran,,12,0,12,12,1,8.3,False,False
+Q00987,p53-binding protein Mdm-2,,12,3,9,12,3,25.0,False,False
+Q01813,Phosphofructokinase platelet type,,12,0,12,12,1,8.3,True,False
+Q09472,Histone acetyltransferase p300,,12,1,11,17,3,25.0,False,False
+Q13163,Dual specificity mitogen-activated protein kinase kinase 5,,12,5,7,19,1,8.3,True,False
+Q13418,Serine/threonine-protein kinase ILK-1,,12,0,12,12,1,8.3,True,False
+Q15392,Delta(24)-sterol reductase,,12,0,12,12,1,8.3,False,False
+Q16620,Neurotrophic tyrosine kinase receptor type 2,,12,5,7,27,0,0.0,True,False
+Q6ZSR9,Uncharacterized protein FLJ45252,,12,4,8,12,1,8.3,False,False
+Q76MJ5,Serine/threonine-protein kinase/endoribonuclease IRE2,,12,2,10,13,1,8.3,True,False
+Q7RTN6,STE20-related kinase adapter protein alpha,,12,0,12,12,1,8.3,True,False
+Q86YV6,Myosin light chain kinase family member 4,,12,4,8,25,0,0.0,True,False
+Q8IU85,CaM kinase I delta,,12,4,8,26,0,0.0,True,False
+Q8TDX7,Serine/threonine-protein kinase NEK7,,12,1,11,24,0,0.0,True,False
+Q92499,ATP-dependent RNA helicase DDX1,,12,0,12,12,1,8.3,False,False
+Q96NX5,CaM kinase I gamma,,12,2,10,23,1,8.3,True,False
+Q9H0A0,RNA cytidine acetyltransferase,,12,0,12,12,1,8.3,False,False
+Q9NSD9,Phenylalanine--tRNA ligase beta subunit,,12,0,12,12,1,8.3,False,False
+Q9NU22,Midasin,,12,0,12,12,1,8.3,False,False
+Q9NYV4,Cyclin-dependent kinase 12,,12,1,11,12,1,8.3,True,False
+Q9UEE5,Serine/threonine-protein kinase 17A,,12,3,9,25,0,0.0,True,False
+Q9UHD8,Septin-9,,12,1,11,12,1,8.3,False,False
+Q9UIK4,Death-associated protein kinase 2,,12,4,8,28,0,0.0,True,False
+Q9UQB9,Serine/threonine-protein kinase Aurora-C,,12,5,7,28,0,0.0,True,False
+O00750,Phosphatidylinositol-4-phosphate 3-kinase C2 domain-containing beta po,,11,1,10,13,0,0.0,True,False
+O00764,Pyridoxal kinase,,11,0,11,11,1,9.1,True,False
+O14920,Inhibitor of nuclear factor kappa B kinase beta subunit,,11,3,8,23,0,0.0,True,False
+O15075,Serine/threonine-protein kinase DCLK1,,11,2,9,26,0,0.0,True,False
+O15146,"Muscle, skeletal receptor tyrosine protein kinase",,11,3,8,25,0,0.0,True,False
+O75914,Serine/threonine-protein kinase PAK 3,,11,3,8,24,0,0.0,True,False
+O96017,Serine/threonine-protein kinase Chk2,,11,6,5,29,0,0.0,True,False
+P00742,Coagulation factor X,,11,5,6,16,3,27.3,False,False
+P04035,HMG-CoA reductase,,11,7,4,40,8,72.7,False,False
+P14616,Insulin receptor-related protein,,11,2,9,24,0,0.0,True,False
+P14920,D-amino-acid oxidase,,11,2,9,24,0,0.0,False,False
+P18074,General transcription and DNA repair factor IIH helicase subunit XPD,,11,1,10,11,1,9.1,False,False
+P19525,"Interferon-induced, double-stranded RNA-activated protein kinase",,11,4,7,20,0,0.0,True,False
+P20340,Ras-related protein Rab-6A,,11,0,11,11,1,9.1,False,False
+P21127,PITSLRE serine/threonine-protein kinase CDC2L1,,11,0,11,22,0,0.0,True,False
+P22830,"Ferrochelatase, mitochondrial",,11,0,11,11,1,9.1,False,False
+P27037,Activin receptor type-2A,,11,0,11,20,0,0.0,True,False
+P28566,Serotonin 1e (5-HT1e) receptor,,11,1,10,13,0,0.0,True,False
+P29350,Protein-tyrosine phosphatase 1C,,11,0,11,13,6,54.5,False,False
+P30305,Dual specificity phosphatase Cdc25B,,11,4,7,14,4,36.4,False,False
+P41231,Purinergic receptor P2Y2,,11,6,5,98,5,45.5,True,False
+P42330,Aldo-keto-reductase family 1 member C3,,11,4,7,37,4,36.4,False,False
+P51159,Ras-related protein Rab-27A,,11,0,11,11,1,9.1,False,False
+P51580,Thiopurine S-methyltransferase,,11,0,11,11,0,0.0,False,False
+P51843,Nuclear receptor subfamily 0 group B member 1,,11,1,10,12,1,9.1,True,False
+P53778,MAP kinase p38 gamma,,11,3,8,48,0,0.0,True,False
+P54646,"AMP-activated protein kinase, alpha-2 subunit",,11,3,8,23,0,0.0,True,False
+P78356,Phosphatidylinositol-5-phosphate 4-kinase type-2 beta,,11,3,8,22,0,0.0,True,False
+P78362,Serine/threonine-protein kinase SRPK2,,11,3,8,24,0,0.0,True,False
+Q02779,Mitogen-activated protein kinase kinase kinase 10,,11,3,8,24,0,0.0,True,False
+Q05513,Protein kinase C zeta,,11,2,9,14,3,27.3,True,False
+Q07002,Serine/threonine-protein kinase PCTAIRE-3,,11,1,10,19,1,9.1,True,False
+Q08881,Tyrosine-protein kinase ITK/TSK,,11,2,9,26,0,0.0,True,False
+Q12866,Proto-oncogene tyrosine-protein kinase MER,,11,3,8,20,1,9.1,True,False
+Q13237,cGMP-dependent protein kinase 2,,11,2,9,24,0,0.0,True,False
+Q13546,Receptor-interacting serine/threonine-protein kinase 1,RIPK1,11,1,10,22,0,0.0,True,False
+Q14524,Sodium channel protein type V alpha subunit,Nav1_5,11,4,7,14,3,27.3,True,False
+Q14683,Structural maintenance of chromosomes protein 1A,,11,0,11,11,1,9.1,False,False
+Q14839,Chromodomain-helicase-DNA-binding protein 4,,11,0,11,11,1,9.1,False,False
+Q15067,Peroxisomal acyl-coenzyme A oxidase 1,,11,0,11,11,1,9.1,False,False
+Q15139,Protein kinase C mu,,11,3,8,23,0,0.0,True,False
+Q15208,Serine/threonine-protein kinase 38,,11,2,9,16,0,0.0,True,False
+Q15349,Ribosomal protein S6 kinase alpha 2,,11,3,8,43,0,0.0,True,False
+Q58FF8,Putative heat shock protein HSP 90-beta 2,,11,0,11,11,1,9.1,False,False
+Q6P3R8,Serine/threonine-protein kinase Nek5,,11,1,10,24,0,0.0,True,False
+Q7Z406,Myosin-14,,11,0,11,11,1,9.1,False,False
+Q86TW2,Uncharacterized aarF domain-containing protein kinase 1,,11,0,11,11,1,9.1,True,False
+Q86UE8,Serine/threonine-protein kinase tousled-like 2,,11,2,9,24,0,0.0,True,False
+Q86UX6,Serine/threonine-protein kinase 32C,,11,1,10,24,0,0.0,True,False
+Q8N4C8,Misshapen-like kinase 1,,11,4,7,18,1,9.1,True,False
+Q8N5S9,CaM-kinase kinase alpha,,11,4,7,27,0,0.0,True,False
+Q8NEV4,Myosin IIIA,,11,1,10,23,0,0.0,False,False
+Q8NFD2,Ankyrin repeat and protein kinase domain-containing protein 1,,11,2,9,22,0,0.0,True,False
+Q8NG68,Tubulin--tyrosine ligase,,11,10,1,11,11,100.0,False,False
+Q96RG2,PAS domain-containing serine/threonine-protein kinase,,11,1,10,12,1,9.1,True,False
+Q96S44,TP53-regulating kinase,,11,0,11,11,1,9.1,True,False
+Q96SB4,Serine/threonine-protein kinase SRPK1,,11,3,8,24,0,0.0,True,False
+Q9BZE4,Nucleolar GTP-binding protein 1,,11,0,11,11,1,9.1,False,False
+Q9C0B1,Alpha-ketoglutarate-dependent dioxygenase FTO,,11,0,11,11,5,45.5,False,False
+Q9NQS5,G-protein coupled receptor 84,,11,4,7,39,8,72.7,True,False
+Q9P0J0,NADH dehydrogenase [ubiquinone] 1 alpha subcomplex subunit 13,,11,0,11,11,0,0.0,False,False
+Q9P286,Serine/threonine-protein kinase PAK7,,11,2,9,26,0,0.0,True,False
+Q9P2K8,Eukaryotic translation initiation factor 2-alpha kinase 4,,11,3,8,22,0,0.0,True,False
+Q9UKI8,Serine/threonine-protein kinase tousled-like 1,,11,2,9,25,0,0.0,True,False
+Q9UM07,Protein-arginine deiminase type-4,,11,0,11,17,2,18.2,False,False
+Q9UQ88,PITSLRE serine/threonine-protein kinase CDC2L2,,11,0,11,22,0,0.0,True,False
+Q9Y572,Receptor-interacting serine/threonine-protein kinase 3,,11,0,11,12,1,9.1,True,False
+O00506,Serine/threonine-protein kinase 25,,10,2,8,22,0,0.0,True,False
+O14730,Serine/threonine-protein kinase RIO3,,10,2,8,20,0,0.0,True,False
+O14733,Dual specificity mitogen-activated protein kinase kinase 7,,10,2,8,11,0,0.0,True,False
+O94921,Serine/threonine-protein kinase PFTAIRE-1,,10,3,7,19,0,0.0,True,False
+P04066,Alpha-L-fucosidase I,,10,2,8,21,10,100.0,False,False
+P06401,Progesterone receptor,,10,9,1,115,7,70.0,True,False
+P07741,Adenine phosphoribosyltransferase,,10,0,10,10,1,10.0,False,False
+P09874,Poly [ADP-ribose] polymerase-1,PARP1,10,1,9,15,0,0.0,False,False
+P10586,Receptor-type tyrosine-protein phosphatase F (LAR),,10,0,10,13,6,60.0,True,False
+P13866,Sodium/glucose cotransporter 1,,10,1,9,29,0,0.0,True,False
+P21802,Fibroblast growth factor receptor 2,,10,3,7,28,0,0.0,True,False
+P30086,Phosphatidylethanolamine-binding protein 1,,10,0,10,10,1,10.0,False,False
+P31152,Mitogen-activated protein kinase 4,,10,0,10,20,0,0.0,True,False
+P32297,Neuronal acetylcholine receptor subunit alpha-3,,10,3,7,64,4,40.0,True,False
+P35590,Tyrosine-protein kinase receptor Tie-1,,10,2,8,18,0,0.0,True,False
+P42574,Caspase-3,CASP3,10,2,8,18,2,20.0,False,False
+P49589,"Cysteine--tRNA ligase, cytoplasmic",,10,0,10,10,1,10.0,False,False
+P54619,"AMP-activated protein kinase, gamma-1 subunit",,10,1,9,10,1,10.0,True,False
+P54762,Ephrin type-B receptor 1,,10,2,8,23,0,0.0,True,False
+P57059,Serine/threonine-protein kinase SIK1,,10,2,8,21,0,0.0,True,False
+Q13554,CaM kinase II beta,,10,2,8,23,0,0.0,True,False
+Q14012,CaM kinase I alpha,,10,2,8,22,0,0.0,True,False
+Q15046,Lysyl-tRNA synthetase,,10,9,1,12,8,80.0,False,False
+Q15125,"3-beta-hydroxysteroid-delta(8),delta(7)-isomerase",,10,4,6,10,5,50.0,False,False
+Q16288,NT-3 growth factor receptor,,10,3,7,19,0,0.0,True,False
+Q16659,Mitogen-activated protein kinase 6,,10,0,10,19,0,0.0,True,False
+Q16816,Phosphorylase kinase gamma subunit 1,,10,4,6,26,0,0.0,True,False
+Q6P5Z2,Serine/threonine-protein kinase N3,,10,1,9,11,1,10.0,True,False
+Q709F0,Acyl-CoA dehydrogenase family member 11,,10,0,10,10,1,10.0,False,False
+Q8IWQ3,BR serine/threonine-protein kinase 2,,10,2,8,21,0,0.0,True,False
+Q8N568,Serine/threonine-protein kinase DCLK2,,10,1,9,21,0,0.0,True,False
+Q8TDC3,BR serine/threonine-protein kinase 1,,10,2,8,20,0,0.0,True,False
+Q8WXR4,Myosin-IIIB,,10,1,9,20,0,0.0,False,False
+Q99755,Phosphatidylinositol-4-phosphate 5-kinase type-1 alpha,,10,2,8,19,0,0.0,True,False
+Q9BRS2,Serine/threonine-protein kinase RIO1,,10,2,8,19,0,0.0,True,False
+Q9BY41,Histone deacetylase 8,,10,5,5,138,4,40.0,True,False
+Q9C098,Serine/threonine-protein kinase DCLK3,,10,2,8,19,0,0.0,True,False
+Q9H1R3,myosin light chain kinase 2,,10,2,8,24,0,0.0,True,False
+Q9NTK5,Obg-like ATPase 1,,10,0,10,10,1,10.0,False,False
+Q9P0L2,Serine/threonine-protein kinase MARK1,,10,2,8,21,0,0.0,True,False
+Q9P2R7,"Succinate--CoA ligase [ADP-forming] subunit beta, mitochondrial",,10,0,10,10,1,10.0,False,False
+Q9UBF8,PI4-kinase beta subunit,,10,2,8,13,0,0.0,True,False
+Q9UGJ0,"AMP-activated protein kinase, gamma-2 subunit",,10,1,9,10,1,10.0,True,False
+Q9ULC5,Long-chain-fatty-acid--CoA ligase 5,,10,0,10,10,0,0.0,False,False
+O15111,Inhibitor of nuclear factor kappa B kinase alpha subunit,,9,2,7,15,0,0.0,True,False
+O43683,Mitotic checkpoint serine/threonine-protein kinase BUB1,,9,0,9,9,1,11.1,True,False
+O60911,Cathepsin L2,,9,4,5,11,2,22.2,False,False
+O94956,Solute carrier organic anion transporter family member 2B1,,9,1,8,14,2,22.2,True,False
+P08240,Signal recognition particle receptor subunit alpha,,9,0,9,9,1,11.1,True,False
+P08588,Beta-1 adrenergic receptor,,9,7,2,53,1,11.1,True,False
+P09960,Leukotriene A4 hydrolase,,9,2,7,19,3,33.3,False,False
+P14174,Macrophage migration inhibitory factor,,9,4,5,15,1,11.1,False,False
+P14555,Phospholipase A2 group IIA,,9,2,7,10,6,66.7,False,False
+P19174,Phospholipase C-gamma-1,,9,0,9,9,7,77.8,False,False
+P29275,Adenosine A2b receptor,,9,0,9,31,0,0.0,True,False
+P29322,Ephrin type-A receptor 8,,9,2,7,20,0,0.0,True,False
+P29376,Leukocyte tyrosine kinase receptor,,9,2,7,17,0,0.0,True,False
+P29475,"Nitric-oxide synthase, brain",,9,3,6,24,4,44.4,False,False
+P31639,Sodium/glucose cotransporter 2,,9,2,7,30,0,0.0,True,False
+P42679,Tyrosine-protein kinase CTK,,9,2,7,13,0,0.0,True,False
+P42681,Tyrosine-protein kinase TXK,,9,1,8,20,0,0.0,True,False
+P43235,Cathepsin K,,9,7,2,10,5,55.6,False,False
+P45452,Matrix metalloproteinase 13,,9,0,9,9,0,0.0,False,False
+P48426,Phosphatidylinositol-5-phosphate 4-kinase type-2 alpha,,9,0,9,9,1,11.1,True,False
+P51957,Serine/threonine-protein kinase Nek4,,9,1,8,11,0,0.0,True,False
+P55072,Transitional endoplasmic reticulum ATPase,,9,1,8,17,1,11.1,False,False
+P56373,P2X purinoceptor 3,,9,6,3,9,1,11.1,False,False
+Q09013,Myotonin-protein kinase,,9,2,7,20,0,0.0,True,False
+Q13535,Serine-protein kinase ATR,,9,2,7,11,0,0.0,True,False
+Q15077,Pyrimidinergic receptor P2Y6,,9,2,7,28,4,44.4,True,False
+Q15835,Rhodopsin kinase,,9,5,4,14,0,0.0,True,False
+Q59H18,Serine/threonine-protein kinase TNNI3K,,9,3,6,18,0,0.0,True,False
+Q5HYI8,Rab-like protein 3,,9,0,9,9,0,0.0,False,False
+Q5S007,Leucine-rich repeat serine/threonine-protein kinase 2,,9,5,4,21,0,0.0,True,False
+Q6JQN1,Acyl-CoA dehydrogenase family member 10,,9,0,9,9,1,11.1,False,False
+Q8WTS6,Histone-lysine N-methyltransferase SETD7,,9,0,9,12,0,0.0,False,False
+Q92630,Dual-specificity tyrosine-phosphorylation regulated kinase 2,,9,3,6,18,0,0.0,True,False
+Q92959,Solute carrier organic anion transporter family member 2A1,,9,2,7,9,7,77.8,True,False
+Q96D53,Uncharacterized aarF domain-containing protein kinase 4,,9,0,9,19,0,0.0,True,False
+Q9BWU1,Cell division cycle 2-like protein kinase 6,,9,3,6,18,0,0.0,True,False
+Q9BXA7,Testis-specific serine/threonine-protein kinase 1,,9,1,8,18,0,0.0,True,False
+Q9BYT3,Serine/threonine-protein kinase 33,,9,2,7,19,0,0.0,True,False
+Q9H3Y6,Tyrosine-protein kinase Srms,,9,1,8,17,0,0.0,True,False
+Q9HCG7,Beta-glucosidase,,9,0,9,13,9,100.0,False,False
+Q9NRM7,Serine/threonine-protein kinase LATS2,,9,2,7,20,0,0.0,True,False
+Q9NRP7,Serine/threonine-protein kinase 36,,9,2,7,16,0,0.0,True,False
+Q9NY57,Serine/threonine-protein kinase 32B,,9,1,8,21,0,0.0,True,False
+Q9UF33,Ephrin type-A receptor 6,,9,4,5,24,0,0.0,True,False
+Q9Y2T6,G-protein coupled receptor 55,,9,3,6,11,3,33.3,True,False
+Q9Y2W1,Thyroid hormone receptor-associated protein 3,,9,0,9,9,1,11.1,True,False
+Q9Y4D2,Sn1-specific diacylglycerol lipase alpha,,9,1,8,12,3,33.3,False,False
+O14936,Peripheral plasma membrane protein CASK,,8,1,7,8,0,0.0,False,False
+O15264,MAP kinase p38 delta,,8,1,7,12,0,0.0,True,False
+O75747,Phosphatidylinositol-4-phosphate 3-kinase C2 domain-containing subunit,,8,2,6,11,0,0.0,True,False
+O95747,Serine/threonine-protein kinase OSR1,,8,2,6,11,0,0.0,True,False
+P00390,Glutathione reductase,,8,0,8,12,2,25.0,False,False
+P04745,Salivary alpha-amylase,,8,1,7,9,1,12.5,False,False
+P04899,Guanine nucleotide-binding protein G(i) subunit alpha-2,,8,0,8,8,0,0.0,False,False
+P0C1S8,Wee1-like protein kinase 2,,8,0,8,11,0,0.0,True,False
+P11142,Heat shock cognate 71 kDa protein,,8,1,7,16,0,0.0,False,False
+P11166,Glucose transporter,,8,4,4,8,3,37.5,True,False
+P11597,Cholesteryl ester transfer protein,,8,0,8,9,8,100.0,False,False
+P13945,Beta-3 adrenergic receptor,,8,6,2,48,0,0.0,True,False
+P20618,Proteasome component C5,,8,4,4,15,5,62.5,False,False
+P20794,Serine/threonine-protein kinase MAK,,8,2,6,12,0,0.0,True,False
+P28472,GABA-A receptor; alpha-1/beta-3/gamma-2,,8,2,6,15,3,37.5,True,False
+P29320,Ephrin type-A receptor 3,,8,1,7,18,0,0.0,True,False
+P30085,UMP-CMP kinase,,8,0,8,8,1,12.5,True,False
+P32298,G protein-coupled receptor kinase 4,,8,3,5,13,0,0.0,True,False
+P35580,Myosin-10,,8,0,8,8,1,12.5,False,False
+P37058,Estradiol 17-beta-dehydrogenase 3,,8,3,5,15,2,25.0,False,False
+P37059,Estradiol 17-beta-dehydrogenase 2,,8,4,4,13,0,0.0,False,False
+P52895,Aldo-keto reductase family 1 member C2,,8,0,8,15,1,12.5,False,False
+P56524,Histone deacetylase 4,,8,3,5,86,4,50.0,True,False
+P57058,Hormonally up-regulated neu tumor-associated kinase,,8,3,5,11,0,0.0,True,False
+P78396,Cyclin-dependent kinase 2/cyclin A,,8,5,3,23,0,0.0,True,False
+Q00532,Cyclin-dependent kinase-like 1,,8,1,7,8,0,0.0,True,False
+Q02083,N-acylsphingosine-amidohydrolase,,8,0,8,8,2,25.0,False,False
+Q06278,Aldehyde oxidase,,8,6,2,16,2,25.0,False,False
+Q07343,Phosphodiesterase 4B,PDE4B,8,3,5,47,2,25.0,True,False
+Q08493,Phosphodiesterase 4,,8,2,6,53,1,12.5,True,False
+Q12794,Hyaluronidase-1,,8,0,8,8,0,0.0,False,False
+Q12852,Mitogen-activated protein kinase kinase kinase 12,,8,2,6,9,0,0.0,True,False
+Q13523,Serine/threonine-protein kinase PRP4 homolog,,8,3,5,11,0,0.0,True,False
+Q15722,Leukotriene B4 receptor 1,,8,4,4,21,2,25.0,True,False
+Q52WX2,Serine/threonine-protein kinase SBK1,,8,3,5,10,0,0.0,True,False
+Q56UN5,SPS1/STE20-related protein kinase YSK4,,8,5,3,13,0,0.0,True,False
+Q7Z2W7,Transient receptor potential cation channel subfamily M member 8,,8,0,8,20,5,62.5,True,False
+Q86XP3,ATP-dependent RNA helicase DDX42,,8,0,8,8,0,0.0,False,False
+Q86Y07,Serine/threonine-protein kinase VRK2,,8,1,7,8,0,0.0,True,False
+Q8IY84,Serine/threonine-protein kinase NIM1,,8,2,6,13,0,0.0,True,False
+Q8IYT8,Serine/threonine-protein kinase ULK2,,8,3,5,13,0,0.0,True,False
+Q8N752,Casein kinase I isoform alpha-like,,8,2,6,14,0,0.0,True,False
+Q8NG66,Serine/threonine-protein kinase Nek11,,8,1,7,9,0,0.0,True,False
+Q8WTQ7,G protein-coupled receptor kinase 7,,8,4,4,13,0,0.0,True,False
+Q96SW2,Protein cereblon,,8,0,8,17,5,62.5,False,False
+Q99489,D-aspartate oxidase,,8,0,8,11,0,0.0,False,False
+Q99873,Protein-arginine N-methyltransferase 1,,8,1,7,12,0,0.0,False,False
+Q9BVS4,Serine/threonine-protein kinase RIO2,,8,3,5,11,0,0.0,True,False
+Q9BX84,Transient receptor potential cation channel subfamily M member 6,,8,0,8,8,0,0.0,True,False
+Q9GZT4,Serine racemase,,8,0,8,12,0,0.0,False,False
+Q9NRH2,SNF-related serine/threonine-protein kinase,,8,2,6,10,0,0.0,True,False
+Q9NSE4,"Isoleucine--tRNA ligase, mitochondrial",,8,0,8,8,1,12.5,False,False
+Q9NYY3,Serine/threonine-protein kinase PLK2,,8,1,7,16,0,0.0,True,False
+Q9NZ45,CDGSH iron-sulfur domain-containing protein 1,,8,5,3,9,1,12.5,False,False
+Q9UEW8,STE20/SPS1-related proline-alanine-rich protein kinase,,8,2,6,13,0,0.0,True,False
+Q9UHH9,Inositol hexakisphosphate kinase 2,,8,4,4,8,0,0.0,True,False
+Q9UPE1,Serine/threonine-protein kinase SRPK3,,8,3,5,11,0,0.0,True,False
+Q9Y2H9,Microtubule-associated serine/threonine-protein kinase 1,,8,2,6,11,0,0.0,True,False
+O00264,Membrane-associated progesterone receptor component 1,,7,0,7,7,0,0.0,True,False
+O14842,Free fatty acid receptor 1,,7,2,5,11,4,57.1,True,False
+O15303,Metabotropic glutamate receptor 6,,7,0,7,10,4,57.1,True,False
+O15379,Histone deacetylase 3,,7,5,2,141,3,42.9,True,False
+O43283,Mitogen-activated protein kinase kinase kinase 13,,7,2,5,9,0,0.0,True,False
+O60841,Eukaryotic translation initiation factor 5B,,7,0,7,7,1,14.3,False,False
+O60885,Bromodomain-containing protein 4,,7,1,6,13,3,42.9,False,False
+O95271,Tankyrase-1,,7,7,0,15,0,0.0,False,False
+P00749,Urokinase-type plasminogen activator,,7,1,6,7,2,28.6,True,False
+P05093,Cytochrome P450 17A1,,7,5,2,25,0,0.0,False,False
+P05129,Protein kinase C gamma,,7,6,1,22,5,71.4,True,False
+P05181,Cytochrome P450 2E1,,7,0,7,8,2,28.6,False,False
+P08151,Zinc finger protein GLI1,,7,2,5,10,7,100.0,False,False
+P09467,"Fructose-1,6-bisphosphatase",,7,1,6,11,2,28.6,False,False
+P0C264,Putative uncharacterized serine/threonine-protein kinase SgK110,,7,1,6,9,0,0.0,True,False
+P15090,Fatty acid binding protein adipocyte,,7,3,4,13,6,85.7,False,False
+P21860,Receptor tyrosine-protein kinase erbB-3,,7,1,6,16,0,0.0,True,False
+P23415,Glycine receptor subunit alpha-1,,7,5,2,20,6,85.7,True,False
+P24557,Thromboxane-A synthase,,7,2,5,8,1,14.3,False,False
+P40925,Malate dehydrogenase cytoplasmic,,7,0,7,7,0,0.0,False,False
+P42224,Signal transducer and activator of transcription 1-alpha/beta,,7,2,5,7,3,42.9,False,False
+P49721,Proteasome Macropain subunit,,7,2,5,10,4,57.1,False,False
+P52209,6-phosphogluconate dehydrogenase,,7,3,4,8,1,14.3,False,False
+P56545,C-terminal-binding protein 2,,7,1,6,7,1,14.3,False,False
+P57078,Receptor-interacting serine/threonine-protein kinase 4,,7,1,6,9,0,0.0,True,False
+P98170,Inhibitor of apoptosis protein 3,,7,1,6,8,1,14.3,False,False
+Q04828,Aldo-keto reductase family 1 member C1,,7,0,7,12,1,14.3,False,False
+Q09470,Voltage-gated potassium channel subunit Kv1.1,,7,0,7,8,1,14.3,True,False
+Q13255,Metabotropic glutamate receptor 1,,7,1,6,13,3,42.9,True,False
+Q16644,MAP kinase-activated protein kinase 3,,7,0,7,8,0,0.0,True,False
+Q3MIX3,Uncharacterized aarF domain-containing protein kinase 5,,7,0,7,7,1,14.3,True,False
+Q6ZN16,Mitogen-activated protein kinase kinase kinase 15,,7,1,6,9,0,0.0,True,False
+Q7L2E3,ATP-dependent RNA helicase DHX30,,7,0,7,7,1,14.3,False,False
+Q86VQ6,Thioredoxin reductase,,7,0,7,13,0,0.0,False,False
+Q8IVW4,Cyclin-dependent kinase-like 3,,7,1,6,10,0,0.0,True,False
+Q8IXJ6,NAD-dependent deacetylase sirtuin 2,,7,0,7,21,1,14.3,True,False
+Q8NE63,Homeodomain-interacting protein kinase 4,,7,6,1,13,0,0.0,True,False
+Q8NFU5,Inositol polyphosphate multikinase,,7,0,7,7,0,0.0,True,False
+Q8TDR2,Serine/threonine-protein kinase 35,,7,2,5,9,0,0.0,True,False
+Q8WUI4,Histone deacetylase 7,,7,1,6,47,4,57.1,True,False
+Q92772,Cyclin-dependent kinase-like 2,,7,2,5,9,0,0.0,True,False
+Q92793,CREB-binding protein,,7,1,6,14,1,14.3,False,False
+Q96BR1,Serine/threonine-protein kinase Sgk3,,7,2,5,9,0,0.0,True,False
+Q96Q40,Serine/threonine-protein kinase PFTAIRE-2,,7,2,5,9,0,0.0,True,False
+Q9GZT9,Egl nine homolog 1,,7,1,6,16,2,28.6,False,False
+Q9H2K2,Tankyrase-2,,7,5,2,10,0,0.0,False,False
+Q9H2X6,Homeodomain-interacting protein kinase 2,,7,4,3,10,0,0.0,True,False
+Q9H9B1,"Histone-lysine N-methyltransferase, H3 lysine-9 specific 5",,7,1,6,7,3,42.9,False,False
+Q9HBX9,Relaxin receptor 1,,7,1,6,8,2,28.6,True,False
+Q9NP87,DNA-directed DNA/RNA polymerase mu,,7,0,7,7,2,28.6,False,False
+Q9UQL6,Histone deacetylase 5,,7,2,5,43,4,57.1,True,False
+Q9Y5N1,Histamine H3 receptor,H3,7,5,2,43,2,28.6,True,False
+O00311,Cell division cycle 7-related protein kinase,,6,1,5,6,1,16.7,True,False
+O14727,Apoptotic protease-activating factor 1,,6,0,6,10,0,0.0,False,False
+O76083,Phosphodiesterase 9A,,6,1,5,8,1,16.7,True,False
+P05164,Myeloperoxidase,,6,1,5,6,4,66.7,False,False
+P14061,Estradiol 17-beta-dehydrogenase 1,,6,4,2,11,4,66.7,False,False
+P14324,Farnesyl diphosphate synthase,,6,2,4,54,3,50.0,False,False
+P16152,Carbonyl reductase [NADPH] 1,,6,4,2,8,0,0.0,False,False
+P16233,Pancreatic lipase,,6,1,5,7,3,50.0,False,False
+P17516,Aldo-keto reductase family 1 member C4,,6,0,6,8,1,16.7,False,False
+P17861,X-box-binding protein 1,,6,2,4,6,3,50.0,False,False
+P20701,Leukocyte adhesion glycoprotein LFA-1 alpha,,6,3,3,6,6,100.0,False,False
+P21917,Dopamine D4 receptor,D4,6,4,2,19,0,0.0,True,False
+P24666,Low molecular weight phosphotyrosine protein phosphatase,,6,0,6,12,5,83.3,False,False
+P25021,Histamine H2 receptor,,6,2,4,11,2,33.3,True,False
+P25024,Interleukin-8 receptor A,,6,2,4,12,0,0.0,True,False
+P35573,Glycogen debranching enzyme,,6,0,6,6,6,100.0,True,False
+P36639,"7,8-dihydro-8-oxoguanine triphosphatase",,6,2,4,7,0,0.0,False,False
+P43250,G protein-coupled receptor kinase 6,,6,0,6,8,1,16.7,True,False
+P46531,Neurogenic locus notch homolog protein 1,,6,5,1,6,6,100.0,False,False
+P47900,Purinergic receptor P2Y1,,6,3,3,12,2,33.3,True,False
+P51582,Pyrimidinergic receptor P2Y4,,6,2,4,20,3,50.0,True,False
+P53609,Geranylgeranyl transferase type I,,6,1,5,6,2,33.3,False,False
+P63165,Small ubiquitin-related modifier 1,,6,0,6,7,0,0.0,False,False
+Q02410,Voltage-gated N-type calcium channel alpha-1B subunit/Amyloid beta A4 ,,6,0,6,9,0,0.0,True,False
+Q13451,Peptidyl-prolyl cis-trans isomerase FKBP5,,6,2,4,7,3,50.0,False,False
+Q14416,Metabotropic glutamate receptor 2,,6,0,6,14,3,50.0,True,False
+Q15118,Pyruvate dehydrogenase kinase,,6,1,5,10,3,50.0,True,False
+Q15131,Cyclin-dependent kinase 10,,6,0,6,6,0,0.0,True,False
+Q16696,Cytochrome P450 2A13,,6,4,2,9,1,16.7,False,False
+Q86Z02,Homeodomain-interacting protein kinase 1,,6,1,5,8,0,0.0,True,False
+Q8TDS4,Hydroxycarboxylic acid receptor 2,,6,3,3,48,0,0.0,True,False
+Q8WXA8,Serotonin 3 (5-HT3) receptor,,6,2,4,7,0,0.0,True,False
+Q92831,Histone acetyltransferase PCAF,,6,0,6,11,1,16.7,False,False
+Q96DB2,Histone deacetylase 11,,6,3,3,50,2,33.3,True,False
+Q96EB6,NAD-dependent deacetylase sirtuin 1,SIRT1,6,2,4,24,2,33.3,True,False
+Q96S53,Dual specificity testis-specific protein kinase 2,,6,0,6,6,1,16.7,True,False
+Q99814,Endothelial PAS domain-containing protein 1,,6,0,6,6,4,66.7,False,False
+Q9H422,Homeodomain-interacting protein kinase 3,,6,3,3,11,0,0.0,True,False
+Q9HAS3,Solute carrier family 28 member 3,,6,0,6,6,0,0.0,False,False
+Q9NSA0,Solute carrier family 22 member 11,,6,1,5,10,2,33.3,False,False
+Q9UBM7,Anti-estrogen binding site (AEBS),,6,4,2,10,4,66.7,False,False
+Q9UKV0,Histone deacetylase 9,,6,2,4,39,4,66.7,True,False
+O00408,Phosphodiesterase 2A,,5,0,5,9,1,20.0,True,False
+O00481,Butyrophilin subfamily 3 member A1,,5,3,2,26,3,60.0,False,False
+O60331,Phosphatidylinositol-4-phosphate 5-kinase type-1 gamma,,5,0,5,5,0,0.0,True,False
+O95551,Tyrosyl-DNA phosphodiesterase 2,,5,1,4,5,0,0.0,True,False
+O96020,Cyclin-dependent kinase 2/cyclin E,,5,4,1,19,0,0.0,True,False
+P00491,Purine nucleoside phosphorylase,,5,0,5,7,0,0.0,False,False
+P00747,Plasminogen,,5,0,5,15,4,80.0,False,False
+P03956,Matrix metalloproteinase-1,,5,1,4,6,0,0.0,False,False
+P07384,Calpain 1,,5,3,2,5,3,60.0,False,False
+P08709,Coagulation factor VII,,5,3,2,6,3,60.0,False,False
+P10276,Retinoic acid receptor alpha,,5,5,0,64,0,0.0,True,False
+P11217,Muscle glycogen phosphorylase,,5,1,4,5,3,60.0,True,False
+P15085,Carboxypeptidase A1,,5,1,4,6,0,0.0,False,False
+P17538,Beta-chymotrypsin,,5,0,5,5,0,0.0,False,False
+P18505,GABA A receptor alpha-1/beta-1/gamma-2,,5,3,2,7,2,40.0,True,False
+P24046,GABA receptor rho-1 subunit,,5,2,3,13,3,60.0,True,False
+P25101,Endothelin receptor ET-A,,5,2,3,20,0,0.0,True,False
+P25105,Platelet activating factor receptor,,5,3,2,6,2,40.0,True,False
+P26358,DNA (cytosine-5)-methyltransferase 1,,5,3,2,10,0,0.0,False,False
+P28329,Choline acetylase,,5,1,4,5,0,0.0,False,False
+P29474,"Nitric-oxide synthase, endothelial",,5,2,3,20,3,60.0,False,False
+P30304,Dual specificity phosphatase Cdc25A,,5,2,3,5,2,40.0,False,False
+P30556,Type-1 angiotensin II receptor,,5,2,3,18,2,40.0,True,False
+P32929,Cystathionine gamma-lyase,,5,0,5,5,0,0.0,False,False
+P34903,GABA A receptor alpha-3/beta-2/gamma-2,,5,1,4,19,1,20.0,True,False
+P34949,Mannose-6-phosphate isomerase,,5,0,5,6,0,0.0,False,False
+P35398,Nuclear receptor ROR-alpha,,5,5,0,8,3,60.0,True,False
+P35520,Cystathionine beta-synthase,,5,0,5,5,0,0.0,False,False
+P41594,Metabotropic glutamate receptor 5,mGluR5,5,1,4,10,3,60.0,True,False
+P47869,GABA-A receptor; alpha-2/beta-3/gamma-2,,5,1,4,18,1,20.0,True,False
+P47871,Glucagon receptor,,5,5,0,5,1,20.0,True,False
+P48039,Melatonin receptor 1A,MT1,5,3,2,82,0,0.0,True,False
+P48066,GABA transporter 3,,5,1,4,9,3,60.0,True,False
+P48443,Retinoid X receptor gamma,,5,2,3,26,3,60.0,True,False
+P49286,Melatonin receptor 1B,,5,3,2,91,0,0.0,True,False
+P49585,Choline-phosphate cytidylyltransferase A,,5,0,5,5,1,20.0,False,False
+P51570,Galactokinase,,5,0,5,5,0,0.0,True,False
+P51575,P2X purinoceptor 1,,5,2,3,5,0,0.0,False,False
+P52732,Kinesin-like protein 1,,5,0,5,8,2,40.0,False,False
+P60568,Interleukin-2,,5,5,0,5,2,40.0,False,False
+P60842,Eukaryotic initiation factor 4A-I,,5,5,0,17,2,40.0,False,False
+Q10471,Polypeptide N-acetylgalactosaminyltransferase 2,,5,2,3,6,0,0.0,False,False
+Q12879,Glutamate NMDA receptor; GRIN1/GRIN2A,,5,2,3,6,3,60.0,True,False
+Q12908,Ileal bile acid transporter,,5,0,5,5,5,100.0,True,False
+Q13224,Glutamate NMDA receptor; GRIN1/GRIN2B,GluN2B,5,2,3,24,3,60.0,True,False
+Q14330,N-arachidonyl glycine receptor,,5,1,4,9,1,20.0,True,False
+Q15303,Receptor protein-tyrosine kinase erbB-4,,5,2,3,16,0,0.0,True,False
+Q2M385,Macrophage-expressed gene 1 protein,,5,2,3,6,3,60.0,False,False
+Q2TB90,Putative hexokinase HKDC1,,5,0,5,6,0,0.0,True,False
+Q6XUX3,Dual serine/threonine and tyrosine protein kinase,,5,1,4,8,0,0.0,True,False
+Q8TEK3,"Histone-lysine N-methyltransferase, H3 lysine-79 specific",,5,1,4,13,0,0.0,False,False
+Q8WU08,Serine/threonine-protein kinase 32A,,5,1,4,5,0,0.0,True,False
+Q92993,Histone acetyltransferase KAT5,,5,0,5,7,1,20.0,False,False
+Q96P20,"NACHT, LRR and PYD domains-containing protein 3",NLRP3,5,0,5,5,0,0.0,False,False
+Q99571,P2X purinoceptor 4,,5,5,0,15,0,0.0,False,False
+Q99808,Equilibrative nucleoside transporter 1,,5,1,4,7,2,40.0,True,False
+Q9GZV3,High-affinity choline transporter,,5,2,3,7,0,0.0,True,False
+Q9H3N8,Histamine H4 receptor,,5,1,4,43,1,20.0,True,False
+Q9H7Z6,Histone acetyltransferase KAT8,,5,0,5,6,1,20.0,False,False
+Q9HAW8,UDP-glucuronosyltransferase 1-10,,5,0,5,5,1,20.0,False,False
+Q9NXA8,"NAD-dependent protein deacylase sirtuin-5, mitochondrial",,5,0,5,11,1,20.0,True,False
+Q9UBT2,SUMO-activating enzyme,,5,0,5,5,1,20.0,False,False
+Q9UL62,Short transient receptor potential channel 5,,5,2,3,5,0,0.0,True,False
+Q9Y251,Heparanase,,5,0,5,5,1,20.0,False,False
+Q9Y2I1,Nischarin,,5,3,2,9,0,0.0,False,False
+Q9Y618,Histone deacetylase 3/Nuclear receptor corepressor 2 (HDAC3/NCoR2),,5,5,0,49,1,20.0,True,False
+Q9Y694,Solute carrier family 22 member 7,,5,0,5,6,1,20.0,False,False
+O43781,Dual-specificity tyrosine-phosphorylation regulated kinase 3,,4,3,1,9,0,0.0,True,False
+O75311,Glycine receptor subunit alpha-3,,4,0,4,4,3,75.0,True,False
+P00797,Renin,,4,1,3,13,3,75.0,False,False
+P04818,Thymidylate synthase,,4,0,4,12,0,0.0,False,False
+P05121,Plasminogen activator inhibitor-1,,4,1,3,5,3,75.0,False,False
+P08575,Leukocyte common antigen,,4,2,2,4,1,25.0,False,False
+P09668,Cathepsin H,,4,1,3,5,4,100.0,False,False
+P09884,DNA polymerase alpha subunit,,4,1,3,4,3,75.0,False,False
+P11086,Phenylethanolamine N-methyltransferase,,4,0,4,5,0,0.0,False,False
+P11474,Estrogen-related receptor alpha,,4,4,0,6,2,50.0,True,False
+P14735,Insulin-degrading enzyme,,4,0,4,7,0,0.0,False,False
+P15144,Aminopeptidase N,,4,0,4,4,0,0.0,False,False
+P15382,"Voltage-gated potassium channel, IKs; KCNQ1(Kv7.1)/KCNE1(MinK)",,4,0,4,5,0,0.0,True,False
+P15559,Quinone reductase 1),,4,1,3,9,0,0.0,False,False
+P15692,Vascular endothelial growth factor A,,4,4,0,4,0,0.0,False,False
+P20248,CDK2/Cyclin A,,4,2,2,9,0,0.0,False,False
+P20815,Cytochrome P450 3A5,,4,3,1,8,1,25.0,False,False
+P22736,Nuclear receptor subfamily 4 group A member 1,,4,4,0,5,3,75.0,True,False
+P23469,Receptor-type tyrosine-protein phosphatase epsilon,,4,0,4,4,4,100.0,True,False
+P23526,Adenosylhomocysteinase,,4,1,3,5,1,25.0,False,False
+P25103,Neurokinin 1 receptor,,4,1,3,4,0,0.0,True,False
+P27986;P42336,PI3-kinase p110-alpha/p85-alpha,,4,3,1,6,1,25.0,True,False
+P28702,Retinoid X receptor beta,,4,2,2,20,2,50.0,True,False
+P30518,Vasopressin V2 receptor,,4,1,3,14,1,25.0,True,False
+P30531,GABA transporter 1,,4,0,4,5,2,50.0,True,False
+P39900,Matrix metalloproteinase 12,,4,2,2,4,0,0.0,False,False
+P41146,Nociceptin receptor,,4,0,4,4,1,25.0,True,False
+P42226,Signal transducer and activator of transcription 6,,4,0,4,13,0,0.0,False,False
+P42356,PI4-kinase alpha subunit,,4,0,4,6,0,0.0,True,False
+P43378,Tyrosine-protein phosphatase non-receptor type 9,,4,0,4,4,0,0.0,True,False
+P48067,Glycine transporter 1,,4,0,4,4,2,50.0,True,False
+P49763,Placenta growth factor,,4,4,0,4,0,0.0,False,False
+P50281,Matrix metalloproteinase 14,,4,0,4,4,0,0.0,False,False
+P50579,Methionine aminopeptidase 2,,4,3,1,10,3,75.0,False,False
+P51531,Probable global transcription activator SNF2L2,,4,0,4,4,3,75.0,False,False
+P61088,Ubiquitin-conjugating enzyme E2 N,,4,0,4,6,1,25.0,False,False
+P78536,ADAM17,,4,0,4,4,2,50.0,False,False
+Q05209,Protein-tyrosine phosphatase G1,,4,0,4,4,0,0.0,False,False
+Q13332,Receptor-type tyrosine-protein phosphatase S,,4,1,3,4,0,0.0,True,False
+Q13370,Phosphodiesterase 3,,4,1,3,15,1,25.0,True,False
+Q13443,ADAM9,,4,1,3,5,4,100.0,False,False
+Q14573,"Inositol 1,4,5-trisphosphate receptor type 3",,4,4,0,4,4,100.0,True,False
+Q14761,Protein tyrosine phosphatase receptor type C-associated protein,,4,0,4,4,0,0.0,True,False
+Q14833,Metabotropic glutamate receptor 4,,4,1,3,9,3,75.0,True,False
+Q14973,Bile acid transporter,,4,1,3,4,1,25.0,True,False
+Q15391,Purinergic receptor P2Y14,,4,4,0,12,4,100.0,True,False
+Q15858,Sodium channel protein type IX alpha subunit,Nav1_7,4,4,0,5,3,75.0,True,False
+Q96G91,Purinergic receptor P2Y11,,4,0,4,7,1,25.0,True,False
+Q96KB5,PDZ-binding kinase,,4,2,2,5,0,0.0,True,False
+Q96RJ0,Trace amine-associated receptor 1,TAAR1,4,4,0,10,0,0.0,True,False
+Q99572,P2X purinoceptor 7,P2X7,4,1,3,6,0,0.0,False,False
+Q99685,Monoglyceride lipase,,4,1,3,4,1,25.0,False,False
+Q99895,Chymotrypsin C,,4,1,3,4,2,50.0,False,False
+Q9H3R0,Lysine-specific demethylase 4C,,4,0,4,4,4,100.0,False,False
+Q9NPH5,NADPH oxidase 4,,4,4,0,4,0,0.0,False,False
+Q9NSD5,GABA transporter 2,,4,0,4,5,3,75.0,True,False
+Q9P0U3,Sentrin-specific protease 1,,4,1,3,5,0,0.0,False,False
+Q9UBL9,P2X purinoceptor 2,,4,0,4,4,0,0.0,False,False
+Q9Y233,Phosphodiesterase 10A,PDE10A,4,1,3,17,1,25.0,True,False
+Q9Y2K7,Lysine-specific demethylase 2A,,4,1,3,4,4,100.0,False,False
+Q9Y5Y9,Sodium channel alpha subunit,Nav1_8,4,0,4,4,2,50.0,True,False
+O00443,Phosphatidylinositol-4-phosphate 3-kinase C2 domain-containing subunit,,3,1,2,3,0,0.0,True,False
+O14672,ADAM10,,3,0,3,4,3,100.0,False,False
+O14843,Free fatty acid receptor 3,,3,0,3,5,2,66.7,True,False
+O43463,Histone-lysine N-methyltransferase SUV39H1,,3,3,0,5,0,0.0,False,False
+O43497,Voltage-gated T-type calcium channel alpha-1G subunit,,3,2,1,3,1,33.3,True,False
+O43826,Glucose-6-phosphate translocase,,3,0,3,4,0,0.0,False,False
+O43868,Sodium/nucleoside cotransporter 2,,3,0,3,5,2,66.7,True,False
+O60656,UDP-glucuronosyltransferase 1-9,,3,0,3,3,0,0.0,False,False
+O75376,Histone deacetylase 3/NCoR1,,3,3,0,7,1,33.3,True,False
+O75387,L-type amino acid transporter 3,,3,0,3,3,3,100.0,True,False
+O75899,GABA-B receptor,,3,3,0,5,2,66.7,True,False
+O75936,Gamma-butyrobetaine dioxygenase,,3,0,3,7,3,100.0,False,False
+O94759,Transient receptor potential cation channel subfamily M member 2,,3,1,2,4,1,33.3,True,False
+O95180,Voltage-gated T-type calcium channel alpha-1H subunit,Cav3_2,3,3,0,3,0,0.0,True,False
+P00403,Cytochrome c oxidase subunit 2,,3,2,1,6,0,0.0,False,False
+P01584,Interleukin-1 beta,,3,0,3,3,3,100.0,False,False
+P02708,Acetylcholine receptor protein alpha chain,,3,1,2,4,0,0.0,True,False
+P04054,Phospholipase A2 group 1B,,3,0,3,3,3,100.0,False,False
+P04156,Prion protein,,3,1,2,3,0,0.0,False,False
+P04183,"Thymidine kinase, cytosolic",,3,1,2,8,2,66.7,True,False
+P07205,Phosphoglycerate kinase,,3,0,3,5,2,66.7,True,False
+P07477,Trypsin I,,3,1,2,3,2,66.7,False,False
+P08236,Beta-glucuronidase,,3,0,3,3,1,33.3,False,False
+P08311,Cathepsin G,,3,0,3,4,0,0.0,False,False
+P08842,Steryl-sulfatase,,3,0,3,4,3,100.0,False,False
+P09237,Matrix metalloproteinase 7,,3,0,3,3,0,0.0,False,False
+P09382,Galectin-1,,3,0,3,4,3,100.0,False,False
+P09429,High mobility group protein B1,,3,2,1,7,1,33.3,False,False
+P0DMV8,Heat shock 70 kDa protein 1,,3,0,3,5,0,0.0,False,False
+P11926,Ornithine decarboxylase,,3,0,3,3,1,33.3,False,False
+P11940,Polyadenylate-binding protein 1,,3,0,3,6,0,0.0,False,False
+P13569,Cystic fibrosis transmembrane conductance regulator,,3,1,2,6,0,0.0,False,False
+P15538,Cytochrome P450 11B1,,3,2,1,9,0,0.0,False,False
+P16109,P-selectin,,3,1,2,3,1,33.3,False,False
+P16389,Voltage-gated potassium channel subunit Kv1.2,,3,0,3,3,0,0.0,True,False
+P16662,UDP-glucuronosyltransferase 2B7,,3,0,3,6,3,100.0,False,False
+P17931,Galectin-3,,3,0,3,6,3,100.0,False,False
+P18433,Receptor-type tyrosine-protein phosphatase alpha,,3,0,3,3,3,100.0,True,False
+P19099,Cytochrome P450 11B2,,3,2,1,10,0,0.0,False,False
+P20292,5-lipoxygenase activating protein,,3,2,1,17,0,0.0,False,False
+P21452,Neurokinin 2 receptor,,3,0,3,3,2,66.7,True,False
+P21817,Ryanodine receptor 1,,3,0,3,3,0,0.0,True,False
+P21980,Protein-glutamine gamma-glutamyltransferase,,3,0,3,3,0,0.0,False,False
+P22001,Voltage-gated potassium channel subunit Kv1.3,,3,1,2,4,0,0.0,True,False
+P22314,Ubiquitin-like modifier-activating enzyme 1,,3,0,3,3,2,66.7,False,False
+P22894,Matrix metalloproteinase 8,,3,0,3,3,0,0.0,False,False
+P23946,Chymase,,3,1,2,3,2,66.7,False,False
+P24530,Endothelin receptor ET-B,,3,1,2,12,0,0.0,True,False
+P25774,Cathepsin S,,3,2,1,4,3,100.0,False,False
+P31644,GABA-A receptor; alpha-5/beta-3/gamma-2,,3,1,2,11,0,0.0,True,False
+P31939,AICAR transformylase,,3,1,2,4,1,33.3,False,False
+P34947,G protein-coupled receptor kinase 5,,3,3,0,4,0,0.0,True,False
+P42261,"Glutamate receptor ionotropic, AMPA 1",,3,1,2,20,2,66.7,True,False
+P42262,"Glutamate receptor ionotropic, AMPA 2",GluA2,3,2,1,14,2,66.7,True,False
+P43004,Excitatory amino acid transporter 2,,3,0,3,9,1,33.3,True,False
+P43005,Excitatory amino acid transporter 3,,3,1,2,9,1,33.3,True,False
+P43119,Prostanoid IP receptor,,3,1,2,10,3,100.0,True,False
+P47870,GABA-A receptor; GABA-A site (alpha1/beta2 interface),,3,0,3,3,0,0.0,True,False
+P47901,Vasopressin V1b receptor,,3,1,2,9,1,33.3,True,False
+P48065,Betaine transporter,,3,0,3,25,2,66.7,True,False
+P48169,GABA A receptor alpha-4/beta-3/gamma-2,,3,0,3,3,1,33.3,True,False
+P50416,"Carnitine O-palmitoyltransferase 1, liver isoform",,3,0,3,3,1,33.3,False,False
+P52789,Hexokinase type II,,3,0,3,3,1,33.3,True,False
+P62942,FK506-binding protein 1A,,3,3,0,19,3,100.0,False,False
+P68106,FK506-binding protein 1B,,3,3,0,3,3,100.0,False,False
+P78417,Glutathione transferase omega 1,,3,0,3,3,1,33.3,False,False
+P80370,Protein delta homolog 1,,3,1,2,4,0,0.0,False,False
+Q01469,Fatty acid binding protein epidermal,,3,2,1,4,2,66.7,False,False
+Q02127,Dihydroorotate dehydrogenase,DHODH,3,1,2,3,1,33.3,False,False
+Q04609,Glutamate carboxypeptidase II,,3,0,3,3,2,66.7,True,False
+Q05940,Synaptic vesicular amine transporter,,3,1,2,7,0,0.0,True,False
+Q07973,Cytochrome P450 24A1,,3,3,0,12,0,0.0,False,False
+Q12931,"Heat shock protein 75 kDa, mitochondrial",,3,1,2,3,0,0.0,False,False
+Q13093,LDL-associated phospholipase A2,,3,1,2,5,1,33.3,False,False
+Q13304,Uracil nucleotide/cysteinyl leukotriene receptor,,3,0,3,4,0,0.0,True,False
+Q13639,Serotonin 4 (5-HT4) receptor,HT4,3,3,0,19,0,0.0,True,False
+Q14123,Phosphodiesterase 1,,3,0,3,7,1,33.3,True,False
+Q14576,ELAV-like protein 3,,3,3,0,3,0,0.0,False,False
+Q15022,EZH2/SUZ12/EED complex,,3,2,1,3,0,0.0,False,False
+Q15393,Splicing factor 3B subunit 3,,3,2,1,5,2,66.7,False,False
+Q16478,Glutamate receptor ionotropic kainate 5,,3,2,1,7,2,66.7,True,False
+Q5BJF2,Sigma intracellular receptor 2,,3,1,2,3,0,0.0,True,False
+Q6PL18,ATPase family AAA domain-containing protein 2,,3,0,3,3,2,66.7,False,False
+Q7Z5Q5,DNA polymerase nu,,3,0,3,3,0,0.0,False,False
+Q8IYD1,Eukaryotic peptide chain release factor GTP-binding subunit ERF3B,,3,0,3,3,0,0.0,False,False
+Q8NHU3,Phosphatidylcholine:ceramide cholinephosphotransferase 2,,3,3,0,3,0,0.0,False,False
+Q8TF76,Serine/threonine-protein kinase haspin,,3,3,0,5,0,0.0,True,False
+Q8WXD0,Relaxin receptor 2,,3,1,2,3,1,33.3,True,False
+Q92523,"Carnitine O-palmitoyltransferase 1, muscle isoform",,3,0,3,3,1,33.3,False,False
+Q92843,Apoptosis regulator Bcl-W,,3,1,2,10,1,33.3,False,False
+Q96IY4,Carboxypeptidase B2 isoform A,,3,3,0,3,0,0.0,False,False
+Q96LD8,Sentrin-specific protease 8,,3,0,3,4,1,33.3,False,False
+Q9BPW9,Dehydrogenase/reductase SDR family member 9,,3,0,3,3,0,0.0,False,False
+Q9HAW7,UDP-glucuronosyltransferase 1-7,,3,0,3,3,0,0.0,False,False
+Q9HBY8,Serine/threonine-protein kinase Sgk2,,3,3,0,4,0,0.0,True,False
+Q9HCN6,Platelet glycoprotein VI (GPVI),,3,2,1,5,2,66.7,False,False
+Q9NNX6,CD209 antigen,,3,0,3,5,3,100.0,False,False
+Q9NTG7,NAD-dependent deacetylase sirtuin 3,,3,0,3,8,0,0.0,True,False
+Q9NWT6,Hypoxia-inducible factor 1-alpha inhibitor,,3,0,3,3,2,66.7,False,False
+Q9UBC3,DNA (cytosine-5)-methyltransferase 3B,,3,2,1,8,0,0.0,False,False
+Q9UDY8,Mucosa-associated lymphoid tissue lymphoma translocation protein 1,,3,1,2,3,1,33.3,False,False
+Q9UGC6,Regulator of G-protein signaling 17,,3,0,3,7,1,33.3,False,False
+Q9UK17,Voltage-gated potassium channel subunit Kv4.3,,3,0,3,3,0,0.0,True,False
+Q9UNI1,Elastase 1,,3,3,0,3,1,33.3,False,False
+Q9Y231,Fucosyltransferase 9,,3,0,3,6,0,0.0,False,False
+Q9Y2R2,Hematopoietic cell protein-tyrosine phosphatase 70Z-PEP,,3,0,3,3,0,0.0,False,False
+Q9Y4K0,Lysyl oxidase homolog 2,,3,1,2,3,1,33.3,False,False
+Q9Y6Q9,Nuclear receptor coactivator 3,,3,1,2,3,0,0.0,True,False
+O00182,Galectin-9,,2,0,2,2,2,100.0,False,False
+O00214,Galectin-8,,2,0,2,2,2,100.0,False,False
+O00255,Menin,,2,1,1,3,0,0.0,False,False
+O00487,26S proteasome non-ATPase regulatory subunit 14,,2,0,2,2,0,0.0,False,False
+O00754,Lysosomal alpha-mannosidase,,2,0,2,9,1,50.0,False,False
+O14744,Protein arginine N-methyltransferase 5,,2,0,2,3,0,0.0,False,False
+O14924,Regulator of G-protein signaling 12,,2,0,2,2,0,0.0,False,False
+O14980,Exportin-1,,2,0,2,2,0,0.0,False,False
+O14983,Sarcoplasmic/endoplasmic reticulum calcium ATPase 1,,2,1,1,2,1,50.0,False,False
+O15054,Lysine-specific demethylase 6B,,2,0,2,2,2,100.0,False,False
+O15496,Group X secretory phospholipase A2,,2,0,2,2,0,0.0,False,False
+O15552,Free fatty acid receptor 2,,2,0,2,5,1,50.0,True,False
+O43603,Galanin receptor 2,,2,0,2,4,0,0.0,True,False
+O75365,Protein-tyrosine phosphatase 4A3,,2,0,2,5,0,0.0,False,False
+O76082,Solute carrier family 22 member 5,,2,0,2,2,0,0.0,False,False
+O94760,"N(G),N(G)-dimethylarginine dimethylaminohydrolase 1",,2,0,2,3,1,50.0,False,False
+O95718,Estrogen-related receptor beta,,2,2,0,4,1,50.0,True,False
+O95749,Geranylgeranyl pyrophosphate synthetase,,2,0,2,10,0,0.0,False,False
+P00813,Adenosine deaminase,,2,1,1,7,1,50.0,True,False
+P01106,Myc proto-oncogene protein,,2,0,2,2,0,0.0,False,False
+P01730,T-cell surface antigen CD4,,2,2,0,2,0,0.0,False,False
+P02675,Fibrinogen beta chain,,2,0,2,3,0,0.0,False,False
+P03951,Coagulation factor XI,,2,0,2,2,1,50.0,False,False
+P03952,Plasma kallikrein,,2,0,2,2,2,100.0,False,False
+P05089,Arginase-1,,2,0,2,3,0,0.0,False,False
+P05091,Aldehyde dehydrogenase,,2,2,0,3,0,0.0,False,False
+P05107,"Intercellular adhesion molecule (ICAM-1), Integrin alpha-L/beta-2",,2,0,2,3,1,50.0,False,False
+P06748,NPM/ALK (Nucleophosmin/ALK tyrosine kinase receptor),,2,0,2,5,0,0.0,True,False
+P06756,Integrin alpha-V/beta-3,,2,2,0,2,1,50.0,False,False
+P07148,"Fatty acid-binding protein, liver",,2,1,1,3,1,50.0,False,False
+P07306,Asialoglycoprotein receptor 1,,2,0,2,4,2,100.0,True,False
+P07998,Ribonuclease pancreatic,,2,0,2,4,2,100.0,False,False
+P08319,Alcohol dehydrogenase class II,,2,0,2,2,2,100.0,False,False
+P08473,Neprilysin,,2,1,1,6,1,50.0,False,False
+P09211,Glutathione S-transferase Pi,,2,1,1,2,1,50.0,False,False
+P09848,Lactase-phlorizin hydrolase,,2,0,2,2,2,100.0,False,False
+P09936,Ubiquitin carboxyl-terminal hydrolase isozyme L1,,2,0,2,2,0,0.0,False,False
+P10826,Retinoic acid receptor beta,,2,2,0,62,0,0.0,True,False
+P10827,Thyroid hormone receptor alpha,,2,2,0,21,0,0.0,True,False
+P11168,"Solute carrier family 2, facilitated glucose transporter member 2",,2,0,2,4,0,0.0,True,False
+P11172,Uridine 5'-monophosphate synthase,,2,0,2,2,2,100.0,False,False
+P11802;P30281,CDK4/Cyclin D3,,2,1,1,3,0,0.0,False,False
+P12004,Proliferating cell nuclear antigen,,2,0,2,2,0,0.0,False,False
+P12104,Fatty acid binding protein intestinal,,2,0,2,2,1,50.0,False,False
+P12955,Xaa-Pro dipeptidase,,2,1,1,3,1,50.0,False,False
+P13631,Retinoic acid receptor gamma,,2,2,0,61,0,0.0,True,False
+P14151,Leukocyte adhesion molecule-1,,2,0,2,2,0,0.0,False,False
+P14410,Sucrase-isomaltase,,2,0,2,3,1,50.0,False,False
+P14550,Aldehyde reductase,,2,0,2,2,1,50.0,False,False
+P14598,Neutrophil cytosol factor 1,,2,0,2,2,0,0.0,False,False
+P14625,Endoplasmin,,2,0,2,4,0,0.0,False,False
+P16278,Beta-galactosidase,,2,0,2,2,1,50.0,False,False
+P16581,Selectin E,,2,0,2,2,0,0.0,False,False
+P18669,Phosphoglycerate mutase 1,,2,2,0,3,0,0.0,False,False
+P19224,UDP-glucuronosyltransferase 1-6,,2,0,2,2,0,0.0,False,False
+P19801,Diamine oxidase,,2,2,0,2,0,0.0,False,False
+P20711,DOPA decarboxylase,,2,0,2,2,0,0.0,False,False
+P20839,Inosine-5'-monophosphate dehydrogenase 1,,2,1,1,13,0,0.0,False,False
+P21462,Formyl peptide receptor 1,,2,0,2,2,1,50.0,True,False
+P21589,5'-nucleotidase,,2,0,2,2,1,50.0,False,False
+P22460,Voltage-gated potassium channel subunit Kv1.5,,2,0,2,2,0,0.0,True,False
+P23786,Carnitine palmitoyltransferase 2,,2,0,2,2,0,0.0,False,False
+P24158,Leukocyte proteinase 3,,2,0,2,3,0,0.0,False,False
+P27169,Serum paraoxonase/arylesterase 1,,2,0,2,2,0,0.0,False,False
+P27815,Phosphodiesterase 4A,,2,1,1,12,1,50.0,True,False
+P30536,Translocator protein,,2,0,2,2,0,0.0,False,False
+P30559,Oxytocin receptor,,2,1,1,33,1,50.0,True,False
+P31213,Steroid 5-alpha-reductase 2,,2,1,1,31,2,100.0,False,False
+P32238,Cholecystokinin A receptor,,2,0,2,2,0,0.0,True,False
+P32239,Cholecystokinin B receptor,,2,2,0,3,0,0.0,True,False
+P32245,Melanocortin receptor 4,,2,0,2,2,0,0.0,True,False
+P32320,Cytidine deaminase,,2,1,1,2,2,100.0,False,False
+P32745,Somatostatin receptor 3,,2,2,0,14,0,0.0,True,False
+P33260,Cytochrome P450 2C18,,2,0,2,2,0,0.0,False,False
+P34995,Prostanoid EP1 receptor,,2,2,0,9,2,100.0,True,False
+P35498,Sodium channel protein type I alpha subunit,Nav1_1,2,2,0,3,2,100.0,True,False
+P35499,Sodium channel protein type IV alpha subunit,,2,2,0,3,2,100.0,True,False
+P35557,Hexokinase type IV,,2,1,1,3,0,0.0,True,False
+P36873,Serine/threonine protein phosphatase PP1-gamma catalytic subunit,,2,2,0,16,2,100.0,False,False
+P39086,Glutamate receptor ionotropic kainate 1,,2,2,0,9,2,100.0,True,False
+P40261,Nicotinamide N-methyltransferase,,2,0,2,2,0,0.0,False,False
+P40394,Alcohol dehydrogenase class IV,,2,0,2,2,2,100.0,False,False
+P41235,Hepatocyte nuclear factor 4-alpha,,2,0,2,2,0,0.0,False,False
+P42263,"Glutamate receptor ionotropic, AMPA 3",,2,0,2,6,2,100.0,True,False
+P42785,Lysosomal Pro-X carboxypeptidase,,2,1,1,2,0,0.0,False,False
+P42892,Endothelin-converting enzyme 1,,2,1,1,7,1,50.0,False,False
+P43003,Excitatory amino acid transporter 1,,2,0,2,7,1,50.0,True,False
+P43088,Prostanoid FP receptor,,2,2,0,8,2,100.0,True,False
+P43115,Prostanoid EP3 receptor,,2,2,0,9,2,100.0,True,False
+P43116,Prostanoid EP2 receptor,,2,1,1,19,2,100.0,True,False
+P46721,Solute carrier organic anion transporter family member 1A2,,2,0,2,2,0,0.0,True,False
+P47712,Cytosolic phospholipase A2,,2,0,2,2,0,0.0,False,False
+P47929,Galectin-7,,2,0,2,2,2,100.0,False,False
+P48544,Kir3.1/Kir3.4,,2,0,2,2,1,50.0,False,False
+P48775,"Tryptophan 2,3-dioxygenase",,2,1,1,5,0,0.0,False,False
+P49810,Gamma-secretase,,2,0,2,5,0,0.0,True,False
+P50052,Angiotensin II receptor,,2,2,0,10,0,0.0,True,False
+P50135,Histamine N-methyltransferase,,2,1,1,3,0,0.0,True,False
+P51679,C-C chemokine receptor type 4,,2,1,1,11,0,0.0,True,False
+P51684,C-C chemokine receptor type 6,,2,1,1,2,2,100.0,True,False
+P53582,Methionine aminopeptidase 1,,2,1,1,4,1,50.0,False,False
+P53634,Dipeptidyl peptidase I,,2,1,1,2,2,100.0,False,False
+P54098,DNA polymerase gamma subunit 1,,2,1,1,2,1,50.0,False,False
+P54289,Voltage-gated calcium channel alpha2/delta subunit 1,,2,2,0,2,2,100.0,True,False
+P54707,Potassium-transporting ATPase alpha chain 2,,2,1,1,2,2,100.0,False,False
+P54750,Phosphodiesterase 1A,,2,0,2,2,1,50.0,True,False
+P59538,Taste receptor type 2 member 31,,2,0,2,2,1,50.0,True,False
+P60174,Triosephosphate isomerase,,2,0,2,2,0,0.0,False,False
+P61981,14-3-3 protein gamma,,2,0,2,2,0,0.0,False,False
+P62508,Estrogen-related receptor gamma,,2,2,0,3,0,0.0,True,False
+Q00975,Voltage-gated N-type calcium channel alpha-1B subunit,,2,1,1,3,0,0.0,True,False
+Q01118,Sodium channel protein type VII alpha subunit,,2,2,0,2,2,100.0,True,False
+Q02790,FK506 binding protein 4,,2,1,1,2,2,100.0,False,False
+Q04844,Acetylcholine receptor protein epsilon chain,,2,1,1,3,0,0.0,True,False
+Q05193,Dynamin-1,,2,0,2,2,2,100.0,False,False
+Q06432,Voltage-gated calcium channel,,2,0,2,2,0,0.0,True,False
+Q07001,Acetylcholine receptor; alpha1/beta1/delta/gamma,,2,2,0,3,0,0.0,True,False
+Q08209,"Serine/threonine protein phosphatase 2B catalytic subunit, alpha isofo",,2,2,0,4,2,100.0,False,False
+Q11130,"Alpha-(1,3)-fucosyltransferase 7",,2,2,0,2,0,0.0,False,False
+Q12797,Aspartyl/asparaginyl beta-hydroxylase,,2,1,1,5,0,0.0,False,False
+Q13002,Glutamate receptor ionotropic kainate 2,,2,1,1,7,2,100.0,True,False
+Q13003,Glutamate receptor ionotropic kainate 3,,2,2,0,4,2,100.0,True,False
+Q13509,Tubulin beta-3 chain,,2,2,0,6,0,0.0,False,False
+Q13946,Phosphodiesterase 7A,,2,0,2,3,1,50.0,True,False
+Q14534,Squalene monooxygenase,,2,1,1,2,1,50.0,False,False
+Q14542,Equilibrative nucleoside transporter 2,,2,0,2,4,1,50.0,True,False
+Q14697,Neutral alpha-glucosidase AB,,2,0,2,14,2,100.0,False,False
+Q14721,Potassium voltage-gated channel subfamily B member 1,,2,2,0,2,0,0.0,True,False
+Q14831,Metabotropic glutamate receptor 7,,2,0,2,7,1,50.0,True,False
+Q14832,Metabotropic glutamate receptor 3,,2,1,1,3,1,50.0,True,False
+Q15109,Advanced glycosylation end product-specific receptor,,2,1,1,2,1,50.0,True,False
+Q15120,Pyruvate dehydrogenase kinase isoform 3,,2,0,2,2,0,0.0,True,False
+Q15172,"Serine/threonine protein phosphatase 2A, 56 kDa regulatory subunit, al",,2,2,0,2,2,100.0,False,False
+Q15465,Sonic hedgehog protein,,2,2,0,2,2,100.0,False,False
+Q15596,Peroxisome proliferator-activated receptor gamma/Nuclear receptor coac,,2,0,2,2,0,0.0,True,False
+Q15788,Peroxisome proliferator-activated receptor gamma/Nuclear receptor coac,,2,0,2,2,0,0.0,True,False
+Q15822,Neuronal acetylcholine receptor; alpha2/beta4,,2,2,0,4,0,0.0,True,False
+Q16549,Subtilisin/kexin type 7,,2,1,1,2,1,50.0,False,False
+Q16706,Alpha-mannosidase 2A1,,2,0,2,2,1,50.0,False,False
+Q16773,Kynurenine--oxoglutarate transaminase I,,2,0,2,2,0,0.0,False,False
+Q53EL6,Programmed cell death protein 4,,2,2,0,2,1,50.0,False,False
+Q5MY95,Ectonucleoside triphosphate diphosphohydrolase 8,,2,0,2,3,0,0.0,False,False
+Q6IQ20,N-acyl-phosphatidylethanolamine-hydrolyzing phospholipase D,,2,0,2,2,1,50.0,False,False
+Q6QHF9,Polyamine oxidase,,2,0,2,2,2,100.0,False,False
+Q6ZQN7,Solute carrier organic anion transporter family member 4C1,,2,2,0,2,2,100.0,True,False
+Q86X55,Histone-arginine methyltransferase CARM1,,2,1,1,3,0,0.0,False,False
+Q8N6T7,NAD-dependent protein deacetylase sirtuin-6,,2,0,2,8,0,0.0,True,False
+Q8NEB9,Phosphatidylinositol 3-kinase catalytic subunit type 3,,2,1,1,3,0,0.0,True,False
+Q8TET4,Neutral alpha-glucosidase C,,2,1,1,2,2,100.0,False,False
+Q8WWR8,Sialidase 4,,2,0,2,3,2,100.0,False,False
+Q92753,Nuclear receptor ROR-beta,,2,1,1,5,0,0.0,True,False
+Q92934,Bcl2-antagonist of cell death (BAD),,2,1,1,3,0,0.0,False,False
+Q96IV0,Peptide-N(4)-(N-acetyl-beta-glucosaminyl)asparagine amidase,,2,0,2,2,2,100.0,False,False
+Q96KS0,Hypoxia-inducible factor prolyl hydroxylase 1,,2,0,2,2,0,0.0,False,False
+Q96Q89,Kinesin-like protein KIF20B,,2,0,2,4,0,0.0,False,False
+Q96QA9,Multidrug resistance associated protein,,2,0,2,2,1,50.0,False,False
+Q99250,Sodium channel protein type II alpha subunit,,2,2,0,3,2,100.0,True,False
+Q99519,Sialidase 1,,2,0,2,3,2,100.0,False,False
+Q99558,Mitogen-activated protein kinase kinase kinase 14,,2,0,2,2,0,0.0,True,False
+Q9BXC0,G-protein coupled receptor 81,,2,0,2,2,0,0.0,True,False
+Q9BY08,Emopamil-binding protein-like,,2,2,0,2,0,0.0,False,False
+Q9GZR1,Sentrin-specific protease 6,,2,1,1,2,0,0.0,False,False
+Q9H227,Beta-glucosidase cytosolic,,2,0,2,3,2,100.0,False,False
+Q9HBA0,Transient receptor potential cation channel subfamily V member 4,,2,0,2,3,0,0.0,True,False
+Q9NR20,Dual specificity tyrosine-phosphorylation-regulated kinase 4,,2,0,2,3,0,0.0,True,False
+Q9NXG6,Hypoxia-inducible factor prolyl 4-hydroxylase,,2,0,2,3,0,0.0,False,False
+Q9NZJ5,Eukaryotic translation initiation factor 2-alpha kinase 3,,2,0,2,4,0,0.0,True,False
+Q9UI33,Sodium channel protein type XI alpha subunit,,2,1,1,3,2,100.0,True,False
+Q9UP65,Cytosolic phospholipase A2 gamma,,2,0,2,2,1,50.0,False,False
+Q9UPY5,Cystine/glutamate transporter,,2,0,2,3,1,50.0,True,False
+Q9UQ49,Sialidase 3,,2,0,2,4,2,100.0,False,False
+Q9UQD0,Sodium channel protein type VIII alpha subunit,Nav1_6,2,2,0,3,2,100.0,True,False
+Q9Y286,Sialic acid-binding Ig-like lectin 7,,2,0,2,4,2,100.0,False,False
+Q9Y337,Kallikrein 5,,2,0,2,3,1,50.0,False,False
+Q9Y345,Glycine transporter 2,,2,2,0,3,2,100.0,True,False
+Q9Y4P1,Cysteine protease ATG4B,,2,0,2,2,1,50.0,False,False
+Q9Y5S8,NADPH oxidase 1,,2,1,1,3,0,0.0,False,False
+Q9Y5X4,Photoreceptor-specific nuclear receptor,,2,2,0,2,0,0.0,True,False
+Q9Y5Z0,Beta secretase 2,,2,2,0,3,0,0.0,True,False
+Q9Y6Y9,Lymphocyte antigen 96,,2,0,2,2,0,0.0,False,False
+O00141,Serine/threonine-protein kinase Sgk1,,1,1,0,3,0,0.0,True,False
+O00142,"Thymidine kinase, mitochondrial",,1,0,1,2,1,100.0,True,False
+O00148,ATP-dependent RNA helicase DDX39A,,1,0,1,1,0,0.0,False,False
+O00222,Metabotropic glutamate receptor 8,,1,1,0,1,1,100.0,True,False
+O00337,Sodium/nucleoside cotransporter 1,,1,0,1,1,0,0.0,True,False
+O00767,Acyl-CoA desaturase,,1,1,0,2,1,100.0,False,False
+O14638,Ectonucleotide pyrophosphatase/phosphodiesterase family member 3,,1,1,0,1,0,0.0,True,False
+O14939,Phospholipase D2,,1,0,1,1,0,0.0,False,False
+O15120,1-acylglycerol-3-phosphate O-acyltransferase beta,,1,0,1,1,0,0.0,False,False
+O15151,Tumour suppressor protein p53/Mdm4,,1,0,1,1,1,100.0,False,False
+O15269,Serine palmitoyltransferase 1,,1,1,0,1,1,100.0,False,False
+O15270,Serine palmitoyltransferase 2,,1,1,0,1,1,100.0,False,False
+O15294,UDP-N-acetylglucosamine--peptide N-acetylglucosaminyltransferase 110 k,,1,0,1,1,0,0.0,False,False
+O15399,Glutamate [NMDA] receptor subunit epsilon 4,,1,0,1,1,0,0.0,True,False
+O15427,Monocarboxylate transporter 4,,1,0,1,1,0,0.0,True,False
+O15528,"25-hydroxyvitamin D-1 alpha hydroxylase, mitochondrial",,1,1,0,1,0,0.0,False,False
+O15550,Lysine-specific demethylase 6A,,1,0,1,1,1,100.0,False,False
+O15554,Intermediate conductance calcium-activated potassium channel protein 4,,1,1,0,3,0,0.0,True,False
+O43174,Cytochrome P450 26A1,,1,0,1,1,0,0.0,False,False
+O43175,D-3-phosphoglycerate dehydrogenase,,1,0,1,1,0,0.0,False,False
+O43193,Motilin receptor,,1,1,0,9,1,100.0,True,False
+O43280,Trehalase,,1,0,1,1,1,100.0,False,False
+O43524,Forkhead box protein O3,,1,0,1,1,0,0.0,False,False
+O43526,Voltage-gated potassium channel subunit Kv7.2,,1,1,0,4,0,0.0,True,False
+O43598,2'-deoxynucleoside 5'-phosphate N-hydrolase 1,,1,0,1,1,0,0.0,False,False
+O60259,Kallikrein 8,,1,0,1,1,1,100.0,False,False
+O60658,Phosphodiesterase 8A,,1,0,1,1,1,100.0,True,False
+O60678,Protein arginine N-methyltransferase 3,,1,1,0,2,0,0.0,False,False
+O60706,"Sulfonylurea receptor 2, Kir6.2",,1,1,0,2,0,0.0,True,False
+O60725,Isoprenylcysteine carboxyl methyltransferase,,1,0,1,1,0,0.0,False,False
+O60760,Hematopoietic prostaglandin D synthase,,1,0,1,1,0,0.0,False,False
+O60883,Endothelin B receptor-like protein 2,,1,0,1,1,0,0.0,True,False
+O75688,Protein phosphatase 2C beta,,1,1,0,1,1,100.0,False,False
+O75909,CDK9/Cyclin K,,1,1,0,3,0,0.0,False,False
+O95050,Indolethylamine N-methyltransferase,,1,0,1,1,0,0.0,False,False
+O95069,Potassium channel subfamily K member 2,,1,0,1,2,0,0.0,True,False
+O95136,Sphingosine 1-phosphate receptor Edg-5,,1,1,0,10,1,100.0,True,False
+O95263,Phosphodiesterase 8B,,1,0,1,1,1,100.0,True,False
+O95870,Protein BAT5,,1,1,0,2,1,100.0,False,False
+O95977,Sphingosine 1-phosphate receptor Edg-6,,1,1,0,12,1,100.0,True,False
+P00325,Alcohol dehydrogenase beta chain,,1,0,1,1,1,100.0,False,False
+P00326,Alcohol dehydrogenase gamma chain,,1,0,1,1,1,100.0,False,False
+P01031,Complement C5,,1,1,0,1,0,0.0,False,False
+P01112,Transforming protein p21/H-Ras-1,,1,1,0,1,0,0.0,False,False
+P01116,GTPase KRas,,1,0,1,1,0,0.0,False,False
+P01213,Proenkephalin B,,1,1,0,1,0,0.0,False,False
+P02511,Alpha-crystallin B chain,,1,1,0,1,1,100.0,False,False
+P02753,Plasma retinol-binding protein,,1,1,0,1,0,0.0,False,False
+P02774,Vitamin D-binding protein,,1,1,0,1,1,100.0,False,False
+P03905,NADH-ubiquinone oxidoreductase chain 4,,1,1,0,1,0,0.0,False,False
+P04070,Vitamin K-dependent protein C,,1,0,1,1,1,100.0,False,False
+P04271,S-100 protein beta chain,,1,1,0,2,0,0.0,False,False
+P05023,Sodium/potassium-transporting ATPase alpha-1 chain,,1,1,0,1,1,100.0,False,False
+P05108,Cytochrome P450 11A1,,1,0,1,1,0,0.0,False,False
+P05187,Alkaline phosphatase placental type,,1,0,1,4,0,0.0,False,False
+P05231,Interleukin-6,,1,1,0,1,0,0.0,False,False
+P05413,Fatty acid binding protein muscle,,1,1,0,3,1,100.0,False,False
+P05981,Serine protease hepsin,,1,1,0,1,1,100.0,False,False
+P06400,Retinoblastoma-associated protein,,1,1,0,1,0,0.0,False,False
+P06730,Eukaryotic translation initation factor,,1,1,0,1,1,100.0,False,False
+P06858,Lipoprotein lipase,,1,1,0,1,1,100.0,False,False
+P07099,Epoxide hydrolase 1,,1,1,0,2,1,100.0,False,False
+P07101,Tyrosine 3-hydroxylase,,1,1,0,1,0,0.0,False,False
+P07195,L-lactate dehydrogenase B chain,,1,0,1,4,0,0.0,False,False
+P07305,Histone H1.0,,1,1,0,1,0,0.0,False,False
+P07327,Alcohol dehydrogenase alpha chain,,1,0,1,1,0,0.0,False,False
+P08514,Integrin alpha-IIb/beta-3,,1,0,1,1,0,0.0,False,False
+P08686,Cytochrome P450 21,,1,0,1,1,0,0.0,False,False
+P09172,Dopamine beta-hydroxylase,,1,0,1,1,0,0.0,True,False
+P09651,Heterogeneous nuclear ribonucleoprotein A1,,1,1,0,1,0,0.0,False,False
+P0DJD9,Pepsin A,,1,1,0,1,1,100.0,False,False
+P0DMS9,Transmembrane domain-containing protein TMIGD3,,1,0,1,1,0,0.0,False,False
+P10070,Zinc finger protein GLI2,,1,1,0,1,0,0.0,False,False
+P10619,Lysosomal protective protein,,1,0,1,1,1,100.0,False,False
+P10809,Heat shock protein HSP 60,,1,0,1,1,0,0.0,False,False
+P11150,Hepatic lipase,,1,1,0,1,1,100.0,False,False
+P11717,Insulin-like growth factor II receptor,,1,0,1,1,1,100.0,True,False
+P11802;P30279,Cyclin-dependent kinase 4/cyclin D2,,1,0,1,1,0,0.0,True,False
+P14060,3-beta-hydroxysteroid dehydrogenase/delta 5-->4-isomerase type I,,1,0,1,1,1,100.0,False,False
+P14207,Folate receptor beta,,1,1,0,4,0,0.0,True,False
+P14867,GABA receptor alpha-1 subunit,GABA_A,1,1,0,2,0,0.0,True,False
+P15086,Carboxypeptidase B,,1,1,0,1,0,0.0,False,False
+P15104,Glutamine synthetase,,1,1,0,1,1,100.0,False,False
+P15328,Folate receptor alpha,,1,1,0,4,0,0.0,True,False
+P15374,Ubiquitin carboxyl-terminal hydrolase isozyme L3,,1,0,1,1,0,0.0,False,False
+P15498,Proto-oncogene vav,,1,1,0,1,1,100.0,False,False
+P16070,CD44 antigen,,1,0,1,2,0,0.0,False,False
+P16435,NADPH--cytochrome P450 reductase,,1,0,1,1,0,0.0,False,False
+P16615,Sarcoplasmic/endoplasmic reticulum calcium ATPase 2,,1,0,1,1,0,0.0,False,False
+P17301,Integrin alpha-2,,1,0,1,1,0,0.0,False,False
+P17302,Gap junction alpha-1 protein,,1,0,1,1,1,100.0,False,False
+P17655,Calpain 2,,1,1,0,1,1,100.0,False,False
+P17658,Voltage-gated potassium channel subunit Kv1.6,,1,0,1,1,0,0.0,True,False
+P18405,Steroid 5-alpha-reductase 1,,1,1,0,25,1,100.0,False,False
+P19320,Vascular cell adhesion protein 1,,1,0,1,1,0,0.0,False,False
+P19438,Tumor necrosis factor receptor R1,,1,0,1,1,0,0.0,True,False
+P19440,Gamma-glutamyltranspeptidase 1,,1,0,1,1,0,0.0,False,False
+P21453,Sphingosine 1-phosphate receptor Edg-1,,1,1,0,20,1,100.0,True,False
+P21731,Thromboxane A2 receptor,,1,0,1,1,1,100.0,True,False
+P21757,Macrophage scavenger receptor types I and II,,1,0,1,1,0,0.0,True,False
+P21964,Catechol O-methyltransferase,,1,0,1,1,0,0.0,False,False
+P22061,Protein-beta-aspartate methyltransferase,,1,0,1,2,0,0.0,False,False
+P22083,Fucosyltransferase 4,,1,0,1,1,0,0.0,False,False
+P22102,GAR transformylase,,1,0,1,1,0,0.0,False,False
+P22392,Nucleoside diphosphate kinase 2,,1,0,1,1,0,0.0,True,False
+P22413,Ectonucleotide pyrophosphatase/phosphodiesterase family member 1,,1,1,0,3,0,0.0,True,False
+P22760,Arylacetamide deacetylase,,1,0,1,3,0,0.0,True,False
+P23284,Cyclophilin B,,1,1,0,2,1,100.0,False,False
+P23743,Diacylglycerol kinase alpha,,1,0,1,1,1,100.0,True,False
+P23919,Thymidylate kinase,,1,0,1,2,1,100.0,True,False
+P23921,Ribonucleoside-diphosphate reductase M1 chain,,1,0,1,1,0,0.0,False,False
+P24462,Cytochrome P450 3A7,,1,0,1,1,0,0.0,False,False
+P24593,Insulin-like growth factor binding protein 5,,1,0,1,7,1,100.0,False,False
+P25090,Lipoxin A4 receptor,,1,1,0,6,1,100.0,True,False
+P25116,Proteinase-activated receptor 1,,1,0,1,1,0,0.0,True,False
+P25440,Bromodomain-containing protein 2,,1,0,1,1,0,0.0,False,False
+P26599,Polypyrimidine tract-binding protein 1,,1,0,1,2,0,0.0,False,False
+P28062,Proteasome subunit beta type-8,,1,1,0,1,1,100.0,False,False
+P28065,Proteasome subunit beta type-9,,1,1,0,1,1,100.0,False,False
+P28838,Leucine aminopeptidase,,1,0,1,1,1,100.0,False,False
+P29033,Gap junction beta-2 protein,,1,0,1,1,1,100.0,False,False
+P29375,Lysine-specific demethylase 5A,,1,0,1,1,1,100.0,False,False
+P29401,Transketolase,,1,0,1,1,0,0.0,False,False
+P30279,Cyclin-dependent kinase 4/cyclin D,,1,1,0,2,0,0.0,True,False
+P30307,Dual specificity phosphatase Cdc25C,,1,0,1,2,0,0.0,False,False
+P30411,Bradykinin B2 receptor,,1,1,0,7,0,0.0,True,False
+P30532,"Neuronal acetylcholine receptors; alpha-3/beta-4, alpha-5, beta-2",,1,0,1,1,0,0.0,True,False
+P30613,Pyruvate kinase isozymes R/L,,1,0,1,2,0,0.0,True,False
+P30872,Somatostatin receptor 1,,1,1,0,10,0,0.0,True,False
+P30874,Somatostatin receptor 2,,1,1,0,13,0,0.0,True,False
+P30926,Nicotinic acetylcholine receptor alpha2/beta4,a3b4nAChR,1,0,1,1,0,0.0,True,False
+P30939,Serotonin 1f (5-HT1f) receptor,,1,1,0,1,0,0.0,True,False
+P31391,Somatostatin receptor 4,,1,1,0,13,0,0.0,True,False
+P31941,Probable DNA dC->dU-editing enzyme APOBEC-3A,,1,0,1,1,0,0.0,False,False
+P32189,Glycerol kinase,,1,0,1,1,0,0.0,True,False
+P32246,C-C chemokine receptor type 1,,1,1,0,1,0,0.0,True,False
+P32302,C-X-C chemokine receptor type 5,,1,0,1,1,1,100.0,True,False
+P32322,"Pyrroline-5-carboxylate reductase 1, mitochondrial",,1,0,1,1,0,0.0,False,False
+P33032,Melanocortin receptor 5,,1,0,1,2,0,0.0,True,False
+P34981,Thyrotropin-releasing hormone receptor,,1,1,0,2,1,100.0,True,False
+P34998,Corticotropin releasing factor receptor 1,,1,1,0,2,0,0.0,True,False
+P35346,Somatostatin receptor 5,,1,1,0,19,0,0.0,True,False
+P35408,Prostanoid EP4 receptor,,1,1,0,20,1,100.0,True,False
+P35414,Apelin receptor,,1,0,1,1,1,100.0,True,False
+P35626,Beta-adrenergic receptor kinase 2,,1,1,0,2,0,0.0,True,False
+P35813,Protein phosphatase 2C alpha,,1,1,0,1,1,100.0,False,False
+P37288,Vasopressin V1a receptor,,1,1,0,14,1,100.0,True,False
+P38919,Eukaryotic initiation factor 4A-III,,1,0,1,2,1,100.0,False,False
+P40145,Adenylate cyclase type VIII,,1,1,0,1,1,100.0,False,False
+P40818,Ubiquitin carboxyl-terminal hydrolase 8,,1,0,1,1,0,0.0,False,False
+P40926,"Malate dehydrogenase, mitochondrial",,1,0,1,1,0,0.0,False,False
+P41182,B-cell lymphoma 6 protein,,1,0,1,1,0,0.0,False,False
+P41229,Lysine-specific demethylase 5C,,1,0,1,1,1,100.0,False,False
+P41440,Folate transporter 1,,1,1,0,2,0,0.0,True,False
+P41597,C-C chemokine receptor type 2,,1,1,0,1,0,0.0,True,False
+P43351,DNA repair protein RAD52 homolog,,1,1,0,2,0,0.0,False,False
+P45974,Ubiquitin carboxyl-terminal hydrolase 5,,1,0,1,1,0,0.0,False,False
+P46663,Bradykinin B1 receptor,,1,1,0,1,1,100.0,True,False
+P47895,Aldehyde dehydrogenase 1A3,,1,0,1,1,0,0.0,False,False
+P48051,Kir3.1/Kir3.2,,1,0,1,1,0,0.0,False,False
+P48058,"Glutamate receptor ionotropic, AMPA 4",,1,1,0,5,1,100.0,True,False
+P48547,Voltage-gated potassium channel subunit Kv3.1,,1,0,1,1,0,0.0,True,False
+P48735,"Isocitrate dehydrogenase [NADP], mitochondrial",,1,0,1,4,0,0.0,False,False
+P49019,HM74 nicotinic acid GPCR,,1,0,1,3,0,0.0,False,False
+P49768,Presenilin 1,,1,0,1,3,1,100.0,False,False
+P49862,Kallikrein 7,,1,0,1,2,0,0.0,False,False
+P49888,Estrogen sulfotransferase,,1,0,1,1,1,100.0,False,False
+P49961,Ectonucleoside triphosphate diphosphohydrolase 1,,1,0,1,2,0,0.0,False,False
+P50225,Sulfotransferase 1A1,,1,1,0,6,1,100.0,False,False
+P51160,Phosphodiesterase 6C,,1,0,1,1,0,0.0,True,False
+P51161,Gastrotropin,,1,0,1,1,0,0.0,False,False
+P51677,C-C chemokine receptor type 3,,1,1,0,11,0,0.0,True,False
+P53396,ATP-citrate synthase,,1,1,0,2,0,0.0,False,False
+P53985,Monocarboxylate transporter 1,,1,1,0,1,0,0.0,True,False
+P54829,Tyrosine-protein phosphatase non-receptor type 5,,1,0,1,1,0,0.0,True,False
+P55085,Proteinase-activated receptor 2,,1,1,0,2,1,100.0,True,False
+P58215,Lysyl oxidase homolog 3,,1,1,0,1,1,100.0,False,False
+P60033,CD81 antigen,,1,1,0,1,1,100.0,False,False
+P60484,"Phosphatidylinositol 3,4,5-trisphosphate 3-phosphatase and dual-specif",,1,0,1,1,1,100.0,False,False
+P61073,C-X-C chemokine receptor type 4,,1,1,0,1,1,100.0,True,False
+P61244,c-Myc/Max,,1,0,1,1,1,100.0,False,False
+P62136,Serine/threonine protein phosphatase PP1-alpha catalytic subunit,,1,0,1,1,0,0.0,False,False
+P62937,Cyclophilin A,,1,1,0,31,1,100.0,False,False
+P63151,"Serine/threonine protein phosphatase 2A, 55 kDa regulatory subunit B, ",,1,1,0,1,1,100.0,False,False
+P67775,"Serine/threonine protein phosphatase 2A, catalytic subunit, alpha isof",,1,1,0,1,1,100.0,False,False
+P78329,Cytochrome P450 4F2,,1,1,0,1,0,0.0,False,False
+Q00534;P30279,CDK6/cyclin D2,,1,0,1,1,0,0.0,False,False
+Q00613,Heat shock factor protein 1,,1,0,1,1,0,0.0,False,False
+Q00688,FK506 binding protein 3,,1,0,1,1,1,100.0,False,False
+Q01064,Phosphodiesterase 1B,,1,1,0,1,0,0.0,True,False
+Q01970,Phospholipase C-beta-3,,1,0,1,1,0,0.0,False,False
+Q02224,Centromere-associated protein E,,1,0,1,2,0,0.0,False,False
+Q02643,Growth hormone-releasing hormone receptor,,1,1,0,1,0,0.0,True,False
+Q04756,Hepatocyte growth factor activator,,1,1,0,1,1,100.0,False,False
+Q05901,Nicotinic acetylcholine receptor alpha3/betaX,,1,0,1,3,0,0.0,True,False
+Q05BQ5,MBT domain-containing protein 1,,1,0,1,1,0,0.0,False,False
+Q06210,Glucosamine--fructose-6-phosphate aminotransferase [isomerizing] 1,,1,0,1,1,0,0.0,False,False
+Q06609,DNA repair protein RAD51 homolog 1,,1,0,1,1,0,0.0,False,False
+Q07108,Early activation antigen CD69,,1,0,1,3,1,100.0,False,False
+Q07812,Apoptosis regulator BAX,,1,0,1,1,0,0.0,False,False
+Q08752,Peptidyl-prolyl cis-trans isomerase D,,1,1,0,7,1,100.0,False,False
+Q08828,Brain adenylate cyclase 1,,1,1,0,3,1,100.0,False,False
+Q09428,"Sulfonylurea receptor 1, Kir6.2",,1,1,0,1,0,0.0,True,False
+Q11128,Fucosyltransferase 5,,1,0,1,1,0,0.0,False,False
+Q11201,"CMP-N-acetylneuraminate-beta-galactosamide-alpha-2,3-sialyltransferase",,1,0,1,1,1,100.0,False,False
+Q12772,Sterol regulatory element-binding protein 2,,1,1,0,1,1,100.0,False,False
+Q12778,Forkhead box protein O1,,1,0,1,1,0,0.0,False,False
+Q12913,Receptor-type tyrosine-protein phosphatase eta,,1,0,1,1,1,100.0,True,False
+Q12974,Protein tyrosine phosphatase type IVA 2,,1,1,0,1,0,0.0,False,False
+Q13118,Krueppel-like factor 10,,1,0,1,2,0,0.0,False,False
+Q13510,Acid ceramidase,,1,0,1,2,1,100.0,False,False
+Q13822,Autotaxin,,1,0,1,1,1,100.0,False,False
+Q13887,Kruppel-like factor 5,,1,1,0,1,1,100.0,False,False
+Q14240,Eukaryotic initiation factor 4A-II,,1,0,1,1,1,100.0,False,False
+Q14376,UDP-glucose 4-epimerase,,1,0,1,1,0,0.0,False,False
+Q14432,Phosphodiesterase 3A,,1,1,0,4,0,0.0,True,False
+Q14469,Transcription factor HES-1,,1,0,1,1,0,0.0,False,False
+Q14642,"Type I inositol-1,4,5-trisphosphate 5-phosphatase",,1,0,1,1,1,100.0,False,False
+Q14643,"Inositol 1,4,5-trisphosphate receptor type 1",,1,1,0,6,1,100.0,True,False
+Q14790,Caspase-8,,1,0,1,1,1,100.0,False,False
+Q14957,Glutamate [NMDA] receptor subunit epsilon 3,,1,0,1,1,0,0.0,True,False
+Q14994,Nuclear receptor subfamily 1 group I member 3,,1,1,0,4,0,0.0,True,False
+Q15059,Bromodomain-containing protein 3,,1,0,1,1,0,0.0,False,False
+Q15119,Pyruvate dehydrogenase kinase isoform 2,,1,0,1,2,0,0.0,True,False
+Q15149,Plectin,,1,0,1,3,0,0.0,False,False
+Q15382,GTP-binding protein Rheb,,1,0,1,1,0,0.0,False,False
+Q15661,Tryptase beta-1,,1,0,1,1,1,100.0,False,False
+Q15717,ELAV-like protein 1,,1,1,0,3,0,0.0,False,False
+Q15750,Mitogen-activated protein kinase kinase kinase 7-interacting protein 1,,1,1,0,1,0,0.0,True,False
+Q15904,Vacuolar ATP synthase subunit S1,,1,1,0,1,1,100.0,False,False
+Q15910,Histone-lysine N-methyltransferase EZH2,,1,1,0,19,0,0.0,False,False
+Q16548,Bcl-2-related protein A1,,1,0,1,1,0,0.0,False,False
+Q16576,EZH2/SUZ12/EED/RBBP7/RBBP4,,1,1,0,1,0,0.0,False,False
+Q16647,Prostaglandin I2 synthase,,1,0,1,1,0,0.0,False,False
+Q16654,Pyruvate dehydrogenase kinase isoform 4,,1,0,1,1,0,0.0,True,False
+Q16719,Kynureninase,,1,0,1,1,0,0.0,False,False
+Q16739,Ceramide glucosyltransferase,,1,0,1,1,1,100.0,False,False
+Q16769,Glutaminyl-peptide cyclotransferase,,1,0,1,1,0,0.0,False,False
+Q16853,"Amine oxidase, copper containing",,1,1,0,1,0,0.0,False,False
+Q16875,"6-phosphofructo-2-kinase/fructose-2,6-bisphosphatase 3",,1,1,0,1,0,0.0,True,False
+Q16881,Thioredoxin reductase 1,,1,0,1,1,0,0.0,False,False
+Q4G0J3,La-related protein 7,,1,1,0,1,0,0.0,False,False
+Q53GL7,Poly [ADP-ribose] polymerase 10,,1,0,1,5,0,0.0,False,False
+Q58F21,Bromodomain testis-specific protein,,1,0,1,1,0,0.0,False,False
+Q5NUL3,G-protein coupled receptor 120,,1,1,0,1,1,100.0,True,False
+Q5TCX8,Mitogen-activated protein kinase kinase kinase MLK4,,1,1,0,1,0,0.0,True,False
+Q5TCY1,Tau-tubulin kinase 1,,1,0,1,1,0,0.0,True,False
+Q6P2M8,Calcium/calmodulin-dependent protein kinase type 1B,,1,1,0,2,0,0.0,True,False
+Q6P6C2,RNA demethylase ALKBH5,,1,0,1,1,0,0.0,False,False
+Q6P988,Palmitoleoyl-protein carboxylesterase NOTUM,,1,0,1,1,0,0.0,False,False
+Q6PIU2,Neutral cholesterol ester hydrolase 1,,1,0,1,1,1,100.0,False,False
+Q6SZW1,NAD(+) hydrolase SARM1,,1,0,1,5,0,0.0,False,False
+Q6V1X1,Dipeptidyl peptidase VIII,,1,0,1,1,1,100.0,False,False
+Q6ZQW0,"Indoleamine 2,3-dioxygenase 2",,1,0,1,2,0,0.0,False,False
+Q6ZVD8,PH domain leucine-rich repeat-containing protein phosphatase 2,,1,0,1,1,0,0.0,False,False
+Q7Z478,ATP-dependent RNA helicase DHX29,,1,0,1,1,1,100.0,False,False
+Q7Z628,Neuroepithelial cell-transforming gene 1 protein,,1,0,1,1,0,0.0,False,False
+Q86SG6,Serine/threonine-protein kinase Nek8,,1,1,0,2,0,0.0,True,False
+Q86TI2,Dipeptidyl peptidase IX,,1,0,1,1,1,100.0,False,False
+Q86U86,Protein polybromo-1,,1,0,1,1,0,0.0,False,False
+Q86V67,Phosphodiesterase isozyme 4,,1,0,1,1,1,100.0,True,False
+Q86VW1,Solute carrier family 22 member 16,,1,0,1,1,1,100.0,False,False
+Q86W56,Poly(ADP-ribose) glycohydrolase,,1,0,1,1,0,0.0,False,False
+Q86WV6,Stimulator of interferon genes protein,,1,0,1,1,0,0.0,False,False
+Q86Y97,Histone-lysine N-methyltransferase SUV420H2,,1,0,1,1,0,0.0,False,False
+Q8IV61,RAS guanyl releasing protein 3,,1,1,0,1,1,100.0,False,False
+Q8N2K0,Monoacylglycerol lipase ABHD12,,1,1,0,5,1,100.0,False,False
+Q8N884,Cyclic GMP-AMP synthase,,1,1,0,1,0,0.0,False,False
+Q8NA19,Lethal(3)malignant brain tumor-like protein 4,,1,0,1,1,0,0.0,False,False
+Q8NBP7,Subtilisin/kexin type 9,,1,0,1,1,0,0.0,False,False
+Q8NCC3,Lysosomal phospholipase A2,,1,0,1,1,1,100.0,False,False
+Q8NCG7,Sn1-specific diacylglycerol lipase beta,,1,1,0,2,1,100.0,False,False
+Q8TAX0,Protein odd-skipped-related 1,,1,1,0,2,0,0.0,False,False
+Q8TD43,Transient receptor potential cation channel subfamily M member 4,,1,0,1,1,0,0.0,True,False
+Q8TDS5,Oxoeicosanoid receptor 1,,1,1,0,4,0,0.0,True,False
+Q8TDV5,Glucose-dependent insulinotropic receptor,,1,1,0,1,1,100.0,True,False
+Q8WVY7,Ubiquitin-like domain-containing CTD phosphatase 1,,1,0,1,1,0,0.0,False,False
+Q92698,DNA repair and recombination protein RAD54-like,,1,0,1,1,0,0.0,False,False
+Q92841,Probable ATP-dependent RNA helicase DDX17,,1,0,1,1,0,0.0,False,False
+Q92888,Rho guanine nucleotide exchange factor 1,,1,0,1,1,0,0.0,False,False
+Q93096,Protein tyrosine phosphatase type IVA 1,,1,1,0,1,0,0.0,False,False
+Q96D31,Calcium release-activated calcium channel protein 1,,1,0,1,2,0,0.0,True,False
+Q96JB6,Lysyl oxidase homolog 4,,1,1,0,1,1,100.0,False,False
+Q96JM7,Lethal(3)malignant brain tumor-like protein 3,,1,0,1,1,0,0.0,False,False
+Q96K76,Ubiquitin carboxyl-terminal hydrolase 47,,1,0,1,1,1,100.0,False,False
+Q96NT5,Proton-coupled folate transporter,,1,1,0,2,0,0.0,True,False
+Q96PF2,Testis-specific serine/threonine-protein kinase 2,,1,1,0,2,0,0.0,True,False
+Q96PN8,Testis-specific serine/threonine-protein kinase 3,,1,1,0,2,0,0.0,True,False
+Q96Q04,Serine/threonine-protein kinase LMTK3,,1,1,0,1,0,0.0,True,False
+Q96RD7,Pannexin-1,,1,0,1,1,0,0.0,False,False
+Q96S37,Solute carrier family 22 member 12,,1,0,1,3,0,0.0,False,False
+Q96T88,E3 ubiquitin-protein ligase UHRF1,,1,0,1,1,0,0.0,False,False
+Q99500,Sphingosine 1-phosphate receptor Edg-3,,1,1,0,18,1,100.0,True,False
+Q99527,G-protein coupled estrogen receptor 1,,1,1,0,5,1,100.0,True,False
+Q99835,Smoothened homolog,,1,1,0,8,1,100.0,False,False
+Q99972,Myocilin,,1,0,1,1,0,0.0,False,False
+Q9BPW0,Serine/threonine-protein phosphatase,,1,0,1,1,0,0.0,False,False
+Q9BQB6,Vitamin k epoxide reductase complex subunit 1 isoform 1,,1,1,0,1,0,0.0,False,False
+Q9BQT8,Mitochondrial 2-oxodicarboxylate carrier,,1,1,0,1,0,0.0,False,False
+Q9BRQ5,ORAI 1/2/3,,1,0,1,2,0,0.0,False,False
+Q9BTY2,Alpha-L-fucosidase 2,,1,1,0,1,1,100.0,False,False
+Q9BV23,Monoacylglycerol lipase ABHD6,,1,1,0,6,1,100.0,False,False
+Q9BXA6,Testis-specific serine/threonine-protein kinase 6,,1,1,0,2,0,0.0,True,False
+Q9BZP6,Acidic mammalian chitinase,,1,0,1,1,0,0.0,False,False
+Q9GZU7,Carboxy-terminal domain RNA polymerase II polypeptide A small phosphat,,1,0,1,1,0,0.0,False,False
+Q9GZZ1,N-alpha-acetyltransferase 50,,1,1,0,1,0,0.0,False,False
+Q9H228,Sphingosine 1-phosphate receptor Edg-8,,1,1,0,12,1,100.0,True,False
+Q9H4A3,Serine/threonine-protein kinase WNK1,,1,0,1,2,0,0.0,True,False
+Q9H4B7,Tubulin beta-1 chain,,1,1,0,1,0,0.0,False,False
+Q9H5I1,Histone-lysine N-methyltransferase SUV39H2,,1,0,1,2,0,0.0,False,False
+Q9H792,Pseudopodium-enriched atypical kinase 1,,1,1,0,2,0,0.0,True,False
+Q9H7B4,Histone-lysine N-methyltransferase SMYD3,,1,0,1,1,0,0.0,False,False
+Q9H8M2,Bromodomain-containing protein 9,,1,0,1,1,0,0.0,False,False
+Q9HAW9,UDP-glucuronosyltransferase 1-8,,1,0,1,2,0,0.0,False,False
+Q9HCR9,Phosphodiesterase 11A,,1,0,1,1,1,100.0,True,False
+Q9NPC2,Potassium channel subfamily K member 9,,1,0,1,1,0,0.0,True,False
+Q9NPI1,Bromodomain-containing protein 7,,1,0,1,1,0,0.0,False,False
+Q9NR82,Voltage-gated potassium channel subunit Kv7.5,,1,1,0,1,0,0.0,True,False
+Q9NR96,Toll-like receptor 9,,1,0,1,1,0,0.0,True,False
+Q9NRA0,Sphingosine kinase 2,,1,0,1,7,1,100.0,True,False
+Q9NRG4,N-lysine methyltransferase SMYD2,,1,1,0,1,0,0.0,False,False
+Q9NRR2,Tryptase gamma,,1,0,1,1,1,100.0,False,False
+Q9NVM4,Protein arginine N-methyltransferase 7,,1,0,1,2,0,0.0,False,False
+Q9NWM8,FK506 binding protein 14,,1,0,1,1,1,100.0,False,False
+Q9NY47,Voltage-gated calcium channel alpha2/delta subunit 2,,1,1,0,1,1,100.0,True,False
+Q9NY91,Low affinity sodium-glucose cotransporter,,1,1,0,1,0,0.0,True,False
+Q9NYA1,Sphingosine kinase 1,,1,0,1,4,1,100.0,True,False
+Q9NZ42,Gamma-secretase subunit PEN-2,,1,0,1,1,1,100.0,True,False
+Q9NZQ7,Programmed cell death 1 ligand 1,,1,0,1,1,0,0.0,False,False
+Q9P0X4,Voltage-gated T-type calcium channel alpha-1I subunit,,1,0,1,1,1,100.0,True,False
+Q9P0Z9,Peroxisomal sarcosine oxidase,,1,0,1,1,1,100.0,False,False
+Q9UBE0,SUMO-activating enzyme subunit 1,,1,0,1,1,1,100.0,False,False
+Q9UBR2,Cathepsin Z,,1,0,1,1,1,100.0,False,False
+Q9UBS0,Ribosomal protein S6 kinase 2,,1,1,0,2,0,0.0,True,False
+Q9UBS5,GABA-B receptor 1,,1,1,0,1,1,100.0,True,False
+Q9UBX1,Cathepsin F,,1,0,1,1,1,100.0,False,False
+Q9UGL1,Lysine-specific demethylase 5B,,1,0,1,1,0,0.0,False,False
+Q9UHC9,Niemann-Pick C1-like protein 1,,1,0,1,1,1,100.0,False,False
+Q9UJW3,DNMT3A2/3L complex,,1,0,1,1,0,0.0,False,False
+Q9UK80,Ubiquitin carboxyl-terminal hydrolase 21,,1,0,1,1,0,0.0,False,False
+Q9UKM7,"Endoplasmic reticulum mannosyl-oligosaccharide 1,2-alpha-mannosidase",,1,0,1,1,0,0.0,False,False
+Q9UKV8,Protein argonaute-2,,1,0,1,1,1,100.0,False,False
+Q9ULC6,Protein-arginine deiminase type-1,,1,0,1,1,0,0.0,False,False
+Q9ULW8,Protein-arginine deiminase type-3,,1,1,0,1,0,0.0,False,False
+Q9UPP1,Histone lysine demethylase PHF8,,1,1,0,3,1,100.0,False,False
+Q9Y237,Peptidyl-prolyl cis-trans isomerase NIMA-interacting 2,,1,0,1,1,1,100.0,False,False
+Q9Y263,Phospholipase A-2-activating protein,,1,1,0,1,0,0.0,False,False
+Q9Y271,Cysteinyl leukotriene receptor 1,,1,1,0,4,1,100.0,True,False
+Q9Y2E5,Epididymis-specific alpha-mannosidase,,1,0,1,1,1,100.0,False,False
+Q9Y2I7,1-phosphatidylinositol 3-phosphate 5-kinase,,1,1,0,1,0,0.0,True,False
+Q9Y2J8,Protein-arginine deiminase type-2,,1,0,1,1,0,0.0,False,False
+Q9Y2Q3,Glutathione S-transferase kappa 1,,1,1,0,1,1,100.0,False,False
+Q9Y2T3,Guanine deaminase,,1,0,1,1,0,0.0,False,False
+Q9Y5K2,Kallikrein 4,,1,0,1,1,1,100.0,False,False
+Q9Y5L3,Ectonucleoside triphosphate diphosphohydrolase 2,,1,0,1,2,0,0.0,False,False
+Q9Y5X9,Endothelial lipase,,1,1,0,1,1,100.0,False,False
+Q9Y5Y4,G protein-coupled receptor 44,,1,1,0,2,0,0.0,True,False
+Q9Y5Y6,Matriptase,,1,1,0,1,1,100.0,False,False
+Q9Y6A2,Cholesterol 24-hydroxylase,,1,1,0,2,0,0.0,False,False
+Q9Y6K1,DNA (cytosine-5)-methyltransferase 3A,,1,0,1,1,0,0.0,False,False
+V9HWB9,L-lactate dehydrogenase,,1,0,1,1,0,0.0,False,False

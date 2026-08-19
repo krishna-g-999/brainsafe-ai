@@ -1,0 +1,4 @@
+endpoint,labelled_records,potency,ic50,ec50,ki_kd,pct_direct_binding_constant,pct_naming_a_cell_type
+NFKB1,362,344,17,0,1,0.3,2.2
+NR3C1,461,160,148,85,68,14.8,34.7
+NRF2,1029,1019,0,10,0,0.0,0.8

@@ -1,14 +1,15 @@
 metric,k,n,estimate,ci95_low,ci95_high,note
-False-positive rate (any actionable disease call),52,1000,0.052,0.0399,0.0676,"upper bound: compounds are presumed inactive, not proven inactive"
-Specificity (no disease call),948,1000,0.948,0.9324,0.9601,
-"False-positive rate, in domain (T>=0.5)",52,1000,0.052,0.0399,0.0676,
-False positives assigned to: Addiction,4,1000,0.004,,,median score 0.53
-False positives assigned to: Chronic pain,1,1000,0.001,,,median score 0.94
-False positives assigned to: Cognition (cholinergic),1,1000,0.001,,,median score 0.31
-False positives assigned to: Depression / anxiety,11,1000,0.011,,,median score 0.53
-False positives assigned to: Huntington's disease,1,1000,0.001,,,median score 0.38
-False positives assigned to: Neuroinflammation,3,1000,0.003,,,median score 0.38
-False positives assigned to: Neuroprotection / oxidative stress,12,1000,0.012,,,median score 0.39
-False positives assigned to: Parkinson's disease,11,1000,0.011,,,median score 0.42
-False positives assigned to: Psychosis / schizophrenia,3,1000,0.003,,,median score 0.43
-False positives assigned to: Sleep / wakefulness,5,1000,0.005,,,median score 0.45
+False-positive rate (any actionable disease call),67,1000,0.067,0.0531,0.0842,"upper bound: compounds are presumed inactive, not proven inactive"
+Specificity (no disease call),933,1000,0.933,0.9158,0.9469,
+"False-positive rate, in domain (T>=0.5)",67,1000,0.067,0.0531,0.0842,
+False positives assigned to: ADHD,1,1000,0.001,,,median score 0.33
+False positives assigned to: Addiction,7,1000,0.007,,,median score 0.53
+False positives assigned to: Chronic pain,2,1000,0.002,,,median score 0.54
+False positives assigned to: Cognition (cholinergic),4,1000,0.004,,,median score 0.43
+False positives assigned to: Depression / anxiety,10,1000,0.01,,,median score 0.52
+False positives assigned to: Epilepsy,1,1000,0.001,,,median score 0.54
+False positives assigned to: Neuroinflammation,6,1000,0.006,,,median score 0.41
+False positives assigned to: Neuroprotection / oxidative stress,11,1000,0.011,,,median score 0.41
+False positives assigned to: Parkinson's disease,16,1000,0.016,,,median score 0.40
+False positives assigned to: Psychosis / schizophrenia,3,1000,0.003,,,median score 0.39
+False positives assigned to: Sleep / wakefulness,6,1000,0.006,,,median score 0.60

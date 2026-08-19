@@ -311,3 +311,48 @@ The two remaining DIFFERS are both understood and neither is an overstatement by
 One deployment blocker remains and is not a manuscript issue: `models_manifest.json` mismatches 171
 of its 246 entries, and regenerating it is part of the deposit, which is blocked on Zenodo
 credentials.
+
+---
+
+## 8. Addendum, 2026-08-18: what has changed since this report was written
+
+This report is a record of the reproduction run at commit `5c7114d`, and it is left as written.
+Several of its numbers are no longer current, and are listed here so that no reader takes a figure
+from the sections above as describing the deployed system.
+
+The binder panel was retrained on the extended endpoint tables, and three endpoints were added to
+test whether the natural-product gap could be closed by adding the targets natural products are
+actually assayed against. All three failed and were withdrawn, so the deployed panel is unchanged in
+membership but not in parameters: the estimators these sections measured no longer exist.
+
+| Quantity | This report | Current | Why it moved |
+|---|---|---|---|
+| Binder classifiers | 49 | 52 trained, 47 deployed | three natural-product endpoints added and withdrawn |
+| Estimators | 72, 70 deployed | 75, 70 deployed | as above |
+| Compound-endpoint records | 227,146 | 228,200 | the three new endpoint tables |
+| Binder mean AUROC | 0.904 | 0.902 over the deployed set | retrain, and the mean is now stated over deployed endpoints only |
+| Binder mean sensitivity | 0.866 | 0.878 over the deployed set | as above |
+| Background FPR, median | 0.0249 | 0.0264 over the deployed set | as above |
+| Non-CNS specificity | 0.948 | **0.933** (95% CI 0.916 to 0.947) | re-run against the retrained panel |
+| Cross-validated estimators | 71 over 67 endpoints, 1,420 fits | 74 over 70 endpoints, 1,480 fits | the three new endpoints were cross-validated |
+
+Section 7 item 2 should therefore be read as one more step in a sequence rather than as a settled
+value: 0.875, then 0.920 on superseded models, then 0.948, and now 0.933 on the current panel. The
+manuscript states 0.933 and the ledger checks it against the regenerated artefact.
+
+Two further corrections were made to this project's own machinery on the same date, both of which
+this report's methodology would have wanted stated:
+
+1. The freshness checker declared `final_thresholds.csv`, `screening_thresholds.csv` and
+   `background_specificity.csv` to depend on `models_rf/binder_modes.json`, which the same four-step
+   sequence rewrites after those tables are written. The edge could never be satisfied, so a correct
+   run left them permanently reported stale, and the obvious way to clear the report was to re-run
+   the first step alone, which silently reverts the background-specificity tightening applied by the
+   fourth. That happened once during this session and was caught by diffing the file; the panel was
+   restored byte-identically. The three tables now depend on the fitted binder models instead, and
+   two tests in `tests/test_pipeline_invariants.py` pin both halves of the invariant.
+2. The reasons for the three natural-product withdrawals were initially hand-written into
+   `models_rf/binder_modes.json`, which is generated. They now live in
+   `src/brainsafe/models/apply_specificity_decisions.py` and are reproduced by a re-run, each with
+   its own evidence pointer rather than all five withdrawals citing an audit that never saw three of
+   them.

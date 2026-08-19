@@ -14,27 +14,26 @@
 
 BrainSafe AI is a web server that profiles the mechanism by which a small molecule may act on the
 human brain, from structure alone. For a submitted SMILES string or compound name it returns, in a
-few seconds, engagement of 60 molecular targets spanning the principal neurodegenerative,
+few seconds, engagement of 63 molecular targets spanning the principal neurodegenerative,
 psychiatric, neuroinflammatory, analgesic and sleep-related axes, predicted blood-brain barrier
 penetration, two cardiac safety liabilities, and a nine-endpoint ADME and exposure layer including a
 directly modelled unbound brain-to-plasma ratio. Every target score is admitted only in proportion to
 predicted brain exposure, so potency at a target a compound cannot reach contributes nothing, and
 engaged targets are traced through a curated pathway graph to the conditions they touch. The
-server is built on 72 estimators, 70 of them deployed, trained on 227,146 measured
+server is built on 75 estimators, 70 of them deployed, trained on 228,200 measured
 compound-endpoint records from ChEMBL
 [@chembl], BindingDB [@bindingdb] and B3DB [@b3db], and validated under both random and
 scaffold-grouped 10-fold cross-validation: mean AUROC 0.958 and 0.925 respectively across the
 measured-label classifiers, with expected calibration error falling from 0.0795 to 0.0161 after
 isotonic calibration. Every prediction carries a calibrated probability, a conformal interval and an
 applicability-domain distance to the nearest measured analogue, and the server reports silence rather
-than a guess for compounds outside its competence: on non-CNS chemistry its specificity is 0.948
-(95% CI 0.932 to 0.960). The binder panel, validated against compounds measured and found inactive at
-the same target rather than against decoys, reaches a mean AUROC of 0.904 and recovers the
+than a guess for compounds outside its competence: on non-CNS chemistry its specificity is 0.933
+(95% CI 0.916 to 0.947). The binder panel, validated against compounds measured and found inactive at
+the same target rather than against decoys, reaches a mean AUROC of 0.902 and recovers the
 pharmacologically correct driving target for reference drugs. Disease-level scores are presented as a
 route from a mechanism to the conditions it touches, not as an indication prediction, because 27 of
-52 targets drive more than one condition and structure alone does not resolve which. BrainSafe AI is
-freely available without registration at [SERVER URL TO BE
-SUPPLIED], with source code, trained models and all validation artefacts at
+the 52 targets in the pathway graph drive more than one condition and structure alone does not
+resolve which. BrainSafe AI is freely available without registration at [SERVER URL TO BE SUPPLIED], with source code, trained models and all validation artefacts at
 https://github.com/krishna-g-999/brainsafe-ai.
 
 ---
@@ -65,7 +64,7 @@ predictions are mechanistically traceable: individual target engagements are fol
 curated graph into disease-level scores, gated by predicted exposure, so the output is an explanation
 rather than a bare score.
 
-The design also commits to reporting where the server does not work. Two endpoints were trained,
+The design also commits to reporting where the server does not work. Five endpoints were trained,
 tested and withdrawn; one adversarial check fails and is reported as failing; and the server stays
 silent rather than guessing on chemistry it cannot place.
 
@@ -96,17 +95,17 @@ ADME layer.
 Protein-target activity is pooled at compound level from ChEMBL [@chembl] pChEMBL values and
 BindingDB [@bindingdb]; blood-brain barrier labels come from B3DB [@b3db] augmented with FDA-curated
 approved drugs; the nine ADME endpoints use measured sets from Therapeutics Data Commons [@tdc],
-MoleculeNet [@moleculenet], B3DB and ChEMBL. The panel holds 227,146 measured compound-endpoint
+MoleculeNet [@moleculenet], B3DB and ChEMBL. The panel holds 228,200 measured compound-endpoint
 records over 193,536 unique compounds keyed by the InChIKey of the desalted parent. No value is
 imputed and no annotation overrides a measurement. Each endpoint is trained on its own measured set
-alone; those sets span from 234 compounds (GluA2) to 10,276 (hERG).
+alone; across the deployed panel those sets span from 234 compounds (GluA2) to 10,276 (hERG).
 
 A bioactivity record describes what was found to bind. A compound assayed and found inactive is
 frequently deposited only as a censored bound, `standard_relation` `>` with no pChEMBL value, and the
 conventional query, which filters on pChEMBL, discards exactly those rows. Training on what survives
 that filter yields a positive class drawn from measurement and a negative class drawn from
-property-matched decoys, and it left 35 of 60 endpoints above 90 per cent active, which is a property
-of the query rather than of the chemistry.
+property-matched decoys, and it left 35 of the 60 protein-target endpoints then in the panel above
+90 per cent active, which is a property of the query rather than of the chemistry.
 
 A censored bound settles a label whenever the entire interval it defines falls on one side of the
 activity cut. `IC50 > 10 uM` places the true potency strictly below pChEMBL 5.0 and is a measured
@@ -145,14 +144,21 @@ for a reader to find.
 Every endpoint is cross-validated ten-fold in two regimes: a random split, and a split grouped on
 Bemis-Murcko scaffolds [@bemis_murcko] that withholds entire structural classes. The two answer
 different questions, and the distance between them is the honest statement of how far a model
-travels. Across 71 cross-validated endpoints this is 1,420 fitted models standing behind the 70 that
-are deployed. A complete inventory of every estimator, with its prediction type, training-set size,
+travels. Across 74 cross-validated estimators, spanning 70 distinct endpoints because four
+receptors carry both a potency regression and a binder classifier, this is 1,480 fitted models
+standing behind the deployed panel. A complete inventory of every estimator, with its prediction type, training-set size,
 validation scheme, calibration and fitting date, is given in Supplementary Table S1 and regenerates
 with one command.
 
 Classifiers are isotonically calibrated [@calibration] on out-of-fold predictions, so no compound
 contributes to the calibrator that scores it; mean expected calibration error falls from 0.0795 to
-0.0161. Each prediction additionally carries a Mondrian conformal interval, which converts the
+0.0161. The reported value is specific to how the calibrator is nested, and the nesting is therefore
+stated: isotonic regression is fitted by five-fold `cross_val_predict` over the pooled out-of-fold
+prediction vector. Fitting it instead on the other nine folds' out-of-fold predictions, an equally
+defensible nesting, gives 0.0077 on the same data. Both are honest estimates of different
+estimators, and the difference is larger than any of the calibration gains it might be used to
+compare, so the protocol is reported rather than the number alone. Each prediction additionally
+carries a Mondrian conformal interval, which converts the
 applicability domain from a caveat into a coverage statement [@conformal]: empirical coverage is
 0.887 to 0.920 against a 0.90 target. The applicability domain itself is the maximum ECFP-4 Tanimoto
 similarity of the query to that endpoint's own measured chemistry [@ad_qsar], reported with the
@@ -173,9 +179,9 @@ restates the target instead of measuring it. The 158,890-compound background lib
 partitioned into three disjoint pools by a stable hash of the canonical structure, so a compound's
 pool is a property of the molecule and never depends on run order: 95,515 compounds supply decoys,
 31,694 set thresholds, and 31,681 measure the false-positive rate. Measured on the pool it was not
-set on, the background false-positive rate has a median of 0.0249 and reaches 0.0631, exceeding its
-0.05 target for three endpoints, which under the previous procedure was arithmetically impossible.
-That the number can now disagree with its target is the evidence that it is a measurement.
+set on, the background false-positive rate has a median of 0.0264 across the 43 deployed endpoints
+that carry one, and reaches 0.0631, exceeding its 0.05 target for three endpoints, which under the
+previous procedure was arithmetically impossible. That the number can now disagree with its target is the evidence that it is a measurement.
 
 ### Disease layer and implementation
 
@@ -205,12 +211,14 @@ weaknesses are reported in their own section rather than folded into the headlin
 
 ### Target engagement, the primary output
 
-The 49 binder classifiers are validated not against the decoys used to train them but against
-compounds experimentally tested at the same target and found inactive. They reach a mean AUROC of
-0.904 and a mean sensitivity of 0.866 on actives withheld by scaffold, at thresholds constrained
-simultaneously by held-out measured inactives and by the false-positive rate on a disjoint pool of
-unrelated chemistry; 47 of 49 are deployed. Measured on that disjoint pool the background
-false-positive rate has a median of 0.0249.
+The 52 binder classifiers are validated not against the decoys used to train them but against
+compounds experimentally tested at the same target and found inactive. Across the 47 that are
+deployed they reach a mean AUROC of 0.902 and a mean sensitivity of 0.878 on actives withheld by
+scaffold, at thresholds constrained simultaneously by held-out measured inactives and by the
+false-positive rate on a disjoint pool of unrelated chemistry. Five are withdrawn: two for firing on
+trivial metabolites, and three added to test natural-product coverage that failed on their own
+held-out inactives and are reported in the limitations. Measured on that disjoint pool the background
+false-positive rate has a median of 0.0264.
 
 The eight measured-label classifiers reach a mean AUROC of 0.958 under the random split and 0.925
 under the scaffold split. BACE1 is most robust to chemotype change, losing 0.012 between
@@ -255,9 +263,9 @@ training set in feature space, which is the subset that supports an external cla
 which is the size of the memorisation the first figure contains.
 
 **Specificity.** One thousand compounds carrying no recorded activity at any modelled target were
-scored through the deployed pipeline. 948 returned no actionable disease signal, a specificity of
-0.948 (95% CI 0.932 to 0.960). Of the 52 false positives, 36 fired on a single condition rather than
-producing a diffuse profile, and the median score among them was 0.426, only modestly above the
+scored through the deployed pipeline. 933 returned no actionable disease signal, a specificity of
+0.933 (95% CI 0.916 to 0.947). Of the 67 false positives, 44 fired on a single condition rather than
+producing a diffuse profile, and the median score among them was 0.423, only modestly above the
 actionable threshold. These compounds are presumed inactive because nothing is recorded, not proven
 inactive, so this is a lower bound.
 
@@ -276,8 +284,10 @@ lipophilicity pushes towards blockade (+0.95). These directions were not supplie
 ### Comparison with existing approaches
 
 Against the read-across baseline that represents what a chemist does by eye, the deployed random
-forest is better on all thirteen cross-validated endpoints, by 0.038 mean AUROC on the scaffold
-split. Against property-based CNS scoring [@cns_mpo], which addresses exposure only, BrainSafe AI
+forest is better on all thirteen endpoints where the two were compared, on the scaffold split. The
+margin is quoted per metric rather than pooled, because eight of those endpoints are scored by
+AUROC and five by R-squared: the mean gain is 0.038 AUROC over the eight classifiers and 0.045
+R-squared over the five potency regressions. Against property-based CNS scoring [@cns_mpo], which addresses exposure only, BrainSafe AI
 adds mechanism and liability but is not a replacement for expert medicinal-chemistry judgement on
 either axis. Against single-endpoint QSAR servers, the difference is the gating: a target score here
 is admitted only in proportion to predicted exposure, so a potent binder that does not reach the
@@ -325,11 +335,11 @@ A constant answer gains from each additional slot faster than the model does, be
 indications are concentrated in a few classes. Deepening the list is therefore not a remedy.
 
 The reason is structural rather than a deficiency of fitting, and it is visible in the graph: 27 of
-the 52 panel targets drive more than one condition. GABA-A alone contributes to depression and
+the 52 targets in the pathway graph drive more than one condition. GABA-A alone contributes to depression and
 anxiety, sleep and wakefulness, and epilepsy. One molecular event genuinely underlies several
 indications, and what selects among them, dose, regimen, exposure duration, patient population and
 trial history, is not present in a structure. Consistent with this, the median rank of the true
-indication among the never-seen drugs is 4: the server places the correct condition in the right
+indication among the 162 never-seen drugs is 4.5: the server places the correct condition in the right
 mechanistic neighbourhood but cannot resolve which member of that neighbourhood a compound was
 developed for.
 
@@ -377,11 +387,37 @@ tautomer or salt, and on those three the panel returns AUROC 0.463 at AChE (n=41
 (n=89) and 0.461 at hERG (n=80). With two to five actives per endpoint those intervals are far too
 wide to establish failure, but they are equally far from supporting a claim of natural-product
 capability, and none is made. The server flags such compounds as outside its domain, which is the
-correct behaviour, and extending the panel to the targets natural products are actually assayed
-against is the obvious next step rather than a caveat to be managed.
+correct behaviour.
+
+Extending the panel to the targets natural products are actually assayed against was attempted and
+did not work, and the attempt is reported because its outcome is informative. Surveying NPASS for
+human protein targets with at least 60 measured compounds and 15 in each class identified 58 targets
+absent from the panel. Three were selected on mechanism rather than on volume: NRF2 (651 compounds),
+the effector of the KEAP1-NRF2 axis whose sensor alone was modelled and which is the withanolide
+mechanism; NFKB1 (263), joining NLRP3 and RIPK1 on an existing neuroinflammation axis; and NR3C1
+(140), the glucocorticoid receptor, the richest of the candidates in the sp3 chemistry the library
+lacks. All three were trained and cross-validated by the same procedure as every other endpoint, and
+all three were then withdrawn on the same criterion every endpoint faces. The distinction matters,
+because they are not simply noise. Under scaffold-grouped cross-validation they carry some signal:
+AUROC 0.719, 0.711 and 0.596 for NRF2, NFKB1 and NR3C1. But the fold-to-fold standard deviations are
+0.157, 0.151 and 0.152, so that signal is not stable, and it does not survive the step that makes an
+endpoint deployable. Against their own held-out measured inactives they reach AUROC 0.539, 0.392 and
+0.479, and at a threshold constrained to control the false-positive rate on the disjoint background
+pool they recover almost no actives at all: sensitivity 0.250, 0.048 and 0.000. An endpoint that
+cannot be given a threshold that finds actives without firing on everything else is not usable,
+whatever its cross-validated AUROC. The cause is visible in what the
+labels are made of. A binder classifier is fitted to reproduce a direct binding constant, and
+for two of these three there is essentially none: of the labelled records, Ki or Kd accounts for
+0.0 per cent at NRF2, 0.3 per cent at NFKB1 and 14.8 per cent at NR3C1, the remainder being
+almost entirely `Potency`, a pooled functional readout that mixes assay formats and does not
+define a binding class a ligand fingerprint can separate. NR3C1, the one with real binding data,
+is also the one with too few compounds to fit. The gap is therefore not one that adding targets
+closes. It requires measured binding affinity on sp3-rich scaffolds, which is what does not
+exist.
 
 The fourth is the disease layer, and it is a limit of the question rather than of the fitting. Clinical
-indication is not a function of structure: 27 of the 52 panel targets drive more than one condition,
+indication is not a function of structure: 27 of the 52 targets in the pathway graph drive more than
+one condition,
 and what selects among them is dose, regimen, exposure and trial history. The layer does not beat a
 frequency baseline at any reporting depth, and reporting more conditions widens rather than closes
 that gap. It is offered as a route from a mechanism to the conditions that mechanism touches, and the
@@ -422,26 +458,28 @@ None declared.
 
 **Figure 1.** How a query is answered. (**A**) A submitted structure is standardised and represented
 as one fixed 1,036-column vector, scored by four model families: nine exposure and ADME endpoints,
-twelve target potency and activity endpoints, the 49-endpoint binder panel and two auxiliary
-regressions. Every target score is admitted only in proportion to the predicted probability that the
+twelve target potency and activity endpoints, the 52-endpoint binder panel of which 47 are deployed,
+and two auxiliary regressions. Every target score is admitted only in proportion to the predicted probability that the
 compound reaches the brain, and surviving scores are ranked by enrichment over each endpoint's base
 rate rather than by raw probability. Every reported value carries a calibrated probability, a
-conformal interval and an applicability-domain distance. (**B**) The counts in (**A**) are deployed
-estimators; each was preceded by twenty fits that never serve a prediction and exist only to measure
-how the twenty-first behaves on withheld compounds, 1,420 across the panel.
+conformal interval and an applicability-domain distance. (**B**) The counts in (**A**) are trained
+estimators, 75 in total, of which 70 are deployed. Each was preceded by twenty fits that never serve
+a prediction and exist only to measure how the twenty-first behaves on withheld compounds, 1,480
+across the panel.
 
 ![Figure 2](figures/Figure9_model_atlas.png)
 
 **Figure 2.** The panel, one mark per estimator, so that no claim rests on a mean a reader cannot
-check. (**A**) Every deployed estimator placed by the number of measured compounds it was trained on
+check. (**A**) Every estimator, deployed or withdrawn, placed by the number of compounds it was
+trained on
 and by the performance claimed for it, coloured by model family. Marker shape carries the metric:
 AUROC and R² both run to 1.0 and are not the same quantity, since 0.5 is chance for one and a
-respectable fit for the other, so they are distinguished rather than averaged. The two estimators
+respectable fit for the other, so they are distinguished rather than averaged. The five estimators
 withdrawn after specificity testing are drawn in outline, because a panel showing only what survived
 is a selection rather than an inventory. Training sets span two orders of magnitude, from 68 to 15,723 rows;
 binder training sets include property-matched decoys while the others are measured compounds only,
 which the axis states. (**B**) The same population by family, with the
-family median marked. The spread is the point: the binder classifiers have a median of 0.936 while
+family median marked. The spread is the point: the binder classifiers have a median of 0.935 while
 the exposure and ADME regressions have a median R² of 0.575, and a single panel average would
 describe neither. The complete inventory, with training-set composition, validation scheme,
 calibration and fitting date for every estimator, is Supplementary Table S1.
@@ -467,8 +505,22 @@ scores after exposure gating, and the driving target is named beside each. The t
 same design decision seen from opposite sides: a target score is admitted only in proportion to
 predicted barrier penetration, so a compound that does not arrive cannot generate a disease call.
 
-Supplementary Figures S1 to S5 give the recovery of the measured negative class and its effect per
-endpoint, the feature vector computed for a worked molecule, the two cross-validation schemes, the
-three disjoint background pools, and the complete 49-endpoint binder panel with every endpoint named.
+Supplementary figures, each named by the file it is generated into so that the number and the
+artefact cannot come apart:
+
+**Figure S1** (`figures/Figure5_negative_class.png`). Recovery of the measured negative class
+from censored bounds, and its effect on class balance per endpoint.
+
+**Figure S2** (`figures/Figure2_feature_vector.png`). The 1,036-column feature vector computed
+for a worked molecule, block by block.
+
+**Figure S3** (`figures/Figure3_cv_design.png`). The two cross-validation schemes, random and
+Bemis-Murcko scaffold-grouped, and what each withholds.
+
+**Figure S4** (`figures/Figure4_pools_and_thresholds.png`). The three disjoint background pools
+and the separation between the pool that sets a threshold and the pool that measures it.
+
+**Figure S5** (`figures/Figure7_binder_panel.png`). The complete binder panel, all 52 endpoints
+named, the 47 deployed and the 5 withdrawn distinguished by colour.
 
 <!-- REFERENCES -->

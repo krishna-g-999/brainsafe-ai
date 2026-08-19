@@ -1,6 +1,9 @@
 target,action,old_threshold,new_threshold,reason
 Nav1_1,withdrawn,0.6458,,"compressed probability band; every trivial metabolite scores 0.80 to 0.82 against a 0.796 threshold, so no cut separates them from real ligands"
 Cav3_2,withdrawn,0.155,,"active band compressed near zero, calibrated threshold 0.065, atenolol scores 0.084"
+NRF2,withdrawn,0.3323,,"added to test natural-product coverage. Cross-validated AUROC 0.719 (scaffold, sd 0.157), so not noise, but AUROC 0.539 against its own held-out measured inactives and sensitivity 0.250 at a threshold that controls the background false-positive rate. Of its labelled NPASS records 0.0 per cent are a direct binding constant (Ki or Kd); 1,019 of 1,029 are Potency, a pooled functional readout that does not define a binding class a ligand fingerprint can separate"
+NFKB1,withdrawn,0.4714,,"added to test natural-product coverage. Cross-validated AUROC 0.711 (scaffold, sd 0.151) but AUROC 0.392 against its own held-out measured inactives and sensitivity 0.048 at a usable threshold. Of its labelled NPASS records 0.3 per cent are a direct binding constant; 344 of 362 are Potency. Same cause as NRF2"
+NR3C1,withdrawn,0.6558,,"added to test natural-product coverage. Cross-validated AUROC 0.596 (scaffold, sd 0.152), AUROC 0.479 against its own held-out measured inactives, and sensitivity 0.000: no threshold recovers an active. The only one of the three with real binding data (14.8 per cent Ki or Kd) and the one with too few compounds to fit: 140 after deduplication"
 a3b4nAChR,rethresholded,0.4379,0.45,ethanol scored 0.437 at the calibrated threshold of 0.392
 SIRT1,rethresholded,0.4719,0.65,"random-chemistry false-positive rate 0.058, above the 5 percent intended"
 RIPK1,rethresholded,0.05,0.5,"fired on acetate, glycine and lactate at the floor threshold of 0.050"

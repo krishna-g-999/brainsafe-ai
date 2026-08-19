@@ -19,14 +19,17 @@ background pools kept disjoint. Figures here will not match documents written be
 |---|---|---|---|
 | Target classifier | 8 | 8 | probability the compound is active at that target |
 | Potency regression | 5 | 5 | pChEMBL potency (4 receptors) or DPPH pIC50 (antioxidant) |
-| Binder classifier | 49 | **47** | probability of engagement, called against a per-target threshold |
+| Binder classifier | 52 | **47** | probability of engagement, called against a per-target threshold |
 | ADME / exposure | 9 | 9 | exposure or developability property |
-| **Total** | **71** | **69** | |
+| **Total** | **74** | **69** | |
 
-Two are withdrawn and never scored: **Nav1_1** and **Cav3_2**. Neither has a probability band any
+Five are withdrawn and never scored: **Nav1_1**, **Cav3_2**, **NRF2**, **NFKB1** and **NR3C1**.
+The first two have no probability band any
 threshold can cut. Every trivial metabolite scores 0.80–0.82 against Nav1_1's 0.796 threshold, and
-atenolol scores 0.084 against Cav3_2's 0.065. They remain in `OUTPUT_CATALOGUE.csv` with
-`deployed = False` so the decision is visible rather than the models simply being absent.
+atenolol scores 0.084 against Cav3_2's 0.065. The last three were added to test natural-product
+coverage and failed against their own held-out measured inactives, at AUROC 0.539, 0.392 and 0.479.
+All five remain in `OUTPUT_CATALOGUE.csv` with `deployed = False` so the decision is visible rather
+than the models simply being absent.
 
 **On the figure 66.** No grouping of these artefacts produces 66. The counts that do occur are 69
 (scored outputs), 71 (models on disk), 52 (distinct target names in the knowledge graph, of which one
@@ -87,7 +90,7 @@ stops meaning anything:
 |---|---|
 | `RECIPE_target_classifier.csv` | the 8 property and target classifiers |
 | `RECIPE_potency_regression.csv` | the 4 receptor regressions and the antioxidant model |
-| `RECIPE_binder_classifier.csv` | the 49 binder classifiers |
+| `RECIPE_binder_classifier.csv` | the 52 binder classifiers |
 | `RECIPE_ADME___exposure.csv` | the 9 ADME endpoints |
 
 ### `BLANKS.csv` — what an empty cell means
@@ -112,7 +115,7 @@ Seven distinct kinds of blank, each with its reason.
   min_samples_leaf=2, class_weight="balanced", random_state=42)`.
 - **Calibration:** isotonic, cross-validated. The eight classifiers have a `_calibrated` companion.
 
-### Binder classifiers (49) — `train_binders_hybrid.py`, `train_measured_label_holdout.py`
+### Binder classifiers (52) — `train_binders_hybrid.py`, `train_measured_label_holdout.py`
 
 - **Positives:** measured binders at pChEMBL >= 7. **A fifth of the active scaffold groups is
   withheld and never trained on**, and sensitivity is reported on those.

@@ -122,12 +122,47 @@ class TestDeployedPipeline(unittest.TestCase):
                 self.assertAlmostEqual(a["targets"][ep], b["targets"][ep], delta=1e-12)
 
     def test_withdrawn_endpoints_are_not_offered(self):
-        """Nav1.1 and Cav3.2 were withdrawn; a regression that re-deploys them must fail here."""
+        """Five endpoints are withdrawn; a regression that re-deploys any of them must fail here.
+
+        Nav1.1 and Cav3.2 were withdrawn by the deployed-specificity audit, for firing on trivial
+        metabolites at every threshold. NRF2, NFKB1 and NR3C1 were added later to test whether the
+        panel's natural-product gap could be closed by adding the targets natural products are
+        actually assayed against; they carry some cross-validated signal (scaffold AUROC 0.719,
+        0.711, 0.596) but cannot be given a threshold that recovers actives without firing on
+        unrelated chemistry, at sensitivities of 0.250, 0.048 and 0.000. Re-deploying any of them
+        would put an endpoint on the server that cannot answer the question it is asked.
+
+        This set is deliberately pinned rather than derived: the point of the test is that a change
+        to it must be argued for, not absorbed.
+        """
         import json
         modes = json.loads((MODELS / "binder_modes.json").read_text(encoding="utf-8"))
         withdrawn = {k for k, v in modes.items() if not v.get("deployed", True)}
-        self.assertEqual(withdrawn, {"Nav1_1", "Cav3_2"},
+        self.assertEqual(withdrawn, {"Nav1_1", "Cav3_2", "NRF2", "NFKB1", "NR3C1"},
                          "the withdrawal set changed; if deliberate, update this test and say why")
+
+    def test_every_withdrawal_records_why_and_on_what_evidence(self):
+        """A withdrawal without a recorded reason is an undocumented scientific decision.
+
+        The three natural-product withdrawals had no reason at all until this audit, and the reason
+        was then hand-written into a generated file, where the next pipeline run would have erased
+        it. Both halves are checked: the reason exists, and it points at evidence that is not the
+        deployed-specificity audit for the three endpoints that audit never saw.
+        """
+        import json
+        modes = json.loads((MODELS / "binder_modes.json").read_text(encoding="utf-8"))
+        for ep, rec in modes.items():
+            if rec.get("deployed", True):
+                continue
+            with self.subTest(endpoint=ep):
+                self.assertTrue((rec.get("withdrawn_reason") or "").strip(),
+                                f"{ep} is withdrawn with no recorded reason")
+                self.assertTrue((rec.get("withdrawn_evidence") or "").strip(),
+                                f"{ep} is withdrawn with no evidence pointer")
+        for ep in ("NRF2", "NFKB1", "NR3C1"):
+            with self.subTest(endpoint=ep, check="evidence is not the audit"):
+                self.assertNotIn("deployed_specificity_audit", modes[ep]["withdrawn_evidence"],
+                                 f"{ep} was never deployed, so that audit cannot be its evidence")
 
     def test_unparseable_input_is_rejected_rather_than_scored(self):
         for bad in ("", "   ", "not a molecule"):
