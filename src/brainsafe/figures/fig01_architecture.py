@@ -58,13 +58,18 @@ def counts() -> dict:
                       if not p.name.endswith(("_binder.joblib", "_calibrated.joblib"))])
                + len(list((M / "adme").glob("*.joblib"))))
     deployed = trained - n_withdrawn
-    cv_rows, cv_eps = 0, set()
+    # An estimator is not an endpoint. Four receptors carry both a potency regression and a binder
+    # classifier, so they are cross-validated twice and appear in two fold tables; counting the
+    # union of file:endpoint keys counts estimators, and counting bare endpoint names counts
+    # endpoints. The two totals differ by those four and are reported separately.
+    cv_rows, cv_est, cv_eps = 0, set(), set()
     for f in ("rf_cv_folds", "binder_cv_folds", "adme_cv_folds"):
         p = ROOT / "results" / "tables" / f"{f}.csv"
         if p.exists():
             d = pd.read_csv(p, usecols=["endpoint"])
             cv_rows += len(d)
-            cv_eps |= {f"{f}:{e}" for e in d.endpoint.unique()}
+            cv_est |= {f"{f}:{e}" for e in d.endpoint.unique()}
+            cv_eps |= set(d.endpoint.unique())
     return {
         "core_cls": sorted(core_cls), "core_reg": sorted(core_reg), "aux": sorted(aux),
         "adme": adme, "binders": sorted(bm),
@@ -73,7 +78,8 @@ def counts() -> dict:
         "binder_holdout": [k for k, v in bm.items() if v.get("mode") == "measured_labels_holdout"],
         "binder_deployed": [k for k, v in bm.items() if v.get("deployed", True)],
         "binder_withdrawn": [k for k, v in bm.items() if not v.get("deployed", True)],
-        "n_deployed": deployed, "n_trained": trained, "n_cv_fits": cv_rows, "n_cv_endpoints": len(cv_eps),
+        "n_deployed": deployed, "n_trained": trained, "n_cv_fits": cv_rows,
+        "n_cv_estimators": len(cv_est), "n_cv_endpoints": len(cv_eps),
         "n_calibrators": len(list(M.glob("*_calibrated.joblib"))),
     }
 
@@ -236,7 +242,7 @@ def panel_b(ax, c) -> None:
             (f"{c['n_deployed']}", "deployed estimators, plus\n"
                                    f"{c['n_calibrators']} isotonic calibrators"),
             (f"{c['n_cv_fits']:,}", "cross-validation fits, over\n"
-                                    f"{c['n_cv_endpoints']} cross-validated endpoints"),
+                                    f"{c['n_cv_estimators']} cross-validated estimators"),
             ("300", "trees in every forest,\nleaf size 2"),
             ("1,036", "input columns, identical\nfor every endpoint")]):
         xx = 0.040 + i * 0.245

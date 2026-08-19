@@ -2,10 +2,10 @@
   "schema": 1,
   "version": "1.1",
   "archive": "brainsafe_models_v1.1.tar.gz",
-  "archive_bytes": 837233242,
-  "archive_sha256": "ed375f77646356878b097153d15f999e92b676f47a2d15e765f68b4652b898b9",
-  "n_files": 246,
-  "unpacked_bytes": 2117884787,
+  "archive_bytes": 837744382,
+  "archive_sha256": "bbc979c5f029a91bfe625929c41e7e23bc03b9c301056b2805707946368cf329",
+  "n_files": 252,
+  "unpacked_bytes": 2118441736,
   "urls": [],
   "doi": "",
   "note": "Fetched at start-up by model_fetch.py when models_rf/ is absent. Every file is verified against its checksum before the server loads anything.",
@@ -187,12 +187,12 @@
       "sha256": "e0a809179fd186cad99bdbb44c77ff5c01ce11f8b3a2cd21f7883d66554d4971"
     },
     "models_rf/binder_modes.json": {
-      "bytes": 52364,
-      "sha256": "660b8e7024d43cc226fb22a0b64ff4428cd42bd97b859930f1269f64ef37c9d2"
+      "bytes": 57522,
+      "sha256": "144370c0f7ad2321c04cac796f01f6e61927361dd1bc59f40a26bc6211ec41f3"
     },
     "models_rf/binder_modes.prespecificity.json": {
-      "bytes": 52421,
-      "sha256": "f8c47b1bb4eec7806bc4dfc633a60189be017d69143ca7fbde2174e3661cf19e"
+      "bytes": 57579,
+      "sha256": "3a25c43af8f3933b325ff170170235215a81d64ec70b344aba5f31589e1eb4fe"
     },
     "models_rf/Cav3_2_binder.joblib": {
       "bytes": 634117,
@@ -348,7 +348,7 @@
     },
     "models_rf/holdout/A1_binder.joblib": {
       "bytes": 3873884,
-      "sha256": "29ec900e04738399aec71ff69bb7bee3c59b359add73cb9e8cf87e8ee6b1f1c2"
+      "sha256": "36fa4b9bb4176375a20cf09b4ab1ea4c957ef8bdcad82e42670a641433c133fb"
     },
     "models_rf/holdout/A1_binder_holdout.json": {
       "bytes": 151124,
@@ -356,7 +356,7 @@
     },
     "models_rf/holdout/A2A_binder.joblib": {
       "bytes": 6096584,
-      "sha256": "8ea6b2f71277dc1b99d84ded4c6d4cdbb051745b4b2e101643d7b51ad15f5b1c"
+      "sha256": "3c69c5eb6fca3bf772d8d80185b92bbdf5ca590ef8ae872075bd51d6ffee40aa"
     },
     "models_rf/holdout/A2A_binder_holdout.json": {
       "bytes": 279256,
@@ -379,8 +379,8 @@
       "sha256": "4402f94b958e515dd536ff9aec79a1e14ce2acb3a93a720947ef25622bb25451"
     },
     "models_rf/holdout/a7nAChR_binder.joblib": {
-      "bytes": 825161,
-      "sha256": "766e88cab250cfb34185b140086e0f28d741fe62bc7b89fa54d1959651ad5e37"
+      "bytes": 825163,
+      "sha256": "3790b1c2e7c0d3d12dbe717aa4d9f38f2e8068c9ba74d90d9873760028189822"
     },
     "models_rf/holdout/a7nAChR_binder_holdout.json": {
       "bytes": 43528,
@@ -396,7 +396,7 @@
     },
     "models_rf/holdout/CB1_binder.joblib": {
       "bytes": 5650160,
-      "sha256": "43adf27971d25a95768861299256481aa141d30bb7d56788cc8f9d8dcb6c19f9"
+      "sha256": "94385f64983aabd7e8c0b65dda3793510059964e3e3d0b8a45ea1fe39ec17098"
     },
     "models_rf/holdout/CB1_binder_holdout.json": {
       "bytes": 348442,
@@ -420,7 +420,7 @@
     },
     "models_rf/holdout/CSF1R_binder.joblib": {
       "bytes": 3437551,
-      "sha256": "ed70d3591ac582f27af98b87547cd5d61c0207ef420d9604e612d1ca366a7f82"
+      "sha256": "11cdd7b2581cb96dc4ed516580f32112de629810c3676852cecdb9e2bb218e8a"
     },
     "models_rf/holdout/CSF1R_binder_holdout.json": {
       "bytes": 118100,
@@ -428,7 +428,7 @@
     },
     "models_rf/holdout/D2_binder.joblib": {
       "bytes": 6575465,
-      "sha256": "35d75cf1cef060c31d5ab261cfcdea2d048abaae1d78a147a45868192c04e872"
+      "sha256": "dfec28b445cdcd01572ebf9496f87188fa936dd5597f54bd7da61dcf824615af"
     },
     "models_rf/holdout/D2_binder_holdout.json": {
       "bytes": 269235,
@@ -436,7 +436,7 @@
     },
     "models_rf/holdout/D3_binder.joblib": {
       "bytes": 5956372,
-      "sha256": "6859ab5f2bb59405ff850d12a28aaf53e64faa7e3d7c14a68189cc686f228fda"
+      "sha256": "da9f95049487e039c425db52f71788592cfdd5c9cc5738afcb4e79d340f3d904"
     },
     "models_rf/holdout/D3_binder_holdout.json": {
       "bytes": 267858,
@@ -444,7 +444,7 @@
     },
     "models_rf/holdout/DAT_binder.joblib": {
       "bytes": 2695953,
-      "sha256": "bd520ef75a63d358bc18fac0e1edd2cb5bad2399542d8a8ccf6b5319b27eac5b"
+      "sha256": "f50c1b456fd69b0deef71bfe7a2f8e71e972a1a3dd73bfe72164630254ff3f2f"
     },
     "models_rf/holdout/DAT_binder_holdout.json": {
       "bytes": 104958,
@@ -460,7 +460,7 @@
     },
     "models_rf/holdout/GABA_A_binder.joblib": {
       "bytes": 577868,
-      "sha256": "ccd72a289b92404c98d540fd0adcc7e26cf45138bc6cdcb2aa30e7199b63aadf"
+      "sha256": "4fae305f0633a9c79c40901083d99c888eddd826a2a2fcf6b0f3d0e25dc8a900"
     },
     "models_rf/holdout/GABA_A_binder_holdout.json": {
       "bytes": 13108,
@@ -475,8 +475,8 @@
       "sha256": "76bf90cf15e7c6a4f1273753a4a56e84710bf7b46fa62ffccfc6d447e0c8c9b2"
     },
     "models_rf/holdout/GluA2_binder.joblib": {
-      "bytes": 306858,
-      "sha256": "12511630a5dd8e43cad2c7a010450f8e652c6f1602b953df5ccd4c2a9e1db48f"
+      "bytes": 306859,
+      "sha256": "0e3d5fc6893703cc6bc2e647948b8cf09ac2a6abe851e99dddd016430a100e26"
     },
     "models_rf/holdout/GluA2_binder_holdout.json": {
       "bytes": 12090,
@@ -484,7 +484,7 @@
     },
     "models_rf/holdout/GluN2B_binder.joblib": {
       "bytes": 1501705,
-      "sha256": "cceeaba91c283572fdd4103d5b8da1aa4023ff03cdc5f06a44665a022f8e411b"
+      "sha256": "ca02ae13bcdd72ac0ddb8980b7f41ac8ab218a664e789656bc7040fe70d02952"
     },
     "models_rf/holdout/GluN2B_binder_holdout.json": {
       "bytes": 48594,
@@ -492,15 +492,15 @@
     },
     "models_rf/holdout/H3_binder.joblib": {
       "bytes": 5189809,
-      "sha256": "6f7d8c5b8693c9bfa70817969a9d480fd6ca4f3b7d6147943050685b24d473b6"
+      "sha256": "9b6c088481847b2188cb49bcd1b8664db0ae649c36f7d4b6358a321db514a139"
     },
     "models_rf/holdout/H3_binder_holdout.json": {
       "bytes": 180206,
       "sha256": "aa2d6f24bbb27377e6fde1330edf3767c0df74494e08ab0bf0d6f67d7f006cc4"
     },
     "models_rf/holdout/HDAC1_binder.joblib": {
-      "bytes": 4685332,
-      "sha256": "6294a98fff9147c59059873f48eaf1eb43dcbbfc27f0456bac4a06b975d75003"
+      "bytes": 4685333,
+      "sha256": "9002ea3111d1991fb54ea1b68dc8c0e91431a1d1e27e024460847feecbb6b765"
     },
     "models_rf/holdout/HDAC1_binder_holdout.json": {
       "bytes": 270282,
@@ -520,7 +520,7 @@
     },
     "models_rf/holdout/HT1A_binder.joblib": {
       "bytes": 5988275,
-      "sha256": "862375c913514a8312b1ccdb40b0ffd74614144a05a63ea1f9b565229b00cc77"
+      "sha256": "87fa181174b4d16f0ce2ae8338e708e652be1c9ba4c87eb946c7520d3b3d585a"
     },
     "models_rf/holdout/HT1A_binder_holdout.json": {
       "bytes": 224571,
@@ -528,7 +528,7 @@
     },
     "models_rf/holdout/HT2A_binder.joblib": {
       "bytes": 7224025,
-      "sha256": "941d16d949a18a9ba152dbe7f65b667debbf2d5f8623e566e1390606c0335977"
+      "sha256": "70f7a8c10dcd6bbfbee7186ecdcf143915962929c5e1f41de452ad00edf0e276"
     },
     "models_rf/holdout/HT2A_binder_holdout.json": {
       "bytes": 231230,
@@ -536,7 +536,7 @@
     },
     "models_rf/holdout/HT6_binder.joblib": {
       "bytes": 4120330,
-      "sha256": "2e3a59cfd3db796eea87c03a24f34f7684d528563128db7cc4ebd25398a8c63f"
+      "sha256": "c44bbcbabcd78a4cadd3e388763d7d686d7f3898ce9aff30db0d83da362f0923"
     },
     "models_rf/holdout/HT6_binder_holdout.json": {
       "bytes": 154739,
@@ -552,7 +552,7 @@
     },
     "models_rf/holdout/KEAP1_binder.joblib": {
       "bytes": 319616,
-      "sha256": "3679679b7e175b76d226c5776daa6e738357844f3132069161272812fb49affc"
+      "sha256": "30edfeb5851391e5f5a2b6d5a95bab0d50e8ef60b5aa000b136ac70817b2f219"
     },
     "models_rf/holdout/KEAP1_binder_holdout.json": {
       "bytes": 34258,
@@ -576,7 +576,7 @@
     },
     "models_rf/holdout/MT1_binder.joblib": {
       "bytes": 1097296,
-      "sha256": "878bd5c7eb9621e689a4f72b4b805349635f5362d0f48cdacaf4e3ba9baf75b7"
+      "sha256": "e06012ed542bb1195e34d7253852b9c7fec4d3d1f230a61e65f855331e873154"
     },
     "models_rf/holdout/MT1_binder_holdout.json": {
       "bytes": 32009,
@@ -584,7 +584,7 @@
     },
     "models_rf/holdout/mTOR_binder.joblib": {
       "bytes": 3998303,
-      "sha256": "2200928efc7ec27b94d882ec253d2f6979ef04c39e03d53146e330c9a875b36a"
+      "sha256": "15bf72f4fdef07aa8e11dc438fe0f4467e5f0d66ec31cf8ac16f755bc8fa1a0c"
     },
     "models_rf/holdout/mTOR_binder_holdout.json": {
       "bytes": 255506,
@@ -600,7 +600,7 @@
     },
     "models_rf/holdout/Nav1_5_binder.joblib": {
       "bytes": 992682,
-      "sha256": "a7177f3aec3117924c976ca3a8e33cfaf1c39fa58cd182a02cf55aae3c3c76f1"
+      "sha256": "dbe608e89789e9fb15290c106f9df4cc22cf7e0f61f312ba3a4bc69a42b97552"
     },
     "models_rf/holdout/Nav1_5_binder_holdout.json": {
       "bytes": 156823,
@@ -615,8 +615,8 @@
       "sha256": "4d41352cd62b4ec66acf2c54a034abdffcea0edd5b21bbdc9999961afc909bea"
     },
     "models_rf/holdout/Nav1_7_binder.joblib": {
-      "bytes": 3654864,
-      "sha256": "270c941867b557f7d5b948310174b472b623146a89cddb2241262d0de229798a"
+      "bytes": 3654863,
+      "sha256": "f42bac34abc54823de1facfd0af7015ad5a88446dd777d5647901f33f4a3ac72"
     },
     "models_rf/holdout/Nav1_7_binder_holdout.json": {
       "bytes": 318018,
@@ -632,23 +632,35 @@
     },
     "models_rf/holdout/NET_binder.joblib": {
       "bytes": 2973991,
-      "sha256": "3d999940f2f6cd41ab205f2fa5bf4b76eb04b261aa2b5c591c345a699ea03745"
+      "sha256": "05b14a7e484a3f595345edba4ac237fe94a196bf39d5790d0406ff2c3576915e"
     },
     "models_rf/holdout/NET_binder_holdout.json": {
       "bytes": 97006,
       "sha256": "6c6d42b16c8bfab0878e3344a14ebcd2f612d3f3592044dcfe36d03f4adca07c"
     },
+    "models_rf/holdout/NFKB1_binder_holdout.json": {
+      "bytes": 11006,
+      "sha256": "48bb39e50224ec55fc74f995e89d8eee2bcf2a686098331a0baac49c73a735fa"
+    },
     "models_rf/holdout/NLRP3_binder.joblib": {
-      "bytes": 532274,
-      "sha256": "f6d0039dd5bb17bc2c6b0d61ba439b0ad90fe85ce5ec9920b73a75bd6da8b4ce"
+      "bytes": 532273,
+      "sha256": "667210d45f21fbc2834eb3de2ddc0ab662f4bc44f3d677f222b46d61c3fa7e5e"
     },
     "models_rf/holdout/NLRP3_binder_holdout.json": {
       "bytes": 24216,
       "sha256": "51f80b35c5d93c93e1ee41ec30a120f7cf0200c4c1da759c837dc8b0657cf958"
     },
+    "models_rf/holdout/NR3C1_binder_holdout.json": {
+      "bytes": 6429,
+      "sha256": "aa820e6b2e4a16242c999f3776ec5d067e420d83166d654009fdc987aacfd86c"
+    },
+    "models_rf/holdout/NRF2_binder_holdout.json": {
+      "bytes": 29108,
+      "sha256": "e82453d7cbc364e9feb2cd7120e04712db39b0c775e4f8c05da5d551287eee1b"
+    },
     "models_rf/holdout/OPRK1_binder.joblib": {
-      "bytes": 5189329,
-      "sha256": "f3849d53a438c5db6295378096d693f62c1aa0c3ba3f3fae947b39c99f0ad2ce"
+      "bytes": 5189328,
+      "sha256": "eede26b781f5c8320b55e23e869dd2d25e906db342e0f89697766c4750fd8899"
     },
     "models_rf/holdout/OPRK1_binder_holdout.json": {
       "bytes": 305798,
@@ -664,7 +676,7 @@
     },
     "models_rf/holdout/OX1_binder.joblib": {
       "bytes": 4118716,
-      "sha256": "3abbff987f6750eaa2e5031a34f758ce93bd81cb510fa7f2f2fa8b2f688bf5ce"
+      "sha256": "34782661657fb30ce429f194c390c38de18317fdb6aa44967db4e66e4c5fc18f"
     },
     "models_rf/holdout/OX1_binder_holdout.json": {
       "bytes": 286578,
@@ -672,7 +684,7 @@
     },
     "models_rf/holdout/OX2_binder.joblib": {
       "bytes": 5437888,
-      "sha256": "9d0f1a945e1db5bdf906d4fb0ec99ab2289af81f2cb1b2180e5a52ff00fb657b"
+      "sha256": "67cc81aa4e35621554d9984d2134ecceeb84701f95af27702e93d94944386500"
     },
     "models_rf/holdout/OX2_binder_holdout.json": {
       "bytes": 321349,
@@ -712,7 +724,7 @@
     },
     "models_rf/holdout/SERT_binder.joblib": {
       "bytes": 5627557,
-      "sha256": "36ad35de927c3603bf80bc9a068bdec50792a96b29e93165f2cd33ec8cbd60e9"
+      "sha256": "ab2d940c583a7a682df482ba874baf4a750a6e1b80716d2d18080aacc2f46a68"
     },
     "models_rf/holdout/SERT_binder_holdout.json": {
       "bytes": 169763,
@@ -720,7 +732,7 @@
     },
     "models_rf/holdout/Sigma1_binder.joblib": {
       "bytes": 3910699,
-      "sha256": "513f082f2e5cf28b1e39ddb0070f3031e22380e20a050ad3961d82809234eb43"
+      "sha256": "851bfb1b390c9fda5b20015e05e47a54fae6ce1581d8f7e62a63129d98cfb831"
     },
     "models_rf/holdout/Sigma1_binder_holdout.json": {
       "bytes": 93242,
@@ -728,7 +740,7 @@
     },
     "models_rf/holdout/SIRT1_binder.joblib": {
       "bytes": 522508,
-      "sha256": "4998dc441ace046e5c8869301fd141b8df7087d24c2a91d95f9d60ae04de00fa"
+      "sha256": "36d2cd7d2d0baf35233d3d9408d0b5a97cb649ca1c4f205df3b6e33bc6932b91"
     },
     "models_rf/holdout/SIRT1_binder_holdout.json": {
       "bytes": 42179,
@@ -878,6 +890,10 @@
       "bytes": 664,
       "sha256": "038c20b1195f742208fca231e5bfddcd8f39c350926bd135422171533ac20641"
     },
+    "models_rf/NFKB1_binder.joblib": {
+      "bytes": 117489,
+      "sha256": "b82f4c8c1d031cdc8247b3ae0455d4c1c73adc35a20f3eb82e7dc2a1632bb297"
+    },
     "models_rf/NLRP3_binder.joblib": {
       "bytes": 589566,
       "sha256": "2e2aaf4c7da22198c84b8725e894f83e6085c596abe147c3b31be68d9126423b"
@@ -885,6 +901,14 @@
     "models_rf/NLRP3_binder_meta.json": {
       "bytes": 661,
       "sha256": "4931428c9a59581c2b161febb540824e6cd68b87fe98a92c2b993aacc1401bf1"
+    },
+    "models_rf/NR3C1_binder.joblib": {
+      "bytes": 82167,
+      "sha256": "4f168ad6b81f3b75438fdc8b38b4b61ae447428a0a58f661286badb15f8ab171"
+    },
+    "models_rf/NRF2_binder.joblib": {
+      "bytes": 300433,
+      "sha256": "197dc865c300da44ca4799bbd50baacc5798afd1264e2426c39d846f22493a9e"
     },
     "models_rf/OPRK1_binder.joblib": {
       "bytes": 5390479,

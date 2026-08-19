@@ -83,10 +83,19 @@ GRAPH: list[tuple[str, list[str], str]] = [
     # Nav1_5, and running it without apply_specificity_decisions.py afterwards would re-deploy two
     # endpoints that were withdrawn for firing on glucose and atenolol. The whole sequence is
     # therefore quoted as the rebuild command for every member of it.
-    ("results/tables/final_thresholds.csv", ["models_rf/binder_modes.json"], THRESHOLD_SEQUENCE),
-    ("results/tables/screening_thresholds.csv", ["models_rf/binder_modes.json"],
+    # These three depend on the fitted binder models, NOT on binder_modes.json, even though every
+    # step of the sequence reads it. binder_modes.json is a co-output of this same sequence: steps
+    # three and four rewrite it after step one has written final_thresholds.csv, so an edge from it
+    # to these tables can never be satisfied. A correct, complete run left them reported stale, and
+    # re-running to clear the report re-ran step one alone, which is precisely the ordering hazard
+    # above. A check that cannot be satisfied by doing the right thing teaches the reader to ignore
+    # it. The binder .joblib files carry the same signal without the cycle: they change when the
+    # panel is retrained, which is when these thresholds genuinely must be re-derived, and the
+    # threshold sequence never writes them.
+    ("results/tables/final_thresholds.csv", ["models_rf/*_binder.joblib"], THRESHOLD_SEQUENCE),
+    ("results/tables/screening_thresholds.csv", ["models_rf/*_binder.joblib"],
      THRESHOLD_SEQUENCE),
-    ("results/tables/background_specificity.csv", ["models_rf/binder_modes.json"],
+    ("results/tables/background_specificity.csv", ["models_rf/*_binder.joblib"],
      THRESHOLD_SEQUENCE),
 
     # ---- the evaluation layer, all of it downstream of the models ------------------------------

@@ -161,5 +161,47 @@ class TestDeterminism(unittest.TestCase):
         np.testing.assert_array_equal(a.predict_proba(X), b.predict_proba(X))
 
 
+class TestThresholdSequenceIsAtomic(unittest.TestCase):
+    """The four threshold scripts must be treated as one unit, by the code and by the checker.
+
+    Running `final_thresholds.py` alone reverts the tightening that
+    `calibrate_background_specificity.py` applied and re-deploys endpoints that
+    `apply_specificity_decisions.py` withdrew. It has happened twice: once found by the audit, and
+    once again while clearing a freshness report that could not be cleared, because the checker
+    declared these tables to depend on a file the same sequence rewrites. Both failures are silent.
+    """
+
+    def setUp(self):
+        sys.path.insert(0, str(ROOT / "tools"))
+        import check_freshness
+        self.cf = check_freshness
+
+    def test_every_member_of_the_sequence_rebuilds_the_whole_sequence(self):
+        members = [n for n, _inputs, cmd in self.cf.GRAPH if cmd == self.cf.THRESHOLD_SEQUENCE]
+        self.assertGreaterEqual(len(members), 3,
+                                "the threshold tables should share one rebuild command")
+        for step in ("final_thresholds.py", "screening_thresholds.py",
+                     "apply_specificity_decisions.py", "calibrate_background_specificity.py"):
+            self.assertIn(step, self.cf.THRESHOLD_SEQUENCE,
+                          f"{step} missing from the sequence; running the rest alone reverts it")
+
+    def test_no_threshold_table_depends_on_a_file_the_sequence_rewrites(self):
+        """An output of the sequence must never be an input to another output of it.
+
+        Such an edge can never be satisfied: the later steps rewrite the file after the earlier
+        steps wrote the table, so the table is reported stale immediately after a correct run, and
+        the natural way to clear that report is to re-run one step alone.
+        """
+        rewritten = {"models_rf/binder_modes.json"}
+        for name, inputs, cmd in self.cf.GRAPH:
+            if cmd != self.cf.THRESHOLD_SEQUENCE:
+                continue
+            for src in inputs:
+                self.assertNotIn(
+                    src, rewritten,
+                    f"{name} depends on {src}, which the same sequence rewrites; this edge is "
+                    f"unsatisfiable and drove a re-run of one step in isolation")
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

@@ -52,7 +52,7 @@ estimates.
 | Test suite, 33 tests | 84 s |
 | Test suite under coverage instrumentation | 980 s (16 min 20 s) |
 | Core cross-validation, 13 endpoints, independent re-run | 962 s |
-| Binder panel retrain, 49 endpoints | ~95 min |
+| Binder panel retrain, 52 endpoints | ~95 min |
 | Non-CNS specificity, 1,000 compounds through the full pipeline | ~28 min |
 | Container build | not measured; see Blockers |
 
