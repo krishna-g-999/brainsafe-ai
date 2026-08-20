@@ -90,6 +90,53 @@ def as_text(code: str) -> str:
     return "\n".join(lines)
 
 
+def polish(path: Path) -> None:
+    """Apply what a stylesheet cannot: header-row repetition, header shading, column widths.
+
+    These are properties of each table instance rather than of the style, so they cannot be set in
+    the reference document and have to be applied after pandoc has written the file.
+    """
+    import docx
+    from docx.enum.table import WD_TABLE_ALIGNMENT
+    from docx.oxml import OxmlElement
+    from docx.oxml.ns import qn
+    from docx.shared import Pt
+
+    d = docx.Document(str(path))
+    for tbl in d.tables:
+        tbl.alignment = WD_TABLE_ALIGNMENT.CENTER
+        tbl.autofit = True
+        # Let Word size the columns to their content instead of the fixed grid pandoc emits, which
+        # is what makes one long text column squeeze every other column to nothing.
+        tblpr = tbl._tbl.tblPr
+        layout = OxmlElement("w:tblLayout")
+        layout.set(qn("w:type"), "autofit")
+        tblpr.append(layout)
+
+        head = tbl.rows[0]
+        trpr = head._tr.get_or_add_trPr()
+        rep = OxmlElement("w:tblHeader")            # repeat on every page the table spans
+        rep.set(qn("w:val"), "true")
+        trpr.append(rep)
+        for cell in head.cells:
+            shd = OxmlElement("w:shd")
+            shd.set(qn("w:val"), "clear")
+            shd.set(qn("w:fill"), "EAF0F7")
+            cell._tc.get_or_add_tcPr().append(shd)
+            for para in cell.paragraphs:
+                for run in para.runs:
+                    run.font.bold = True
+                    run.font.size = Pt(8.5)
+        # A very wide table is set a point smaller so it still fits the text column.
+        if len(tbl.columns) >= 6:
+            for row in tbl.rows[1:]:
+                for cell in row.cells:
+                    for para in cell.paragraphs:
+                        for run in para.runs:
+                            run.font.size = Pt(7.8)
+    d.save(str(path))
+
+
 def main() -> None:
     if not SRC.exists():
         raise SystemExit(f"{SRC} not found; run build_technical_report.py first")
@@ -139,13 +186,18 @@ def main() -> None:
     tmp_md.write_text(text, encoding="utf-8")
     try:
         import pypandoc
-        pypandoc.convert_file(
-            str(tmp_md), "docx", outputfile=str(OUT),
-            extra_args=["--resource-path", str(ROOT / "docs"),
-                        "--resource-path", str(ROOT),
-                        "--toc", "--toc-depth=3", "-V", "geometry:margin=2cm"])
+        args = ["--resource-path", str(ROOT / "docs"), "--resource-path", str(ROOT),
+                "--toc", "--toc-depth=3"]
+        ref = ROOT / "docs" / "report_reference.docx"
+        if not ref.exists():
+            import report_reference_docx
+            report_reference_docx.main()
+        args += ["--reference-doc", str(ref)]
+        pypandoc.convert_file(str(tmp_md), "docx", outputfile=str(OUT), extra_args=args)
     finally:
         tmp_md.unlink(missing_ok=True)
+
+    polish(OUT)
 
     size = OUT.stat().st_size / 1e6
     print(f"\nwrote {OUT.relative_to(ROOT)}  ({size:.2f} MB)")

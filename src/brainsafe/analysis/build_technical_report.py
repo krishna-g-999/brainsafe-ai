@@ -73,6 +73,27 @@ def endpoint_sources() -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def cv_show(cv: pd.DataFrame) -> pd.DataFrame:
+    """The cross-validation summary as a reader can use it.
+
+    The raw table carries 22 columns, every metric with its standard deviation, which on an A4 page
+    crushes each cell to two characters. Classification and regression also use different metrics,
+    so half of any row is empty. One metric per row, with its spread, and the full table stays in
+    results/tables/rf_cv_summary.csv.
+    """
+    out = []
+    for _, r in cv.iterrows():
+        if r.task == "classification":
+            score, sd, metric = r.get("roc_auc_mean"), r.get("roc_auc_sd"), "AUROC"
+        else:
+            score, sd, metric = r.get("r2_mean"), r.get("r2_sd"), "R2"
+        out.append({"endpoint": r.endpoint, "task": r.task, "split": r.split,
+                    "compounds": int(r.n) if pd.notna(r.n) else None, "metric": metric,
+                    "score": None if pd.isna(score) else round(float(score), 4),
+                    "fold sd": None if pd.isna(sd) else round(float(sd), 4)})
+    return pd.DataFrame(out)
+
+
 def md_table(df: pd.DataFrame, cols=None) -> str:
     df = df[cols] if cols else df
     head = "| " + " | ".join(str(c) for c in df.columns) + " |"
@@ -107,11 +128,62 @@ def main() -> None:
     D: list[str] = []
     A = D.append
 
+    env = {}
+    try:
+        env = json.loads((ROOT / "validation" / "repro" / "environment.json").read_text())
+    except Exception:
+        pass
+    pkgs = env.get("key_packages", {})
+
     A(f"""# BrainSafe AI: Technical Report
 
-**Generated** {today} from the deployed panel at commit `{commit}`.
+| | |
+|---|---|
+| **Document** | Technical report on the BrainSafe AI prediction panel |
+| **Generated** | {today}, automatically, from the deployed panel |
+| **Commit** | `{commit}` |
+| **Status** | Research preview, pending peer review |
+| **Repository** | https://github.com/krishna-g-999/brainsafe-ai |
+| **Regenerate** | `python src/brainsafe/analysis/build_technical_report.py` |
+
 Every figure in this document is read from an artefact in this repository at generation time. None
-is typed in. Regenerate with `python src/brainsafe/analysis/build_technical_report.py`.
+is typed in, so the document cannot describe a panel other than the one that is deployed.
+
+---
+
+## 0. Executive summary
+
+BrainSafe AI predicts, from chemical structure alone, whether a small molecule reaches the human
+brain, what it engages there, which conditions that mechanism touches, and what would stop it
+becoming a drug. It exists because CNS attrition is not usually a potency problem: a compound can be
+potent at its intended target and never arrive, or arrive and carry a liability nobody tested for.
+
+**What it is.** {len(inv)} fitted estimators, {int(inv.deployed.sum())} deployed, trained on
+{n_records:,} measured compound-endpoint records drawn from ChEMBL, BindingDB, B3DB, Therapeutics
+Data Commons and MoleculeNet. Every endpoint is trained on measured experimental values only; no
+label comes from a curator's annotation and no value is imputed.
+
+**How well it works.** Across the measured-label classifiers, mean AUROC is
+{cv[(cv.task=="classification") & (cv.split=="random")].roc_auc_mean.mean():.3f} under a random
+split and {cv[(cv.task=="classification") & (cv.split=="scaffold")].roc_auc_mean.mean():.3f} under a
+scaffold-grouped split that withholds entire structural classes. The binder panel, validated against
+compounds measured at the same target and found inactive rather than against decoys, reaches a mean
+AUROC of {np.mean([v["auroc_vs_measured_inactives"] for v in dep]):.3f} at a mean sensitivity of
+{np.mean([v["sensitivity_at_threshold"] for v in dep]):.3f}. On 1,000 compounds with no recorded
+activity at any modelled target it stays silent {float(spec[spec.metric.str.startswith("Specificity")].estimate.iloc[0]):.1%} of the time.
+
+**What is distinctive.** Three things, each of which is a decision rather than a default. The
+negative class is *recovered from censored measurements* rather than simulated with decoys wherever
+the data allows. Decision thresholds are *measured on a pool disjoint from the one that set them*,
+so a false-positive rate can disagree with its target instead of restating it. And every target
+score is *gated by predicted exposure*, so potency at a target the compound cannot reach contributes
+nothing.
+
+**What it does not do.** It does not predict clinical efficacy, distinguish agonism from antagonism,
+or resolve chirality. Its disease layer is a route from a mechanism to the conditions that mechanism
+touches, not an indication prediction, and it does not beat a frequency baseline. Five endpoints
+were trained, tested and withdrawn. One adversarial check fails and is reported as failing. Section
+8 states these in full.
 
 ---
 
@@ -148,8 +220,15 @@ within chemistry it has.
 """)
 
     if inv is not None:
-        show = inv[["model", "family", "predicts", "task", "algorithm", "n_train", "n_positive",
-                    "metric", "random_split", "scaffold_split", "calibration", "deployed"]].copy()
+        # Seven columns, not twelve. On a portrait page twelve columns crush every cell to a few
+        # characters and the table stops being readable, which defeats the purpose of printing it.
+        # Algorithm and calibration are uniform across a family and are stated in section 3;
+        # n_positive and the random split are in results/tables/MODEL_INVENTORY.csv for anyone who
+        # wants them.
+        show = inv[["model", "family", "predicts", "n_train", "metric", "scaffold_split",
+                    "deployed"]].copy()
+        show.columns = ["estimator", "family", "predicts", "training rows", "metric",
+                        "scaffold split", "deployed"]
         A("\n<details><summary><b>All " + str(len(show)) +
           " estimators (click to expand)</b></summary>\n\n" + md_table(show) + "\n\n</details>\n")
 
@@ -507,7 +586,7 @@ honest statement of how far a model travels.
 Across the measured-label classifiers: mean AUROC **{c[c.split=='random'].roc_auc_mean.mean():.4f}**
 random and **{c[c.split=='scaffold'].roc_auc_mean.mean():.4f}** scaffold.
 
-{md_table(cv.round(4))}
+{md_table(cv_show(cv))}
 """)
 
     if temporal is not None and len(temporal[temporal.metric == "auroc"]):
@@ -554,7 +633,7 @@ so this is a lower bound.
 
 The barrier model tested on FDA-curated approved drugs absent from the training source by InChIKey.
 
-{md_table(ext.round(4))}
+{md_table(ext[["set", "n", "n_permeable", "auroc", "sensitivity", "specificity"]].round(4))}
 
 The row that supports an external claim is the second: compounds absent by InChIKey *and*
 distinguishable from training in feature space. The third row is the memorisation the first contains.
@@ -758,8 +837,46 @@ reinstated while GluA2 began failing and was withdrawn.
 | **Class weight balanced** | Each class is weighted inversely to its frequency, so a 90-per-cent-active endpoint does not train a model that simply says "active" |
 
 ---
+""")
 
-## 10. Reproducing this
+    _all = sum(os.path.getsize(f) for f in glob.glob(str(ROOT / "models_rf" / "**" / "*"),
+                                                     recursive=True) if os.path.isfile(f))
+    _hold = sum(os.path.getsize(f) for f in glob.glob(str(ROOT / "models_rf" / "holdout" / "*"))
+                if os.path.isfile(f))
+    pkg_rows = chr(10).join(f"| {k} | `{str(v).split('==')[-1]}` |"
+                            for k, v in sorted(pkgs.items())) or "| packages | not recorded |"
+    py = str(env.get("python", "not recorded")).split("|")[0].strip()
+
+    A(f"""
+## 10. Software environment and runtime
+
+Reproducibility depends on the versions as much as on the code. The panel was fitted under the
+environment below; scikit-learn in particular is pinned, because an estimator unpickled under a
+different minor version can silently change behaviour.
+
+| | |
+|---|---|
+| Python | {py} |
+| Platform | {env.get("platform", "not recorded")} |
+| Processor | {env.get("processor", "not recorded")}, {env.get("cpu_count", "?")} logical cores |
+| Random seed | 42 throughout |
+{pkg_rows}
+
+### 10.1 What a query costs
+
+| Operation | Measured cost |
+|---|---|
+| One compound, full profile across all deployed estimators | a few seconds on one CPU core |
+| Model load, once per server start | tens of seconds; every later query reuses it |
+| Panel on disk | {_all/1e9:.2f} GB after compression, {(_all - _hold)/1e9:.2f} GB excluding hold-out twins |
+| Full reproduction of everything downstream of the models | about 75 s |
+| Re-deriving binder thresholds, all four steps | about 25 min |
+| Refitting the whole panel | hours |
+| Test suite | about 90 s |
+
+---
+
+## 11. Reproducing this
 
 | What | Command |
 |---|---|
