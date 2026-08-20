@@ -5,7 +5,7 @@ probabilities), receptor potency, an hERG safety flag, the ADME / exposure (ADME
 directly-modelled unbound brain exposure (K_p,uu) with a free-brain-exposure verdict, BBB-gated
 per-disease target-engagement scores, a compound-target-disease network, and an applicability-domain
 confidence with the nearest measured analogue. Every number is a model output on measured public data
-(64,474 records); this is a research triage tool, not a clinical or diagnostic device.
+(228,200 records); this is a research triage tool, not a clinical or diagnostic device.
 
 Visual identity (navy + gold, SAI-Net / SSSIHL) matches the earlier BrainSafe app; the science is the
 current validated model set. Run:  streamlit run app.py
@@ -262,6 +262,11 @@ NAVY   = "#0D2137"
 NAVY_DK = "#071626"
 NAVY_MD = "#1A3A5C"
 GOLD   = "#F0A500"
+# Tab bar. White type on the brand gold reaches only 2.1:1 and on the logo orange 2.9:1,
+# both well under the 4.5:1 that 13px bold body text needs, so the bar uses deeper tints of
+# the same hue: 5.2:1 for the bar and 7.3:1 for the selected tab. Measured, not judged by eye.
+TAB_BAR  = "#C2410C"   # white on this: 5.18:1
+TAB_ACTIVE = "#9A3412" # white on this: 7.31:1
 BG     = "#EEF2F9"
 SURF   = "#FFFFFF"
 LINE   = "#E6ECF5"
@@ -505,6 +510,20 @@ BINDER_FLOOR = 0.40  # calibrated binder probability below this is treated as no
 # omeprazole, insulin glargine and the rest) falls silent while genuine signals are retained.
 # Below this value a score reflects weak, non-specific engagement and is not shown as a finding.
 MIN_ACTIONABLE_SCORE = 0.30
+
+# The smallest engagement signal reported as an engaged target, anywhere in the interface.
+#
+# This was a local constant inside the mechanism map while every other view filtered on `> 0`, so
+# one compound reported different mechanisms depending on which panel a reader opened: the map drew
+# five targets for haloperidol, and the batch table drew six, the extra one a 5-HT7 signal of 0.02.
+# The export field was labelled "targets with a signal above threshold" while applying a threshold
+# of zero. A signal this small is a probability that has barely cleared its own calibrated cut, and
+# presenting it beside a 0.93 as though the two were comparable findings overstates it.
+#
+# Disease scoring deliberately does NOT apply this floor. It consumes the raw signal and is gated
+# afterwards by MIN_ACTIONABLE_SCORE, so a weak mechanism can still contribute to a condition
+# without being listed as an engaged target in its own right.
+MIN_ENGAGEMENT_SIGNAL = 0.06
 
 
 @st.cache_resource
@@ -1017,16 +1036,52 @@ def inject_css():
         .bs-searchcard p.d {{ font-size:var(--t-sm); color:#4A5568; margin:0 0 var(--s2); line-height:1.6; }}
 
         /* ---- tabs: a segmented control rather than a browser tab strip ---- */
-        [data-baseweb="tab-list"] {{ gap:var(--s1) !important; background:#E4EBF5; padding:var(--s1);
-            border-radius:var(--r-md); border:1px solid #DAE3EF; margin-bottom:var(--s4);
+        /* Orange bar, white type, with the selected tab a deeper tint of the same hue so the bar
+           reads as one control and the active page is obvious. The tints are chosen by measurement:
+           at 13px bold, white needs 4.5:1, which the brand gold (2.1:1) and the logo orange (2.9:1)
+           do not reach. The bar is 5.2:1 and the selected tab 7.3:1. Resting labels sit at 82 per
+           cent white, still above 4.5:1 on this ground, so the selected tab stands out without the
+           unselected ones becoming hard to read. */
+        [data-baseweb="tab-list"] {{ gap:var(--s1) !important; background:{TAB_BAR}; padding:var(--s1);
+            border-radius:var(--r-md); border:1px solid {TAB_BAR}; margin-bottom:var(--s4);
             display:inline-flex !important; }}
-        button[data-baseweb="tab"] {{ font-weight:700 !important; font-size:var(--t-sm) !important;
-            border-radius:var(--r-sm) !important; padding:var(--s2) var(--s5) !important;
-            color:var(--mute) !important; transition:all .2s var(--ease); }}
-        button[data-baseweb="tab"]:hover {{ color:{NAVY} !important; background:rgba(255,255,255,.6); }}
-        button[data-baseweb="tab"][aria-selected="true"] {{ background:var(--surf) !important;
-            color:{NAVY} !important; box-shadow:var(--e1); }}
-        [data-baseweb="tab-highlight"], [data-baseweb="tab-border"] {{ display:none !important; }}
+        /* The label lives in a child node that Streamlit colours itself, so colouring only the
+           button leaves the text unchanged however many !important flags it carries. Every
+           descendant is targeted, and -webkit-text-fill-color is set alongside color because the
+           theme sets that too and it wins over color where both are present. */
+        [data-baseweb="tab-list"] button[data-baseweb="tab"] {{ font-weight:700 !important;
+            font-size:var(--t-sm) !important; border-radius:var(--r-sm) !important;
+            padding:var(--s2) var(--s5) !important; transition:all .2s var(--ease); }}
+        [data-baseweb="tab-list"] button[data-baseweb="tab"],
+        [data-baseweb="tab-list"] button[data-baseweb="tab"] * {{
+            color:rgba(255,255,255,.86) !important;
+            -webkit-text-fill-color:rgba(255,255,255,.86) !important; }}
+        [data-baseweb="tab-list"] button[data-baseweb="tab"]:hover {{
+            background:rgba(255,255,255,.14) !important; }}
+        [data-baseweb="tab-list"] button[data-baseweb="tab"]:hover,
+        [data-baseweb="tab-list"] button[data-baseweb="tab"]:hover * {{
+            color:#FFFFFF !important; -webkit-text-fill-color:#FFFFFF !important; }}
+        /* The selected tab is painted with an inset shadow rather than a background colour. The
+           theme sets background-color on these buttons through a generated class that survives an
+           !important background rule, so the colour never reached the element; box-shadow is not
+           contested and covers the whole button. The white underline is a second, redundant cue for
+           anyone who cannot separate the two oranges. */
+        [data-baseweb="tab-list"] button[data-baseweb="tab"][aria-selected="true"] {{
+            box-shadow:inset 0 0 0 999px {TAB_ACTIVE},
+                       inset 0 -3px 0 0 #FFFFFF !important; }}
+        [data-baseweb="tab-list"] button[data-baseweb="tab"][aria-selected="true"],
+        [data-baseweb="tab-list"] button[data-baseweb="tab"][aria-selected="true"] * {{
+            color:#FFFFFF !important; -webkit-text-fill-color:#FFFFFF !important; }}
+        button[data-baseweb="tab"]:focus-visible {{ outline:2px solid #FFFFFF !important;
+            outline-offset:-3px; }}
+        /* BaseWeb's own selected-tab indicator, kept rather than hidden. Painting the selected tab
+           with a background or an inset shadow does not survive the theme's generated classes, but
+           this element is the mechanism the component already uses to mark the active tab, so it is
+           simply recoloured to white against the orange bar. The border strip below it is still
+           removed: on a coloured bar it reads as a stray line. */
+        [data-baseweb="tab-highlight"] {{ background:#FFFFFF !important; height:3px !important;
+            border-radius:2px !important; }}
+        [data-baseweb="tab-border"] {{ display:none !important; }}
 
         /* ---- inputs ---- */
         [data-testid="stTextArea"] textarea, [data-testid="stTextInput"] input {{
@@ -1205,7 +1260,7 @@ def build_network_svg(r, name="Compound"):
     Nodes are ordered barycentrically to minimise edge crossings; only engaged targets are drawn."""
     bbb, neuro, dz = disease_scores(r)
     dzmap = {d["disease"]: d for d in dz}
-    ENG = 0.06
+    ENG = MIN_ENGAGEMENT_SIGNAL
 
     targets = [t for t in KNOWLEDGE_GRAPH if target_signal(r, neuro, t) >= ENG]
     herg = engaged_signal("hERG", r["targets"]["hERG"])
@@ -1374,7 +1429,8 @@ def render_network(r, name="Compound"):
 def render_independence(r):
     """How many independent mechanisms were engaged, as opposed to how many targets."""
     neuro = neuro_signal(r)
-    engaged = [t for t in TARGET_KIND if t != "NEURO" and target_signal(r, neuro, t) > 0]
+    engaged = [t for t in TARGET_KIND
+               if t != "NEURO" and target_signal(r, neuro, t) >= MIN_ENGAGEMENT_SIGNAL]
     if not engaged:
         return
     by_fam, multi = grouped_engagement(engaged)
@@ -1550,7 +1606,8 @@ def render_receptors(r):
     note = ("<b>Binder probability</b> is a classifier trained to distinguish measured binders "
             "(pChEMBL &ge; 7) from property-matched non-binders. It is validated against compounds "
             "experimentally tested on the same target and found inactive, which were never used in "
-            "training: mean AUROC 0.955 across 43 targets. Each model is fitted on property-matched "
+            "training: mean AUROC 0.917 across the 47 deployed targets. Each model is fitted on "
+            "property-matched "
             "decoys together with half of the measured inactives and is validated and thresholded on "
             "the held-out half, so no compound used for fitting is used to judge it. Thresholds hold "
             "the false-positive rate near 10% on those measured inactives AND no more than 5% on "
@@ -2019,9 +2076,11 @@ def result_frame(smiles, name, r):
             "; ".join(f"{k} {v:.2f}" for k, v in m["parts"].items()))
 
     neuro_sig = neuro_signal(r)
-    engaged = [t for t in TARGET_KIND if t != "NEURO" and target_signal(r, neuro_sig, t) > 0]
+    engaged = [t for t in TARGET_KIND
+               if t != "NEURO" and target_signal(r, neuro_sig, t) >= MIN_ENGAGEMENT_SIGNAL]
     _by_fam, multi = grouped_engagement(engaged)
-    add("Mechanism independence", "n_targets_engaged", "Targets with a signal above threshold",
+    add("Mechanism independence", "n_targets_engaged",
+        f"Targets with an engagement signal of at least {MIN_ENGAGEMENT_SIGNAL:.2f}",
         len(engaged), "count",
         "; ".join(f"{f}: {', '.join(MECH_LABEL.get(t, t) for t in ts)}" for f, ts in multi.items())
         or "no two engaged targets are homologous")
@@ -2076,7 +2135,8 @@ def result_json(smiles, name, r):
             "n_independent_mechanisms": independent_mechanisms(eng),
             "correlated_families": {f: [MECH_LABEL.get(t, t) for t in ts]
                                     for f, ts in grouped_engagement(eng)[1].items()},
-        })([t for t in TARGET_KIND if t != "NEURO" and target_signal(r, neuro, t) > 0]),
+        })([t for t in TARGET_KIND
+            if t != "NEURO" and target_signal(r, neuro, t) >= MIN_ENGAGEMENT_SIGNAL]),
         "caveats": [
             "Research triage tool. Not for medical, diagnostic or treatment use.",
             "Homologous targets are engaged together by the same ligands, so the number of engaged "
@@ -2263,7 +2323,7 @@ wet-lab or clinical validation.</li>
 </ul>
 <div class="foot">BrainSafe AI version {APP_VERSION}, {"high-precision" if screening_mode() else "standard"}
 screening mode. Calibrated random-forest models trained on measured public bioactivity and ADME data
-(64,474 records; 61,317 unique compounds). Research decision-support for prioritisation and
+(228,200 records; 169,341 unique compounds). Research decision-support for prioritisation and
 hypothesis generation only. Not for medical, diagnostic or treatment decisions.</div>
 </div></body></html>"""
 
@@ -2330,7 +2390,7 @@ def batch_row(smiles, name, models):
     top = [d for d in dz if d["gated"] >= MIN_ACTIONABLE_SCORE][:3]
     ad = assess_domain(cs)
     eng = [(t, target_signal(r, neuro, t)) for t in TARGET_KIND if t != "NEURO"]
-    eng = sorted([e for e in eng if e[1] > 0], key=lambda x: -x[1])[:5]
+    eng = sorted([e for e in eng if e[1] >= MIN_ENGAGEMENT_SIGNAL], key=lambda x: -x[1])[:5]
     m = cns_mpo(r, cs)
     return {
         "input": name, "smiles": cs, "status": "ok",
@@ -2670,56 +2730,158 @@ def render_glossary():
         unsafe_allow_html=True)
 
 
+@st.cache_data(show_spinner=False)
+def panel_facts():
+    """Every number the About page states, read from the artefacts rather than typed.
+
+    The page previously carried figures typed by hand and left behind by the panel: it claimed
+    64,474 records and 61,317 compounds when the tables hold 228,200 and 169,341, an AUROC range of
+    0.95-0.97 when the measured range is 0.899-0.976, and a temporal range of 0.61-0.91 against a
+    measured 0.720-0.910. A page that describes the models has to be generated from them, or it
+    describes whichever panel existed when someone last edited the string.
+    """
+    import glob
+    f = {}
+    try:
+        modes = load_binder_modes()
+        dep = [v for v in modes.values() if v.get("deployed", True)]
+        f["n_binder_trained"], f["n_binder_deployed"] = len(modes), len(dep)
+        f["binder_auroc"] = sum(v["auroc_vs_measured_inactives"] for v in dep) / max(len(dep), 1)
+        f["binder_sens"] = sum(v["sensitivity_at_threshold"] for v in dep) / max(len(dep), 1)
+    except Exception:
+        pass
+    try:
+        n = 0
+        for path in glob.glob(str(ROOT / "data" / "endpoints" / "*.csv")):
+            n += len(pd.read_csv(path, usecols=["smiles"]))
+        f["n_records"] = n
+    except Exception:
+        pass
+    try:
+        cv = pd.read_csv(RESULTS / "rf_cv_summary.csv")
+        c = cv[cv.task == "classification"]
+        for split in ("random", "scaffold"):
+            g = c[c.split == split]
+            f[split + "_lo"], f[split + "_hi"] = g.roc_auc_mean.min(), g.roc_auc_mean.max()
+            f[split + "_mean"] = g.roc_auc_mean.mean()
+    except Exception:
+        pass
+    try:
+        tp = pd.read_csv(RESULTS / "rf_temporal.csv")
+        a = tp[tp.metric == "auroc"]
+        f["temporal_lo"], f["temporal_hi"], f["temporal_n"] = a.score.min(), a.score.max(), len(a)
+    except Exception:
+        pass
+    try:
+        s = pd.read_csv(RESULTS / "noncns_specificity_summary.csv")
+        row = s[s.metric.str.startswith("Specificity")].iloc[0]
+        f["spec"], f["spec_lo"], f["spec_hi"] = row.estimate, row.ci95_low, row.ci95_high
+    except Exception:
+        pass
+    return f
+
+
 def render_about():
+    """One page in one order: what it answers, how it was built and tested, what bounds it.
+
+    Rebuilt because the previous version rendered the glossary, the coverage card and the model
+    comparison, then began again with a second "About BrainSafe AI" block repeating what the tool
+    does and how it was trained. A reader met the same material twice, in different words and with
+    different numbers, and the second set was three years of panel growth out of date.
+    """
+    f = panel_facts()
+
+    def val(key, fmt="{:.3f}", dash="not available"):
+        return fmt.format(f[key]) if key in f else dash
+
+    st.markdown('<div class="about-h">About Brain<span>Safe</span> AI</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<p class="bs-note" style="font-size:.95rem;margin:-6px 0 18px;max-width:72ch">'
+        'BrainSafe AI answers four questions about a small molecule in one pass: can it reach the '
+        'brain, what does it engage there, what does that mechanism touch, and what would stop it '
+        'being a drug. Every endpoint is trained on measured experimental values, never on '
+        'qualitative annotation, and every prediction carries its own uncertainty.</p>',
+        unsafe_allow_html=True)
+
+    records = "{:,}".format(f["n_records"]) if "n_records" in f else "not available"
+    cards = [
+        ("Trained on", records,
+         "measured compound-endpoint records from ChEMBL, BindingDB and B3DB"),
+        ("Target panel", str(f.get("n_binder_deployed", "-")),
+         "binder endpoints deployed of {} trained, at a mean AUROC of {} "
+         "against compounds measured and found inactive".format(
+             f.get("n_binder_trained", "-"), val("binder_auroc"))),
+        ("Silent on non-CNS chemistry", val("spec"),
+         "specificity, 95% CI {} to {}, over 1,000 compounds with no recorded activity at any "
+         "modelled target".format(val("spec_lo"), val("spec_hi"))),
+    ]
+    for col, (label, big, sub) in zip(st.columns(3, gap="medium"), cards):
+        with col:
+            st.markdown(
+                '<div class="bs-card" style="height:100%"><div class="about-eyebrow">' + label +
+                '</div><div style="font-size:1.7rem;font-weight:800;color:' + NAVY +
+                ';line-height:1.15;margin:4px 0 6px">' + big + '</div>'
+                '<div class="bs-note" style="font-size:.82rem">' + sub + '</div></div>',
+                unsafe_allow_html=True)
+
+    st.write("")
     render_glossary()
     st.write("")
     render_coverage_card()
     st.write("")
+
+    st.markdown(
+        '<div class="bs-card"><div class="bs-h">How it was built and tested'
+        '<span class="bs-h-sub">every figure below is read from the deployed models at page load'
+        '</span></div>'
+        '<div class="bs-note" style="max-width:78ch">Each compound is reduced to its largest '
+        'organic fragment, neutralised so that a salt and its free base are one input, and '
+        'represented by a 1,024-bit ECFP-4 fingerprint with twelve physicochemical descriptors. A '
+        'random forest is fitted per endpoint, chosen after comparison against gradient boosting, '
+        'XGBoost, L2 logistic regression, a nearest-neighbour read-across and a graph neural '
+        'network. Classifier probabilities are isotonically calibrated on out-of-fold predictions; '
+        'binder models use Platt scaling, because the withheld set for one target is often too '
+        'small to fit a step function without overfitting it.</div>'
+        '<table class="bs-table" style="margin-top:12px"><tbody>'
+        '<tr><td style="width:34%"><b>Random 10-fold</b></td><td>AUROC ' + val("random_lo") +
+        ' to ' + val("random_hi") + ', mean ' + val("random_mean") + ' across the measured-label '
+        'classifiers. Interpolation within known chemistry.</td></tr>'
+        '<tr><td><b>Scaffold-grouped 10-fold</b></td><td>AUROC ' + val("scaffold_lo") + ' to ' +
+        val("scaffold_hi") + ', mean ' + val("scaffold_mean") + '. Whole Bemis-Murcko scaffold '
+        'classes withheld before training, so this is generalisation to chemistry the model has '
+        'not seen.</td></tr>'
+        '<tr><td><b>Temporal split</b></td><td>AUROC ' + val("temporal_lo") + ' to ' +
+        val("temporal_hi") + ' across ' + str(f.get("temporal_n", "-")) + ' endpoints, training on '
+        'compounds published before a cut-off and testing on those published after it.</td></tr>'
+        '<tr><td><b>Binder panel</b></td><td>Validated against compounds measured at the same '
+        'target and found inactive, not against the decoys used to train it: mean AUROC ' +
+        val("binder_auroc") + ' at a mean sensitivity of ' + val("binder_sens") + ' on actives '
+        'withheld by scaffold.</td></tr>'
+        '</tbody></table>'
+        '<div class="bs-note" style="margin-top:10px">The distance between the random and the '
+        'scaffold split is the honest statement of how far a model travels. Both are reported, '
+        'because quoting only the first would describe a use case nobody has.</div></div>',
+        unsafe_allow_html=True)
+
+    st.write("")
     render_model_comparison()
     st.write("")
-    st.markdown('<div class="about-h">About Brain<span>Safe</span> AI</div>'
-                '<p class="bs-note" style="font-size:.92rem;margin:-6px 0 16px">Trained on measured ChEMBL and '
-                'B3DB bioactivity data (64,474 records; 61,317 unique compounds).</p>', unsafe_allow_html=True)
-    st.markdown('<div class="about-eyebrow">Science for Society</div>'
-                '<p class="bs-note" style="font-style:italic;font-size:.95rem">Bridging neuroscience with '
-                'public-health education.</p>', unsafe_allow_html=True)
-    with st.container(border=True):
-        st.markdown("""
-        ### What BrainSafe AI does
-        From chemical structure alone, BrainSafe AI estimates a compound's likely profile of brain-relevant effects:
-        - **Blood-brain-barrier penetration**: can it reach the brain?
-        - **Disease-relevant target activity**: AChE & BChE (Alzheimer's/cognition), BACE1 (amyloid),
-          GSK-3β (tau), MAO-B (Parkinson's), MAO-A (mood), and receptor potencies (D2, A2A, 5-HT2A, SERT).
-        - **Safety**: hERG cardiotoxicity liability.
-        - **Antioxidant** capacity (measured DPPH model) and a **physicochemical / druggability** profile.
-        - **ADME / exposure (ADMET)** including the directly-modelled unbound brain exposure (K<sub>p,uu</sub>).
-        - **BBB-gated per-disease engagement**, a **compound→target→disease network**, and an
-          **applicability-domain confidence** with the **nearest real measured compound** behind each prediction.
-        """, unsafe_allow_html=True)
-    with st.container(border=True):
-        st.markdown("""
-        ### Methods & data (transparent by design)
-        Every endpoint is trained on **measured experimental data**: ChEMBL bioassay measurements (pChEMBL)
-        and the B3DB blood-brain-barrier database, totalling **64,474 measured compound-endpoint records**
-        (61,317 unique compounds). Molecules are represented by a 1024-bit ECFP-4 fingerprint plus 12 RDKit
-        physicochemical descriptors. The **deployed model is a random forest per endpoint** (selected after
-        comparison with XGBoost, gradient boosting and a graph neural network), with **isotonic probability
-        calibration** and **conformal prediction** in validation.
 
-        Models were validated under increasingly stringent regimes: random 10-fold, **scaffold** (grouped)
-        10-fold, and **temporal (future-compound)** splits. Classifiers reach AUROC ≈ 0.95-0.97 (random),
-        0.87-0.96 (scaffold, mean 0.92) and 0.61-0.91 (temporal). Full methods, figures and per-endpoint
-        metrics are in the accompanying manuscript and model card (`docs/METHODS.md`, `docs/BS_MODEL_CARD.md`).
-        """)
-    with st.container(border=True):
-        st.markdown("""
-        ### Scope & limitations
-        BrainSafe AI predicts **molecular target engagement and physicochemical properties, not clinical
-        efficacy**, and does not distinguish agonism from antagonism. Predictions outside the models'
-        applicability domain (novel chemotypes, low max-Tanimoto) are flagged as low-confidence. The tool is
-        intended for research prioritisation and hypothesis generation and is **pending peer review**; it is
-        **not** for medical, diagnostic, or treatment use.
-        """)
+    st.markdown(
+        '<div class="bs-card"><div class="bs-h">Intended use'
+        '<span class="bs-h-sub">what a result from this server is, and what it is not</span></div>'
+        '<div class="bs-note" style="max-width:78ch">BrainSafe AI predicts molecular target '
+        'engagement and physicochemical properties. It does not predict clinical efficacy, and it '
+        'does not distinguish an agonist from an antagonist: both bind, and the models are trained '
+        'on binding. Disease-level scores are a route from a mechanism to the conditions that '
+        'mechanism touches, useful for orientation and for deciding what to test next, and they '
+        'are not an indication prediction. Predictions on chemistry far from the training set are '
+        'flagged rather than suppressed, so a reader can tell interpolation from extrapolation. '
+        'The tool is for research prioritisation and hypothesis generation, is pending peer '
+        'review, and is not for medical, diagnostic or treatment use.</div></div>',
+        unsafe_allow_html=True)
+
+    st.write("")
     with st.container(border=True):
         st.markdown("""
         ### 100 Years of Selfless Service
@@ -2734,8 +2896,9 @@ def render_about():
         &#8220;True knowledge is that which makes man work for the welfare of humanity.&#8221;</p>
         <cite style="color:#1A3A5C">Bhagawan Sri Sathya Sai Baba</cite></div>
         """, unsafe_allow_html=True)
-    st.markdown('<div class="bs-foot">Repository: https://github.com/krishna-g-999/brainsafe-ai · '
-                'See CITATION.cff for how to cite. Research use, pending peer review.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="bs-foot">Repository: https://github.com/krishna-g-999/brainsafe-ai '
+                '&middot; See CITATION.cff for how to cite. Research use, pending peer review.</div>',
+                unsafe_allow_html=True)
 
 
 EXAMPLES = {
@@ -2791,6 +2954,233 @@ def resolve_query(q):
                         f'name. Check the spelling, or paste a SMILES string.')
 
 
+# ---------------------------------------------------------------------------------------------
+# The pages a scientific web server is expected to carry. Each is generated from the artefacts it
+# describes: a Methods page that states a training-set size, or a Validation page that quotes an
+# AUROC, becomes wrong the moment the panel is refitted unless it reads the number at page load.
+# ---------------------------------------------------------------------------------------------
+
+
+@st.cache_data(show_spinner=False)
+def validation_rows():
+    """Per-endpoint validation, straight from the cross-validation summary."""
+    try:
+        cv = pd.read_csv(RESULTS / "rf_cv_summary.csv")
+    except Exception:
+        return None
+    out = cv.pivot_table(index=["endpoint", "task"], columns="split",
+                         values=["roc_auc_mean", "r2_mean"]).reset_index()
+    out.columns = [c[0] if not c[1] else f"{c[0]}_{c[1]}" for c in out.columns]
+    return out
+
+
+def render_methods():
+    f = panel_facts()
+
+    def val(key, fmt="{:.3f}", dash="not available"):
+        return fmt.format(f[key]) if key in f else dash
+
+    st.markdown('<div class="about-h">Methods</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<p class="bs-note" style="max-width:78ch;margin:-6px 0 16px">How a structure becomes a '
+        'profile, in the order it happens. Full detail, including every decision that was made and '
+        'reversed, is in the manuscript and in <code>docs/METHODS.md</code>; the numbers on this '
+        'page are read from the deployed models rather than written down.</p>',
+        unsafe_allow_html=True)
+
+    steps = [
+        ("1 &middot; Standardisation",
+         "The structure is reduced to its largest organic fragment and neutralised. Neutralisation "
+         "matters: stripping a counter-ion without it leaves the parent carrying the salt's charge, "
+         "and haloperidol hydrochloride then scored a barrier probability of 0.613 against 0.993 "
+         "for the free base, losing a cardiac liability flag. Only protonation states are undone. A "
+         "permanent charge is kept, because a quaternary ammonium's charge is precisely what stops "
+         "it crossing the barrier."),
+        ("2 &middot; Representation",
+         "A 1,024-bit folded ECFP-4 fingerprint plus twelve physicochemical descriptors: molecular "
+         "weight, cLogP, TPSA, hydrogen-bond donors and acceptors, rotatable bonds, aromatic rings, "
+         "fraction sp3, ring count, heavy atoms, formal charge and QED. Chirality is excluded, so "
+         "two enantiomers give identical rows; rows identical in feature space are collapsed before "
+         "any split, or copies of one compound would sit on both sides of a fold."),
+        ("3 &middot; Labels from measurement only",
+         "Every endpoint is trained on measured experimental values. A compound assayed and found "
+         "inactive is often deposited only as a censored bound, and the conventional query discards "
+         "exactly those rows. A bound settles a label when the whole interval it defines falls on "
+         "one side of the activity cut, and is discarded as undecidable when it spans both. "
+         "Recovering these added measured non-binders across 57 endpoints."),
+        ("4 &middot; Fitting",
+         "A random forest per endpoint, 300 trees, chosen after comparison against gradient "
+         "boosting, XGBoost, L2 logistic regression, a nearest-neighbour read-across and a graph "
+         "neural network. Classifiers are isotonically calibrated on out-of-fold predictions, so no "
+         "compound contributes to the calibrator that scores it; binder models use Platt scaling, "
+         "because the withheld set for one target is often too small to fit a step function."),
+        ("5 &middot; Thresholds measured where they were not set",
+         "The background library is partitioned into three disjoint pools by a stable hash of the "
+         "structure: one supplies decoys, one sets thresholds, one measures the false-positive "
+         "rate. Choosing a threshold as a quantile of a sample and then measuring the rate on that "
+         "same sample restates the target instead of testing it."),
+        ("6 &middot; Exposure gating",
+         "A target score is admitted only in proportion to predicted barrier penetration, so "
+         "potency at a target the compound cannot reach contributes nothing. Engaged targets are "
+         "then traced through a curated pathway graph, anchored to KEGG, Reactome and IUPHAR, to "
+         "the conditions they touch."),
+    ]
+    body = "".join(
+        '<tr><td style="width:30%;vertical-align:top"><b>' + h + '</b></td>'
+        '<td style="vertical-align:top">' + d + '</td></tr>' for h, d in steps)
+    st.markdown('<div class="bs-card"><table class="bs-table"><tbody>' + body +
+                '</tbody></table></div>', unsafe_allow_html=True)
+
+    st.markdown(
+        '<div class="bs-card" style="margin-top:14px"><div class="bs-h">Data sources</div>'
+        '<table class="bs-table"><tbody>'
+        '<tr><td style="width:30%"><b>ChEMBL</b></td><td>pChEMBL bioactivity values for the protein '
+        'target panel, including censored bounds recovered as measured non-binders.</td></tr>'
+        '<tr><td><b>BindingDB</b></td><td>Additional measured affinities pooled at compound '
+        'level.</td></tr>'
+        '<tr><td><b>B3DB</b></td><td>Blood-brain-barrier labels, augmented with FDA-curated approved '
+        'drugs.</td></tr>'
+        '<tr><td><b>Therapeutics Data Commons, MoleculeNet</b></td><td>Measured sets for the ADME '
+        'and exposure endpoints.</td></tr>'
+        '</tbody></table>'
+        '<div class="bs-note" style="margin-top:10px">The panel holds ' +
+        ("{:,}".format(f["n_records"]) if "n_records" in f else "its") +
+        ' measured compound-endpoint records. No value is imputed, and no qualitative annotation '
+        'overrides a measurement.</div></div>',
+        unsafe_allow_html=True)
+
+
+def render_validation():
+    f = panel_facts()
+
+    def val(key, fmt="{:.3f}", dash="not available"):
+        return fmt.format(f[key]) if key in f else dash
+
+    st.markdown('<div class="about-h">Validation</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<p class="bs-note" style="max-width:78ch;margin:-6px 0 16px">Every figure on this page is '
+        'read from the validation artefacts at page load. Where a check fails it is shown failing: '
+        'a validation suite that only ever passes is not measuring anything.</p>',
+        unsafe_allow_html=True)
+
+    st.markdown(
+        '<div class="bs-card"><div class="bs-h">Headline'
+        '<span class="bs-h-sub">measured-label classifiers unless stated</span></div>'
+        '<table class="bs-table"><tbody>'
+        '<tr><td style="width:42%"><b>Random 10-fold, mean AUROC</b></td><td>' + val("random_mean") +
+        ' (range ' + val("random_lo") + ' to ' + val("random_hi") + ')</td></tr>'
+        '<tr><td><b>Scaffold-grouped 10-fold, mean AUROC</b></td><td>' + val("scaffold_mean") +
+        ' (range ' + val("scaffold_lo") + ' to ' + val("scaffold_hi") + ')</td></tr>'
+        '<tr><td><b>Temporal split, AUROC</b></td><td>' + val("temporal_lo") + ' to ' +
+        val("temporal_hi") + ' across ' + str(f.get("temporal_n", "-")) + ' endpoints</td></tr>'
+        '<tr><td><b>Binder panel vs measured non-binders</b></td><td>mean AUROC ' +
+        val("binder_auroc") + ', mean sensitivity ' + val("binder_sens") +
+        ' on actives withheld by scaffold</td></tr>'
+        '<tr><td><b>Specificity on non-CNS chemistry</b></td><td>' + val("spec") + ' (95% CI ' +
+        val("spec_lo") + ' to ' + val("spec_hi") + ') over 1,000 compounds</td></tr>'
+        '</tbody></table></div>',
+        unsafe_allow_html=True)
+
+    rows = validation_rows()
+    if rows is not None:
+        st.markdown('<div class="bs-h" style="margin:18px 0 6px">Per endpoint</div>',
+                    unsafe_allow_html=True)
+        show = rows.copy()
+        show.columns = [c.replace("roc_auc_mean_", "AUROC ").replace("r2_mean_", "R2 ")
+                        for c in show.columns]
+        st.dataframe(show.round(3), use_container_width=True, hide_index=True)
+        st.caption("AUROC for classification endpoints, R-squared for regressions. The two are not "
+                   "comparable: 0.5 is chance for one and a respectable fit for the other.")
+
+    try:
+        inv = pd.read_csv(RESULTS / "inversion_validation.csv")
+        n_pass = int((inv.result.astype(str).str.upper() == "PASS").sum())
+        items = "".join(
+            '<tr><td style="width:12%;color:' + (GREEN if str(r.result).upper() == "PASS" else ADVERSE) +
+            ';font-weight:700">' + str(r.result).upper() + '</td><td>' + str(r.check) +
+            '<div class="bs-ctx" style="margin-top:2px">' + str(r.detail) + '</div></td></tr>'
+            for r in inv.itertuples())
+        st.markdown(
+            '<div class="bs-card" style="margin-top:16px"><div class="bs-h">Adversarial checks'
+            '<span class="bs-h-sub">' + str(n_pass) + ' of ' + str(len(inv)) +
+            ' pass; each was written so that it could fail</span></div>'
+            '<table class="bs-table"><tbody>' + items + '</tbody></table>'
+            '<div class="bs-note" style="margin-top:10px">The failing check is reported at the same '
+            'size as the others and is not tuned until it passes. It is a finding about the '
+            'applicability-domain flag, and the conformal interval and nearest-analogue distance '
+            'should be read as the statement of confidence instead.</div></div>',
+            unsafe_allow_html=True)
+    except Exception:
+        pass
+
+
+def render_downloads():
+    st.markdown('<div class="about-h">Downloads and code</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<p class="bs-note" style="max-width:78ch;margin:-6px 0 16px">Everything behind this server '
+        'is public. Source code, the curated knowledge graph, every validation artefact and the '
+        'scripts that regenerate each table and figure are in the repository; the trained '
+        'estimators are deposited separately with a committed manifest recording the SHA-256 of the '
+        'archive and of every file inside it, so a download is verified rather than trusted.</p>',
+        unsafe_allow_html=True)
+    st.markdown(
+        '<div class="bs-card"><table class="bs-table"><tbody>'
+        '<tr><td style="width:32%"><b>Source code</b></td>'
+        '<td><a href="https://github.com/krishna-g-999/brainsafe-ai">'
+        'github.com/krishna-g-999/brainsafe-ai</a>, MIT licence</td></tr>'
+        '<tr><td><b>How to cite</b></td><td><code>CITATION.cff</code> in the repository '
+        'root</td></tr>'
+        '<tr><td><b>Reproduce the results</b></td><td><code>REPRODUCE.md</code>, one command, with '
+        'recorded runtimes and a provenance map of every artefact</td></tr>'
+        '<tr><td><b>Validation artefacts</b></td><td><code>results/tables/</code> and '
+        '<code>validation/</code>, including the reproduction ledger comparing every reported '
+        'number against an independently regenerated one</td></tr>'
+        '<tr><td><b>Trained models</b></td><td>Deposited archive with '
+        '<code>models_manifest.json</code>; the deposit DOI is added on publication</td></tr>'
+        '<tr><td><b>Batch results</b></td><td>Every screening run is downloadable as CSV from the '
+        'Batch Screening tab</td></tr>'
+        '</tbody></table></div>',
+        unsafe_allow_html=True)
+
+
+def render_legal():
+    st.markdown('<div class="about-h">Contact, privacy and licence</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="bs-card"><div class="bs-h">Privacy</div>'
+        '<div class="bs-note" style="max-width:78ch">No registration is required and no account '
+        'exists. Structures submitted for prediction are held in memory for the lifetime of the '
+        'request and are not written to disk, logged or retained. Nothing submitted here is used to '
+        'train or update any model. One external call is made, and only when it is needed: a '
+        'compound entered by name is resolved to a structure through PubChem, which means that name '
+        'reaches PubChem. Paste a SMILES string instead and no request leaves this server.</div>'
+        '</div>',
+        unsafe_allow_html=True)
+    st.markdown(
+        '<div class="bs-card" style="margin-top:14px"><div class="bs-h">Licence</div>'
+        '<div class="bs-note" style="max-width:78ch">Source code is released under the MIT licence. '
+        'Underlying data retain the licences of their sources: ChEMBL (CC BY-SA 3.0), BindingDB, '
+        'B3DB, Therapeutics Data Commons and MoleculeNet. Pathway annotations are drawn from KEGG, '
+        'Reactome and the IUPHAR/BPS Guide to Pharmacology and are subject to their own terms; KEGG '
+        'in particular restricts commercial redistribution. Users are responsible for observing the '
+        'terms of any source they redistribute.</div></div>',
+        unsafe_allow_html=True)
+    st.markdown(
+        '<div class="bs-card" style="margin-top:14px"><div class="bs-h">Contact</div>'
+        '<div class="bs-note" style="max-width:78ch">BrainSafe AI is developed under the SAI-Net '
+        'initiative at the Sri Sathya Sai Institute of Higher Learning, Prasanthi Nilayam, India. '
+        'Questions, corrections and bug reports are best raised as issues in the repository, where '
+        'they stay visible alongside the code they concern.</div></div>',
+        unsafe_allow_html=True)
+    st.markdown(
+        '<div class="bs-card" style="margin-top:14px"><div class="bs-h">Status</div>'
+        '<div class="bs-note" style="max-width:78ch">Research preview, pending peer review. '
+        'BrainSafe AI is a computational decision-support tool for research prioritisation and '
+        'hypothesis generation. It predicts molecular target engagement and physicochemical '
+        'properties, not clinical efficacy, and has not undergone wet-lab or clinical validation. '
+        'It is not for medical, diagnostic or treatment decisions.</div></div>',
+        unsafe_allow_html=True)
+
+
 def render_report(smiles, name="Compound"):
     mol = Chem.MolFromSmiles(smiles.strip())
     if mol is None:
@@ -2838,7 +3228,7 @@ def render_report(smiles, name="Compound"):
     render_exports(smiles.strip(), name, r)
     st.markdown(
         '<div class="bs-foot">Predictions are calibrated random-forest outputs trained on measured public '
-        'bioactivity and ADME data (64,474 records; 61,317 unique compounds); scaffold-split AUROC ~0.92 '
+        'bioactivity and ADME data (228,200 records; 169,341 unique compounds); scaffold-split AUROC 0.925 '
         '(target panel). Least reliable for compounds far from the training chemistry (see applicability domain) '
         'and for the weakest endpoints (clearance, plasma-protein binding). Not for medical, diagnostic or '
         'treatment use. See docs/METHODS.md and docs/ADME_RESULTS.md.</div>', unsafe_allow_html=True)
@@ -2850,7 +3240,9 @@ def main():
     inject_css()
     render_header()
 
-    tab_search, tab_batch, tab_about = st.tabs(["Compound Search", "Batch Screening", "About"])
+    (tab_search, tab_batch, tab_about, tab_methods, tab_valid, tab_dl,
+     tab_legal) = st.tabs(["Compound Search", "Batch Screening", "About", "Methods",
+                           "Validation", "Downloads", "Contact & Licence"])
     with tab_search:
         with st.container(border=True):
             st.markdown('<p class="t" style="font-size:1.05rem;font-weight:700;color:#0D2137;margin:0 0 3px">'
@@ -2902,6 +3294,14 @@ def main():
 
     with tab_about:
         render_about()
+    with tab_methods:
+        render_methods()
+    with tab_valid:
+        render_validation()
+    with tab_dl:
+        render_downloads()
+    with tab_legal:
+        render_legal()
 
 
 if __name__ == "__main__":
