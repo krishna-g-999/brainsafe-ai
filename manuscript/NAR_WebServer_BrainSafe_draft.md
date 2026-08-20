@@ -96,9 +96,9 @@ Protein-target activity is pooled at compound level from ChEMBL [@chembl] pChEMB
 BindingDB [@bindingdb]; blood-brain barrier labels come from B3DB [@b3db] augmented with FDA-curated
 approved drugs; the nine ADME endpoints use measured sets from Therapeutics Data Commons [@tdc],
 MoleculeNet [@moleculenet], B3DB and ChEMBL. The panel holds 228,200 measured compound-endpoint
-records over 193,536 unique compounds keyed by the InChIKey of the desalted parent. No value is
+records over 169,341 unique compounds keyed by the InChIKey of the desalted parent. No value is
 imputed and no annotation overrides a measurement. Each endpoint is trained on its own measured set
-alone; across the deployed panel those sets span from 234 compounds (GluA2) to 10,276 (hERG).
+alone; across the deployed panel those sets span from 387 compounds (KEAP1) to 10,276 (hERG).
 
 A bioactivity record describes what was found to bind. A compound assayed and found inactive is
 frequently deposited only as a censored bound, `standard_relation` `>` with no pChEMBL value, and the
