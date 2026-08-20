@@ -2,10 +2,10 @@
   "schema": 1,
   "version": "1.1",
   "archive": "brainsafe_models_v1.1.tar.gz",
-  "archive_bytes": 838534825,
-  "archive_sha256": "2ff3e43be5b5f8ed296eee07bff9db943ca91d15bd683dad928cf1ac92cf3d1d",
+  "archive_bytes": 863978469,
+  "archive_sha256": "2bfb2f0609f7f0d0ac6182507b1ae753ddccac38faf2ebe57e61a5b5f64e13f7",
   "n_files": 252,
-  "unpacked_bytes": 2118204451,
+  "unpacked_bytes": 920390699,
   "urls": [],
   "doi": "",
   "note": "Fetched at start-up by model_fetch.py when models_rf/ is absent. Every file is verified against its checksum before the server loads anything.",
@@ -19,8 +19,8 @@
       "sha256": "a946470897de73ba09c6120dcc0392061fc803e070677ac44d5d8004d5927e4f"
     },
     "models_rf/A2A.joblib": {
-      "bytes": 78558481,
-      "sha256": "a97ac0db9cf257bef96e558b54a11f781414dc0e9b836f32f4f034f1186c6cdb"
+      "bytes": 22838742,
+      "sha256": "80d084e2cdb406152fe3f9fd11f92294108c9f545e0fba39b8c15fbea60b3c93"
     },
     "models_rf/A2A_binder.joblib": {
       "bytes": 6525776,
@@ -51,12 +51,12 @@
       "sha256": "6f9b7fc972089325c40019c0a5a338adebaa74f007a197d3204c04d33c564484"
     },
     "models_rf/AChE.joblib": {
-      "bytes": 27733593,
-      "sha256": "063f07d86b9048abf049810174566d477e352706f1af04fb35920406a9c9cb2a"
+      "bytes": 8366931,
+      "sha256": "a41e9873fae334f134d6699b77a666f43ffe3738d51adbefabc7e67c53134adc"
     },
     "models_rf/AChE_calibrated.joblib": {
-      "bytes": 117693733,
-      "sha256": "4fd57e393f3f896aa56af4e8f9594db0bc025a18186a8c918efdcfbb683ca699"
+      "bytes": 34836667,
+      "sha256": "e42850b45756ad7d31809076611024c3b370a82b4f03668ae43e705b9eacd1d9"
     },
     "models_rf/AChE_meta.json": {
       "bytes": 1177,
@@ -71,116 +71,116 @@
       "sha256": "d81dcd2a051435a3a75da8d8bf05a0e92c2aeda3bc44d4239fd572e392e7bc15"
     },
     "models_rf/adme/caco2_permeability.joblib": {
-      "bytes": 10463185,
-      "sha256": "9a21b4bf0a3a80d168a59ac9deb3a046d0a2951ed989142dd055d12feaab6c63"
+      "bytes": 3477867,
+      "sha256": "b235e22c403235d7ccf73835e7b59e94f1d0c2f4bd67aded6e6371700af95f74"
     },
     "models_rf/adme/caco2_permeability_meta.json": {
       "bytes": 257,
       "sha256": "fc1d68eac8f617dd7ee65c2b747550eb823b03e970427754ac5f214c2d89b21b"
     },
     "models_rf/adme/clearance_hepatocyte.joblib": {
-      "bytes": 11260945,
-      "sha256": "7fd94a7d5aa8dddc584d8969f36137865c46cb2737c572dd372ff0dd8d1c64b0"
+      "bytes": 3488321,
+      "sha256": "0adac38ce03452bedd74bd335ab58b92d2067618454d4478c567a8737f112777"
     },
     "models_rf/adme/clearance_hepatocyte_meta.json": {
       "bytes": 260,
       "sha256": "47c7b795d238456d2971f93c1e302932e5e7a8d4fe08cc82a02c543be34017f6"
     },
     "models_rf/adme/kpuu.joblib": {
-      "bytes": 6762385,
-      "sha256": "d45998322f80224d8953d5c980d4fbf8a5142aceee5a7488373130c4b959231a"
+      "bytes": 2262107,
+      "sha256": "ef5d7b1b850de8feb908d90e33d63fcf758335ea2df978b3e8059e6e474df72d"
     },
     "models_rf/adme/kpuu_meta.json": {
       "bytes": 243,
       "sha256": "96458ca2590e78b42dfb26ef043a5f46949d0dbc39a51cd4649c46a8c9cd4864"
     },
     "models_rf/adme/lipophilicity.joblib": {
-      "bytes": 50138065,
-      "sha256": "67a9d63fe88ba838b0e2684667c56e01014ac7bfed1058b0ac208a4daea907e4"
+      "bytes": 13920725,
+      "sha256": "c43a4ef49fbd8cf64ca99bcd3d386e9811a45d5e89aa07487d4d8956fa122107"
     },
     "models_rf/adme/lipophilicity_meta.json": {
       "bytes": 253,
       "sha256": "7390e095729af32daf2c3882efaa0f2ae78e5fb07baa05aa9b1d178da6197027"
     },
     "models_rf/adme/logbb.joblib": {
-      "bytes": 12549025,
-      "sha256": "e4fd9f2b9cb6c50357f41473e1387c4912aaa73f74aba96e9eb12ef9e3eed528"
+      "bytes": 3666164,
+      "sha256": "12d545bff9abc414ba3fc2efd51a22ee9afcc51163040bbd5c380f3226e45846"
     },
     "models_rf/adme/logbb_meta.json": {
       "bytes": 245,
       "sha256": "345d3c99dd4cc19d5196eb59bc044cda17ad73ec58866a0e6d1b38d576f6dab6"
     },
     "models_rf/adme/pgp_inhibition.joblib": {
-      "bytes": 6370233,
-      "sha256": "d792fe31d78459ae0a56280306fd9f63db72f1a6b96b0383d165b231293cd18c"
+      "bytes": 1987288,
+      "sha256": "153441919a5ea04018cfaf191d02bbb4c7625396a0c53bb007dc9c55c2270ee4"
     },
     "models_rf/adme/pgp_inhibition_meta.json": {
       "bytes": 258,
       "sha256": "0cf0bcd5701907a13b21ecbad415970d309bb44f7e51d5e6709c8cee8371642b"
     },
     "models_rf/adme/pgp_substrate.joblib": {
-      "bytes": 9805433,
-      "sha256": "c292abd05c8942bd74cccf841e774858f404ef8f49f3911aed2e8fa19731dd22"
+      "bytes": 3025711,
+      "sha256": "a2516615150a89d011497f5ccffcd1fdfb2b80be571a03d4e9899814336b6bf4"
     },
     "models_rf/adme/pgp_substrate_meta.json": {
       "bytes": 257,
       "sha256": "c1cbe74075cd76f50fc48c4eb24a06a4f4e1bd88f34286a84a0bac1aeae22092"
     },
     "models_rf/adme/plasma_protein_binding.joblib": {
-      "bytes": 21535633,
-      "sha256": "a274dcce0e7905fe28e11f7dba687d514a6c60f7aa2aa2a08d7d0fa8470b2182"
+      "bytes": 6560839,
+      "sha256": "b81d7b35dd15f209a9e6be949e192898588425904bceda381c156203064d32d5"
     },
     "models_rf/adme/plasma_protein_binding_meta.json": {
       "bytes": 262,
       "sha256": "13a29d9548d55f1703ca69815c4d567750a03322c946885d5bcf35cf3a9d7073"
     },
     "models_rf/adme/solubility.joblib": {
-      "bytes": 114189265,
-      "sha256": "c2391c64599c489d9c04a320c3d95a3acd247bf0a65e0b4318087738f734fd3d"
+      "bytes": 37150467,
+      "sha256": "e72e717989658b1048cec74d51ec1b7c31b390093317924ea76d0c912bedf0c9"
     },
     "models_rf/adme/solubility_meta.json": {
       "bytes": 250,
       "sha256": "63d6c77883ca939c0f16e8d1cdb5967c19914151a15337076ead09e0ce7a2892"
     },
     "models_rf/antioxidant_DPPH.joblib": {
-      "bytes": 32566033,
-      "sha256": "6abd99db9e56c833b78215cf37772dc6105ca2e8e689a3cd296b7779676f4024"
+      "bytes": 10626134,
+      "sha256": "97a473b76bff7aa7f6e34fb7b063a5fd48d48871085fcb7a271b86ba305e2bea"
     },
     "models_rf/antioxidant_DPPH_meta.json": {
       "bytes": 1032,
       "sha256": "88fe51bb114828a5a4e5b5f524b77734bae930a93132a4f2880f8e441d9c7ded"
     },
     "models_rf/BACE1.joblib": {
-      "bytes": 24073913,
-      "sha256": "b0448727ba044c22153ba3679f72760b1165b0a83fa7eba3bd37cf403a0c3dd0"
+      "bytes": 7570071,
+      "sha256": "f294cbc440ac3e2e9d745802896dd6a745acc902c4d1ae7532787410199d57fe"
     },
     "models_rf/BACE1_calibrated.joblib": {
-      "bytes": 115366309,
-      "sha256": "3ea7526da9eebdcd9ad4d46bba9f3ee3933903aa7cc83bddd8f3be19922b54c9"
+      "bytes": 34702012,
+      "sha256": "0ae27e6102585ba6318ccfe5a2c565cc1e587011d2a38fdf2db7b6cf5b25ed0b"
     },
     "models_rf/BACE1_meta.json": {
       "bytes": 1178,
       "sha256": "82d8bdc34711a85003998b056502b4f91b8f305d90f064ff9f01fdd9b2673e25"
     },
     "models_rf/BBB.joblib": {
-      "bytes": 24260633,
-      "sha256": "27f38003f4a2512acd1ed50d1e523dd32cd08c31bcb167ed305d23e8439bbad9"
+      "bytes": 7354504,
+      "sha256": "e0377dcfd8bed387a3a054ba6815fdf69fa99bfdcded5e10f143a72e2702f525"
     },
     "models_rf/BBB_calibrated.joblib": {
-      "bytes": 148083125,
-      "sha256": "3010d59894fa9390a69f09b511cb13e16eea412d00aa885898f686423d74846b"
+      "bytes": 43896482,
+      "sha256": "713604ac6a618839b809c7b588f82ee4bbd953cd5fbacd61e6c301e471f13071"
     },
     "models_rf/BBB_meta.json": {
       "bytes": 1179,
       "sha256": "95b698d8d0da623802110dc97cc98c3b0af44a73cf9d643b7fdc49d45dd74a7b"
     },
     "models_rf/BChE.joblib": {
-      "bytes": 15888633,
-      "sha256": "b8ad817b25e7f2510edeb1baf3880da6a458b43d61d4fbb233c382819d6216d7"
+      "bytes": 4824711,
+      "sha256": "aaec364354ad2463444c5e96f84d3ef9c7cfe1d9e84214f4d571389e81db8ee4"
     },
     "models_rf/BChE_calibrated.joblib": {
-      "bytes": 67668389,
-      "sha256": "2e0eb9fdabf6f9cd722ebe2d20b16f0355546b120ac07ccca1f65994c89d7eda"
+      "bytes": 21007650,
+      "sha256": "c0f0a1e06ceaf255716b2dfcb8ad942a08817f1dfd8d6266929c79b7ff0fc0b6"
     },
     "models_rf/BChE_meta.json": {
       "bytes": 1176,
@@ -227,8 +227,8 @@
       "sha256": "4d08a381f47d7e0b471387eb5a2c0d20cae2b8e0f34cd8cc5a187df9fb2cbf7d"
     },
     "models_rf/D2.joblib": {
-      "bytes": 91686385,
-      "sha256": "dc3fc067e2981aa1c27f35a3c35738d308c13ba47346486bb3a5d30bbc7f0aa0"
+      "bytes": 26631994,
+      "sha256": "c536e3d9d63a669ea9214511eec253ece4c468cf27b3c03c3ccd4126a49e2205"
     },
     "models_rf/D2_binder.joblib": {
       "bytes": 7081331,
@@ -299,12 +299,12 @@
       "sha256": "94b0f13f4956cb8ed4622edb525fe34b73ecc907ec8832dbed8d7a05cebd609a"
     },
     "models_rf/GSK3B.joblib": {
-      "bytes": 25804793,
-      "sha256": "4c24a39d470227b2be41a1366dea78219747c08b614fc0962ce3579d0f88c173"
+      "bytes": 7765679,
+      "sha256": "94f8a6438e671f553a66f80d5e92f93d3867e13abe98e2ad4179bfe2154b1ee8"
     },
     "models_rf/GSK3B_calibrated.joblib": {
-      "bytes": 107395429,
-      "sha256": "d56f47d4119d1e610ad49fb9450e812a58595dc31d3a36433704357407c71fd0"
+      "bytes": 32354793,
+      "sha256": "7b7d530eda4ed619a744f7e8443e849a8e5d7e3cac4140f51071f39a03981ab6"
     },
     "models_rf/GSK3B_meta.json": {
       "bytes": 1179,
@@ -335,12 +335,12 @@
       "sha256": "684ba5bc5e1ee248a2f8a25f58117fef1a51780d0e8cdb7fc1922b83874496d2"
     },
     "models_rf/hERG.joblib": {
-      "bytes": 48456313,
-      "sha256": "057088f250a08e884f9c47769152500e83901d7a351cc646bf4873f442278b0d"
+      "bytes": 14034838,
+      "sha256": "9d6d6d4710d000016edd3dda0b524d45bdbcfb5776fe5a258103a02a76aba296"
     },
     "models_rf/hERG_calibrated.joblib": {
-      "bytes": 199870565,
-      "sha256": "f38e0794349a56cb84f229c7afe28ebe0e648b5a5f2acc3ca49afbe1ff7e0dd1"
+      "bytes": 58045332,
+      "sha256": "25d991627f748af3f2df6052e3349ea1c96dec252b4577bec3c59fc89894d2da"
     },
     "models_rf/hERG_meta.json": {
       "bytes": 1179,
@@ -763,8 +763,8 @@
       "sha256": "eb22b314733a6e989309b8a84899ca27dcd2d93d90e14d3f3bd305ddf1c081a7"
     },
     "models_rf/HT2A.joblib": {
-      "bytes": 70514065,
-      "sha256": "8cb7e6f11cde0c77136dc6c5791fe452eae482512b9d531a1f049744c277a51e"
+      "bytes": 20722199,
+      "sha256": "1cab02367201f9d115645789db9dffb6ff218352f3925e683cc32ba8eeae772c"
     },
     "models_rf/HT2A_binder.joblib": {
       "bytes": 7316653,
@@ -811,24 +811,24 @@
       "sha256": "c55db9d3266947c70cc8da218687b1e747a7326ea760604d466826c0a41df46b"
     },
     "models_rf/MAO_A.joblib": {
-      "bytes": 17165433,
-      "sha256": "257e66ec83d736c54bf20cf4f14c68f2ae228c8aba7d41f68727fdb95ecf8b85"
+      "bytes": 5784109,
+      "sha256": "e37189b0347daf96ce069c47d784efe70dde24db8c5705f47ffc115ebb05b280"
     },
     "models_rf/MAO_A_calibrated.joblib": {
-      "bytes": 76398917,
-      "sha256": "848b73c555594483dbf403afb9073fc401e6888497b626fcf810d57970e0d6b8"
+      "bytes": 23825348,
+      "sha256": "23fe084ae4202fe4a366682c1f58bd4e4972a91ac272f561976ec32db984b9d2"
     },
     "models_rf/MAO_A_meta.json": {
       "bytes": 1177,
       "sha256": "05d20bf312f5d3f9a1ee670fb7adb2024430408739d5500e2a7585b475869725"
     },
     "models_rf/MAO_B.joblib": {
-      "bytes": 25009913,
-      "sha256": "35a761971d0d773a3aae1bfba6e7dbab80bd4152d93068cc3b371413701fca6e"
+      "bytes": 7811808,
+      "sha256": "0594c10c51cda1e8ae130de8519eb5172918fd5ff5a3b63c0d65bd31b45d4f4a"
     },
     "models_rf/MAO_B_calibrated.joblib": {
-      "bytes": 104980901,
-      "sha256": "d664c130890b9d68eccc0586804853039998b5af8c4dd53c12e367bcec2a5d2c"
+      "bytes": 32016235,
+      "sha256": "c3a0e7f82bc9bee446f7166a570510e176647ce616fb93da8178ea4079479b98"
     },
     "models_rf/MAO_B_meta.json": {
       "bytes": 1174,
@@ -983,8 +983,8 @@
       "sha256": "d6bf928fd27989f7b3d8f5ee5f1972d40ebe61140374a5a2cc50fcb05c7bb7fb"
     },
     "models_rf/SERT.joblib": {
-      "bytes": 52296913,
-      "sha256": "2eb99257c25a05462226e11870c4d64c1be120804df693d08b62e59e81f9c99d"
+      "bytes": 16177158,
+      "sha256": "83b9aef00a3dc352c238c2ff417274c79e6e538b112d410408984a1970ee18ef"
     },
     "models_rf/SERT_binder.joblib": {
       "bytes": 6403281,
