@@ -936,10 +936,24 @@ def inject_css():
             padding:26px 40px; margin:8px -2rem 16px; border-bottom:3px solid {GOLD};
             border-radius:0 0 16px 16px; box-shadow:0 8px 30px rgba(0,0,0,.28); position:relative; }}
         .header-wrap {{ display:flex; align-items:center; gap:26px; }}
-        .header-logo {{ height:84px; width:84px; border-radius:50%; border:2.5px solid {GOLD};
-            box-shadow:0 0 22px rgba(240,165,0,.32),0 4px 14px rgba(0,0,0,.45); object-fit:cover; flex-shrink:0; }}
-        .header-inst {{ height:84px; width:84px; border-radius:50%; border:2.5px solid rgba(255,255,255,.55);
-            background:rgba(255,255,255,.96); object-fit:contain; padding:6px; flex-shrink:0; }}
+        /* The mark is a photorealistic illustration drawn for a light ground: measured over its
+           opaque pixels it is 29 per cent very light and 66 per cent mid-tone, and its soft edge
+           averages luminance 0.68. Laid straight onto the navy header that pale edge reads as haze
+           and the brain washes out, so it sits on a white plate, which is its intended ground and
+           is how the institute mark beside it is already treated. It is also given more room: at
+           96px only about 3,900 pixels carried the whole illustration and the detail turned to
+           noise. Contain, never cover: the gold arc runs to the edge of the artwork and a circular
+           crop cuts it. */
+        .header-logo {{ height:112px; width:112px; object-fit:contain; flex-shrink:0;
+            background:#FFFFFF; border-radius:18px; padding:8px;
+            border:1px solid rgba(240,165,0,.55);
+            box-shadow:0 0 20px rgba(240,165,0,.22), 0 4px 14px rgba(0,0,0,.40); }}
+        /* Matched to the BrainSafe mark opposite it: same white plate, same corner radius, so the
+           two read as a pair rather than as two unrelated badges. Slightly smaller, because it is
+           the institutional credit and not the identity of the tool. */
+        .header-inst {{ height:96px; width:96px; border-radius:18px;
+            border:1px solid rgba(255,255,255,.55); background:#FFFFFF; object-fit:contain;
+            padding:8px; flex-shrink:0; box-shadow:0 4px 14px rgba(0,0,0,.35); }}
         .header-div {{ width:2px; height:76px; background:linear-gradient(to bottom,transparent,{GOLD},transparent); flex-shrink:0; }}
         .header-textblk {{ flex:1; min-width:0; }}
         .header-title {{ color:#fff; font-size:2.3rem; font-weight:800; margin:0; letter-spacing:-.5px; line-height:1.12; }}
@@ -1044,17 +1058,21 @@ def inject_css():
            do not reach. The bar is 5.2:1 and the selected tab 7.3:1. Resting labels sit at 82 per
            cent white, still above 4.5:1 on this ground, so the selected tab stands out without the
            unselected ones becoming hard to read. */
+        /* The bar spans the content column and the tabs divide it evenly. It was inline-flex, so it
+           shrank to its labels and left the rest of a 1320px row empty beside it, which read as a
+           control that had failed to load rather than as navigation. */
         [data-baseweb="tab-list"] {{ gap:var(--s1) !important; background:{TAB_BAR}; padding:var(--s1);
             border-radius:var(--r-md); border:1px solid {TAB_BAR}; margin-bottom:var(--s4);
-            display:inline-flex !important; flex-wrap:nowrap !important; max-width:100%;
-            overflow-x:auto; }}
+            display:flex !important; width:100%; flex-wrap:nowrap !important; overflow-x:auto; }}
         /* The label lives in a child node that Streamlit colours itself, so colouring only the
            button leaves the text unchanged however many !important flags it carries. Every
            descendant is targeted, and -webkit-text-fill-color is set alongside color because the
            theme sets that too and it wins over color where both are present. */
-        [data-baseweb="tab-list"] button[data-baseweb="tab"] {{ font-weight:700 !important;
-            font-size:var(--t-sm) !important; border-radius:var(--r-sm) !important;
-            padding:var(--s2) var(--s5) !important; transition:all .2s var(--ease); }}
+        [data-baseweb="tab-list"] button[data-baseweb="tab"] {{ font-weight:800 !important;
+            font-size:.95rem !important; letter-spacing:.01em; border-radius:var(--r-sm) !important;
+            padding:var(--s3) var(--s4) !important; transition:all .2s var(--ease);
+            flex:1 1 0; min-width:0; justify-content:center !important; text-align:center;
+            white-space:nowrap; }}
         [data-baseweb="tab-list"] button[data-baseweb="tab"],
         [data-baseweb="tab-list"] button[data-baseweb="tab"] * {{
             color:{NAVY} !important; -webkit-text-fill-color:{NAVY} !important; }}
