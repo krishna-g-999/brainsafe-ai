@@ -3090,35 +3090,6 @@ def render_validation():
         pass
 
 
-def render_downloads():
-    st.markdown('<div class="about-h">Downloads and code</div>', unsafe_allow_html=True)
-    st.markdown(
-        '<p class="bs-note" style="margin:-6px 0 16px">Everything behind this server '
-        'is public. Source code, the curated knowledge graph, every validation artefact and the '
-        'scripts that regenerate each table and figure are in the repository; the trained '
-        'estimators are deposited separately with a committed manifest recording the SHA-256 of the '
-        'archive and of every file inside it, so a download is verified rather than trusted.</p>',
-        unsafe_allow_html=True)
-    st.markdown(
-        '<div class="bs-card"><table class="bs-table"><tbody>'
-        '<tr><td style="width:32%"><b>Source code</b></td>'
-        '<td><a href="https://github.com/krishna-g-999/brainsafe-ai">'
-        'github.com/krishna-g-999/brainsafe-ai</a>, MIT licence</td></tr>'
-        '<tr><td><b>How to cite</b></td><td><code>CITATION.cff</code> in the repository '
-        'root</td></tr>'
-        '<tr><td><b>Reproduce the results</b></td><td><code>REPRODUCE.md</code>, one command, with '
-        'recorded runtimes and a provenance map of every artefact</td></tr>'
-        '<tr><td><b>Validation artefacts</b></td><td><code>results/tables/</code> and '
-        '<code>validation/</code>, including the reproduction ledger comparing every reported '
-        'number against an independently regenerated one</td></tr>'
-        '<tr><td><b>Trained models</b></td><td>Deposited archive with '
-        '<code>models_manifest.json</code>; the deposit DOI is added on publication</td></tr>'
-        '<tr><td><b>Batch results</b></td><td>Every screening run is downloadable as CSV from the '
-        'Batch Screening tab</td></tr>'
-        '</tbody></table></div>',
-        unsafe_allow_html=True)
-
-
 def render_legal():
     st.markdown('<div class="about-h">Contact, privacy and licence</div>', unsafe_allow_html=True)
     st.markdown(
@@ -3141,6 +3112,16 @@ def render_legal():
         'terms of any source they redistribute.</div></div>',
         unsafe_allow_html=True)
     st.markdown(
+        '<div class="bs-card" style="margin-top:14px"><div class="bs-h">Code and data</div>'
+        '<div class="bs-note">Source code, the curated knowledge graph, every validation artefact '
+        'and the scripts that regenerate each table and figure are at '
+        '<a href="https://github.com/krishna-g-999/brainsafe-ai">'
+        'github.com/krishna-g-999/brainsafe-ai</a> under the MIT licence. '
+        '<code>CITATION.cff</code> gives the citation and <code>REPRODUCE.md</code> regenerates the '
+        'results from one command. Trained estimators are deposited separately with a manifest '
+        'recording the SHA-256 of the archive and of every file inside it, so a download is '
+        'verified rather than trusted. Any screening run is downloadable as CSV from the Batch '
+        'Screening tab.</div></div>'
         '<div class="bs-card" style="margin-top:14px"><div class="bs-h">Contact</div>'
         '<div class="bs-note">BrainSafe AI is developed under the SAI-Net '
         'initiative at the Sri Sathya Sai Institute of Higher Learning, Prasanthi Nilayam, India. '
@@ -3216,8 +3197,8 @@ def main():
     inject_css()
     render_header()
 
-    tab_search, tab_batch, tab_about, tab_dl, tab_legal = st.tabs(
-        ["Compound Search", "Batch Screening", "About", "Downloads", "Contact"])
+    tab_search, tab_batch, tab_about, tab_legal = st.tabs(
+        ["Compound Search", "Batch Screening", "About", "Contact"])
     with tab_search:
         with st.container(border=True):
             st.markdown('<p class="t" style="font-size:1.05rem;font-weight:700;color:#0D2137;margin:0 0 3px">'
@@ -3269,8 +3250,6 @@ def main():
 
     with tab_about:
         render_about()
-    with tab_dl:
-        render_downloads()
     with tab_legal:
         render_legal()
 
