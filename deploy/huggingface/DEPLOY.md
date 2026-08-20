@@ -34,32 +34,72 @@ Anything that cannot be verified is left exactly as it was.
 `models_rf/holdout/` is another 155 MB and is not needed to serve predictions. It holds the
 scaffold-split twins used for validation. Exclude it.
 
-## Creating the Space
+## Creating the Space under your institute organisation
 
-1. Create a Space at https://huggingface.co/new-space, SDK **Streamlit**, hardware **CPU basic**
-   (free). This gives the URL `https://huggingface.co/spaces/<user>/brainsafe-ai`.
+You have already joined the organisation, which is the part people usually get stuck on. What
+follows assumes the Space belongs to the organisation rather than to you personally, so that it
+survives you changing accounts and carries the institute's name in the URL.
 
-2. Clone it and copy this directory's `README.md` to the Space root. The YAML block at the top is
-   what tells Hugging Face which SDK to run and which file is the entry point; without it the Space
-   will not start.
+**1. Check you can write to the organisation.** Open
+`https://huggingface.co/organizations/<org>/settings/members` and confirm your role is `write` or
+`admin`. With `read` you can see the organisation but the Owner dropdown in step 2 will not offer
+it, and nothing later will work. If you only have `read`, an admin has to raise it.
 
-3. Copy in what the server needs, and nothing else:
+**2. Create the Space.** Go to https://huggingface.co/new-space and set:
 
-   ```
-   app.py  api.py  serve.py  model_fetch.py  models_manifest.json  requirements.txt
-   src/  assets/  results/  docs/  data/
-   models_rf/            (excluding holdout/)
-   ```
+| Field | Value |
+|---|---|
+| Owner | **the organisation**, not your username. This is the dropdown people miss |
+| Space name | `brainsafe-ai` |
+| Licence | MIT |
+| SDK | **Streamlit** |
+| Hardware | CPU basic, 2 vCPU, 16 GB. Free |
+| Visibility | Public |
 
-4. Track the models with git-LFS before adding them, or the push is rejected for file size:
+The URL is then `https://huggingface.co/spaces/<org>/brainsafe-ai`. That is the address for the
+manuscript.
 
-   ```bash
-   git lfs install
-   git lfs track "*.joblib" "*.pkl"
-   git add .gitattributes
-   ```
+**3. Get a token that can write to the organisation.** A personal token is not automatically an
+organisational one. At https://huggingface.co/settings/tokens create a token with **Write** access,
+and if you choose a fine-grained token, tick the organisation and give it write permission on
+repositories. Copy it; it is shown once.
 
-5. Push. The first build takes several minutes because the scientific stack is large.
+**4. Clone the Space and fill it.**
+
+```bash
+git clone https://huggingface.co/spaces/<org>/brainsafe-ai
+python deploy/huggingface/prepare_space.py --out brainsafe-ai
+```
+
+`prepare_space.py` copies only what answers a query: the app, `src/`, `assets/`, `results/`,
+`docs/`, the four `data/` subdirectories the server reads, and `models_rf/` without `holdout/`. It
+also writes the Space card and the git-LFS rules. That is 0.80 GB. Copying the repository instead
+would be 1.36 GB, most of it raw pulls and API caches that are never opened to serve a prediction.
+
+**5. Track LFS before adding the models.** This ordering matters more than anything else here. Git
+refuses single files over 10 MB on the Hub, and once a large file is in a commit, adding LFS
+afterwards does not fix that commit.
+
+```bash
+cd brainsafe-ai
+git lfs install
+git add .gitattributes && git commit -m "Track model files with LFS"
+git add -A && git commit -m "BrainSafe AI"
+git push
+```
+
+When prompted, the username is your Hugging Face username and the **password is the token** from
+step 3, not your account password.
+
+The push moves 0.8 GB and takes a while. The first build then takes several minutes because the
+scientific stack is large.
+
+**6. Silence the model-fetch warning.** `model_fetch.py` compares what is on disk against
+`models_manifest.json`, which lists the hold-out files that were deliberately not shipped, so the
+log opens with "102 of 252 model files missing". The app runs correctly regardless. To keep the log
+clean, add a Space variable under Settings, Variables and secrets:
+
+    BRAINSAFE_SKIP_MODEL_FETCH = 1
 
 ## Two things to check after it is live
 
