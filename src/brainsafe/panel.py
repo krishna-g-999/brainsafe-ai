@@ -152,7 +152,29 @@ def verify() -> dict:
         if m.stat().st_mtime < t.stat().st_mtime:
             stale.append(ep)
 
+    # A clone carries the registry and the endpoint tables but not the fitted models, which are
+    # deposited separately because they are gigabytes. With no models on disk the three-way
+    # reconciliation has only two views, and "every endpoint is missing its model" is a statement
+    # about the clone rather than a disagreement in the panel. The model-dependent findings are
+    # therefore reported as empty and `models_present` says why, so a caller can tell an absent
+    # panel from an inconsistent one instead of failing on a fresh checkout.
+    models_present = bool(fitted)
+    if not models_present:
+        return {
+            "n_registered": len(registered), "n_fitted": 0,
+            "n_tabled": len(tabled & registered), "models_present": False,
+            "no_model": [], "no_table": [], "unregistered": [], "stale_model": [],
+            "no_mode": sorted(ep for ep, r in modes.items() if not r.get("mode")),
+            "withdrawn_silent": sorted(ep for ep, r in modes.items()
+                                       if not r.get("deployed", True)
+                                       and not (r.get("withdrawn_reason") or "").strip()),
+            "by_mode": {m: len(binders(mode=m)) for m in (HYBRID, MEASURED_LABEL)},
+            "n_deployed": len(binders(deployed=True)),
+            "n_withdrawn": len(binders(deployed=False)),
+        }
+
     return {
+        "models_present": True,
         "n_registered": len(registered),
         "n_fitted": len(fitted),
         "n_tabled": len(tabled & registered),
@@ -181,8 +203,12 @@ def main() -> None:
     problems = [k for k in ("no_model", "no_table", "unregistered", "stale_model", "no_mode",
                             "withdrawn_silent") if v[k]]
     print()
+    if not v["models_present"]:
+        print("no fitted models on disk, so only the registry and the endpoint tables were "
+              "compared")
     if not problems:
-        print("the registry, the endpoint tables and the fitted models agree")
+        print("the registry, the endpoint tables and the fitted models agree"
+              if v["models_present"] else "the registry and the endpoint tables agree")
         return
     for k in problems:
         print(f"  {k:17s} {len(v[k])}: {', '.join(v[k])}")
