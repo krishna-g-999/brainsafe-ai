@@ -1914,9 +1914,8 @@ COVERAGE_NO = [
     "curation",
     "Vesicular monoamine transporter VMAT2, the target of tetrabenazine: 149 activities from 12 "
     "sources, too few and too narrow to train",
-    "Calcium channel subtypes. Cav3.2 was trained and rejected: its calibrated threshold collapsed to "
-    "0.065 and atenolol scored 0.084, so it would have generated false leads. Cav2.2 has 566 "
-    "activities, below the bar",
+    "Calcium channel subtype Cav2.2: 566 measured activities, below the bar for an endpoint that "
+    "survives a scaffold split. Cav3.2 is modelled and deployed",
     "Aggregation of alpha-synuclein, tau and huntingtin. These are phenotypic assays with no defined "
     "binding site. Tau carries 95,345 potency values, more than any deployed endpoint, but 86 per "
     "cent come from a single thioflavin-S displacement campaign and a 1,000-activity sample draws on "
@@ -1942,7 +1941,7 @@ COVERAGE_NO = [
 # stands in for an unmodelled subtype necessarily contains the string "GABA-A", which a text search
 # cannot distinguish from a claim that GABA-A itself is missing.
 COVERAGE_NO_MECHANISMS = {
-    "GluK1", "GluK2", "GluK3", "NMDA_PCP_site", "VMAT2", "Cav3_2", "Cav2_2",
+    "GluK1", "GluK2", "GluK3", "NMDA_PCP_site", "VMAT2", "Cav2_2",
     "SNCA", "MAPT", "HTT", "SOD1", "TARDBP", "C9orf72", "GABAA_a5", "SARM1", "KCNQ2",
 }
 
@@ -2514,6 +2513,15 @@ def render_model_comparison():
 
 
 def render_coverage_card():
+    """What the panel covers, with its bounds one click away rather than shouted alongside.
+
+    The bounds are not removed. A reviewer, a referee and a user deciding whether a null result means
+    anything all need them, and a resource that lists 47 endpoints while stating no scope reads as
+    naive rather than confident. What changed is the weight: the validated panel is the headline, and
+    the limits sit behind a disclosure that anyone who wants them can open. Both halves are generated
+    from the deployed model registry at page load, so neither can drift from the panel that is
+    actually running.
+    """
     yes = "".join(f'<li><b>{t}</b> <span class="bs-ctx">· {src}</span></li>'
                   for t, src in coverage_modelled())
     no = "".join(f"<li>{t}</li>" for t in COVERAGE_NO)
@@ -2525,34 +2533,42 @@ def render_coverage_card():
     _wd = coverage_withdrawn()
     withdrawn = ("".join(f'<li><b>{t}</b> <span class="bs-ctx">· {why}</span></li>' for t, why in _wd)
                  if _wd else "")
+
     st.markdown(
         f"""
-        <div class="bs-card"><div class="bs-h">Coverage: what this tool can and cannot assess
-          <span class="bs-h-sub">a null result means "no signal among modelled mechanisms", not "inert"</span></div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
-            <div><div class="about-eyebrow" style="color:{GREEN}">✓ Validated &amp; modelled</div>
-              <ul class="bs-note" style="margin:6px 0 0;padding-left:18px;line-height:1.7">{yes}</ul></div>
-            <div><div class="about-eyebrow" style="color:{AMBER}">◯ Not yet modelled</div>
-              <ul class="bs-note" style="margin:6px 0 0;padding-left:18px;line-height:1.7">{no}</ul>
-              <div class="about-eyebrow" style="color:{AMBER};margin-top:12px">△ Modelled but low sensitivity</div>
-              <ul class="bs-note" style="margin:6px 0 0;padding-left:18px;line-height:1.7">{low}</ul>
-              <div class="bs-note" style="margin-top:6px">For these, a positive call carries information but a
-              negative one does not rule engagement out.</div>
-              {f'<div class="about-eyebrow" style="color:{ADVERSE};margin-top:12px">✕ Trained then withdrawn</div><ul class="bs-note" style="margin:6px 0 0;padding-left:18px;line-height:1.7">{withdrawn}</ul>' if withdrawn else ''}
-              </div>
-          </div>
-          <div class="bs-note" style="margin-top:12px"><b>A class this panel cannot represent.</b>
-          {COVERAGE_CLASS_LIMIT}</div>
-          <div class="bs-note" style="margin-top:10px">Because the tool can only "see" mechanisms it has a
-          validated model for, a compound whose real target is in the right-hand column will correctly show
-          "no distinctive engagement". That is a genuine <i>unknown</i>, not evidence of inactivity. The
-          modelled list and the sensitivity figures on this page are generated from the deployed model
-          registry at page load, not written by hand, so they cannot describe a panel other than the one
-          actually running.</div>
+        <div class="bs-card"><div class="bs-h">Validated coverage
+          <span class="bs-h-sub">every endpoint below is trained on measured data and passes its own
+          specificity audit</span></div>
+          <ul class="bs-note" style="margin:6px 0 0;padding-left:18px;line-height:1.7;
+              columns:2;column-gap:28px">{yes}</ul>
         </div>
         """,
         unsafe_allow_html=True,
     )
+
+    with st.expander("Scope: what a null result does and does not mean"):
+        st.markdown(
+            f"""
+            <div class="bs-note" style="margin-bottom:10px">The panel reports the mechanisms it has a
+            validated model for. A compound acting through something outside that set will correctly
+            show no distinctive engagement, which is a genuine <i>unknown</i> rather than evidence of
+            inactivity. The lists below are generated from the deployed model registry at page load,
+            not written by hand, so they describe the panel that is actually running.</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+              <div><div class="about-eyebrow" style="color:{AMBER}">Not yet modelled</div>
+                <ul class="bs-note" style="margin:6px 0 0;padding-left:18px;line-height:1.7">{no}</ul></div>
+              <div><div class="about-eyebrow" style="color:{AMBER}">Modelled, lower sensitivity</div>
+                <ul class="bs-note" style="margin:6px 0 0;padding-left:18px;line-height:1.7">{low}</ul>
+                <div class="bs-note" style="margin-top:6px">For these a positive call carries
+                information but a negative one does not rule engagement out.</div>
+                {f'<div class="about-eyebrow" style="color:{ADVERSE};margin-top:12px">Trained then withdrawn</div><ul class="bs-note" style="margin:6px 0 0;padding-left:18px;line-height:1.7">{withdrawn}</ul><div class="bs-note" style="margin-top:6px">Endpoints that were trained, tested against trivial metabolites and random chemistry, and withheld because no threshold separated real ligands from background. They are listed because a panel showing only what survived is a selection rather than an inventory.</div>' if withdrawn else ''}
+              </div>
+            </div>
+            <div class="bs-note" style="margin-top:12px"><b>A class this panel cannot represent.</b>
+            {COVERAGE_CLASS_LIMIT}</div>
+            """,
+            unsafe_allow_html=True,
+        )
 
 
 def render_glossary():
