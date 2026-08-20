@@ -262,11 +262,13 @@ NAVY   = "#0D2137"
 NAVY_DK = "#071626"
 NAVY_MD = "#1A3A5C"
 GOLD   = "#F0A500"
-# Tab bar. White type on the brand gold reaches only 2.1:1 and on the logo orange 2.9:1,
-# both well under the 4.5:1 that 13px bold body text needs, so the bar uses deeper tints of
-# the same hue: 5.2:1 for the bar and 7.3:1 for the selected tab. Measured, not judged by eye.
-TAB_BAR  = "#C2410C"   # white on this: 5.18:1
-TAB_ACTIVE = "#9A3412" # white on this: 7.31:1
+# Tab bar, in the brand gold that the wordmark and the logo already use, so the page carries one
+# accent colour rather than three. The label colour is measured rather than assumed: white on this
+# gold is 2.08:1, which is not readable at any size, while the navy ink is 7.82:1. The resting tabs
+# therefore take the navy, and the selected tab inverts to a navy chip with white type at 16.3:1,
+# which both marks the active page unmistakably and puts white type where it is legible.
+TAB_BAR = GOLD          # navy on this: 7.82:1
+TAB_ACTIVE = NAVY       # white on this: 16.28:1
 BG     = "#EEF2F9"
 SURF   = "#FFFFFF"
 LINE   = "#E6ECF5"
@@ -1044,7 +1046,8 @@ def inject_css():
            unselected ones becoming hard to read. */
         [data-baseweb="tab-list"] {{ gap:var(--s1) !important; background:{TAB_BAR}; padding:var(--s1);
             border-radius:var(--r-md); border:1px solid {TAB_BAR}; margin-bottom:var(--s4);
-            display:inline-flex !important; }}
+            display:inline-flex !important; flex-wrap:nowrap !important; max-width:100%;
+            overflow-x:auto; }}
         /* The label lives in a child node that Streamlit colours itself, so colouring only the
            button leaves the text unchanged however many !important flags it carries. Every
            descendant is targeted, and -webkit-text-fill-color is set alongside color because the
@@ -1054,21 +1057,25 @@ def inject_css():
             padding:var(--s2) var(--s5) !important; transition:all .2s var(--ease); }}
         [data-baseweb="tab-list"] button[data-baseweb="tab"],
         [data-baseweb="tab-list"] button[data-baseweb="tab"] * {{
-            color:rgba(255,255,255,.86) !important;
-            -webkit-text-fill-color:rgba(255,255,255,.86) !important; }}
+            color:{NAVY} !important; -webkit-text-fill-color:{NAVY} !important; }}
         [data-baseweb="tab-list"] button[data-baseweb="tab"]:hover {{
-            background:rgba(255,255,255,.14) !important; }}
-        [data-baseweb="tab-list"] button[data-baseweb="tab"]:hover,
-        [data-baseweb="tab-list"] button[data-baseweb="tab"]:hover * {{
-            color:#FFFFFF !important; -webkit-text-fill-color:#FFFFFF !important; }}
+            background:rgba(255,255,255,.28) !important; }}
         /* The selected tab is painted with an inset shadow rather than a background colour. The
            theme sets background-color on these buttons through a generated class that survives an
            !important background rule, so the colour never reached the element; box-shadow is not
            contested and covers the whole button. The white underline is a second, redundant cue for
            anyone who cannot separate the two oranges. */
-        [data-baseweb="tab-list"] button[data-baseweb="tab"][aria-selected="true"] {{
-            box-shadow:inset 0 0 0 999px {TAB_ACTIVE},
-                       inset 0 -3px 0 0 #FFFFFF !important; }}
+        /* The active tab is filled by a pseudo-element rather than a background or a shadow. The
+           theme's generated classes reset background-color and box-shadow on these buttons and win
+           against !important, but they do not style ::before, so this is the one fill that holds.
+           It sits behind the label, which is why the button gets its own stacking context. */
+        [data-baseweb="tab-list"] button[data-baseweb="tab"] {{ position:relative; z-index:0; }}
+        [data-baseweb="tab-list"] button[data-baseweb="tab"][aria-selected="true"]::before {{
+            content:""; position:absolute; inset:0; z-index:-1; background:{TAB_ACTIVE};
+            border-radius:var(--r-sm); }}
+        [data-baseweb="tab-list"] button[data-baseweb="tab"][aria-selected="true"],
+        [data-baseweb="tab-list"] button[data-baseweb="tab"][aria-selected="true"] * {{
+            color:#FFFFFF !important; -webkit-text-fill-color:#FFFFFF !important; }}
         [data-baseweb="tab-list"] button[data-baseweb="tab"][aria-selected="true"],
         [data-baseweb="tab-list"] button[data-baseweb="tab"][aria-selected="true"] * {{
             color:#FFFFFF !important; -webkit-text-fill-color:#FFFFFF !important; }}
@@ -1079,8 +1086,7 @@ def inject_css():
            this element is the mechanism the component already uses to mark the active tab, so it is
            simply recoloured to white against the orange bar. The border strip below it is still
            removed: on a coloured bar it reads as a stray line. */
-        [data-baseweb="tab-highlight"] {{ background:#FFFFFF !important; height:3px !important;
-            border-radius:2px !important; }}
+        [data-baseweb="tab-highlight"] {{ display:none !important; }}
         [data-baseweb="tab-border"] {{ display:none !important; }}
 
         /* ---- inputs ---- */
@@ -1301,7 +1307,7 @@ def build_network_svg(r, name="Compound"):
             f'<div style="padding:26px 14px;text-align:center;color:{MUTE}">'
             f'<div style="font-size:1.02rem;font-weight:700;color:{NAVY}">'
             f'No CNS target engagement above the reporting threshold</div>'
-            f'<div class="bs-note" style="margin-top:8px;max-width:70ch;margin-left:auto;'
+            f'<div class="bs-note" style="margin-top:8px;margin-left:auto;'
             f'margin-right:auto">The analysis ran across all {len(KNOWLEDGE_GRAPH)} modelled '
             f'targets. This is the expected result for a peripherally acting compound. It is not '
             f'evidence of inactivity, for two reasons. The molecule may act through a mechanism this '
@@ -2796,7 +2802,7 @@ def render_about():
 
     st.markdown('<div class="about-h">About Brain<span>Safe</span> AI</div>', unsafe_allow_html=True)
     st.markdown(
-        '<p class="bs-note" style="font-size:.95rem;margin:-6px 0 18px;max-width:72ch">'
+        '<p class="bs-note" style="font-size:.95rem;margin:-6px 0 18px">'
         'BrainSafe AI answers four questions about a small molecule in one pass: can it reach the '
         'brain, what does it engage there, what does that mechanism touch, and what would stop it '
         'being a drug. Every endpoint is trained on measured experimental values, never on '
@@ -2830,39 +2836,10 @@ def render_about():
     render_coverage_card()
     st.write("")
 
-    st.markdown(
-        '<div class="bs-card"><div class="bs-h">How it was built and tested'
-        '<span class="bs-h-sub">every figure below is read from the deployed models at page load'
-        '</span></div>'
-        '<div class="bs-note" style="max-width:78ch">Each compound is reduced to its largest '
-        'organic fragment, neutralised so that a salt and its free base are one input, and '
-        'represented by a 1,024-bit ECFP-4 fingerprint with twelve physicochemical descriptors. A '
-        'random forest is fitted per endpoint, chosen after comparison against gradient boosting, '
-        'XGBoost, L2 logistic regression, a nearest-neighbour read-across and a graph neural '
-        'network. Classifier probabilities are isotonically calibrated on out-of-fold predictions; '
-        'binder models use Platt scaling, because the withheld set for one target is often too '
-        'small to fit a step function without overfitting it.</div>'
-        '<table class="bs-table" style="margin-top:12px"><tbody>'
-        '<tr><td style="width:34%"><b>Random 10-fold</b></td><td>AUROC ' + val("random_lo") +
-        ' to ' + val("random_hi") + ', mean ' + val("random_mean") + ' across the measured-label '
-        'classifiers. Interpolation within known chemistry.</td></tr>'
-        '<tr><td><b>Scaffold-grouped 10-fold</b></td><td>AUROC ' + val("scaffold_lo") + ' to ' +
-        val("scaffold_hi") + ', mean ' + val("scaffold_mean") + '. Whole Bemis-Murcko scaffold '
-        'classes withheld before training, so this is generalisation to chemistry the model has '
-        'not seen.</td></tr>'
-        '<tr><td><b>Temporal split</b></td><td>AUROC ' + val("temporal_lo") + ' to ' +
-        val("temporal_hi") + ' across ' + str(f.get("temporal_n", "-")) + ' endpoints, training on '
-        'compounds published before a cut-off and testing on those published after it.</td></tr>'
-        '<tr><td><b>Binder panel</b></td><td>Validated against compounds measured at the same '
-        'target and found inactive, not against the decoys used to train it: mean AUROC ' +
-        val("binder_auroc") + ' at a mean sensitivity of ' + val("binder_sens") + ' on actives '
-        'withheld by scaffold.</td></tr>'
-        '</tbody></table>'
-        '<div class="bs-note" style="margin-top:10px">The distance between the random and the '
-        'scaffold split is the honest statement of how far a model travels. Both are reported, '
-        'because quoting only the first would describe a use case nobody has.</div></div>',
-        unsafe_allow_html=True)
-
+    st.write("")
+    render_methods()
+    st.write("")
+    render_validation()
     st.write("")
     render_model_comparison()
     st.write("")
@@ -2870,7 +2847,7 @@ def render_about():
     st.markdown(
         '<div class="bs-card"><div class="bs-h">Intended use'
         '<span class="bs-h-sub">what a result from this server is, and what it is not</span></div>'
-        '<div class="bs-note" style="max-width:78ch">BrainSafe AI predicts molecular target '
+        '<div class="bs-note">BrainSafe AI predicts molecular target '
         'engagement and physicochemical properties. It does not predict clinical efficacy, and it '
         'does not distinguish an agonist from an antagonist: both bind, and the models are trained '
         'on binding. Disease-level scores are a route from a mechanism to the conditions that '
@@ -2980,12 +2957,11 @@ def render_methods():
     def val(key, fmt="{:.3f}", dash="not available"):
         return fmt.format(f[key]) if key in f else dash
 
-    st.markdown('<div class="about-h">Methods</div>', unsafe_allow_html=True)
     st.markdown(
-        '<p class="bs-note" style="max-width:78ch;margin:-6px 0 16px">How a structure becomes a '
-        'profile, in the order it happens. Full detail, including every decision that was made and '
-        'reversed, is in the manuscript and in <code>docs/METHODS.md</code>; the numbers on this '
-        'page are read from the deployed models rather than written down.</p>',
+        '<div class="bs-h" style="margin:0 0 8px">How a prediction is made'
+        '<span class="bs-h-sub">the six steps, in the order they happen</span></div>'
+        '<p class="bs-note" style="margin:0 0 12px">Full detail, including every decision that was '
+        'made and later reversed, is in the manuscript and in <code>docs/METHODS.md</code>.</p>',
         unsafe_allow_html=True)
 
     steps = [
@@ -3056,11 +3032,11 @@ def render_validation():
     def val(key, fmt="{:.3f}", dash="not available"):
         return fmt.format(f[key]) if key in f else dash
 
-    st.markdown('<div class="about-h">Validation</div>', unsafe_allow_html=True)
     st.markdown(
-        '<p class="bs-note" style="max-width:78ch;margin:-6px 0 16px">Every figure on this page is '
-        'read from the validation artefacts at page load. Where a check fails it is shown failing: '
-        'a validation suite that only ever passes is not measuring anything.</p>',
+        '<div class="bs-h" style="margin:0 0 8px">How it was tested'
+        '<span class="bs-h-sub">read from the validation artefacts at page load</span></div>'
+        '<p class="bs-note" style="margin:0 0 12px">Where a check fails it is shown failing. A '
+        'validation suite that only ever passes is not measuring anything.</p>',
         unsafe_allow_html=True)
 
     st.markdown(
@@ -3083,14 +3059,14 @@ def render_validation():
 
     rows = validation_rows()
     if rows is not None:
-        st.markdown('<div class="bs-h" style="margin:18px 0 6px">Per endpoint</div>',
-                    unsafe_allow_html=True)
-        show = rows.copy()
-        show.columns = [c.replace("roc_auc_mean_", "AUROC ").replace("r2_mean_", "R2 ")
-                        for c in show.columns]
-        st.dataframe(show.round(3), use_container_width=True, hide_index=True)
-        st.caption("AUROC for classification endpoints, R-squared for regressions. The two are not "
-                   "comparable: 0.5 is chance for one and a respectable fit for the other.")
+        with st.expander("Per-endpoint metrics"):
+            show = rows.copy()
+            show.columns = [c.replace("roc_auc_mean_", "AUROC ").replace("r2_mean_", "R2 ")
+                            for c in show.columns]
+            st.dataframe(show.round(3), use_container_width=True, hide_index=True)
+            st.caption("AUROC for classification endpoints, R-squared for regressions. The two are "
+                       "not comparable: 0.5 is chance for one and a respectable fit for the "
+                       "other.")
 
     try:
         inv = pd.read_csv(RESULTS / "inversion_validation.csv")
@@ -3117,7 +3093,7 @@ def render_validation():
 def render_downloads():
     st.markdown('<div class="about-h">Downloads and code</div>', unsafe_allow_html=True)
     st.markdown(
-        '<p class="bs-note" style="max-width:78ch;margin:-6px 0 16px">Everything behind this server '
+        '<p class="bs-note" style="margin:-6px 0 16px">Everything behind this server '
         'is public. Source code, the curated knowledge graph, every validation artefact and the '
         'scripts that regenerate each table and figure are in the repository; the trained '
         'estimators are deposited separately with a committed manifest recording the SHA-256 of the '
@@ -3147,7 +3123,7 @@ def render_legal():
     st.markdown('<div class="about-h">Contact, privacy and licence</div>', unsafe_allow_html=True)
     st.markdown(
         '<div class="bs-card"><div class="bs-h">Privacy</div>'
-        '<div class="bs-note" style="max-width:78ch">No registration is required and no account '
+        '<div class="bs-note">No registration is required and no account '
         'exists. Structures submitted for prediction are held in memory for the lifetime of the '
         'request and are not written to disk, logged or retained. Nothing submitted here is used to '
         'train or update any model. One external call is made, and only when it is needed: a '
@@ -3157,7 +3133,7 @@ def render_legal():
         unsafe_allow_html=True)
     st.markdown(
         '<div class="bs-card" style="margin-top:14px"><div class="bs-h">Licence</div>'
-        '<div class="bs-note" style="max-width:78ch">Source code is released under the MIT licence. '
+        '<div class="bs-note">Source code is released under the MIT licence. '
         'Underlying data retain the licences of their sources: ChEMBL (CC BY-SA 3.0), BindingDB, '
         'B3DB, Therapeutics Data Commons and MoleculeNet. Pathway annotations are drawn from KEGG, '
         'Reactome and the IUPHAR/BPS Guide to Pharmacology and are subject to their own terms; KEGG '
@@ -3166,14 +3142,14 @@ def render_legal():
         unsafe_allow_html=True)
     st.markdown(
         '<div class="bs-card" style="margin-top:14px"><div class="bs-h">Contact</div>'
-        '<div class="bs-note" style="max-width:78ch">BrainSafe AI is developed under the SAI-Net '
+        '<div class="bs-note">BrainSafe AI is developed under the SAI-Net '
         'initiative at the Sri Sathya Sai Institute of Higher Learning, Prasanthi Nilayam, India. '
         'Questions, corrections and bug reports are best raised as issues in the repository, where '
         'they stay visible alongside the code they concern.</div></div>',
         unsafe_allow_html=True)
     st.markdown(
         '<div class="bs-card" style="margin-top:14px"><div class="bs-h">Status</div>'
-        '<div class="bs-note" style="max-width:78ch">Research preview, pending peer review. '
+        '<div class="bs-note">Research preview, pending peer review. '
         'BrainSafe AI is a computational decision-support tool for research prioritisation and '
         'hypothesis generation. It predicts molecular target engagement and physicochemical '
         'properties, not clinical efficacy, and has not undergone wet-lab or clinical validation. '
@@ -3240,9 +3216,8 @@ def main():
     inject_css()
     render_header()
 
-    (tab_search, tab_batch, tab_about, tab_methods, tab_valid, tab_dl,
-     tab_legal) = st.tabs(["Compound Search", "Batch Screening", "About", "Methods",
-                           "Validation", "Downloads", "Contact & Licence"])
+    tab_search, tab_batch, tab_about, tab_dl, tab_legal = st.tabs(
+        ["Compound Search", "Batch Screening", "About", "Downloads", "Contact"])
     with tab_search:
         with st.container(border=True):
             st.markdown('<p class="t" style="font-size:1.05rem;font-weight:700;color:#0D2137;margin:0 0 3px">'
@@ -3294,10 +3269,6 @@ def main():
 
     with tab_about:
         render_about()
-    with tab_methods:
-        render_methods()
-    with tab_valid:
-        render_validation()
     with tab_dl:
         render_downloads()
     with tab_legal:
