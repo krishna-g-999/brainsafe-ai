@@ -237,29 +237,44 @@ stops such compounds crossing the barrier.
 
 ### 3.1.1 How one endpoint is trained
 
+The pipeline is one chain, shown in two halves because it is fifteen steps long. The first half
+turns raw deposited measurements into a labelled training table; the second turns that table into a
+deployed endpoint, or withholds it.
+
+**Stage 1: from deposited measurements to a labelled table.**
+
 ```mermaid
 flowchart TD
-    A[ChEMBL / BindingDB / B3DB / TDC<br/>raw measurements for ONE target] --> B[Keep potency types only<br/>IC50, Ki, Kd, EC50]
-    B --> C{Exact value<br/>or censored bound?}
-    C -->|exact| D[pChEMBL >= 7 : active<br/>pChEMBL <= 5 : inactive<br/>between : discarded]
+    A[ChEMBL / BindingDB / B3DB / TDC<br/>raw measurements for ONE target] --> B[Keep potency types only:<br/>IC50, Ki, Kd, EC50]
+    B --> C{Exact value or<br/>censored bound?}
+    C -->|exact| D[pChEMBL >= 7 : active<br/>pChEMBL <= 5 : inactive<br/>in between : discarded]
     C -->|bound| E{Does the whole interval<br/>fall one side of the cut?}
     E -->|yes| D
     E -->|no| F[Discarded as undecidable]
-    D --> G[Deduplicate on InChIKey<br/>of the desalted parent]
-    G --> H{Enough measured<br/>inactives?}
+    D --> G[Deduplicate on the InChIKey<br/>of the desalted parent]
+    G --> H{Enough measured<br/>inactives for this target?}
     H -->|yes| I[Negatives = measured inactives]
-    H -->|no| J[Negatives = measured inactives<br/>+ property-matched decoys<br/>Tanimoto < 0.35 to any active]
-    I --> K[Featurise: 1,036 columns]
+    H -->|no| J[Negatives = measured inactives<br/>plus property-matched decoys,<br/>Tanimoto below 0.35 to any active]
+    I --> K[Labelled training table]
     J --> K
-    K --> L[Collapse feature-identical rows]
-    L --> M[Withhold a fifth of active<br/>scaffold groups, and half<br/>the measured inactives]
-    M --> N[Fit random forest, 300 trees]
-    N --> O[Calibrate on out-of-fold<br/>predictions]
-    O --> P[Set threshold on the<br/>withheld inactives]
-    P --> Q[Measure FPR on a DISJOINT<br/>background pool]
-    Q --> R{Fires on trivial metabolites,<br/>or FPR above 5 per cent?}
-    R -->|yes| S[Withdrawn, with the<br/>reason recorded]
-    R -->|no| T[Deployed]
+```
+
+**Stage 2: from the table to a deployed endpoint, or not.**
+
+```mermaid
+flowchart TD
+    K[Labelled training table] --> L[Featurise: 1,036 columns]
+    L --> M[Collapse feature-identical rows]
+    M --> N[Withhold a fifth of the active scaffold groups,<br/>and half the measured inactives]
+    N --> O[Fit random forest, 300 trees]
+    O --> P[Calibrate on out-of-fold predictions]
+    P --> Q[Set the threshold on the withheld inactives]
+    Q --> R[Measure the false-positive rate on a<br/>DISJOINT background pool]
+    R --> S{Fires on trivial metabolites,<br/>or FPR above 5 per cent?}
+    S -->|yes| T[Withdrawn, with the reason<br/>and its evidence recorded]
+    S -->|no| U{Sensitivity at that<br/>threshold above 0.60?}
+    U -->|no| V[Deployed, flagged as<br/>lower sensitivity]
+    U -->|yes| W[Deployed]
 ```
 
 Every endpoint goes through this independently. Nothing crosses between them except the
