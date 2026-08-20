@@ -1,8 +1,52 @@
 # BrainSafe AI: Technical Report
 
-**Generated** 2026-08-20 from the deployed panel at commit `120f2c7`.
+| | |
+|---|---|
+| **Document** | Technical report on the BrainSafe AI prediction panel |
+| **Generated** | 2026-08-20, automatically, from the deployed panel |
+| **Commit** | `120f2c7` |
+| **Status** | Research preview, pending peer review |
+| **Repository** | https://github.com/krishna-g-999/brainsafe-ai |
+| **Regenerate** | `python src/brainsafe/analysis/build_technical_report.py` |
+
 Every figure in this document is read from an artefact in this repository at generation time. None
-is typed in. Regenerate with `python src/brainsafe/analysis/build_technical_report.py`.
+is typed in, so the document cannot describe a panel other than the one that is deployed.
+
+---
+
+## 0. Executive summary
+
+BrainSafe AI predicts, from chemical structure alone, whether a small molecule reaches the human
+brain, what it engages there, which conditions that mechanism touches, and what would stop it
+becoming a drug. It exists because CNS attrition is not usually a potency problem: a compound can be
+potent at its intended target and never arrive, or arrive and carry a liability nobody tested for.
+
+**What it is.** 75 fitted estimators, 70 deployed, trained on
+228,200 measured compound-endpoint records drawn from ChEMBL, BindingDB, B3DB, Therapeutics
+Data Commons and MoleculeNet. Every endpoint is trained on measured experimental values only; no
+label comes from a curator's annotation and no value is imputed.
+
+**How well it works.** Across the measured-label classifiers, mean AUROC is
+0.958 under a random
+split and 0.925 under a
+scaffold-grouped split that withholds entire structural classes. The binder panel, validated against
+compounds measured at the same target and found inactive rather than against decoys, reaches a mean
+AUROC of 0.917 at a mean sensitivity of
+0.898. On 1,000 compounds with no recorded
+activity at any modelled target it stays silent 94.9% of the time.
+
+**What is distinctive.** Three things, each of which is a decision rather than a default. The
+negative class is *recovered from censored measurements* rather than simulated with decoys wherever
+the data allows. Decision thresholds are *measured on a pool disjoint from the one that set them*,
+so a false-positive rate can disagree with its target instead of restating it. And every target
+score is *gated by predicted exposure*, so potency at a target the compound cannot reach contributes
+nothing.
+
+**What it does not do.** It does not predict clinical efficacy, distinguish agonism from antagonism,
+or resolve chirality. Its disease layer is a route from a mechanism to the conditions that mechanism
+touches, not an indication prediction, and it does not beat a frequency baseline. Five endpoints
+were trained, tested and withdrawn. One adversarial check fails and is reported as failing. Section
+8 states these in full.
 
 ---
 
@@ -47,83 +91,83 @@ within chemistry it has.
 
 <details><summary><b>All 75 estimators (click to expand)</b></summary>
 
-| model | family | predicts | task | algorithm | n_train | n_positive | metric | random_split | scaffold_split | calibration | deployed |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| A2A | target | potency, pChEMBL | regression | RandomForest, 300 trees, min_samples_leaf=2, seed 42 | 6743 |  | R2 | 0.7231 | 0.6205 | none | True |
-| AChE | target | probability of activity | classification | RandomForest, 300 trees, min_samples_leaf=2, seed 42 | 5125 | 3014.0 | AUROC | 0.9659 | 0.9212 | isotonic, out-of-fold | True |
-| antioxidant_DPPH | target | potency, pChEMBL | regression | RandomForest, 300 trees, min_samples_leaf=2, seed 42 | 2782 |  | R2 | 0.6589 | 0.4153 | none | True |
-| BACE1 | target | probability of activity | classification | RandomForest, 300 trees, min_samples_leaf=2, seed 42 | 8207 | 7096.0 | AUROC | 0.9764 | 0.9648 | isotonic, out-of-fold | True |
-| BBB | exposure | probability of activity | classification | RandomForest, 300 trees, min_samples_leaf=2, seed 42 | 3901 | 2473.0 | AUROC | 0.899 | 0.8777 | isotonic, out-of-fold | True |
-| BChE | target | probability of activity | classification | RandomForest, 300 trees, min_samples_leaf=2, seed 42 | 3278 | 1760.0 | AUROC | 0.9724 | 0.9451 | isotonic, out-of-fold | True |
-| D2 | target | potency, pChEMBL | regression | RandomForest, 300 trees, min_samples_leaf=2, seed 42 | 7905 |  | R2 | 0.6403 | 0.5311 | none | True |
-| GSK3B | target | probability of activity | classification | RandomForest, 300 trees, min_samples_leaf=2, seed 42 | 5439 | 4056.0 | AUROC | 0.9649 | 0.9425 | isotonic, out-of-fold | True |
-| hERG | safety | probability of activity | classification | RandomForest, 300 trees, min_samples_leaf=2, seed 42 | 9933 | 2370.0 | AUROC | 0.9565 | 0.927 | isotonic, out-of-fold | True |
-| HT2A | target | potency, pChEMBL | regression | RandomForest, 300 trees, min_samples_leaf=2, seed 42 | 6075 |  | R2 | 0.6996 | 0.556 | none | True |
-| MAO_A | target | probability of activity | classification | RandomForest, 300 trees, min_samples_leaf=2, seed 42 | 3585 | 857.0 | AUROC | 0.9619 | 0.9059 | isotonic, out-of-fold | True |
-| MAO_B | target | probability of activity | classification | RandomForest, 300 trees, min_samples_leaf=2, seed 42 | 4534 | 2299.0 | AUROC | 0.963 | 0.917 | isotonic, out-of-fold | True |
-| pka_basic | target | pKa | regression | RandomForest, 300 trees, min_samples_leaf=2, seed 42 | 6384 |  | R2 |  |  | none | True |
-| SERT | target | potency, pChEMBL | regression | RandomForest, 300 trees, min_samples_leaf=2, seed 42 | 4479 |  | R2 | 0.6897 | 0.4612 | none | True |
-| A1_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 7352 | 1523.0 | AUROC vs measured non-binders |  | 0.914 | sigmoid, prefit | True |
-| A2A_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 15636 | 3333.0 | AUROC vs measured non-binders |  | 0.949 | sigmoid, prefit | True |
-| CB1_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 10198 | 2158.0 | AUROC vs measured non-binders |  | 0.949 | sigmoid, prefit | True |
-| CGRP_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 2251 | 454.0 | AUROC vs measured non-binders |  | 0.985 | sigmoid, prefit | True |
-| COX2_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 4429 | 883.0 | AUROC vs measured non-binders |  | 0.783 | sigmoid, prefit | True |
-| CSF1R_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 6772 | 1420.0 | AUROC vs measured non-binders |  | 0.95 | sigmoid, prefit | True |
-| Cav3_2_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 1325 | 272.0 | AUROC vs measured non-binders |  | 0.982 | sigmoid, prefit | True |
-| D2_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 13861 | 2890.0 | AUROC vs measured non-binders |  | 0.872 | sigmoid, prefit | True |
-| D3_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 15831 | 3450.0 | AUROC vs measured non-binders |  | 0.956 | sigmoid, prefit | True |
-| DAT_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 5113 | 1102.0 | AUROC vs measured non-binders |  | 0.959 | sigmoid, prefit | True |
-| DHODH_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 3619 | 730.0 | AUROC vs measured non-binders |  | 0.966 | sigmoid, prefit | True |
-| GABA_A_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 771 | 168.0 | AUROC vs measured non-binders |  | 0.719 | sigmoid, prefit | True |
-| GBA1_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 441 | 81.0 | AUROC vs measured non-binders |  | 0.932 | sigmoid, prefit | True |
-| GluA2_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 68 | 68.0 | AUROC vs measured non-binders |  | 0.696 | sigmoid, prefit | False |
-| GluN2B_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 3461 | 749.0 | AUROC vs measured non-binders |  | 0.761 | sigmoid, prefit | True |
-| H3_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 12295 | 2659.0 | AUROC vs measured non-binders |  | 0.978 | sigmoid, prefit | True |
-| HDAC1_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 11728 | 2563.0 | AUROC vs measured non-binders |  | 0.96 | sigmoid, prefit | True |
-| HDAC6_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 14155 | 3010.0 | AUROC vs measured non-binders |  | 0.975 | sigmoid, prefit | True |
-| HT1A_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 14179 | 3070.0 | AUROC vs measured non-binders |  | 0.936 | sigmoid, prefit | True |
-| HT2A_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 14369 | 2918.0 | AUROC vs measured non-binders |  | 0.925 | sigmoid, prefit | True |
-| HT6_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 10532 | 2309.0 | AUROC vs measured non-binders |  | 0.96 | sigmoid, prefit | True |
-| HT7_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 5623 | 1189.0 | AUROC vs measured non-binders |  | 0.947 | sigmoid, prefit | True |
-| KEAP1_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 463 | 97.0 | AUROC vs measured non-binders |  | 0.88 | sigmoid, prefit | True |
-| LRRK2_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 4470 | 951.0 | AUROC vs measured non-binders |  | 0.968 | sigmoid, prefit | True |
-| MT1_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 2670 | 579.0 | AUROC vs measured non-binders |  | 0.896 | sigmoid, prefit | True |
-| NET_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 5933 | 1217.0 | AUROC vs measured non-binders |  | 0.92 | sigmoid, prefit | True |
-| NFKB1_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 102 | 39.0 | AUROC vs measured non-binders |  | 0.459 | sigmoid, prefit | False |
-| NLRP3_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 843 | 177.0 | AUROC vs measured non-binders |  | 0.93 | sigmoid, prefit | True |
-| NR3C1_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 37 | 60.0 | AUROC vs measured non-binders |  | 0.41 | sigmoid, prefit | False |
-| NRF2_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 285 | 70.0 | AUROC vs measured non-binders |  | 0.789 | sigmoid, prefit | False |
-| Nav1_1_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 227 | 40.0 | AUROC vs measured non-binders |  | 0.952 | sigmoid, prefit | False |
-| Nav1_5_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 870 | 207.0 | AUROC vs measured non-binders |  | 0.921 | sigmoid, prefit | True |
-| Nav1_6_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 1027 | 199.0 | AUROC vs measured non-binders |  | 0.862 | sigmoid, prefit | True |
-| Nav1_7_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 10397 | 2165.0 | AUROC vs measured non-binders |  | 0.957 | sigmoid, prefit | True |
-| Nav1_8_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 1030 | 181.0 | AUROC vs measured non-binders |  | 0.956 | sigmoid, prefit | True |
-| OPRK1_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 11642 | 2465.0 | AUROC vs measured non-binders |  | 0.945 | sigmoid, prefit | True |
-| OPRM1_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 14058 | 2904.0 | AUROC vs measured non-binders |  | 0.954 | sigmoid, prefit | True |
-| OX1_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 12724 | 2788.0 | AUROC vs measured non-binders |  | 0.964 | sigmoid, prefit | True |
-| OX2_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 14679 | 3123.0 | AUROC vs measured non-binders |  | 0.964 | sigmoid, prefit | True |
-| P2X7_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 11122 | 2308.0 | AUROC vs measured non-binders |  | 0.813 | sigmoid, prefit | True |
-| PDE10A_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 15463 | 3211.0 | AUROC vs measured non-binders |  | 0.962 | sigmoid, prefit | True |
-| PDE4B_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 4332 | 948.0 | AUROC vs measured non-binders |  | 0.966 | sigmoid, prefit | True |
-| RIPK1_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 5619 | 1149.0 | AUROC vs measured non-binders |  | 0.966 | sigmoid, prefit | True |
-| SERT_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 11429 | 2516.0 | AUROC vs measured non-binders |  | 0.945 | sigmoid, prefit | True |
-| SIRT1_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 276 | 125.0 | AUROC vs measured non-binders |  | 0.792 | sigmoid, prefit | True |
-| Sigma1_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 7427 | 1643.0 | AUROC vs measured non-binders |  | 0.881 | sigmoid, prefit | True |
-| TAAR1_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 82 | 162.0 | AUROC vs measured non-binders |  | 0.78 | sigmoid, prefit | True |
-| a3b4nAChR_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 760 | 166.0 | AUROC vs measured non-binders |  | 0.974 | sigmoid, prefit | True |
-| a4b2nAChR_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 1835 | 407.0 | AUROC vs measured non-binders |  | 0.923 | sigmoid, prefit | True |
-| a7nAChR_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 1285 | 274.0 | AUROC vs measured non-binders |  | 0.763 | sigmoid, prefit | True |
-| mGluR5_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 4511 | 911.0 | AUROC vs measured non-binders |  | 0.893 | sigmoid, prefit | True |
-| mTOR_binder | binder | probability this compound binds this target | classification | RandomForest, 300 trees, min_samples_leaf=4, seed 42 | 11510 | 2558.0 | AUROC vs measured non-binders |  | 0.983 | sigmoid, prefit | True |
-| adme_caco2_permeability | exposure | measured value | regression | RandomForest, 300 trees, min_samples_leaf=2, seed 42 | 897 |  | R2 | 0.7359 | 0.5818 | none | True |
-| adme_clearance_hepatocyte | exposure | measured value | regression | RandomForest, 300 trees, min_samples_leaf=2, seed 42 | 1020 |  | R2 | 0.2302 | 0.2062 | none | True |
-| adme_kpuu | exposure | measured value | regression | RandomForest, 300 trees, min_samples_leaf=2, seed 42 | 566 |  | R2 | 0.4056 | 0.3523 | none | True |
-| adme_lipophilicity | exposure | measured value | regression | RandomForest, 300 trees, min_samples_leaf=2, seed 42 | 4200 |  | R2 | 0.6389 | 0.5659 | none | True |
-| adme_logbb | exposure | measured value | regression | RandomForest, 300 trees, min_samples_leaf=2, seed 42 | 1058 |  | R2 | 0.5836 | 0.4131 | none | True |
-| adme_pgp_inhibition | exposure | probability | classification | RandomForest, 300 trees, min_samples_leaf=2, seed 42 | 1212 |  | AUROC | 0.9549 | 0.9346 | none | True |
-| adme_pgp_substrate | exposure | probability | classification | RandomForest, 300 trees, min_samples_leaf=2, seed 42 | 1371 |  | AUROC | 0.8561 | 0.807 | none | True |
-| adme_plasma_protein_binding | exposure | measured value | regression | RandomForest, 300 trees, min_samples_leaf=2, seed 42 | 1797 |  | R2 | 0.4336 | 0.3645 | none | True |
-| adme_solubility | exposure | measured value | regression | RandomForest, 300 trees, min_samples_leaf=2, seed 42 | 9573 |  | R2 | 0.8008 | 0.7263 | none | True |
+| estimator | family | predicts | training rows | metric | scaffold split | deployed |
+|---|---|---|---|---|---|---|
+| A2A | target | potency, pChEMBL | 6743 | R2 | 0.6205 | True |
+| AChE | target | probability of activity | 5125 | AUROC | 0.9212 | True |
+| antioxidant_DPPH | target | potency, pChEMBL | 2782 | R2 | 0.4153 | True |
+| BACE1 | target | probability of activity | 8207 | AUROC | 0.9648 | True |
+| BBB | exposure | probability of activity | 3901 | AUROC | 0.8777 | True |
+| BChE | target | probability of activity | 3278 | AUROC | 0.9451 | True |
+| D2 | target | potency, pChEMBL | 7905 | R2 | 0.5311 | True |
+| GSK3B | target | probability of activity | 5439 | AUROC | 0.9425 | True |
+| hERG | safety | probability of activity | 9933 | AUROC | 0.927 | True |
+| HT2A | target | potency, pChEMBL | 6075 | R2 | 0.556 | True |
+| MAO_A | target | probability of activity | 3585 | AUROC | 0.9059 | True |
+| MAO_B | target | probability of activity | 4534 | AUROC | 0.917 | True |
+| pka_basic | target | pKa | 6384 | R2 |  | True |
+| SERT | target | potency, pChEMBL | 4479 | R2 | 0.4612 | True |
+| A1_binder | binder | probability this compound binds this target | 7352 | AUROC vs measured non-binders | 0.914 | True |
+| A2A_binder | binder | probability this compound binds this target | 15636 | AUROC vs measured non-binders | 0.949 | True |
+| CB1_binder | binder | probability this compound binds this target | 10198 | AUROC vs measured non-binders | 0.949 | True |
+| CGRP_binder | binder | probability this compound binds this target | 2251 | AUROC vs measured non-binders | 0.985 | True |
+| COX2_binder | binder | probability this compound binds this target | 4429 | AUROC vs measured non-binders | 0.783 | True |
+| CSF1R_binder | binder | probability this compound binds this target | 6772 | AUROC vs measured non-binders | 0.95 | True |
+| Cav3_2_binder | binder | probability this compound binds this target | 1325 | AUROC vs measured non-binders | 0.982 | True |
+| D2_binder | binder | probability this compound binds this target | 13861 | AUROC vs measured non-binders | 0.872 | True |
+| D3_binder | binder | probability this compound binds this target | 15831 | AUROC vs measured non-binders | 0.956 | True |
+| DAT_binder | binder | probability this compound binds this target | 5113 | AUROC vs measured non-binders | 0.959 | True |
+| DHODH_binder | binder | probability this compound binds this target | 3619 | AUROC vs measured non-binders | 0.966 | True |
+| GABA_A_binder | binder | probability this compound binds this target | 771 | AUROC vs measured non-binders | 0.719 | True |
+| GBA1_binder | binder | probability this compound binds this target | 441 | AUROC vs measured non-binders | 0.932 | True |
+| GluA2_binder | binder | probability this compound binds this target | 68 | AUROC vs measured non-binders | 0.696 | False |
+| GluN2B_binder | binder | probability this compound binds this target | 3461 | AUROC vs measured non-binders | 0.761 | True |
+| H3_binder | binder | probability this compound binds this target | 12295 | AUROC vs measured non-binders | 0.978 | True |
+| HDAC1_binder | binder | probability this compound binds this target | 11728 | AUROC vs measured non-binders | 0.96 | True |
+| HDAC6_binder | binder | probability this compound binds this target | 14155 | AUROC vs measured non-binders | 0.975 | True |
+| HT1A_binder | binder | probability this compound binds this target | 14179 | AUROC vs measured non-binders | 0.936 | True |
+| HT2A_binder | binder | probability this compound binds this target | 14369 | AUROC vs measured non-binders | 0.925 | True |
+| HT6_binder | binder | probability this compound binds this target | 10532 | AUROC vs measured non-binders | 0.96 | True |
+| HT7_binder | binder | probability this compound binds this target | 5623 | AUROC vs measured non-binders | 0.947 | True |
+| KEAP1_binder | binder | probability this compound binds this target | 463 | AUROC vs measured non-binders | 0.88 | True |
+| LRRK2_binder | binder | probability this compound binds this target | 4470 | AUROC vs measured non-binders | 0.968 | True |
+| MT1_binder | binder | probability this compound binds this target | 2670 | AUROC vs measured non-binders | 0.896 | True |
+| NET_binder | binder | probability this compound binds this target | 5933 | AUROC vs measured non-binders | 0.92 | True |
+| NFKB1_binder | binder | probability this compound binds this target | 102 | AUROC vs measured non-binders | 0.459 | False |
+| NLRP3_binder | binder | probability this compound binds this target | 843 | AUROC vs measured non-binders | 0.93 | True |
+| NR3C1_binder | binder | probability this compound binds this target | 37 | AUROC vs measured non-binders | 0.41 | False |
+| NRF2_binder | binder | probability this compound binds this target | 285 | AUROC vs measured non-binders | 0.789 | False |
+| Nav1_1_binder | binder | probability this compound binds this target | 227 | AUROC vs measured non-binders | 0.952 | False |
+| Nav1_5_binder | binder | probability this compound binds this target | 870 | AUROC vs measured non-binders | 0.921 | True |
+| Nav1_6_binder | binder | probability this compound binds this target | 1027 | AUROC vs measured non-binders | 0.862 | True |
+| Nav1_7_binder | binder | probability this compound binds this target | 10397 | AUROC vs measured non-binders | 0.957 | True |
+| Nav1_8_binder | binder | probability this compound binds this target | 1030 | AUROC vs measured non-binders | 0.956 | True |
+| OPRK1_binder | binder | probability this compound binds this target | 11642 | AUROC vs measured non-binders | 0.945 | True |
+| OPRM1_binder | binder | probability this compound binds this target | 14058 | AUROC vs measured non-binders | 0.954 | True |
+| OX1_binder | binder | probability this compound binds this target | 12724 | AUROC vs measured non-binders | 0.964 | True |
+| OX2_binder | binder | probability this compound binds this target | 14679 | AUROC vs measured non-binders | 0.964 | True |
+| P2X7_binder | binder | probability this compound binds this target | 11122 | AUROC vs measured non-binders | 0.813 | True |
+| PDE10A_binder | binder | probability this compound binds this target | 15463 | AUROC vs measured non-binders | 0.962 | True |
+| PDE4B_binder | binder | probability this compound binds this target | 4332 | AUROC vs measured non-binders | 0.966 | True |
+| RIPK1_binder | binder | probability this compound binds this target | 5619 | AUROC vs measured non-binders | 0.966 | True |
+| SERT_binder | binder | probability this compound binds this target | 11429 | AUROC vs measured non-binders | 0.945 | True |
+| SIRT1_binder | binder | probability this compound binds this target | 276 | AUROC vs measured non-binders | 0.792 | True |
+| Sigma1_binder | binder | probability this compound binds this target | 7427 | AUROC vs measured non-binders | 0.881 | True |
+| TAAR1_binder | binder | probability this compound binds this target | 82 | AUROC vs measured non-binders | 0.78 | True |
+| a3b4nAChR_binder | binder | probability this compound binds this target | 760 | AUROC vs measured non-binders | 0.974 | True |
+| a4b2nAChR_binder | binder | probability this compound binds this target | 1835 | AUROC vs measured non-binders | 0.923 | True |
+| a7nAChR_binder | binder | probability this compound binds this target | 1285 | AUROC vs measured non-binders | 0.763 | True |
+| mGluR5_binder | binder | probability this compound binds this target | 4511 | AUROC vs measured non-binders | 0.893 | True |
+| mTOR_binder | binder | probability this compound binds this target | 11510 | AUROC vs measured non-binders | 0.983 | True |
+| adme_caco2_permeability | exposure | measured value | 897 | R2 | 0.5818 | True |
+| adme_clearance_hepatocyte | exposure | measured value | 1020 | R2 | 0.2062 | True |
+| adme_kpuu | exposure | measured value | 566 | R2 | 0.3523 | True |
+| adme_lipophilicity | exposure | measured value | 4200 | R2 | 0.5659 | True |
+| adme_logbb | exposure | measured value | 1058 | R2 | 0.4131 | True |
+| adme_pgp_inhibition | exposure | probability | 1212 | AUROC | 0.9346 | True |
+| adme_pgp_substrate | exposure | probability | 1371 | AUROC | 0.807 | True |
+| adme_plasma_protein_binding | exposure | measured value | 1797 | R2 | 0.3645 | True |
+| adme_solubility | exposure | measured value | 9573 | R2 | 0.7263 | True |
 
 </details>
 
@@ -551,34 +595,34 @@ honest statement of how far a model travels.
 Across the measured-label classifiers: mean AUROC **0.9575**
 random and **0.9252** scaffold.
 
-| endpoint | task | split | n | roc_auc_mean | roc_auc_sd | pr_auc_mean | pr_auc_sd | mcc_mean | mcc_sd | f1_mean | f1_sd | balanced_acc_mean | balanced_acc_sd | r2_mean | r2_sd | rmse_mean | rmse_sd | mae_mean | mae_sd | spearman_mean | spearman_sd |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| BBB | classification | random | 3901 | 0.899 | 0.0161 | 0.9389 | 0.0107 | 0.608 | 0.0504 | 0.8633 | 0.0168 | 0.7956 | 0.0266 |  |  |  |  |  |  |  |  |
-| BBB | classification | scaffold | 3901 | 0.8777 | 0.0336 | 0.9219 | 0.0281 | 0.5699 | 0.0786 | 0.8502 | 0.0369 | 0.7748 | 0.0426 |  |  |  |  |  |  |  |  |
-| AChE | classification | random | 5125 | 0.9659 | 0.0057 | 0.975 | 0.0045 | 0.8084 | 0.0262 | 0.9202 | 0.011 | 0.9051 | 0.0135 |  |  |  |  |  |  |  |  |
-| AChE | classification | scaffold | 5125 | 0.9212 | 0.0206 | 0.9463 | 0.0131 | 0.6631 | 0.0476 | 0.8567 | 0.0249 | 0.8332 | 0.0246 |  |  |  |  |  |  |  |  |
-| BChE | classification | random | 3278 | 0.9724 | 0.008 | 0.9776 | 0.0075 | 0.8228 | 0.0313 | 0.9154 | 0.015 | 0.9119 | 0.0159 |  |  |  |  |  |  |  |  |
-| BChE | classification | scaffold | 3278 | 0.9451 | 0.0155 | 0.9578 | 0.0167 | 0.7454 | 0.0655 | 0.875 | 0.0386 | 0.8752 | 0.0328 |  |  |  |  |  |  |  |  |
-| BACE1 | classification | random | 8207 | 0.9764 | 0.0104 | 0.9959 | 0.0021 | 0.7923 | 0.0445 | 0.972 | 0.0058 | 0.8953 | 0.0258 |  |  |  |  |  |  |  |  |
-| BACE1 | classification | scaffold | 8207 | 0.9648 | 0.0093 | 0.9941 | 0.0015 | 0.736 | 0.0675 | 0.965 | 0.0094 | 0.8688 | 0.0375 |  |  |  |  |  |  |  |  |
-| GSK3B | classification | random | 5439 | 0.9649 | 0.0065 | 0.9878 | 0.0027 | 0.7618 | 0.0185 | 0.9405 | 0.0047 | 0.8755 | 0.0118 |  |  |  |  |  |  |  |  |
-| GSK3B | classification | scaffold | 5439 | 0.9425 | 0.0236 | 0.9784 | 0.0116 | 0.6993 | 0.0561 | 0.925 | 0.0193 | 0.8428 | 0.0269 |  |  |  |  |  |  |  |  |
-| MAO_A | classification | random | 3585 | 0.9619 | 0.0124 | 0.9096 | 0.0214 | 0.7826 | 0.0547 | 0.8296 | 0.0442 | 0.877 | 0.0328 |  |  |  |  |  |  |  |  |
-| MAO_A | classification | scaffold | 3585 | 0.9059 | 0.0303 | 0.7908 | 0.0737 | 0.6268 | 0.0867 | 0.685 | 0.0888 | 0.7767 | 0.0541 |  |  |  |  |  |  |  |  |
-| MAO_B | classification | random | 4534 | 0.963 | 0.0075 | 0.9634 | 0.008 | 0.7923 | 0.0284 | 0.899 | 0.014 | 0.8957 | 0.0142 |  |  |  |  |  |  |  |  |
-| MAO_B | classification | scaffold | 4534 | 0.917 | 0.0294 | 0.9068 | 0.05 | 0.6728 | 0.0668 | 0.8357 | 0.0523 | 0.8346 | 0.0345 |  |  |  |  |  |  |  |  |
-| hERG | classification | random | 9933 | 0.9565 | 0.0077 | 0.9037 | 0.0155 | 0.7702 | 0.0169 | 0.8151 | 0.0138 | 0.8593 | 0.0107 |  |  |  |  |  |  |  |  |
-| hERG | classification | scaffold | 9933 | 0.927 | 0.0271 | 0.8453 | 0.0393 | 0.6805 | 0.0518 | 0.7321 | 0.0502 | 0.8019 | 0.0337 |  |  |  |  |  |  |  |  |
-| D2 | regression | random | 7905 |  |  |  |  |  |  |  |  |  |  | 0.6403 | 0.0243 | 0.6796 | 0.0257 | 0.4837 | 0.0145 | 0.7979 | 0.0128 |
-| D2 | regression | scaffold | 7905 |  |  |  |  |  |  |  |  |  |  | 0.5311 | 0.0287 | 0.773 | 0.0481 | 0.5631 | 0.0433 | 0.7237 | 0.0365 |
-| A2A | regression | random | 6743 |  |  |  |  |  |  |  |  |  |  | 0.7231 | 0.0255 | 0.6882 | 0.0262 | 0.4956 | 0.0164 | 0.8421 | 0.017 |
-| A2A | regression | scaffold | 6743 |  |  |  |  |  |  |  |  |  |  | 0.6205 | 0.0485 | 0.7995 | 0.0341 | 0.5929 | 0.0233 | 0.7827 | 0.0376 |
-| HT2A | regression | random | 6075 |  |  |  |  |  |  |  |  |  |  | 0.6996 | 0.0166 | 0.6727 | 0.0209 | 0.4859 | 0.0167 | 0.8401 | 0.0104 |
-| HT2A | regression | scaffold | 6075 |  |  |  |  |  |  |  |  |  |  | 0.556 | 0.0656 | 0.8091 | 0.0685 | 0.5997 | 0.0533 | 0.7465 | 0.0546 |
-| SERT | regression | random | 4479 |  |  |  |  |  |  |  |  |  |  | 0.6897 | 0.0273 | 0.7064 | 0.0294 | 0.5139 | 0.0181 | 0.8179 | 0.0159 |
-| SERT | regression | scaffold | 4479 |  |  |  |  |  |  |  |  |  |  | 0.4612 | 0.0987 | 0.9143 | 0.102 | 0.6733 | 0.0591 | 0.6969 | 0.0763 |
-| antioxidant_DPPH | regression | random | 2782 |  |  |  |  |  |  |  |  |  |  | 0.6589 | 0.0508 | 0.4608 | 0.0184 | 0.309 | 0.0132 | 0.8064 | 0.0286 |
-| antioxidant_DPPH | regression | scaffold | 2782 |  |  |  |  |  |  |  |  |  |  | 0.4153 | 0.1491 | 0.5865 | 0.0789 | 0.4188 | 0.0519 | 0.64 | 0.1059 |
+| endpoint | task | split | compounds | metric | score | fold sd |
+|---|---|---|---|---|---|---|
+| BBB | classification | random | 3901 | AUROC | 0.899 | 0.0161 |
+| BBB | classification | scaffold | 3901 | AUROC | 0.8777 | 0.0336 |
+| AChE | classification | random | 5125 | AUROC | 0.9659 | 0.0057 |
+| AChE | classification | scaffold | 5125 | AUROC | 0.9212 | 0.0206 |
+| BChE | classification | random | 3278 | AUROC | 0.9724 | 0.008 |
+| BChE | classification | scaffold | 3278 | AUROC | 0.9451 | 0.0155 |
+| BACE1 | classification | random | 8207 | AUROC | 0.9764 | 0.0104 |
+| BACE1 | classification | scaffold | 8207 | AUROC | 0.9648 | 0.0093 |
+| GSK3B | classification | random | 5439 | AUROC | 0.9649 | 0.0065 |
+| GSK3B | classification | scaffold | 5439 | AUROC | 0.9425 | 0.0236 |
+| MAO_A | classification | random | 3585 | AUROC | 0.9619 | 0.0124 |
+| MAO_A | classification | scaffold | 3585 | AUROC | 0.9059 | 0.0303 |
+| MAO_B | classification | random | 4534 | AUROC | 0.963 | 0.0075 |
+| MAO_B | classification | scaffold | 4534 | AUROC | 0.917 | 0.0294 |
+| hERG | classification | random | 9933 | AUROC | 0.9565 | 0.0077 |
+| hERG | classification | scaffold | 9933 | AUROC | 0.927 | 0.0271 |
+| D2 | regression | random | 7905 | R2 | 0.6403 | 0.0243 |
+| D2 | regression | scaffold | 7905 | R2 | 0.5311 | 0.0287 |
+| A2A | regression | random | 6743 | R2 | 0.7231 | 0.0255 |
+| A2A | regression | scaffold | 6743 | R2 | 0.6205 | 0.0485 |
+| HT2A | regression | random | 6075 | R2 | 0.6996 | 0.0166 |
+| HT2A | regression | scaffold | 6075 | R2 | 0.556 | 0.0656 |
+| SERT | regression | random | 4479 | R2 | 0.6897 | 0.0273 |
+| SERT | regression | scaffold | 4479 | R2 | 0.4612 | 0.0987 |
+| antioxidant_DPPH | regression | random | 2782 | R2 | 0.6589 | 0.0508 |
+| antioxidant_DPPH | regression | scaffold | 2782 | R2 | 0.4153 | 0.1491 |
 
 
 ### 6.2 Temporal validation
@@ -622,11 +666,11 @@ so this is a lower bound.
 
 The barrier model tested on FDA-curated approved drugs absent from the training source by InChIKey.
 
-| set | n | n_permeable | auroc | accuracy | balanced_accuracy | sensitivity | specificity |
-|---|---|---|---|---|---|---|---|
-| FDA-curated, not in B3DB by InChIKey | 306 | 203 | 0.7645 | 0.732 | 0.7119 | 0.7734 | 0.6505 |
-| FDA-curated, also distinguishable from training in feature space | 241 | 171 | 0.7934 | 0.7344 | 0.7116 | 0.7661 | 0.6571 |
-| of which: feature-identical to a training compound | 65 | 32 | 0.7102 | 0.7231 | 0.7244 | 0.8125 | 0.6364 |
+| set | n | n_permeable | auroc | sensitivity | specificity |
+|---|---|---|---|---|---|
+| FDA-curated, not in B3DB by InChIKey | 306 | 203 | 0.7645 | 0.7734 | 0.6505 |
+| FDA-curated, also distinguishable from training in feature space | 241 | 171 | 0.7934 | 0.7661 | 0.6571 |
+| of which: feature-identical to a training compound | 65 | 32 | 0.7102 | 0.8125 | 0.6364 |
 
 The row that supports an external claim is the second: compounds absent by InChIKey *and*
 distinguishable from training in feature space. The third row is the memorisation the first contains.
@@ -899,7 +943,44 @@ reinstated while GluA2 began failing and was withdrawn.
 
 ---
 
-## 10. Reproducing this
+
+## 10. Software environment and runtime
+
+Reproducibility depends on the versions as much as on the code. The panel was fitted under the
+environment below; scikit-learn in particular is pinned, because an estimator unpickled under a
+different minor version can silently change behaviour.
+
+| | |
+|---|---|
+| Python | 3.13.13 |
+| Platform | Windows-11-10.0.26200-SP0 |
+| Processor | Intel64 Family 6 Model 198 Stepping 2, GenuineIntel, 24 logical cores |
+| Random seed | 42 throughout |
+| joblib | `1.5.3` |
+| matplotlib | `3.10.9` |
+| numpy | `2.4.6` |
+| pandas | `3.0.3` |
+| rdkit | `2026.3.2` |
+| scikit-learn | `1.8.0` |
+| scipy | `1.17.1` |
+| streamlit | `1.58.0` |
+| xgboost | `3.3.0` |
+
+### 10.1 What a query costs
+
+| Operation | Measured cost |
+|---|---|
+| One compound, full profile across all deployed estimators | a few seconds on one CPU core |
+| Model load, once per server start | tens of seconds; every later query reuses it |
+| Panel on disk | 0.92 GB after compression, 0.77 GB excluding hold-out twins |
+| Full reproduction of everything downstream of the models | about 75 s |
+| Re-deriving binder thresholds, all four steps | about 25 min |
+| Refitting the whole panel | hours |
+| Test suite | about 90 s |
+
+---
+
+## 11. Reproducing this
 
 | What | Command |
 |---|---|
