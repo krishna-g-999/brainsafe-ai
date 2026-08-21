@@ -35,7 +35,7 @@ from sklearn.metrics import roc_auc_score, r2_score
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from features.featurize import featurize, MORGAN_BITS  # noqa: E402
 from models.train_rf import (CLASSIFICATION, REGRESSION, RF_COMMON, SEED, _load,  # noqa: E402
-                             _scaffold_groups)
+                             _scaffold_groups, _dedup_features)
 
 RDLogger.DisableLog("rdApp.*")
 ROOT = Path(__file__).resolve().parents[3]
@@ -83,6 +83,19 @@ def analyse(endpoints):
         y = df[target].to_numpy()
         y = y.astype(int) if task == "classification" else y.astype(float)
         headline = "roc_auc" if task == "classification" else "r2"
+
+        # Deduplicate exactly as the training pipeline does, and for the same reason. This file
+        # used to featurise and split directly, so rows identical in feature space sat on both
+        # sides of every fold: the leak deduplication exists to remove. It mattered for one
+        # endpoint rather than all of them, because that is where the duplicates are. Measured
+        # against the deployed panel before this was fixed, seven of the eight classifiers agreed
+        # to within 0.011 AUROC while BBB read 0.0596 high, BBB being the endpoint the adversarial
+        # suite reports as carrying 3,773 duplicate rows before deduplication.
+        n_before = len(y)
+        _smi = df["smiles"].tolist()
+        X, y, _, _, _rep = _dedup_features(X, y, _scaffold_groups(_smi), _smi, task)
+        if len(y) != n_before:
+            print(f"[{endpoint}] deduplicated {n_before} -> {len(y)} rows", flush=True)
         print(f"[{endpoint}] {task}, {len(y)} compounds")
 
         for block, cols in BLOCKS.items():

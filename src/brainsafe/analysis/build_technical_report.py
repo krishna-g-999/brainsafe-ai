@@ -122,6 +122,33 @@ def main() -> None:
     src = endpoint_sources()
 
     n_records = int(src.compounds.sum())
+
+    # The natural-product limitation rests on two numbers about the library's own chemistry, so
+    # they are measured here rather than quoted. Both were previously carried as prose and both had
+    # drifted: the median was stated as 0.36 against a measured 0.34, and the sp3-rich share as 3.3
+    # per cent against a measured 9.2.
+    from features.featurize import parent_mol
+    from rdkit import RDLogger
+    from rdkit.Chem import rdMolDescriptors
+    RDLogger.DisableLog("rdApp.*")
+    _smis = set()
+    for _f in glob.glob(str(ROOT / "data" / "endpoints" / "*.csv")):
+        _smis |= set(pd.read_csv(_f, usecols=["smiles"]).smiles.astype(str))
+    _frac, _rich = [], 0
+    for _s in _smis:
+        _m = parent_mol(_s)
+        if _m is None:
+            continue
+        try:
+            _f3 = rdMolDescriptors.CalcFractionCSP3(_m)
+            _ar = rdMolDescriptors.CalcNumAromaticRings(_m)
+        except Exception:
+            continue
+        _frac.append(_f3)
+        if _f3 >= 0.55 and _ar <= 1:
+            _rich += 1
+    sp3_median = float(np.median(_frac)) if _frac else float("nan")
+    sp3_rich_pct = 100.0 * _rich / max(len(_frac), 1)
     today = dt.date.today().isoformat()
     commit = (inv.commit.iloc[0] if inv is not None and "commit" in inv else "unknown")
 
@@ -730,6 +757,14 @@ The 1,036-column vector is two blocks. Each was tested alone.
 The combination beats either block alone on most endpoints, but the margin over the fingerprint
 alone is small. The twelve descriptors earn their place mainly on the exposure endpoints, where
 physicochemistry is the mechanism, and contribute least where binding is substructure-driven.
+
+> **How to read the absolute values.** This analysis uses five-fold random cross-validation, not the
+> ten-fold random and scaffold-grouped regimes the headline figures use, so its numbers are not
+> comparable with section 6. Until it was corrected it also did not deduplicate, which inflated one
+> endpoint: measured against the deployed panel, seven of the eight classifiers agreed to within
+> 0.011 AUROC while BBB read 0.060 high, BBB being where the feature-identical duplicates are
+> concentrated. The comparison this table exists to make, between blocks on identical data, is
+> unaffected either way, because whatever inflates one block inflates all three.
 """)
 
     if curve is not None:
@@ -774,7 +809,9 @@ Stated because a tool that reports only what works cannot be checked.
    recorded about them, drawn from within the reference library, so it does not bound behaviour on
    genuinely distant chemistry.
 3. **Natural-product chemistry is largely outside the training library**, whose median fraction-sp3
-   is 0.36. Extending the panel to targets natural products are actually assayed against was
+   is {sp3_median:.2f}, and only {sp3_rich_pct:.1f} per cent of it is both sp3-rich and free of
+   aromatic rings. Extending the panel to targets natural products are actually assayed
+   against was
    attempted, and the three endpoints added all failed and were withdrawn.
 4. **The disease layer does not predict indication.** 27 of the 52 targets in the pathway graph drive
    more than one condition. It does not beat a frequency baseline at any reporting depth, and
