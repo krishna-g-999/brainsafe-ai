@@ -1,17 +1,17 @@
 disease,targets,tested,untestable,best_target_sensitivity,median_target_sensitivity
-Alzheimer's disease,7,2,0,0.935,0.876
-Parkinson's disease,4,1,1,0.958,0.958
-Amyotrophic lateral sclerosis,8,6,2,0.943,0.899
-Huntington's disease,2,2,0,0.897,0.864
-Depression / anxiety,11,10,0,0.914,0.749
-Psychosis / schizophrenia,4,3,1,0.745,0.542
-Cognition (cholinergic),8,4,2,0.971,0.887
-Addiction,5,3,2,0.845,0.84
-ADHD,2,2,0,0.845,0.84
-Chronic pain,6,4,2,0.88,0.834
-Sleep / wakefulness,6,6,0,0.96,0.848
-Epilepsy,6,4,2,0.914,0.739
+Alzheimer's disease,7,2,0,0.792,0.752
+Parkinson's disease,4,1,1,0.878,0.878
+Amyotrophic lateral sclerosis,8,7,1,0.99,0.712
+Huntington's disease,2,2,0,0.92,0.88
+Depression / anxiety,11,10,0,0.814,0.738
+Psychosis / schizophrenia,4,4,0,0.74,0.659
+Cognition (cholinergic),8,4,2,0.912,0.892
+Addiction,5,3,2,0.953,0.845
+ADHD,2,2,0,0.953,0.883
+Chronic pain,6,4,2,0.845,0.806
+Sleep / wakefulness,6,6,0,0.902,0.812
+Epilepsy,6,5,1,0.815,0.583
 Migraine,1,0,1,,
 Multiple sclerosis,2,0,2,,
-Neuroinflammation,6,5,1,0.971,0.927
-Neuroprotection / oxidative stress,6,4,1,0.943,0.791
+Neuroinflammation,6,5,1,0.913,0.712
+Neuroprotection / oxidative stress,6,5,0,0.99,0.71

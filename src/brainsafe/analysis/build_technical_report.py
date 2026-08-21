@@ -680,6 +680,79 @@ a finding about the applicability-domain flag: the conformal interval and the ne
 distance, rather than the flag, should be read as the statement of confidence.
 """)
 
+    ver = None
+    try:
+        ver = pd.read_csv(ROOT / "inversion" / "results" / "VERDICTS.csv")
+    except Exception:
+        pass
+    if ver is not None:
+        ver_show = ver.rename(columns={"headline": "what was measured"})
+        n_ref = int(ver.verdict.str.upper().str.startswith("REFUTED").sum())
+        n_sup = int(ver.verdict.str.upper().str.startswith("SUPPORTED").sum())
+        A(f"""
+### 6.7 The falsification suite
+
+Cross-validation asks how well a model scores. It cannot ask whether the thing the system claims to
+do is real. Eight hypotheses were therefore written as claims the system makes about itself, each
+paired with a null model that would produce the same apparent success by accident, and each run to
+see whether it survived. A test that cannot fail is not evidence, so the suite was designed to be
+able to embarrass the tool, and it did: **{n_ref} of the {len(ver)} hypotheses were refuted and only
+{n_sup} were supported outright.**
+
+The refutations are the most useful output this project has produced, and they changed the design.
+
+{md_table(ver_show)}
+
+**What each refutation cost, and what was done about it.**
+
+- **H2, the curated edge weights add nothing.** The pathway graph's hand-assigned weights were
+  expected to carry information. Replacing them with uniform weights, or with randomly permuted
+  ones, changes top-3 accuracy in the third decimal place. The predictive content lies in the graph's
+  *topology*, in which target connects to which condition, not in how strongly. The weights are
+  therefore reported as structure rather than as tuned parameters, and no claim is made for them.
+- **H3, barrier gating cannot discriminate between diseases.** This one is refuted by construction,
+  which is worth stating plainly: the gate multiplies every disease score by the same barrier
+  probability, so it can raise or lower them together but can never change their order. Gating
+  decides *whether* to report, not *which* condition. Presenting it as though it discriminated
+  between conditions would be a misrepresentation of arithmetic.
+- **H7, the silent antiepileptics are explained by weak targets.** Several antiepileptic drugs return
+  no call, and the natural suspicion was that some panel targets are simply non-discriminative. They
+  are not: no target ranks below AUROC 0.70. The cause is the operating point rather than the model,
+  which is a different problem with a different remedy.
+- **H8, engaged targets are independent observations.** They are not. Targets fire in correlated
+  families, so counting them overstates the evidence. This is why the interface reports the number of
+  *independent mechanisms* beside the raw count, and why the disease score takes the strongest
+  engaged mechanism rather than summing.
+
+Read-only by construction: nothing in this suite writes to `models_rf/`, `data/` or the application,
+and its outputs live under `inversion/` so that a falsification can never be mistaken for a
+validation.
+
+### 6.8 The software test suite
+
+Validation asks whether the science is right. Tests ask whether the code still does what the science
+assumed, and they run on every commit. There are **44 tests with 53 subtests**, and they are not
+tests of "does it run": each pins a property whose loss would change a published number without
+raising an error, and most correspond to a defect that actually occurred.
+
+| Group | Tests | What it pins |
+|---|---|---|
+| `TestShape`, `TestPurity` | 8 | the feature vector is 1,036 columns and is a pure function of the structure, identical alone or in a batch and under reordering |
+| `TestParentAndStereo` | 4 | salts reduce to their free base and give identical vectors; a permanent charge survives; enantiomers collide, which is pinned as a known limitation |
+| `TestDeduplication` | 4 | rows identical in feature space collapse, contradictory groups are dropped rather than voted on, and both happen before any split |
+| `TestBackgroundPools` | 5 | the three background pools are disjoint and pool membership is a pure function of the structure, so a threshold set on one and measured on another stays honest across machines |
+| `TestCensoredLabelRule` | 3 | a censored bound settles a label only when the whole interval falls one side of the cut |
+| `TestDeterminism` | 2 | the declared seed is the one the pipeline uses, and a fixed seed reproduces itself |
+| `TestPanelRegistryIsConsistent` | 5 | the registry, the endpoint tables and the fitted models describe one panel; no model predates its training table; no endpoint is withheld without a recorded reason |
+| `TestEveryEndpointIsRetrainable` | 2 | every endpoint is claimed by exactly one trainer, and by no more than one |
+| `TestThresholdSequenceIsAtomic` | 2 | the four threshold steps stay one unit, and no member depends on a file the sequence itself rewrites |
+| `TestDeployedPipeline` | 9 | reference drugs return their known pharmacology; predictions are reproducible to 1e-12; unparseable input is rejected rather than scored; the withdrawal set is what it is claimed to be |
+
+A pre-commit hook additionally refuses a commit whose artefacts are older than their inputs, or whose
+panel does not reconcile.
+
+""")
+
     A("""
 ### 6.7 Leakage and null models
 

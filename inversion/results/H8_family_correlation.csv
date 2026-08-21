@@ -1,21 +1,21 @@
 family,target_a,target_b,rate_a,rate_b,joint_rate,phi_correlation,p_b_given_a
-voltage-gated sodium,Nav1_5,Nav1_6,0.0025,0.0,0.0,,0.0
-voltage-gated sodium,Nav1_5,Nav1_7,0.0025,0.0,0.0,,0.0
-voltage-gated sodium,Nav1_5,Nav1_8,0.0025,0.0,0.0,,0.0
+voltage-gated sodium,Nav1_5,Nav1_6,0.015,0.0,0.0,,0.0
+voltage-gated sodium,Nav1_5,Nav1_7,0.015,0.0,0.0,,0.0
+voltage-gated sodium,Nav1_5,Nav1_8,0.015,0.0,0.0,,0.0
 voltage-gated sodium,Nav1_6,Nav1_7,0.0,0.0,0.0,,
 voltage-gated sodium,Nav1_6,Nav1_8,0.0,0.0,0.0,,
 voltage-gated sodium,Nav1_7,Nav1_8,0.0,0.0,0.0,,
 neuronal nicotinic,a7nAChR,a4b2nAChR,0.0025,0.01,0.0025,0.498,1.0
-neuronal nicotinic,a7nAChR,a3b4nAChR,0.0025,0.04,0.0025,0.245,1.0
-neuronal nicotinic,a4b2nAChR,a3b4nAChR,0.01,0.04,0.01,0.492,1.0
-monoamine transporters,SERT,DAT,0.18,0.0625,0.0475,0.39,0.264
-monoamine transporters,SERT,NET,0.18,0.1625,0.115,0.605,0.639
-monoamine transporters,DAT,NET,0.0625,0.1625,0.045,0.39,0.72
-opioid,OPRM1,OPRK1,0.0975,0.0525,0.0525,0.716,0.538
-dopamine,D2,D3,0.1125,0.09,0.0725,0.69,0.644
-serotonin GPCR,HT1A,HT2A,0.0825,0.0725,0.035,0.407,0.424
-serotonin GPCR,HT1A,HT6,0.0825,0.0375,0.0125,0.18,0.152
-serotonin GPCR,HT1A,HT7,0.0825,0.105,0.0575,0.579,0.697
-serotonin GPCR,HT2A,HT6,0.0725,0.0375,0.0025,-0.004,0.034
-serotonin GPCR,HT2A,HT7,0.0725,0.105,0.055,0.596,0.759
-serotonin GPCR,HT6,HT7,0.0375,0.105,0.01,0.104,0.267
+neuronal nicotinic,a7nAChR,a3b4nAChR,0.0025,0.0275,0.0,-0.008,0.0
+neuronal nicotinic,a4b2nAChR,a3b4nAChR,0.01,0.0275,0.0075,0.444,0.75
+monoamine transporters,SERT,DAT,0.1825,0.085,0.05,0.32,0.274
+monoamine transporters,SERT,NET,0.1825,0.1375,0.1225,0.732,0.671
+monoamine transporters,DAT,NET,0.085,0.1375,0.0525,0.425,0.618
+opioid,OPRM1,OPRK1,0.0875,0.0575,0.0575,0.798,0.657
+dopamine,D2,D3,0.115,0.105,0.0825,0.72,0.717
+serotonin GPCR,HT1A,HT2A,0.0875,0.1025,0.0425,0.391,0.486
+serotonin GPCR,HT1A,HT6,0.0875,0.0775,0.02,0.175,0.229
+serotonin GPCR,HT1A,HT7,0.0875,0.09,0.055,0.583,0.629
+serotonin GPCR,HT2A,HT6,0.1025,0.0775,0.01,0.025,0.098
+serotonin GPCR,HT2A,HT7,0.1025,0.09,0.0675,0.671,0.659
+serotonin GPCR,HT6,HT7,0.0775,0.09,0.005,-0.026,0.065

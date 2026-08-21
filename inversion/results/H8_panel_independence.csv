@@ -1,10 +1,10 @@
 metric,value
 targets in panel,52.0
-reported finding on random chemistry (user visible),0.1133
-reported finding on approved drugs,0.54
-"any binder endpoint above threshold, random chemistry",0.3683
-"independent-panel expectation, binder endpoints",0.4077
-mean binder endpoints fired per random compound,0.512
-mean binder endpoints fired per approved drug,1.64
-targets that ever fire on the drug set,38.0
-independent directions in the firing pattern,15.0
+reported finding on random chemistry (user visible),0.0467
+reported finding on approved drugs,0.495
+"any binder endpoint above threshold, random chemistry",0.255
+"independent-panel expectation, binder endpoints",0.2727
+mean binder endpoints fired per random compound,0.313
+mean binder endpoints fired per approved drug,1.538
+targets that ever fire on the drug set,37.0
+independent directions in the firing pattern,17.0

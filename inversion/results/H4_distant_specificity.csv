@@ -1,5 +1,5 @@
 stratum,n,false_positive_rate,ci95_low,ci95_high,median_max_tanimoto,sample_source
-in domain (T>=0.5),75,0.1333,0.0741,0.2283,0.55,random PubChem CIDs
-near domain (0.3-0.5),464,0.1099,0.0846,0.1416,0.387,random PubChem CIDs
-distant (T<0.3),61,0.0328,0.009,0.1119,0.275,random PubChem CIDs
-ALL,600,0.105,0.0829,0.1321,0.389,random PubChem CIDs
+in domain (T>=0.5),75,0.0933,0.0459,0.1803,0.55,random PubChem CIDs
+near domain (0.3-0.5),464,0.0431,0.0281,0.0656,0.387,random PubChem CIDs
+distant (T<0.3),61,0.0164,0.0029,0.0872,0.275,random PubChem CIDs
+ALL,600,0.0467,0.0325,0.0666,0.389,random PubChem CIDs
