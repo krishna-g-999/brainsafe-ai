@@ -107,6 +107,15 @@ GRAPH: list[tuple[str, list[str], str]] = [
      "python src/brainsafe/evaluation/validate_inversion.py"),
     ("results/tables/integrity_audit.csv", ["models_rf/BBB.joblib"],
      "python src/brainsafe/evaluation/integrity_audit.py"),
+
+    # Two supporting analyses that were absent from this graph and had gone stale unnoticed. Both
+    # predate the neutralisation retrain by a month, and both are quoted in the technical report, so
+    # nothing would have caught them except someone checking file dates by hand. Being outside the
+    # graph is exactly what let them drift, which is the defect this checker exists to prevent.
+    ("results/tables/feature_block_ablation.csv", ["models_rf/BBB.joblib"],
+     "python src/brainsafe/evaluation/feature_analysis.py"),
+    ("results/tables/learning_curve.csv", ["models_rf/BBB.joblib"],
+     "python src/brainsafe/evaluation/learning_curve.py"),
     ("results/tables/noncns_specificity_summary.csv",
      ["models_rf/BBB.joblib", "models_rf/binder_modes.json"],
      "python src/brainsafe/evaluation/noncns_specificity.py"),

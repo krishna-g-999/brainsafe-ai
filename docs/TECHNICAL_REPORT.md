@@ -824,33 +824,31 @@ physicochemistry is the mechanism, and contribute least where binding is substru
 
 ### 7.3 Would more data have helped?
 
-> **Note.** This table was computed on 2026-07-21, before the current panel was refitted, so its absolute values describe the previous estimators. It is retained because the comparison it makes is between *methods* on identical data, which the refit does not change, and it is marked rather than silently reprinted.
-
 
 Performance against training-set fraction.
 
 | endpoint | task | train_fraction | n_train | n_test | metric | score |
 |---|---|---|---|---|---|---|
-| BBB | classification | 0.1 | 955 | 1269 | roc_auc | 0.8473 |
-| BBB | classification | 0.25 | 1877 | 1269 | roc_auc | 0.9023 |
-| BBB | classification | 0.5 | 3205 | 1269 | roc_auc | 0.9166 |
-| BBB | classification | 0.75 | 4776 | 1269 | roc_auc | 0.922 |
-| BBB | classification | 1.0 | 6536 | 1269 | roc_auc | 0.9213 |
-| MAO_A | classification | 0.1 | 187 | 541 | roc_auc | 0.5063 |
-| MAO_A | classification | 0.25 | 505 | 541 | roc_auc | 0.5918 |
-| MAO_A | classification | 0.5 | 940 | 541 | roc_auc | 0.7846 |
-| MAO_A | classification | 0.75 | 1310 | 541 | roc_auc | 0.7792 |
-| MAO_A | classification | 1.0 | 1687 | 541 | roc_auc | 0.8005 |
-| BACE1 | classification | 0.1 | 788 | 1604 | roc_auc | 0.8845 |
-| BACE1 | classification | 0.25 | 1880 | 1604 | roc_auc | 0.9072 |
-| BACE1 | classification | 0.5 | 3466 | 1604 | roc_auc | 0.9248 |
-| BACE1 | classification | 0.75 | 5213 | 1604 | roc_auc | 0.934 |
-| BACE1 | classification | 1.0 | 6897 | 1604 | roc_auc | 0.9417 |
-| A2A | regression | 0.1 | 481 | 1207 | r2 | 0.3449 |
-| A2A | regression | 0.25 | 1292 | 1207 | r2 | 0.3921 |
-| A2A | regression | 0.5 | 3013 | 1207 | r2 | 0.4523 |
-| A2A | regression | 0.75 | 4367 | 1207 | r2 | 0.4853 |
-| A2A | regression | 1.0 | 5578 | 1207 | r2 | 0.4895 |
+| BBB | classification | 0.1 | 650 | 1423 | roc_auc | 0.8668 |
+| BBB | classification | 0.25 | 1457 | 1423 | roc_auc | 0.8794 |
+| BBB | classification | 0.5 | 3050 | 1423 | roc_auc | 0.9276 |
+| BBB | classification | 0.75 | 4676 | 1423 | roc_auc | 0.9278 |
+| BBB | classification | 1.0 | 6382 | 1423 | roc_auc | 0.9325 |
+| MAO_A | classification | 0.1 | 297 | 833 | roc_auc | 0.6783 |
+| MAO_A | classification | 0.25 | 691 | 833 | roc_auc | 0.8026 |
+| MAO_A | classification | 0.5 | 1333 | 833 | roc_auc | 0.841 |
+| MAO_A | classification | 0.75 | 2257 | 833 | roc_auc | 0.864 |
+| MAO_A | classification | 1.0 | 2956 | 833 | roc_auc | 0.8764 |
+| BACE1 | classification | 0.1 | 679 | 1806 | roc_auc | 0.8945 |
+| BACE1 | classification | 0.25 | 1862 | 1806 | roc_auc | 0.9064 |
+| BACE1 | classification | 0.5 | 3530 | 1806 | roc_auc | 0.9293 |
+| BACE1 | classification | 0.75 | 5233 | 1806 | roc_auc | 0.9387 |
+| BACE1 | classification | 1.0 | 7156 | 1806 | roc_auc | 0.9481 |
+| A2A | regression | 0.1 | 618 | 1433 | r2 | 0.3892 |
+| A2A | regression | 0.25 | 1395 | 1433 | r2 | 0.4666 |
+| A2A | regression | 0.5 | 2702 | 1433 | r2 | 0.5369 |
+| A2A | regression | 0.75 | 4114 | 1433 | r2 | 0.6136 |
+| A2A | regression | 1.0 | 5568 | 1433 | r2 | 0.6223 |
 
 The curves flatten well before the full training set, which is the argument against expecting a
 larger pull to change the result, and the argument for the effort having gone into the *negative
