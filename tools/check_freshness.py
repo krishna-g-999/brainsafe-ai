@@ -114,6 +114,16 @@ GRAPH: list[tuple[str, list[str], str]] = [
     # graph is exactly what let them drift, which is the defect this checker exists to prevent.
     ("results/tables/feature_block_ablation.csv", ["models_rf/BBB.joblib"],
      "python src/brainsafe/evaluation/feature_analysis.py"),
+
+    # The falsification suite. Eight hypotheses, four of them refuted, quoted in the technical
+    # report and in the manuscript. Four of the eight had gone a month stale against the retrained
+    # panel before this entry existed, for the same reason as the two above: nothing named them.
+    ("inversion/results/VERDICTS.csv",
+     ["models_rf/binder_modes.json", "models_rf/holdout"],
+     "python inversion/inv_disease_layer.py && python inversion/inv_clinical_indication.py && "
+     "python inversion/inv_distant_specificity.py && python inversion/inv_readacross_value.py && "
+     "python inversion/inv_target_discrimination.py && python inversion/inv_panel_independence.py "
+     "&& python inversion/summarise.py"),
     ("results/tables/learning_curve.csv", ["models_rf/BBB.joblib"],
      "python src/brainsafe/evaluation/learning_curve.py"),
     ("results/tables/noncns_specificity_summary.csv",
