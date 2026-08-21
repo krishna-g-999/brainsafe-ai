@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Document** | Technical report on the BrainSafe AI prediction panel |
-| **Generated** | 2026-08-20, automatically, from the deployed panel |
+| **Generated** | 2026-08-21, automatically, from the deployed panel |
 | **Commit** | `120f2c7` |
 | **Status** | Research preview, pending peer review |
 | **Repository** | https://github.com/krishna-g-999/brainsafe-ai |
@@ -764,8 +764,6 @@ across 8 classification endpoints.
 
 ### 7.2 Would a simpler representation have done?
 
-> **Note.** This table was computed on 2026-07-21, before the current panel was refitted, so its absolute values describe the previous estimators. It is retained because the comparison it makes is between *methods* on identical data, which the refit does not change, and it is marked rather than silently reprinted.
-
 
 The 1,036-column vector is two blocks. Each was tested alone.
 
@@ -774,46 +772,54 @@ The 1,036-column vector is two blocks. Each was tested alone.
 | BBB | classification | fingerprint_only | roc_auc | 0.9556 | 0.0057 |
 | BBB | classification | descriptors_only | roc_auc | 0.9498 | 0.0092 |
 | BBB | classification | combined | roc_auc | 0.9586 | 0.0068 |
-| AChE | classification | fingerprint_only | roc_auc | 0.9568 | 0.0106 |
-| AChE | classification | descriptors_only | roc_auc | 0.8987 | 0.0089 |
-| AChE | classification | combined | roc_auc | 0.9599 | 0.0084 |
-| BChE | classification | fingerprint_only | roc_auc | 0.9579 | 0.0091 |
-| BChE | classification | descriptors_only | roc_auc | 0.9173 | 0.0193 |
-| BChE | classification | combined | roc_auc | 0.9632 | 0.0089 |
-| BACE1 | classification | fingerprint_only | roc_auc | 0.9637 | 0.0068 |
-| BACE1 | classification | descriptors_only | roc_auc | 0.9149 | 0.0168 |
-| BACE1 | classification | combined | roc_auc | 0.9653 | 0.0067 |
-| GSK3B | classification | fingerprint_only | roc_auc | 0.9656 | 0.0065 |
-| GSK3B | classification | descriptors_only | roc_auc | 0.9089 | 0.0197 |
-| GSK3B | classification | combined | roc_auc | 0.9676 | 0.0069 |
-| MAO_A | classification | fingerprint_only | roc_auc | 0.9417 | 0.0106 |
-| MAO_A | classification | descriptors_only | roc_auc | 0.8747 | 0.0208 |
-| MAO_A | classification | combined | roc_auc | 0.9457 | 0.0128 |
-| MAO_B | classification | fingerprint_only | roc_auc | 0.9466 | 0.0039 |
-| MAO_B | classification | descriptors_only | roc_auc | 0.9007 | 0.0109 |
-| MAO_B | classification | combined | roc_auc | 0.9507 | 0.0036 |
-| hERG | classification | fingerprint_only | roc_auc | 0.9455 | 0.0032 |
-| hERG | classification | descriptors_only | roc_auc | 0.8923 | 0.0096 |
-| hERG | classification | combined | roc_auc | 0.9523 | 0.0035 |
-| D2 | regression | fingerprint_only | r2 | 0.5838 | 0.0227 |
-| D2 | regression | descriptors_only | r2 | 0.356 | 0.0211 |
-| D2 | regression | combined | r2 | 0.5856 | 0.0172 |
-| A2A | regression | fingerprint_only | r2 | 0.6728 | 0.0173 |
-| A2A | regression | descriptors_only | r2 | 0.4797 | 0.0052 |
-| A2A | regression | combined | r2 | 0.6742 | 0.0173 |
-| HT2A | regression | fingerprint_only | r2 | 0.615 | 0.0221 |
-| HT2A | regression | descriptors_only | r2 | 0.448 | 0.0163 |
-| HT2A | regression | combined | r2 | 0.6241 | 0.0197 |
-| SERT | regression | fingerprint_only | r2 | 0.5843 | 0.0252 |
-| SERT | regression | descriptors_only | r2 | 0.4293 | 0.0421 |
-| SERT | regression | combined | r2 | 0.595 | 0.0229 |
-| antioxidant_DPPH | regression | fingerprint_only | r2 | 0.6563 | 0.0544 |
-| antioxidant_DPPH | regression | descriptors_only | r2 | 0.4152 | 0.0411 |
-| antioxidant_DPPH | regression | combined | r2 | 0.6544 | 0.0526 |
+| AChE | classification | fingerprint_only | roc_auc | 0.9634 | 0.0035 |
+| AChE | classification | descriptors_only | roc_auc | 0.9162 | 0.007 |
+| AChE | classification | combined | roc_auc | 0.9644 | 0.0031 |
+| BChE | classification | fingerprint_only | roc_auc | 0.969 | 0.005 |
+| BChE | classification | descriptors_only | roc_auc | 0.932 | 0.0079 |
+| BChE | classification | combined | roc_auc | 0.9718 | 0.0067 |
+| BACE1 | classification | fingerprint_only | roc_auc | 0.9647 | 0.0059 |
+| BACE1 | classification | descriptors_only | roc_auc | 0.9098 | 0.0144 |
+| BACE1 | classification | combined | roc_auc | 0.9656 | 0.006 |
+| GSK3B | classification | fingerprint_only | roc_auc | 0.9644 | 0.0069 |
+| GSK3B | classification | descriptors_only | roc_auc | 0.8779 | 0.0062 |
+| GSK3B | classification | combined | roc_auc | 0.9638 | 0.007 |
+| MAO_A | classification | fingerprint_only | roc_auc | 0.9579 | 0.0099 |
+| MAO_A | classification | descriptors_only | roc_auc | 0.9079 | 0.0131 |
+| MAO_A | classification | combined | roc_auc | 0.9608 | 0.009 |
+| MAO_B | classification | fingerprint_only | roc_auc | 0.9599 | 0.0029 |
+| MAO_B | classification | descriptors_only | roc_auc | 0.9259 | 0.009 |
+| MAO_B | classification | combined | roc_auc | 0.9636 | 0.0023 |
+| hERG | classification | fingerprint_only | roc_auc | 0.9495 | 0.0026 |
+| hERG | classification | descriptors_only | roc_auc | 0.9024 | 0.0056 |
+| hERG | classification | combined | roc_auc | 0.9567 | 0.0024 |
+| D2 | regression | fingerprint_only | r2 | 0.6446 | 0.0195 |
+| D2 | regression | descriptors_only | r2 | 0.4017 | 0.0182 |
+| D2 | regression | combined | r2 | 0.6342 | 0.0232 |
+| A2A | regression | fingerprint_only | r2 | 0.7176 | 0.0095 |
+| A2A | regression | descriptors_only | r2 | 0.5131 | 0.0154 |
+| A2A | regression | combined | r2 | 0.7111 | 0.0126 |
+| HT2A | regression | fingerprint_only | r2 | 0.6748 | 0.0106 |
+| HT2A | regression | descriptors_only | r2 | 0.5273 | 0.0247 |
+| HT2A | regression | combined | r2 | 0.6897 | 0.0158 |
+| SERT | regression | fingerprint_only | r2 | 0.6706 | 0.0236 |
+| SERT | regression | descriptors_only | r2 | 0.5245 | 0.0145 |
+| SERT | regression | combined | r2 | 0.6724 | 0.0169 |
+| antioxidant_DPPH | regression | fingerprint_only | r2 | 0.6561 | 0.0553 |
+| antioxidant_DPPH | regression | descriptors_only | r2 | 0.414 | 0.0417 |
+| antioxidant_DPPH | regression | combined | r2 | 0.6541 | 0.0511 |
 
 The combination beats either block alone on most endpoints, but the margin over the fingerprint
 alone is small. The twelve descriptors earn their place mainly on the exposure endpoints, where
 physicochemistry is the mechanism, and contribute least where binding is substructure-driven.
+
+> **How to read the absolute values.** This analysis uses five-fold random cross-validation, not the
+> ten-fold random and scaffold-grouped regimes the headline figures use, so its numbers are not
+> comparable with section 6. Until it was corrected it also did not deduplicate, which inflated one
+> endpoint: measured against the deployed panel, seven of the eight classifiers agreed to within
+> 0.011 AUROC while BBB read 0.060 high, BBB being where the feature-identical duplicates are
+> concentrated. The comparison this table exists to make, between blocks on identical data, is
+> unaffected either way, because whatever inflates one block inflates all three.
 
 
 ### 7.3 Would more data have helped?
@@ -877,7 +883,9 @@ Stated because a tool that reports only what works cannot be checked.
    recorded about them, drawn from within the reference library, so it does not bound behaviour on
    genuinely distant chemistry.
 3. **Natural-product chemistry is largely outside the training library**, whose median fraction-sp3
-   is 0.36. Extending the panel to targets natural products are actually assayed against was
+   is 0.34, and only 9.2 per cent of it is both sp3-rich and free of
+   aromatic rings. Extending the panel to targets natural products are actually assayed
+   against was
    attempted, and the three endpoints added all failed and were withdrawn.
 4. **The disease layer does not predict indication.** 27 of the 52 targets in the pathway graph drive
    more than one condition. It does not beat a frequency baseline at any reporting depth, and

@@ -402,8 +402,8 @@ estimate rests on compounds presumed inactive because nothing is recorded about 
 within the reference library, so it does not bound behaviour on genuinely distant chemistry.
 
 The third is natural-product chemistry, and it is stated here because a reader will reasonably ask.
-The training library has a median fraction-sp3 of 0.36 and only 3.3 per cent of it is both sp3-rich
-and free of aromatic rings, so terpenoid and steroidal natural products are largely outside it: a
+The training library has a median fraction-sp3 of 0.34 and only 9.2 per cent of it is both
+sp3-rich and free of aromatic rings, so terpenoid and steroidal natural products are largely outside it: a
 withanolide submitted to the server returns a maximum Tanimoto of 0.31 and no engagement call, with
 a bile acid as its nearest measured neighbour. Measured activity for such compounds is scarce against
 these targets and is usually recorded against cell lines rather than proteins. Assembling an external
