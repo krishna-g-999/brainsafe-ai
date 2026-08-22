@@ -1,0 +1,13 @@
+question,value
+training structures parsed,228198.0
+carrying an assigned stereocentre,93102.0
+percent carrying a stereocentre,40.8
+skeletons present as 2+ stereoisomers at one endpoint,8013.0
+those pairs whose labels AGREE,7579.0
+those pairs whose labels DISAGREE,434.0
+percent of pairs that disagree,5.4
+pairs with a measurable potency gap,6882.0
+"median potency gap, log units",0.41
+pairs differing by more than 1 log unit,1698.0
+percent of pairs differing by more than 1 log unit,24.7
+percent of the whole panel where chirality could change a call,0.19

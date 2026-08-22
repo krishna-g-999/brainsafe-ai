@@ -125,6 +125,18 @@ chirality is excluded, so two enantiomers produce byte-identical rows. Rows iden
 space are therefore collapsed before any split; leaving them in place would put copies of one
 compound on both sides of a fold.
 
+For a CNS panel this exclusion needs a measured bound rather than a disclaimer. Of 228,198 training
+structures, 40.8 per cent carry an assigned stereocentre, so the data could in principle support a
+chirality-aware fingerprint. Where one flat skeleton appears as two or more stereoisomers measured at
+the same endpoint, however, which is the only situation in which chirality has anything to resolve,
+the measured labels agree in 94.6 per cent of the 8,013 such cases. Stereochemistry is therefore
+mostly not what separates an active from an inactive in this data, and the share of the whole panel
+where it could change a class call is 0.19 per cent. That bound is not an absolution: a quarter of
+the comparable pairs differ by more than one log unit in potency, and the disagreements concentrate
+where a pharmacologist would expect them, at the barrier model, BACE1, D2, OX2, the mu-opioid
+receptor and CB1. Predictions are made on the flat skeleton and should be read as applying to the
+racemate.
+
 Neutralisation is part of the representation rather than a detail of it, because a drug and its
 salt are the same molecule and must give the same answer. Removing the counter-ion without it
 leaves the parent carrying the charge the salt gave it, so haloperidol hydrochloride written as
@@ -355,6 +367,17 @@ widens it:
 A constant answer gains from each additional slot faster than the model does, because approved CNS
 indications are concentrated in a few classes. Deepening the list is therefore not a remedy.
 
+Top-k accuracy is, however, the metric on which a constant answer is strongest, and it is worth
+recording what the layer does on two metrics a constant answer cannot pass. Per-indication AUROC asks
+whether the drugs that treat a condition score above the drugs that do not, and any constant
+predictor scores 0.500 by construction; over the nine indications carrying at least five of these
+drugs the layer averages 0.607 and beats chance on eight. Macro-averaged top-3 recall, which averages
+per indication rather than pooling and so cannot be carried by naming the common conditions, is 0.400
+against 0.333. The spread is wide and is the substance of the result: depression reaches 0.794 and
+psychosis 0.765, while attention deficit and sleep sit at chance. The layer therefore does respond to
+the compound, decisively for some conditions and not at all for others, which is why it is offered as
+a route from mechanism to condition and not as an indication prediction.
+
 The reason is structural rather than a deficiency of fitting, and it is visible in the graph: 27 of
 the 52 targets in the pathway graph drive more than one condition. GABA-A alone contributes to depression and
 anxiety, sleep and wakefulness, and epilepsy. One molecular event genuinely underlies several
@@ -395,11 +418,14 @@ rather than simulated with decoys, thresholds measured on a pool disjoint from t
 them, an applicability domain expressed as conformal coverage, and validations designed so that they
 could fail.
 
-Four limitations bound its use. The applicability-domain flag does not currently separate
-non-drug-like chemistry from unseen drugs, so the conformal interval and the nearest-analogue
-distance, rather than the flag, should be read as the statement of confidence. The specificity
-estimate rests on compounds presumed inactive because nothing is recorded about them, drawn from
-within the reference library, so it does not bound behaviour on genuinely distant chemistry.
+Four limitations bound its use. The applicability-domain flag is a weak signal rather than a
+decisive one: against chemistry genuinely absent from the reference library it scores a median
+maximum similarity of 0.47 against 0.59 for unseen approved drugs (n = 25, one-sided Mann-Whitney
+p = 1.1e-03), but at a threshold that rejects a tenth of genuine drugs it catches only a fifth of
+distant chemistry. The conformal interval and the nearest-analogue distance remain the stronger
+statements of confidence and the interface presents them as such. The specificity estimate rests on
+compounds presumed inactive because nothing is recorded about them, drawn from within the reference
+library, so it does not bound behaviour on genuinely distant chemistry.
 
 The third is natural-product chemistry, and it is stated here because a reader will reasonably ask.
 The training library has a median fraction-sp3 of 0.34 and only 9.2 per cent of it is both

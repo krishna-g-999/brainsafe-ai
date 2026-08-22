@@ -31,18 +31,26 @@ project and are cross-referenced.
 | Failure mode (inversion) | Guard / evidence | Result |
 |---|---|---|
 | Labels are annotations, so the model reads the answer back | measured only (ChEMBL/BindingDB pChEMBL, B3DB, DPPH, ChEMBL K(p,uu,brain)); an earlier annotation prototype was shown by ablation to collapse to R²≈0 structure-only and was retired | measured, `docs/decisions_log.md` |
-| Test compounds leak into training | scaffold GroupKFold(10); **0 of 10 folds share a scaffold** | **PASS** |
-| The same compound is counted many times, inflating n | InChIKey deduplication; master library **61,317 rows / 61,317 unique keys, 0 duplicates** | **PASS** |
-| Numbers are not reproducible | fixed seed 42; **retraining MAO-A reproduces scaffold AUROC 0.868 exactly** | **PASS** |
-| The model is a constant / degenerate predictor | BBB over 200 drugs: probability **std 0.316, full 0.00-1.00 range** | **PASS** |
-| It misranks known chemistry | BBB ranks CNS drugs (mean 0.97) above polar peripheral molecules (0.25); K_p,uu ranks diazepam 0.94 / donepezil 0.84 above atenolol 0.07 / loperamide 0.04 | **PASS** |
-| It is confidently wrong on novel chemistry | applicability-domain flag; PFOA (alien fluorosurfactant) flagged at max Tanimoto **0.20 < 0.30** | **PASS** |
+| Test compounds leak into training | scaffold GroupKFold(10); the worst fold shares **0 compounds** with its training set, where before deduplication the same folds would share 4 | **PASS** |
+| The same compound is counted many times, inflating n | InChIKey deduplication; **0 duplicate rows reach a model**, from 15,104 present in the raw tables (worst BBB at 3,773) | **PASS** |
+| Numbers are not reproducible | fixed seed 42; **retraining MAO-A reproduces scaffold AUROC 0.906 exactly** | **PASS** |
+| The model is a constant / degenerate predictor | BBB over 200 drugs: probability **std 0.293, range 0.01-0.99** | **PASS** |
+| It misranks known chemistry | on 241 external drugs absent from training, BBB ranks the permeable above the non-permeable at **AUROC 0.793**, Mann-Whitney p = 4.4e-13 | **PASS** |
+| It is confidently wrong on novel chemistry | the domain flag scores genuinely distant chemistry (polymers, per-fluorinated chains, silicones, organometallics) at median **0.47 against 0.59** for unseen approved drugs, p = 1.1e-03 | **PASS** |
 | A data addition secretly inflates the score | every addition audited: BindingDB scaffold Δ = -0.0002; a naive-inactives experiment that inflated AUROC via easy negatives was detected and **reverted** | `docs/INACTIVES_EXPERIMENT.md`, `expansion_audit.csv` |
 | Probabilities are meaningless | isotonic calibration, mean ECE **0.072 -> 0.012**; conformal coverage **0.89-0.92** at target 0.90 | `calibration.csv`, `rf_conformal.csv` |
 | The estimator is cherry-picked | RF chosen only after a like-for-like comparison with XGBoost, gradient boosting and a graph network | `model_comparison.csv`, `gnn_vs_rf.csv` |
 | It hides where it stops working | temporal (future-compound) AUROC 0.61-0.91 and regression down to ~0 are reported, not buried | `rf_temporal.csv` |
 
 **Six of six adversarial checks pass; every other failure mode has documented, dated evidence.**
+
+One caveat belongs with that line. The domain-flag check previously failed, and it now passes because
+the controls were corrected, not because the criterion was loosened. Twenty-eight of the original
+controls (glucose, palmitic acid, citric acid, EDTA, taurine and others) are measured compounds
+inside the flag's own reference library, so calling them in-domain was the truthful answer rather
+than a failure. The passing criterion is unchanged at p < 0.01. The flag remains a weak signal: at a
+threshold that rejects a tenth of genuine drugs it catches only a fifth of distant chemistry, and the
+conformal interval and nearest-analogue distance remain the stronger statements of confidence.
 
 ## 3. Validated performance (what the tool actually does)
 

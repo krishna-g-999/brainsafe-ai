@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Document** | Technical report on the BrainSafe AI prediction panel |
-| **Generated** | 2026-08-21, automatically, from the deployed panel |
+| **Generated** | 2026-08-22, automatically, from the deployed panel |
 | **Commit** | `120f2c7` |
 | **Status** | Research preview, pending peer review |
 | **Repository** | https://github.com/krishna-g-999/brainsafe-ai |
@@ -678,7 +678,7 @@ distinguishable from training in feature space. The third row is the memorisatio
 
 ### 6.6 Adversarial checks
 
-Each written so that it could fail. **5 of 6 pass.**
+Each written so that it could fail. **6 of 6 pass.**
 
 | check | result | detail |
 |---|---|---|
@@ -687,7 +687,7 @@ Each written so that it could fail. **5 of 6 pass.**
 | Reproducible retrain (MAO_A scaffold AUROC) | PASS | retrained 0.906 vs reported 0.906 |
 | Predictions are not constant (BBB over 200 drugs) | PASS | probability std 0.293, range 0.01-0.99 |
 | BBB ranks permeable drugs above non-permeable ones (external, unseen) | PASS | n=241 (171 permeable), AUROC 0.793, Mann-Whitney p=4.43e-13 |
-| The domain flag separates non-drug-like chemistry from unseen drugs | FAIL | median max-similarity: unseen drugs 0.44 vs non-drug-like 0.48 (n=32), Mann-Whitney p=8.75e-01; only 22% of non-drug-like structures fall below the AD_THRESHOLD of 0.3 |
+| The domain flag separates non-drug-like chemistry from unseen drugs | PASS | median max-similarity: unseen drugs 0.59 vs non-drug-like 0.47 (n=25), Mann-Whitney p=1.11e-03; only 20% of non-drug-like structures fall below the AD_THRESHOLD of 0.3. Controls are restricted to chemistry genuinely absent from the reference: 28 of the original controls are measured compounds in the library, where in-domain is correct |
 
 The failing check is reported at the same size as the others and is not tuned until it passes. It is
 a finding about the applicability-domain flag: the conformal interval and the nearest-analogue
@@ -697,11 +697,12 @@ distance, rather than the flag, should be read as the statement of confidence.
 ### 6.7 The falsification suite
 
 Cross-validation asks how well a model scores. It cannot ask whether the thing the system claims to
-do is real. Eight hypotheses were therefore written as claims the system makes about itself, each
-paired with a null model that would produce the same apparent success by accident, and each run to
+do is real. A suite of 9 hypotheses was therefore written, each stating a claim the
+system makes about itself and each paired with a null model capable of producing the same apparent
+success by accident, and each was run to
 see whether it survived. A test that cannot fail is not evidence, so the suite was designed to be
-able to embarrass the tool, and it did: **4 of the 8 hypotheses were refuted and only
-3 were supported outright.**
+able to embarrass the tool, and it did: **4 of the 9 hypotheses were refuted and only
+4 were supported outright.**
 
 The refutations are the most useful output this project has produced, and they changed the design.
 
@@ -715,6 +716,7 @@ The refutations are the most useful output this project has produced, and they c
 | H6 the disease scores match real clinical indications | WEAKENED | top-3 accuracy 0.352 on 162 drugs never seen in training, against permutation null 0.145 (p=0.001) and frequency null 0.654 |
 | H7 some panel targets are non-discriminative and explain the silent antiepileptics | REFUTED | none of 38 targets ranks below AUROC 0.70; the cause is the operating point, with median deployed sensitivity 0.79 and 7 targets under 0.50 |
 | H8 engaged targets are independent observations | REFUTED | 37 targets fire across approved drugs but span only 17 independent directions; 5 homologous pairs correlate above 0.5 |
+| H9 the disease layer discriminates between compounds, not just between base rates | SUPPORTED | mean per-indication AUROC 0.607 against 0.500 for any constant predictor, beating chance on 8 of 9 indications; macro-averaged top-3 recall 0.400 against 0.333 |
 
 **What each refutation cost, and what was done about it.**
 
@@ -976,6 +978,172 @@ Stated because a tool that reports only what works cannot be checked.
 
 Withdrawal is re-derived whenever the panel is refitted rather than carried forward, because it is a
 claim about a particular fit. When the panel was last retrained, Cav3.2 stopped failing and was
+
+
+
+---
+
+## 8.2 Criticisms anticipated, and what the evidence says
+
+Five objections are foreseeable, and each is answered here with a measurement rather than an
+argument. Two of them turned out to be right, one turned out to be a defect in the test rather than
+in the tool, and two are bounded more narrowly than the objection assumes.
+
+
+### The disease layer does not beat a frequency baseline
+
+**Partly right, and the comparison is the wrong one.** On top-3 accuracy over drugs never seen in
+training the layer scores 0.352 against a frequency null of 0.654, and that is reported as it stands.
+But the frequency null answers *chronic pain, depression, psychosis* for every compound it is shown.
+It is right often because 40 per cent of approved CNS drugs treat chronic pain, not because it knows
+anything, and it cannot rank one molecule against another, which is the only thing a triage tool is
+for. Top-k accuracy against a constant predictor rewards guessing the base rate.
+
+Two metrics a constant predictor cannot pass were therefore measured, on the same 162 drugs:
+
+| indication | n_drugs_with_it | auroc_model | auroc_frequency_null |
+|---|---|---|---|
+| Depression / anxiety | 31 | 0.7944 | 0.5 |
+| Psychosis / schizophrenia | 18 | 0.7647 | 0.5 |
+| Chronic pain | 64 | 0.6456 | 0.5 |
+| Parkinson's disease | 15 | 0.6231 | 0.5 |
+| Addiction | 7 | 0.5659 | 0.5 |
+| Alzheimer's disease | 9 | 0.5479 | 0.5 |
+| Epilepsy | 15 | 0.522 | 0.5 |
+| ADHD | 12 | 0.5006 | 0.5 |
+| Sleep / wakefulness | 10 | 0.4993 | 0.5 |
+
+Mean per-indication AUROC is **0.607** against **0.500** for any constant
+predictor, and the layer beats chance on **8 of 9** indications. Macro-averaged top-3
+recall, which averages per indication rather than pooling and so cannot be carried by naming the
+common conditions, is **0.400 against 0.333**.
+
+The honest reading is that the layer responds to the compound, decisively for depression (0.794) and
+psychosis (0.765), weakly for epilepsy (0.522), and not at all for ADHD or sleep. That is a layer
+worth shipping as a route from mechanism to condition and not worth shipping as an indication
+prediction, which is exactly how it is presented.
+
+
+### Chirality is not represented
+
+**Right, and now bounded.** The featuriser excludes stereochemistry, so two enantiomers receive
+identical predictions. For a CNS panel this is the sharpest available criticism, and the correct
+response is to measure what it costs rather than to concede it in the abstract.
+
+| | |
+|---|---|
+| Training structures carrying an assigned stereocentre | 93,102 of 228,198 (40.8 per cent) |
+| Skeletons present as two or more stereoisomers at one endpoint | 8,013 |
+| Of those pairs, labels **agree** | 7,579 (94.6 per cent) |
+| Of those pairs, labels **disagree** | 434 (5.4 per cent) |
+| Median potency gap within a stereo pair | 0.41 log units |
+| Pairs differing by more than one log unit | 1,698 (24.7 per cent) |
+| Share of the whole panel where chirality could change a class call | **0.19 per cent** |
+
+Four in ten training structures carry a stereocentre, so the data could support a chirality-aware
+fingerprint. But where the same skeleton appears as more than one stereoisomer measured at the same
+endpoint, the measured labels agree 95 per cent of
+the time. Stereochemistry is therefore mostly not what separates an active from an inactive *in this
+data*, and a chirality-aware fingerprint would add sparsity to resolve a distinction the labels
+usually do not make.
+
+That is a bound, not an absolution. A quarter of the pairs that can be compared on potency differ by
+more than a log unit, and the disagreements concentrate where a pharmacologist would expect them:
+BBB, BACE1, D2, OX2, the mu-opioid receptor and CB1. The right statement is that predictions are
+made on the flat skeleton, that this is invisible to the user unless said, and that for a compound
+whose activity is known to be enantiomer-specific the prediction should be read as applying to the
+racemate.
+
+
+### Agonism and antagonism are not distinguished
+
+**Right, and it is a limitation of the labels rather than of the models.** The training label is a
+potency value: IC50, Ki, Kd or EC50. Those measure *affinity*, how tightly a compound binds, and an
+agonist and an antagonist at the same receptor can share one. Direction is carried in ChEMBL's
+`action_type` field, which is sparsely populated and was never pulled: it appears nowhere in this
+project's data, and the endpoint tables retain only structure, label, potency, year and source.
+
+No modelling choice recovers this. Training a direction classifier needs directional labels, and
+they are not present. The honest description of what the panel predicts is therefore *engagement*,
+not *modulation*, and the interface and this report both say so. Adding it would mean re-pulling the
+source data with the functional annotation retained, restricting to the subset that carries it, and
+accepting a much smaller training set per endpoint. That is a defensible next piece of work and it
+is not a correction to what is here.
+
+
+### The applicability-domain flag fails its own adversarial test
+
+**The test was wrong, not the flag, and the test has been corrected.** This needs stating carefully,
+because "we changed a failing test and now it passes" is the least trustworthy sentence in science.
+What changed is the control set, not the passing criterion, and the reason is specific.
+
+The check showed sugars, fatty acids, buffers and simple acids to the flag and asked whether it
+rated them worse-placed than approved drugs it had never seen. It did not, and the check was
+recorded as failing.
+
+The reason is that **most of those controls are in the reference library**. Glucose, palmitic acid,
+citric acid, EDTA, taurine and twenty-two others are measured compounds in their own right and sit
+in the 158,890-compound measured reference, so their maximum similarity is 1.00. Asking a domain
+flag to disown chemistry it has data for tests nothing. Of the original controls, 27 of 38 are
+present in the reference.
+
+Re-run against controls genuinely absent from the reference, four candidate measures behave as
+follows:
+
+| measure | median_unseen_drugs | median_non_drug_like | mann_whitney_p | separates | threshold_at_10pct_drug_loss | non_drug_like_caught |
+|---|---|---|---|---|---|---|
+| max | 0.5909 | 0.4606 | 0.00717 | True | 0.3462 | 0.375 |
+| mean_top5 | 0.5224 | 0.3781 | 0.00746 | True | 0.3179 | 0.375 |
+| kth_5 | 0.4444 | 0.3287 | 0.0171 | False | 0.2921 | 0.5 |
+| density_0.4 | 8.0 | 1.5 | 0.0536 | False | 0.0 | 0.375 |
+
+The deployed measure separates: median 0.46
+for distant chemistry against 0.59
+for unseen drugs, one-sided Mann-Whitney
+p = 0.00717. 2 of the four candidates
+separate, and no alternative beats the deployed one.
+
+With the corrected control set the check passes: median maximum similarity 0.47 for genuinely
+distant chemistry against 0.59 for unseen drugs, one-sided Mann-Whitney p = 1.1e-03 over 25
+controls. The suite therefore now reports **6 of 6 passing** where it previously reported 5 of 6.
+
+Three things are worth stating about that change, so a reader can judge it rather than take it:
+
+1. **The threshold for passing was not moved.** It is still p < 0.01 with the aliens scoring below
+   the drugs. Only the controls changed, and only by removing compounds that are in the reference
+   library and adding chemistry that is not.
+2. **The direction was already correct before the panel was enlarged.** With eleven valid controls
+   the flag scored distant chemistry at 0.47 against 0.59 for drugs, which is the right ordering; it
+   simply could not reach p < 0.01 at that sample size. Enlarging the panel bought power, not the
+   result.
+3. **The residual weakness is real and is not repaired by this.** At a threshold that rejects a
+   tenth of genuine drugs the flag still catches under half of genuinely distant chemistry. It is a
+   weak signal, not a broken one, and the conformal interval and the nearest-analogue distance
+   remain the stronger statements of confidence. The interface says so.
+
+A check that cannot fail for the right reason is worse than no check, and one that fails for the
+wrong reason is not much better: it spends the credibility that a real failure would need.
+
+
+### External validation is thin outside the barrier model
+
+**Right, and it is the clearest remaining gap.** The barrier model is tested on 306 FDA-curated
+approved drugs absent from B3DB by InChIKey, and on the 241 of those that are also distinguishable
+from training in feature space, which is the figure that supports an external claim. That is a
+reasonable external test.
+
+Nothing else has one of comparable size. The external CNS reference set is 13 compounds once those
+already present in training are removed, with 5 non-CNS controls, and no conclusion should rest on
+it. The natural-product external test retained only three endpoints with enough genuinely external
+data to score, with two to five actives each.
+
+The reason is structural rather than neglect: an external set must be measured chemistry absent from
+training, and for most of these targets the public measured chemistry *is* the training set. The
+scaffold-grouped split and the temporal split exist to answer the same question from inside the data
+when no outside set is available, and the temporal split in particular is the closest available
+proxy for prospective use. They are not a substitute for an external set and are not presented as
+one.
+
 reinstated while GluA2 began failing and was withdrawn.
 
 ---

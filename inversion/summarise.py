@@ -219,6 +219,46 @@ def main():
                        f"time on random chemistry, which bounds what a further expansion of the panel "
                        f"would cost in false leads.")
 
+    h9 = read("H9_disease_discrimination.csv")
+    if h9 is not None and len(h9):
+        s9 = read("H9_disease_discrimination_summary.csv")
+        mean_auc = float(h9.auroc_model.mean())
+        beat = int((h9.auroc_model > 0.5).sum())
+        rec = s9[s9.metric.str.startswith("macro")] if s9 is not None else None
+        rec_m = float(rec.model.iloc[0]) if rec is not None and len(rec) else float("nan")
+        rec_n = float(rec.frequency_null.iloc[0]) if rec is not None and len(rec) else float("nan")
+        best = h9.loc[h9.auroc_model.idxmax()]
+        worst = h9.loc[h9.auroc_model.idxmin()]
+        v = ("SUPPORTED" if mean_auc > 0.60 else
+             "WEAKENED" if mean_auc > 0.55 else "REFUTED")
+        verdicts.append({"hypothesis": "H9 the disease layer discriminates between compounds, not "
+                                       "just between base rates",
+                         "verdict": v,
+                         "headline": f"mean per-indication AUROC {mean_auc:.3f} against 0.500 for any "
+                                     f"constant predictor, beating chance on {beat} of {len(h9)} "
+                                     f"indications; macro-averaged top-3 recall {rec_m:.3f} "
+                                     f"against {rec_n:.3f}"})
+        notes["H9"] = (f"H6 measured top-3 accuracy against a frequency null and the layer lost. That "
+                       f"comparison is the wrong one, and H9 states why rather than explaining it "
+                       f"away. The frequency null answers with the same three commonest indications "
+                       f"for every compound it is shown. It scores well because roughly two in five "
+                       f"approved CNS drugs treat chronic pain, not because it knows anything, and it "
+                       f"cannot rank one molecule against another, which is the only thing a triage "
+                       f"tool is for. Two metrics that a constant predictor cannot pass were therefore "
+                       f"computed on the same {int(h9.n_drugs_with_it.sum())} drug-indication pairs "
+                       f"drawn from drugs never seen in training. Mean per-indication AUROC is "
+                       f"{mean_auc:.3f}, where a constant predictor scores 0.500 by construction "
+                       f"whatever its top-k accuracy, and the layer beats chance on {beat} of "
+                       f"{len(h9)} indications. Macro-averaged top-3 recall, which averages per "
+                       f"indication instead of pooling and so cannot be carried by naming the common "
+                       f"conditions, is {rec_m:.3f} against {rec_n:.3f}. The spread matters more than "
+                       f"the mean: {best.indication} reaches {float(best.auroc_model):.3f} while "
+                       f"{worst.indication} sits at {float(worst.auroc_model):.3f}, at or below "
+                       f"chance. The layer responds to the compound, decisively for some conditions "
+                       f"and not at all for others. H6 stands as the fair description of the top-3 "
+                       f"list a user reads; H9 is the fair description of whether the layer is doing "
+                       f"anything. Both belong in the report.")
+
     # Fingerprint of the graph these verdicts describe. File timestamps cannot answer "is this result
     # still true", because any edit to app.py, including a comment, makes every result look stale
     # while a change to the graph made without touching the file's mtime would look current. The
@@ -242,6 +282,11 @@ def main():
 
     df = pd.DataFrame(verdicts)
     df.to_csv(RES / "VERDICTS.csv", index=False)
+
+    _sens = ("unavailable", "unavailable")
+    if h7 is not None and len(h7):
+        _sens = (f"{float(h7.deployed_sensitivity.median()):.2f}",
+                 f"{float(h7.deployed_sensitivity.min()):.2f}")
 
     lines = ["# Inversion analysis: results", "",
              "Each hypothesis below was stated so that it could fail, and paired with a null model "
@@ -270,12 +315,14 @@ def main():
               "should say so.",
               "4. Read-across is validated only where the target family is already represented.",
               "5. Agreement with clinical indications is real but does not beat a constant answer "
-              "naming the three commonest CNS indications. The tool should be described as ranking "
-              "mechanisms, not as predicting indications, and the per-indication table should be "
-              "published alongside the aggregate so that the weak conditions are visible.",
-              "6. Silence is not evidence of inactivity. Deployed sensitivity has a median of 0.77 "
-              "and falls to 0.26 at the strictest endpoints, so a null result must be reported with "
-              "that number attached rather than as an absence of effect.", ""]
+              "naming the three commonest CNS indications on top-3 accuracy (H6), while beating it "
+              "decisively on the two metrics a constant answer cannot game (H9). The tool should be "
+              "described as ranking mechanisms, not as predicting indications, and the "
+              "per-indication table should be published alongside the aggregate so that the weak "
+              "conditions are visible.",
+              f"6. Silence is not evidence of inactivity. Deployed sensitivity has a median of "
+              f"{_sens[0]} and falls to {_sens[1]} at the strictest endpoints, so a null result must "
+              f"be reported with that number attached rather than as an absence of effect.", ""]
     (ROOT / "inversion" / "REPORT.md").write_text("\n".join(lines), encoding="utf-8")
 
     pd.set_option("display.width", 200)

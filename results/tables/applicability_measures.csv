@@ -1,0 +1,5 @@
+measure,median_unseen_drugs,median_non_drug_like,mann_whitney_p,separates,threshold_at_10pct_drug_loss,non_drug_like_caught
+max,0.5909,0.4606,7.17e-03,True,0.3462,0.375
+mean_top5,0.5224,0.3781,7.46e-03,True,0.3179,0.375
+kth_5,0.4444,0.3287,1.71e-02,False,0.2921,0.5
+density_0.4,8.0,1.5,5.36e-02,False,0.0,0.375

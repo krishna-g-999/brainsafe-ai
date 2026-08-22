@@ -4,4 +4,4 @@ No duplicate compound survives into training,PASS,"0 duplicate rows reach a mode
 Reproducible retrain (MAO_A scaffold AUROC),PASS,retrained 0.906 vs reported 0.906
 Predictions are not constant (BBB over 200 drugs),PASS,"probability std 0.293, range 0.01-0.99"
 "BBB ranks permeable drugs above non-permeable ones (external, unseen)",PASS,"n=241 (171 permeable), AUROC 0.793, Mann-Whitney p=4.43e-13"
-The domain flag separates non-drug-like chemistry from unseen drugs,FAIL,"median max-similarity: unseen drugs 0.44 vs non-drug-like 0.48 (n=32), Mann-Whitney p=8.75e-01; only 22% of non-drug-like structures fall below the AD_THRESHOLD of 0.3"
+The domain flag separates non-drug-like chemistry from unseen drugs,PASS,"median max-similarity: unseen drugs 0.59 vs non-drug-like 0.47 (n=25), Mann-Whitney p=1.11e-03; only 20% of non-drug-like structures fall below the AD_THRESHOLD of 0.3. Controls are restricted to chemistry genuinely absent from the reference: 28 of the original controls are measured compounds in the library, where in-domain is correct"

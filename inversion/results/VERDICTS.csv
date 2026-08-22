@@ -7,3 +7,4 @@ H5 read-across beats a frequency baseline,SUPPORTED,recall 0.973 against 0.059
 H6 the disease scores match real clinical indications,WEAKENED,"top-3 accuracy 0.352 on 162 drugs never seen in training, against permutation null 0.145 (p=0.001) and frequency null 0.654"
 H7 some panel targets are non-discriminative and explain the silent antiepileptics,REFUTED,"none of 38 targets ranks below AUROC 0.70; the cause is the operating point, with median deployed sensitivity 0.79 and 7 targets under 0.50"
 H8 engaged targets are independent observations,REFUTED,37 targets fire across approved drugs but span only 17 independent directions; 5 homologous pairs correlate above 0.5
+"H9 the disease layer discriminates between compounds, not just between base rates",SUPPORTED,"mean per-indication AUROC 0.607 against 0.500 for any constant predictor, beating chance on 8 of 9 indications; macro-averaged top-3 recall 0.400 against 0.333"

@@ -115,15 +115,32 @@ GRAPH: list[tuple[str, list[str], str]] = [
     ("results/tables/feature_block_ablation.csv", ["models_rf/BBB.joblib"],
      "python src/brainsafe/evaluation/feature_analysis.py"),
 
-    # The falsification suite. Eight hypotheses, four of them refuted, quoted in the technical
-    # report and in the manuscript. Four of the eight had gone a month stale against the retrained
-    # panel before this entry existed, for the same reason as the two above: nothing named them.
+    # The falsification suite. Nine hypotheses, four of them refuted, quoted in the technical
+    # report and in the manuscript. Four of the original eight had gone a month stale against the
+    # retrained panel before this entry existed, for the same reason as the two above: nothing named
+    # them. H9 is listed separately below because it is an input to the summary, not a sibling of it.
     ("inversion/results/VERDICTS.csv",
-     ["models_rf/binder_modes.json", "models_rf/holdout"],
+     ["models_rf/binder_modes.json", "models_rf/holdout",
+      "inversion/results/H9_disease_discrimination.csv"],
      "python inversion/inv_disease_layer.py && python inversion/inv_clinical_indication.py && "
      "python inversion/inv_distant_specificity.py && python inversion/inv_readacross_value.py && "
      "python inversion/inv_target_discrimination.py && python inversion/inv_panel_independence.py "
-     "&& python inversion/summarise.py"),
+     "&& python inversion/inv_disease_discrimination.py && python inversion/summarise.py"),
+
+    # H9 scores the disease layer through app.py's own graph, so it is stale if either the models or
+    # the graph move. H6's predictions are its input population.
+    ("inversion/results/H9_disease_discrimination.csv",
+     ["models_rf/binder_modes.json", "inversion/results/H6_clinical_indication_predictions.csv"],
+     "python inversion/inv_disease_discrimination.py"),
+
+    # The two analyses written to answer foreseeable reviewer criticisms. Both are quoted verbatim in
+    # section 8.2 of the technical report, which is precisely the condition that let earlier
+    # supporting analyses drift: quoted in a document, named by no dependency.
+    ("results/tables/stereochemistry_audit.csv", ["data/endpoints/*.csv"],
+     "python src/brainsafe/evaluation/stereochemistry_audit.py"),
+    ("results/tables/applicability_measures.csv",
+     ["models_rf/ad_reference.pkl", "data/external/processed/external_bbb_test.csv"],
+     "python src/brainsafe/evaluation/applicability_measures.py"),
     ("results/tables/learning_curve.csv", ["models_rf/BBB.joblib"],
      "python src/brainsafe/evaluation/learning_curve.py"),
     ("results/tables/noncns_specificity_summary.csv",
