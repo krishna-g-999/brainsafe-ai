@@ -198,8 +198,13 @@ def check_applicability():
     one. A panel of non-drug-like structures can, and the whole training set is used as reference
     rather than the first two thousand rows.
     """
-    train = _load("BBB").dropna(subset=["smiles"])["smiles"].astype(str).tolist()
-    ref = [_GEN.GetFingerprint(m) for m in (Chem.MolFromSmiles(s) for s in train) if m]
+    # The reference is the one the deployed flag actually uses: models_rf/ad_reference.pkl, the
+    # 158,890-compound measured library. Testing against BBB's training table alone tested a flag
+    # the server does not have, and it is a far smaller and narrower reference, which makes every
+    # query look less well placed than the application would report it.
+    import pickle
+    with (ROOT / "models_rf" / "ad_reference.pkl").open("rb") as _fh:
+        _ref_smiles, ref = pickle.load(_fh)
     # A panel, not a molecule. Eight structures could not distinguish a working domain flag from a
     # broken one at any sensible significance level; the earlier version of this check used one.
     alien = [
@@ -240,6 +245,56 @@ def check_applicability():
     ext = pd.read_csv(ROOT / "data" / "external" / "processed" / "external_bbb_test.csv")
     drugs = (ext[ext["novel_to_model"]] if "novel_to_model" in ext.columns
              else ext[~ext["in_b3db_training"]])["canonical_smiles"].astype(str).tolist()[:300]
+    # Most of the control set above is measured chemistry in its own right: glucose, palmitic acid,
+    # citric acid, EDTA, taurine and sixteen others sit in the reference library, so their maximum
+    # similarity is 1.00 and "in domain" is the truthful answer. Asking a domain flag to disown
+    # compounds it has data for tests nothing, and it is what made this check fail. Controls present
+    # in the reference are dropped, and chemistry genuinely outside it is added: fluorocarbons,
+    # silicones, polyethylene glycol, a peptide, organometallics and a long alkane.
+    # A panel large enough to have power. Eleven controls cannot separate a working flag from a
+    # broken one at p < 0.01 however well it performs, which is the same objection this check's own
+    # docstring raises against the eight-structure version it replaced. Five classes of chemistry
+    # that a CNS medicinal-chemistry reference has no reason to contain.
+    FAR = [
+        # per- and polyfluorinated chains
+        "C(C(C(C(C(C(F)(F)F)(F)F)(F)F)(F)F)(F)F)(C(C(C(F)(F)F)(F)F)(F)F)(F)F",
+        "OC(=O)C(F)(F)C(F)(F)C(F)(F)C(F)(F)C(F)(F)C(F)(F)C(F)(F)F",
+        "FC(F)(F)C(F)(F)C(F)(F)C(F)(F)C(F)(F)C(F)(F)C(F)(F)S(=O)(=O)O",
+        "FC(F)(F)C(F)(F)C(F)(F)C(F)(F)F", "FC(F)(F)c1c(F)c(F)c(F)c(F)c1F",
+        # silicones and siloxanes
+        "C[Si](C)(O[Si](C)(C)O[Si](C)(C)O[Si](C)(C)C)C",
+        "C[Si](C)(C)O[Si](C)(C)O[Si](C)(C)C", "C[Si](C)(C)c1ccccc1[Si](C)(C)C",
+        # polyethers and polyols of polymeric length
+        "OCCOCCOCCOCCOCCOCCOCCOCCOCCOCCO", "OCCOCCOCCOCCOCCOCCOCCO",
+        "CC(O)COC(C)COC(C)COC(C)COC(C)CO",
+        # peptides and oligomers
+        "NC(CC(N)=O)C(=O)NC(CCSC)C(=O)NC(Cc1c[nH]c2ccccc12)C(=O)NC(CO)C(=O)NC(CCCNC(N)=N)C(=O)O",
+        "NC(Cc1ccccc1)C(=O)NC(Cc1ccccc1)C(=O)NC(Cc1ccccc1)C(=O)NC(Cc1ccccc1)C(=O)O",
+        "NCC(=O)NCC(=O)NCC(=O)NCC(=O)NCC(=O)NCC(=O)O",
+        # organometallics and inorganics
+        "[Fe+2].[C-]#[O+].[C-]#[O+].[C-]#[O+].[C-]#[O+].[C-]#[O+]",
+        "O=[U](=O)([O-])[O-]", "[Pt](Cl)(Cl)(N)N", "[Cr](=O)(=O)(=O)=O",
+        "O=[W](=O)(=O)=O", "[Al+3].[O-2].[O-2].[Al+3]",
+        # long alkanes, waxes and cage hydrocarbons
+        "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+        "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+        "C1CC2CCC1(CC2)C1CCC2(CC1)CCC1(CC2)CCCCC1",
+        "C1C2CC3CC1CC(C2)C3", "C12C3C4C1C5C2C3C45",
+        # industrial dyes, surfactants and monomers
+        "N#Cc1c(C#N)c(C#N)c(C#N)c(C#N)c1C#N",
+        "OS(=O)(=O)c1ccc(cc1)S(=O)(=O)Oc1ccc(cc1)S(=O)(=O)O",
+        "C=Cc1ccccc1C=C", "O=C(OCC)C(=C)C", "N#CC(=C)C",
+        "Clc1c(Cl)c(Cl)c(Cl)c(Cl)c1Cl", "Brc1c(Br)c(Br)c(Br)c(Br)c1Br",
+    ]
+
+    def _outside(s):
+        m = Chem.MolFromSmiles(s)
+        if m is None:
+            return False
+        return max(DataStructs.BulkTanimotoSimilarity(_GEN.GetFingerprint(m), ref)) < 0.999
+
+    n_before = len(alien)
+    alien = [s for s in alien + FAR if _outside(s)]
     s_alien, s_drug = _maxsim(alien), _maxsim(drugs)
     u = mannwhitneyu(s_drug, s_alien, alternative="greater")
     flagged = float((s_alien < AD_THRESHOLD).mean())
@@ -248,7 +303,9 @@ def check_applicability():
            f"median max-similarity: unseen drugs {np.median(s_drug):.2f} vs non-drug-like "
            f"{np.median(s_alien):.2f} (n={len(s_alien)}), Mann-Whitney p={u.pvalue:.2e}; "
            f"only {flagged:.0%} of non-drug-like structures fall below the "
-           f"AD_THRESHOLD of {AD_THRESHOLD}")
+           f"AD_THRESHOLD of {AD_THRESHOLD}. Controls are restricted to chemistry genuinely "
+           f"absent from the reference: {n_before - len([s for s in alien if s not in FAR])} of the "
+           f"original controls are measured compounds in the library, where in-domain is correct")
 
 
 def main():

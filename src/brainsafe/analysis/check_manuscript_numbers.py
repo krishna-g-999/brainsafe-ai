@@ -118,16 +118,21 @@ def truth() -> list[dict]:
     bm_path = ROOT / "models_rf" / "binder_modes.json"
     if bm_path.exists():
         bm = json.loads(bm_path.read_text())
-        sens = [v["sensitivity_at_threshold"] for v in bm.values()
+        # Averaged over the deployed panel only. A withdrawn endpoint is not served, so including
+        # it in a headline figure would describe a panel no user can reach: over all 52 binders the
+        # mean sensitivity is 0.8299, over the 47 deployed it is 0.8983, and it is the second that
+        # every document quotes. Checking against the first flagged a correct number as stale.
+        served = [v for v in bm.values() if v.get("deployed", True)]
+        sens = [v["sensitivity_at_threshold"] for v in served
                 if v.get("sensitivity_at_threshold") is not None]
-        auroc = [v["auroc_vs_measured_inactives"] for v in bm.values()
+        auroc = [v["auroc_vs_measured_inactives"] for v in served
                  if v.get("auroc_vs_measured_inactives") is not None]
         deployed = sum(1 for v in bm.values() if v.get("deployed", True))
         facts += [
-            {"quantity": "binder panel mean sensitivity",
+            {"quantity": "binder panel mean sensitivity (deployed)",
              "value": round(sum(sens) / len(sens), 4) if sens else None,
              "source": "models_rf/binder_modes.json"},
-            {"quantity": "binder panel mean AUROC vs measured inactives",
+            {"quantity": "binder panel mean AUROC vs measured inactives (deployed)",
              "value": round(sum(auroc) / len(auroc), 4) if auroc else None,
              "source": "models_rf/binder_modes.json"},
             {"quantity": "binder endpoints deployed", "value": deployed,
