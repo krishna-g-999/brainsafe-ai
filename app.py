@@ -417,6 +417,48 @@ def predict_all(smiles, m):
     return out
 
 
+@st.cache_data(show_spinner=False)
+def _recall_bands():
+    """Measured recall as a function of distance from training chemistry.
+
+    The prospective validation (section 6.5 of the technical report) found that this panel's recall
+    depends on how far a compound sits from the chemistry it was fitted to, and not on when that
+    compound was published: conditioned on distance, a time-split and a random-split test set behave
+    the same. Because the distance is computed for every query anyway, the expected sensitivity for
+    the compound in hand is knowable at the moment it is submitted, rather than only as a panel
+    average measured on a held-out set that is four fifths close analogues.
+
+    Read from the artefact rather than restated here, so the figure the interface shows and the
+    figure the report prints cannot drift apart. Returns [] if the table is absent, in which case
+    the interface says nothing rather than guessing.
+    """
+    p = ROOT / "results" / "tables" / "external_novelty_strata.csv"
+    if not p.exists():
+        return []
+    try:
+        d = pd.read_csv(p)
+        d = d[(d.source == "prospective") & (d.split == "time") & d.recall_at_threshold.notna()]
+        out = []
+        for r in d.itertuples():
+            lo = float(str(r.novelty_band).split()[0]) if "below" not in str(r.novelty_band) else 0.0
+            out.append((lo, float(r.recall_at_threshold), int(r.n_actives)))
+        return sorted(out)
+    except Exception:
+        return []
+
+
+def expected_recall(max_sim: float):
+    """The measured recall band this query falls in, or None if the artefact is unavailable."""
+    bands = _recall_bands()
+    if not bands:
+        return None
+    lo, rec, n = bands[0]
+    for b_lo, b_rec, b_n in bands:
+        if max_sim >= b_lo:
+            lo, rec, n = b_lo, b_rec, b_n
+    return {"recall": rec, "n": n, "band_low": lo}
+
+
 def assess_domain(smiles):
     """Max Tanimoto to measured training chemistry + the nearest analogue (applicability domain)."""
     ref = load_ad_reference()
@@ -434,7 +476,8 @@ def assess_domain(smiles):
            ("Near domain", AMBER, "moderate") if mx >= 0.3 else \
            ("Out of domain", ADVERSE, "low")
     return {"max_sim": mx, "nearest_smiles": ref_smiles[i], "n_ref": len(ref_smiles),
-            "tier": tier[0], "colour": tier[1], "confidence": tier[2]}
+            "tier": tier[0], "colour": tier[1], "confidence": tier[2],
+            "expected_recall": expected_recall(mx)}
 
 
 def assess_per_endpoint(smiles):
@@ -2115,9 +2158,19 @@ def result_frame(smiles, name, r):
 
     ad = assess_domain(smiles)
     if ad:
+        er = ad.get("expected_recall")
+        note = f"{ad['tier']}; nearest analogue {ad['nearest_smiles']}"
+        if er:
+            note += (f"; measured recall for compounds at this distance {er['recall']:.2f} "
+                     f"(n={er['n']:,}), so a silent endpoint here is weak evidence of inactivity")
         add("Applicability domain", "max_tanimoto", "Similarity to nearest measured training compound",
-            round(ad["max_sim"], 4), "Tanimoto",
-            f"{ad['tier']}; nearest analogue {ad['nearest_smiles']}")
+            round(ad["max_sim"], 4), "Tanimoto", note)
+        if er:
+            add("Expected sensitivity at this distance", "expected_recall",
+                "Measured recall of the panel on compounds this far from its training chemistry",
+                round(er["recall"], 4), "fraction",
+                "prospective validation, results/tables/external_novelty_strata.csv; recall is a "
+                "function of chemical distance rather than of publication date")
 
     df = pd.DataFrame(rows)
     df.insert(0, "compound", name)
@@ -3099,10 +3152,12 @@ def render_validation():
             '<span class="bs-h-sub">' + str(n_pass) + ' of ' + str(len(inv)) +
             ' pass; each was written so that it could fail</span></div>'
             '<table class="bs-table"><tbody>' + items + '</tbody></table>'
-            '<div class="bs-note" style="margin-top:10px">The failing check is reported at the same '
-            'size as the others and is not tuned until it passes. It is a finding about the '
-            'applicability-domain flag, and the conformal interval and nearest-analogue distance '
-            'should be read as the statement of confidence instead.</div></div>',
+            '<div class="bs-note" style="margin-top:10px">Every check is reported at the same size, '
+            'passing or not. The domain-flag check passes only after its controls were corrected: '
+            'most of the original controls were measured compounds inside the flag\'s own reference '
+            'library, where in-domain is the truthful answer. The criterion was not moved, and the '
+            'flag remains a weak signal, so the conformal interval and the nearest-analogue '
+            'distance should be read as the statement of confidence.</div></div>',
             unsafe_allow_html=True)
     except Exception:
         pass

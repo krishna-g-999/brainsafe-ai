@@ -133,6 +133,24 @@ GRAPH: list[tuple[str, list[str], str]] = [
      ["models_rf/binder_modes.json", "inversion/results/H6_clinical_indication_predictions.csv"],
      "python inversion/inv_disease_discrimination.py"),
 
+    # The external-validation programme. These refit the panel rather than scoring it, so they do
+    # not depend on the fitted models for their result; they depend on binder_modes.json only
+    # because each row quotes the deployed figure beside the prospective one. They depend on the
+    # endpoint tables, which is what actually invalidates them.
+    ("results/tables/external_prospective.csv",
+     ["data/endpoints/*.csv", "models_rf/binder_modes.json"],
+     "python src/brainsafe/evaluation/external_prospective.py"),
+    ("results/tables/external_prospective_core.csv", ["data/endpoints/*.csv"],
+     "python src/brainsafe/evaluation/external_prospective_core.py"),
+    ("results/tables/external_cross_source.csv",
+     ["data/endpoints/*.csv", "models_rf/binder_modes.json"],
+     "python src/brainsafe/evaluation/external_cross_source.py"),
+    # The stratification is downstream of the compound-level output of both, and is the analysis the
+    # headline numbers are meaningless without.
+    ("results/tables/external_novelty_strata.csv",
+     ["results/tables/external_prospective.csv", "results/tables/external_cross_source.csv"],
+     "python src/brainsafe/evaluation/external_novelty_strata.py"),
+
     # The two analyses written to answer foreseeable reviewer criticisms. Both are quoted verbatim in
     # section 8.2 of the technical report, which is precisely the condition that let earlier
     # supporting analyses drift: quoted in a document, named by no dependency.
@@ -177,6 +195,10 @@ GRAPH: list[tuple[str, list[str], str]] = [
      "python src/brainsafe/figures/fig06_validation.py"),
     ("manuscript/figures/Figure7_binder_panel.png", ["models_rf/binder_modes.json"],
      "python src/brainsafe/figures/fig07_binder_panel.py"),
+    ("manuscript/figures/Figure11_external_validation.png",
+     ["results/tables/external_prospective.csv", "results/tables/external_novelty_strata.csv",
+      "results/tables/external_cross_source.csv"],
+     "python src/brainsafe/figures/fig11_external_validation.py"),
 
     # ---- the manuscript is downstream of everything it quotes -----------------------------------
     ("manuscript/tables_generated.md",
