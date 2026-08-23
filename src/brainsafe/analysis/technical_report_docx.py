@@ -49,7 +49,12 @@ ANNEX = [
     ("Figure6_validation.png",
      "Four validations that a cross-validated score cannot replace: calibration, recall on withheld "
      "scaffold classes, specificity on chemistry the server should stay quiet about, and the "
-     "adversarial suite including the check that fails."),
+     "adversarial suite, every check shown at the same size whatever its verdict."),
+    ("Figure11_external_validation.png",
+     "External validation. An aggregate gap between a time split and a size-matched random split "
+     "that looks like prospective decay, the difference in test-set composition that produces it, "
+     "and the single recall-against-distance curve traced by three test sets withheld by unrelated "
+     "rules: by date, at random, and by curator."),
     ("Figure7_binder_panel.png",
      "Every binder endpoint named, deployed and withdrawn alike, with what it discriminates and "
      "what it recovers."),

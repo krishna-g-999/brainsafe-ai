@@ -1,0 +1,13 @@
+source,split,novelty_band,n_actives,n_measured_inactives,auroc,recall_at_threshold,fpr_at_threshold,n_endpoints,note
+prospective,random,below 0.40 (different chemotype),212,4190,0.7516,0.1179,0.0279,39,
+prospective,random,0.40 to 0.55 (related series),453,1331,0.8217,0.5232,0.127,39,
+prospective,random,0.55 to 0.70 (same series),1981,829,0.8379,0.7683,0.3172,39,
+prospective,random,0.70 and above (close analogue),13208,418,0.8548,0.9334,0.4976,39,
+prospective,time,below 0.40 (different chemotype),4366,5395,0.6711,0.1612,0.0762,39,
+prospective,time,0.40 to 0.55 (related series),5228,1003,0.7645,0.5532,0.2692,39,
+prospective,time,0.55 to 0.70 (same series),3674,278,0.7871,0.7403,0.4676,39,
+prospective,time,0.70 and above (close analogue),2586,92,0.8617,0.8616,0.3261,39,
+cross-provenance,cross_source,below 0.40 (different chemotype),324,0,,0.0494,,3,no AUROC: too few measured inactives in band
+cross-provenance,cross_source,0.40 to 0.55 (related series),418,0,,0.4641,,3,no AUROC: too few measured inactives in band
+cross-provenance,cross_source,0.55 to 0.70 (same series),288,0,,0.8264,,3,no AUROC: too few measured inactives in band
+cross-provenance,cross_source,0.70 and above (close analogue),273,0,,0.9011,,3,no AUROC: too few measured inactives in band

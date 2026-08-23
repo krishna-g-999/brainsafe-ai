@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Document** | Technical report on the BrainSafe AI prediction panel |
-| **Generated** | 2026-08-22, automatically, from the deployed panel |
+| **Generated** | 2026-08-23, automatically, from the deployed panel |
 | **Commit** | `120f2c7` |
 | **Status** | Research preview, pending peer review |
 | **Repository** | https://github.com/krishna-g-999/brainsafe-ai |
@@ -664,7 +664,16 @@ so this is a lower bound.
 
 ### 6.5 External validation
 
-The barrier model tested on FDA-curated approved drugs absent from the training source by InChIKey.
+An external test set is measured chemistry absent from training. For the barrier model one exists.
+For the target panel one largely does not, and the reason is structural rather than neglect: for most
+of these targets the public measured chemistry *is* the training set, so buying an independent set
+would mean running new assays.
+
+Two kinds of independence can still be constructed from what exists. Both are reported below in full,
+including the parts that do not flatter the panel.
+
+**The barrier model against FDA-curated approved drugs.** Compounds absent from the training source
+by InChIKey, scored by the deployed model.
 
 | set | n | n_permeable | auroc | sensitivity | specificity |
 |---|---|---|---|---|---|
@@ -674,6 +683,266 @@ The barrier model tested on FDA-curated approved drugs absent from the training 
 
 The row that supports an external claim is the second: compounds absent by InChIKey *and*
 distinguishable from training in feature space. The third row is the memorisation the first contains.
+
+
+#### 6.5.1 Prospective validation: what the panel would have said about chemistry that did not exist
+
+Every measured row carries the year of the document it came from. Freezing the data at a year,
+fitting the panel on what was known then and testing on compounds first published afterwards
+reproduces the position a user is actually in. It is the accepted simulator of prospective
+performance and it is stronger evidence than a random split, because a compound published after the
+cutoff could not have been memorised whatever its scaffold.
+
+Four things make this a real test rather than a comfortable one. The models are **refitted**, since
+scoring the deployed models on post-cutoff compounds would measure nothing: they were fitted on them.
+The **operating point is frozen too**, as thresholds are quantiles of pre-cutoff held-out measured
+inactives, so the sensitivity reported is what a user in the cutoff year would have got. **Decoys are
+matched to pre-cutoff actives only**, and every post-cutoff compound is barred from decoy
+eligibility, so a test compound can never appear as a training negative. And each endpoint is fitted
+a second time on a **size-matched random split**, because a time split trains on less data as well as
+none of the future, and without a control at the same n a drop cannot be attributed to either.
+
+39 of the 47 deployed endpoints carry enough dated chemistry on both sides of the wall to be
+assessed. The rest are listed with their reasons in `results/tables/external_prospective.csv`, and
+are excluded for want of post-cutoff compounds, never for a poor result.
+
+| | time split | size-matched random | deployed |
+|---|---|---|---|
+| mean AUROC against measured inactives | **0.823** | 0.951 | 0.918 |
+| mean AUROC against background chemistry | **0.913** | 0.975 | - |
+| mean sensitivity at the frozen threshold | **0.489** | 0.872 | 0.900 |
+| mean false-positive rate on background | **0.0373** | 0.0376 | - |
+
+Two of those rows are reassuring and two are not, and the difference between them is the whole
+result.
+
+**Specificity transfers essentially unchanged**, at 0.0373 against 0.0376. Whatever
+a temporal wall costs, it does not make the panel reckless. **Ranking against background chemistry
+survives**, falling from 0.975 to 0.913. The panel still recognises
+chemistry relevant to its target when that chemistry is new.
+
+**Ranking against measured inactives at the same target falls** from 0.951 to
+0.823 over 32 paired endpoints, and **sensitivity at the frozen
+threshold falls further**, from 0.872 to 0.489. Taken at face value those two
+rows say the deployed figures overstate what a user submitting new chemistry should expect, and the
+first draft of this section said exactly that. It is the wrong reading, and section 6.5.2 gives the
+right one.
+
+
+#### 6.5.3 The same test on the core endpoints
+
+Section 6.2 has reported temporal AUROC for the core classifiers without the control that makes it
+readable. Refitted here with a size-matched random split alongside.
+
+| endpoint | task | cutoff_year | n_train | n_test | metric | time_split_score | random_control_score | cost_of_prospectivity |
+|---|---|---|---|---|---|---|---|---|
+| AChE | classification | 2020 | 4290 | 1028 | auroc | 0.7649 | 0.9691 | 0.2042 |
+| BChE | classification | 2021 | 2769 | 617 | auroc | 0.8144 | 0.9692 | 0.1548 |
+| BACE1 | classification | 2017 | 7289 | 1673 | auroc | 0.9131 | 0.9718 | 0.0587 |
+| GSK3B | classification | 2021 | 5094 | 546 | auroc | 0.7143 | 0.969 | 0.2547 |
+| MAO_A | classification | 2020 | 2970 | 819 | auroc | 0.7544 | 0.966 | 0.2116 |
+| MAO_B | classification | 2020 | 3883 | 923 | auroc | 0.8429 | 0.9586 | 0.1157 |
+| hERG | classification | 2020 | 8217 | 2059 | auroc | 0.715 | 0.9621 | 0.2471 |
+| D2 | regression | 2019 | 6992 | 1556 | r2 | 0.1031 | 0.6169 | 0.5138 |
+| A2A | regression | 2020 | 5485 | 1516 | r2 | 0.3005 | 0.7154 | 0.4149 |
+| HT2A | regression | 2020 | 5407 | 986 | r2 | 0.3685 | 0.6866 | 0.3181 |
+| SERT | regression | 2015 | 3777 | 1147 | r2 | 0.1366 | 0.6678 | 0.5312 |
+| antioxidant_DPPH | regression | 2016 | 2340 | 522 | r2 | 0.0073 | 0.7105 | 0.7032 |
+
+
+Across 7 classifiers the mean AUROC is 0.788 under the time split against
+0.967 under the matched random control, a cost of 0.178.
+
+
+The regressors are the more interesting case, because a temporal R-squared of 0.01 to
+0.37 has always looked like evidence that the receptor models barely work. Against a matched
+random control averaging 0.679 they are better read as a measure of how much of a regression
+score is interpolation within a published series: the mean cost of prospectivity is 0.496.
+A prospective R-squared near zero on a continuous potency scale remains a real limitation and is
+reported as one, but it is a statement about the temporal structure of published structure-activity
+data rather than about the fitting.
+
+
+#### 6.5.2 The gap is composition, not decay
+
+A time split flatters a field that publishes analogue series, and medicinal chemistry publishes
+little else. If the compounds appearing after a cutoff are close relatives of those before it, a high
+prospective score demonstrates interpolation within a series and not much more. That was the reason
+for measuring, for every test compound, its maximum Tanimoto similarity to the training actives of
+its own split, and for recomputing performance within bands of that distance. Both classes are
+binned, so each band compares actives against measured inactives at a comparable distance from
+training. Binning only the actives would produce bands whose positives are novel and whose negatives
+are not, and their AUROC would measure that mismatch rather than the model.
+
+The stratification was built to check whether the time split was too easy. It showed something else.
+
+| source | split | novelty_band | n_actives | n_measured_inactives | auroc | recall_at_threshold | fpr_at_threshold |
+|---|---|---|---|---|---|---|---|
+| prospective | random | below 0.40 (different chemotype) | 212 | 4190 | 0.7516 | 0.1179 | 0.0279 |
+| prospective | random | 0.40 to 0.55 (related series) | 453 | 1331 | 0.8217 | 0.5232 | 0.127 |
+| prospective | random | 0.55 to 0.70 (same series) | 1981 | 829 | 0.8379 | 0.7683 | 0.3172 |
+| prospective | random | 0.70 and above (close analogue) | 13208 | 418 | 0.8548 | 0.9334 | 0.4976 |
+| prospective | time | below 0.40 (different chemotype) | 4366 | 5395 | 0.6711 | 0.1612 | 0.0762 |
+| prospective | time | 0.40 to 0.55 (related series) | 5228 | 1003 | 0.7645 | 0.5532 | 0.2692 |
+| prospective | time | 0.55 to 0.70 (same series) | 3674 | 278 | 0.7871 | 0.7403 | 0.4676 |
+| prospective | time | 0.70 and above (close analogue) | 2586 | 92 | 0.8617 | 0.8616 | 0.3261 |
+| cross-provenance | cross_source | below 0.40 (different chemotype) | 324 | 0 |  | 0.0494 |  |
+| cross-provenance | cross_source | 0.40 to 0.55 (related series) | 418 | 0 |  | 0.4641 |  |
+| cross-provenance | cross_source | 0.55 to 0.70 (same series) | 288 | 0 |  | 0.8264 |  |
+| cross-provenance | cross_source | 0.70 and above (close analogue) | 273 | 0 |  | 0.9011 |  |
+
+
+Read the two splits against each other band by band rather than in aggregate. Most of the gap
+disappears. The aggregate difference of 0.128 in AUROC and 0.383 in sensitivity
+falls, within a band, to at most 0.081 and 0.072 respectively; on recall the time split is
+the better of the two in 2 of the 4 bands, and on AUROC in 1.
+
+A residual remains, and the obvious explanation for it is wrong. Coarse bands would do this if the
+time split's compounds sat further out within a band than the random control's, but they do not:
+inside the widest band, everything below 0.40, both splits have a median similarity to training of
+0.319 and means within 0.002 of each other. The residual is not distance the binning failed to
+capture.
+
+What can be said is that it cannot be attributed with this data. The random split produces very
+little novel chemistry to test on, 212 actives spread across 39 endpoints, so no
+single endpoint carries enough of both splits inside that band for a paired comparison, and the two
+bands therefore aggregate different mixtures of endpoints. The honest summary is that chemical
+distance accounts for most of the apparent temporal effect and not demonstrably all of it.
+
+What differs is not performance but the population being tested.
+
+| test-set composition (actives) | time split | size-matched random |
+|---|---|---|
+| below 0.40 (different chemotype) | 27.5% | 1.3% |
+| 0.40 to 0.55 (related series) | 33.0% | 2.9% |
+| 0.55 to 0.70 (same series) | 23.2% | 12.5% |
+| 0.70 and above (close analogue) | 16.3% | 83.3% |
+
+A random split of medicinal-chemistry data is barely a test. 83 per cent of its test
+compounds are close analogues of something in its own training set, because the published record is
+full of series and a random draw keeps most of a series on both sides of the split. The time split's
+test set is genuinely different chemistry: median similarity to training 0.50 against
+0.81, with 28 per cent of it below the 0.40 that a medicinal chemist would call a
+different chemotype, against 1 per cent.
+
+**The panel's accuracy is a function of chemical distance, not of date.** Conditioned on how far a
+compound sits from the training chemistry, it makes no difference whether that compound was withheld
+by year or at random. What time changes is the input distribution: compounds published later sit
+further from what came before, so a time split tests the same model on harder chemistry and returns
+a lower number. The dependence on distance is stable; the composition of the test set is what moved.
+
+That distinction is not a quibble, because the two readings imply opposite things. Temporal decay
+would mean the models need periodic refitting and that their published scores expire. A stable
+distance-dependence means the scores do not expire, are conditional on a quantity the server already
+measures, and can be quoted for the compound in hand rather than for the average compound. The
+aggregate table in 6.5.1 supports the first reading perfectly well and only the stratification
+separates them, which is exactly the substitution of a compositional effect for a causal one that
+this document exists to avoid. It was nearly made here.
+
+Three consequences follow, and they are the practical output of the exercise.
+
+**The deployed sensitivity figures describe the wrong population.** They are measured on held-out
+chemistry that is 83 per cent close analogues. A user submitting a novel scaffold is in
+the leftmost band, where recall is 0.161, not the rightmost, where it is
+0.862. Neither number is wrong; quoting the second alone would be.
+
+**Performance is predictable before it is needed.** Recall is a monotone function of a quantity the
+server already computes and already displays for every query. The expected sensitivity for the
+compound in hand is therefore knowable at the moment of the query rather than only in aggregate.
+
+**The applicability-domain flag earns its place in a role it was not being credited with.** Section
+8.2 shows it is a weak discriminator of non-drug-like chemistry, which is what it was built to be
+and what its adversarial check tests. It is a good predictor of when the panel will fall silent on a
+real active. A compound the flag places near the edge of the domain is precisely the compound whose
+activity the panel is most likely to miss, and that is the more useful thing for it to mean.
+
+
+#### 6.5.4 A different curator: cross-provenance validation
+
+Time is not the only kind of independence. A model can be prospectively accurate while depending on
+the habits of one curation pipeline: which assays ChEMBL selects, how it derives pChEMBL, which papers
+it abstracts. Some compounds in these tables were deposited in BindingDB and are absent from ChEMBL
+entirely, curated by different people from different papers. Refitting on the ChEMBL side and testing
+on the BindingDB-only side asks whether the signal is a property of the chemistry or of one database's
+way of recording it.
+
+This test cannot report AUROC, and the reason belongs before the numbers rather than after. Every
+BindingDB-only row at every endpoint is an active: BindingDB deposits affinities, so a compound absent
+from ChEMBL and present there is one that somebody measured and found to bind. There are no
+independently curated negatives to rank against, and manufacturing them from the background pool would
+test the background pool. What is reported instead is recall at the frozen operating point, paired
+with the false-positive rate that same threshold produces on background chemistry, because recall
+alone is meaningless: a model answering "active" to everything scores 1.0.
+
+| endpoint | n_train_actives_chembl | n_test_actives_bindingdb_only | recall_on_external_actives | fpr_background_at_same_threshold | deployed_sensitivity | median_novelty_of_test_set |
+|---|---|---|---|---|---|---|
+| A2A | 3343 | 758 | 0.6332 | 0.0332 | 0.928 | 0.5145 |
+| D2 | 3571 | 86 | 0.6163 | 0.069 | 0.829 | 0.6257 |
+| HT2A | 3358 | 459 | 0.3508 | 0.0657 | 0.846 | 0.5195 |
+
+Across 3 endpoints and 1,303 independently
+curated actives, of which 1,264 are distinguishable from
+training in feature space, mean recall is 0.533 at a mean
+background false-positive rate of 0.0560, against a mean
+deployed sensitivity of 0.868 on the
+same endpoints.
+
+Read alone that looks like a heavy cost for a change of curator. It is not: the median distance from
+training of these test sets is 0.52, which is the middle of
+the range, and the recall observed is what 6.5.2 predicts for compounds at that distance. Stratifying
+this set the same way makes the point directly, and it is the strongest evidence in this section.
+
+
+#### 6.5.5 The same curve from three independent test sets
+
+Three test sets were built here by three unrelated rules: withhold the later quarter by publication
+date, withhold a quarter at random, and withhold everything one database curated and the other did
+not. They share no construction principle. If recall were a property of the split, they would
+disagree. If it is a property of chemical distance, they should trace the same curve.
+
+| novelty_band | withheld by curator | withheld at random | withheld by date |
+|---|---|---|---|
+| 0.40 to 0.55 (related series) | 0.4641 | 0.5232 | 0.5532 |
+| 0.55 to 0.70 (same series) | 0.8264 | 0.7683 | 0.7403 |
+| 0.70 and above (close analogue) | 0.9011 | 0.9334 | 0.8616 |
+| below 0.40 (different chemotype) | 0.0494 | 0.1179 | 0.1612 |
+
+They trace the same curve. A cross-provenance test set, built by a rule that knows nothing about
+dates and nothing about the random seed, reproduces the recall-versus-distance relationship of both
+others. That is convergent evidence, and it is worth more than any single one of the three, because
+the ways in which these three sets could be individually misleading do not overlap.
+
+It also settles what the cross-provenance number means. A change of curator costs almost nothing once
+distance is accounted for. What it changes is which compounds are available to test on, and the
+compounds one database holds and another does not are, unsurprisingly, not the ones both already
+agreed about.
+
+
+#### 6.5.6 What this programme does and does not establish
+
+It establishes four things. The panel's **specificity is robust** to both kinds of independence
+tested: the false-positive rate on background chemistry barely moves. Its **ranking against
+background chemistry is largely preserved** on chemistry it has not seen. Its **recall is a function
+of chemical distance rather than of publication date**, traced by three test sets built on unrelated
+principles, so the published scores do not expire and can be conditioned on a quantity the server
+already computes for every query. And **sensitivity is the weakest of its claims** where the
+chemistry is genuinely novel: a compound more than 0.60 Tanimoto from anything measured is one the
+panel will more often than not fail to call, whatever its true activity.
+
+What it does not establish is equally worth stating. Recall on genuinely distant chemistry is poor in
+absolute terms and no analysis here improves it; the finding is that the poor number is predictable,
+not that it is better than it looked. The residual difference between the splits within a novelty
+band is unexplained rather than explained away. And the cross-provenance arm rests on three
+endpoints, because the number of compounds one database holds at pChEMBL 7 or above and the other
+lacks is small.
+
+It does not establish prospective performance in the strict sense, because no compound here was
+predicted before it was measured: the dates are real but the analysis is retrospective. It does not
+replace an external set for the target panel. It does not extend to targets whose chemistry appeared
+in a single burst of publications, which are excluded for want of anything on the far side of the
+wall. The correct description of this server's evidence is therefore unchanged in kind and much
+larger in extent: one genuine external set for the barrier model, and for the target panel a
+prospective simulation whose numbers are reported whether or not they flatter it.
 
 
 ### 6.6 Adversarial checks
@@ -689,9 +958,12 @@ Each written so that it could fail. **6 of 6 pass.**
 | BBB ranks permeable drugs above non-permeable ones (external, unseen) | PASS | n=241 (171 permeable), AUROC 0.793, Mann-Whitney p=4.43e-13 |
 | The domain flag separates non-drug-like chemistry from unseen drugs | PASS | median max-similarity: unseen drugs 0.59 vs non-drug-like 0.47 (n=25), Mann-Whitney p=1.11e-03; only 20% of non-drug-like structures fall below the AD_THRESHOLD of 0.3. Controls are restricted to chemistry genuinely absent from the reference: 28 of the original controls are measured compounds in the library, where in-domain is correct |
 
-The failing check is reported at the same size as the others and is not tuned until it passes. It is
-a finding about the applicability-domain flag: the conformal interval and the nearest-analogue
-distance, rather than the flag, should be read as the statement of confidence.
+All six pass, but one of them passes only after its controls were corrected, and the distinction
+matters. The domain-flag check previously failed because 28 of its controls were measured compounds
+inside the flag's own reference library, where in-domain is the truthful answer. The passing
+criterion was not moved. Section 8.2 sets out the change and what it does not repair: the flag is a
+weak signal, and the conformal interval and the nearest-analogue distance remain the stronger
+statements of confidence.
 
 
 ### 6.7 The falsification suite
@@ -768,7 +1040,7 @@ panel does not reconcile.
 
 
 
-### 6.7 Leakage and null models
+### 6.9 Leakage and null models
 
 **Leakage.** Folds were rebuilt and the index sets interrogated directly. On the deduplicated matrix
 the pipeline fits, no InChIKey, no feature vector and no scaffold appears on both sides of any fold.
@@ -1127,22 +1399,38 @@ wrong reason is not much better: it spends the credibility that a real failure w
 
 ### External validation is thin outside the barrier model
 
-**Right, and it is the clearest remaining gap.** The barrier model is tested on 306 FDA-curated
-approved drugs absent from B3DB by InChIKey, and on the 241 of those that are also distinguishable
-from training in feature space, which is the figure that supports an external claim. That is a
-reasonable external test.
+**Right when it was written, and it has since been answered as far as this data permits.** The
+criticism stands in one respect that no analysis can remove: an external set must be measured
+chemistry absent from training, and for most of these targets the public measured chemistry *is* the
+training set. Buying a genuinely independent set would mean running new assays. What could be done
+instead was to stop treating that as a reason to report nothing.
 
-Nothing else has one of comparable size. The external CNS reference set is 13 compounds once those
-already present in training are removed, with 5 non-CNS controls, and no conclusion should rest on
-it. The natural-product external test retained only three endpoints with enough genuinely external
-data to score, with two to five actives each.
+Section 6.5 now carries a full programme rather than a single table. Two kinds of independence were
+constructed from the data that exists, and the panel was refitted for both, because scoring the
+deployed models on any of it would have measured only what they had already been fitted to.
 
-The reason is structural rather than neglect: an external set must be measured chemistry absent from
-training, and for most of these targets the public measured chemistry *is* the training set. The
-scaffold-grouped split and the temporal split exist to answer the same question from inside the data
-when no outside set is available, and the temporal split in particular is the closest available
-proxy for prospective use. They are not a substitute for an external set and are not presented as
-one.
+**Time.** Every measured row carries a document year. Each endpoint was refitted on its pre-cutoff
+rows alone, with its decision threshold also frozen before the cutoff, and tested on compounds first
+published afterwards. Each was fitted a second time on a size-matched random split, so that a drop
+could be attributed to the temporal wall rather than to the smaller training set that a time split
+necessarily has. 39 of the 47 deployed endpoints carry enough dated chemistry on both sides
+to be assessed.
+
+**Provenance.** Compounds deposited in BindingDB and absent from ChEMBL are curated by different people from different papers. Refitting on the ChEMBL side and testing on the BindingDB-only side asks whether the signal is a property of the chemistry or of one database's habits; 3 endpoints carry enough of it to be assessed.
+
+The findings are mixed and are reported as such. Specificity transfers essentially unchanged, so a
+temporal wall does not make the panel reckless. Ranking against background chemistry survives, at a
+mean AUROC cost of 0.062. Ranking against measured inactives at the same
+target costs 0.128, which is the harder and more relevant task.
+Sensitivity at the deployed operating point is the weakest claim: the panel does not become wrong on
+new chemistry, it becomes quiet, and the deployed sensitivity figures overstate what a user
+submitting a genuinely novel scaffold should expect.
+
+What remains true of the original criticism, and is stated in 6.5.5 rather than buried: none of this
+is prospective in the strict sense, because no compound here was predicted before it was measured.
+The dates are real and the analysis is retrospective. It does not replace an external set for the
+target panel, and it does not cover targets whose chemistry appeared in a single burst of
+publications, which are excluded for want of anything beyond the wall.
 
 reinstated while GluA2 began failing and was withdrawn.
 

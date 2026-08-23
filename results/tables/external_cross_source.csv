@@ -1,0 +1,4 @@
+endpoint,mode,n_train_actives_chembl,n_test_actives_bindingdb_only,n_test_actives_distinguishable,threshold,threshold_basis,recall_on_external_actives,recall_on_distinguishable_only,fpr_background_at_same_threshold,auroc_vs_background,median_novelty_of_test_set,test_actives_below_tanimoto_0.4,deployed_sensitivity,deployed_threshold
+A2A,hybrid_decoys_plus_measured_inactives,3343,758,749,0.9254,held-out measured inactives from the training side of the split,0.6332,0.6302,0.0332,0.9678,0.5145,223,0.928,0.8888
+D2,hybrid_decoys_plus_measured_inactives,3571,86,70,0.8071,held-out measured inactives from the training side of the split,0.6163,0.5714,0.069,0.9168,0.6257,5,0.829,0.9072
+HT2A,hybrid_decoys_plus_measured_inactives,3358,459,445,0.7543,held-out measured inactives from the training side of the split,0.3508,0.3348,0.0657,0.8686,0.5195,96,0.846,0.9016

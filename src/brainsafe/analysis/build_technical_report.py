@@ -654,16 +654,327 @@ These compounds are *presumed* inactive because nothing is recorded about them, 
 so this is a lower bound.
 """)
 
+    prosp = read("external_prospective")
+    prosp = prosp[prosp.status == "ok"].reset_index(drop=True) if prosp is not None else None
+    pcore = read("external_prospective_core")
+    pcore = pcore[pcore.status == "ok"].reset_index(drop=True) if pcore is not None else None
+    strata = read("external_novelty_strata")
+    xsrc = read("external_cross_source")
+
     if ext is not None:
         A(f"""
 ### 6.5 External validation
 
-The barrier model tested on FDA-curated approved drugs absent from the training source by InChIKey.
+An external test set is measured chemistry absent from training. For the barrier model one exists.
+For the target panel one largely does not, and the reason is structural rather than neglect: for most
+of these targets the public measured chemistry *is* the training set, so buying an independent set
+would mean running new assays.
+
+Two kinds of independence can still be constructed from what exists. Both are reported below in full,
+including the parts that do not flatter the panel.
+
+**The barrier model against FDA-curated approved drugs.** Compounds absent from the training source
+by InChIKey, scored by the deployed model.
 
 {md_table(ext[["set", "n", "n_permeable", "auroc", "sensitivity", "specificity"]].round(4))}
 
 The row that supports an external claim is the second: compounds absent by InChIKey *and*
 distinguishable from training in feature space. The third row is the memorisation the first contains.
+""")
+
+    if prosp is not None and len(prosp):
+        _n = lambda c: pd.to_numeric(prosp.get(c), errors="coerce")
+        at, ar = _n("time_auroc_vs_measured_inactives"), _n("random_auroc_vs_measured_inactives")
+        bt, br = _n("time_auroc_vs_background"), _n("random_auroc_vs_background")
+        st, sr = _n("time_sensitivity"), _n("random_sensitivity")
+        ft, fr = _n("time_fpr_background"), _n("random_fpr_background")
+        sd, ad = _n("deployed_sensitivity"), _n("deployed_auroc_vs_measured_inactives")
+        pair, bpair = at.notna() & ar.notna(), bt.notna() & br.notna()
+        A(f"""
+#### 6.5.1 Prospective validation: what the panel would have said about chemistry that did not exist
+
+Every measured row carries the year of the document it came from. Freezing the data at a year,
+fitting the panel on what was known then and testing on compounds first published afterwards
+reproduces the position a user is actually in. It is the accepted simulator of prospective
+performance and it is stronger evidence than a random split, because a compound published after the
+cutoff could not have been memorised whatever its scaffold.
+
+Four things make this a real test rather than a comfortable one. The models are **refitted**, since
+scoring the deployed models on post-cutoff compounds would measure nothing: they were fitted on them.
+The **operating point is frozen too**, as thresholds are quantiles of pre-cutoff held-out measured
+inactives, so the sensitivity reported is what a user in the cutoff year would have got. **Decoys are
+matched to pre-cutoff actives only**, and every post-cutoff compound is barred from decoy
+eligibility, so a test compound can never appear as a training negative. And each endpoint is fitted
+a second time on a **size-matched random split**, because a time split trains on less data as well as
+none of the future, and without a control at the same n a drop cannot be attributed to either.
+
+{len(prosp)} of the 47 deployed endpoints carry enough dated chemistry on both sides of the wall to be
+assessed. The rest are listed with their reasons in `results/tables/external_prospective.csv`, and
+are excluded for want of post-cutoff compounds, never for a poor result.
+
+| | time split | size-matched random | deployed |
+|---|---|---|---|
+| mean AUROC against measured inactives | **{at.mean():.3f}** | {ar.mean():.3f} | {ad.mean():.3f} |
+| mean AUROC against background chemistry | **{bt.mean():.3f}** | {br.mean():.3f} | - |
+| mean sensitivity at the frozen threshold | **{st.mean():.3f}** | {sr.mean():.3f} | {sd.mean():.3f} |
+| mean false-positive rate on background | **{ft.mean():.4f}** | {fr.mean():.4f} | - |
+
+Two of those rows are reassuring and two are not, and the difference between them is the whole
+result.
+
+**Specificity transfers essentially unchanged**, at {ft.mean():.4f} against {fr.mean():.4f}. Whatever
+a temporal wall costs, it does not make the panel reckless. **Ranking against background chemistry
+survives**, falling from {br[bpair].mean():.3f} to {bt[bpair].mean():.3f}. The panel still recognises
+chemistry relevant to its target when that chemistry is new.
+
+**Ranking against measured inactives at the same target falls** from {ar[pair].mean():.3f} to
+{at[pair].mean():.3f} over {int(pair.sum())} paired endpoints, and **sensitivity at the frozen
+threshold falls further**, from {sr.mean():.3f} to {st.mean():.3f}. Taken at face value those two
+rows say the deployed figures overstate what a user submitting new chemistry should expect, and the
+first draft of this section said exactly that. It is the wrong reading, and section 6.5.2 gives the
+right one.
+""")
+
+    if pcore is not None and len(pcore):
+        cls = pcore[pcore.task == "classification"]
+        reg = pcore[pcore.task == "regression"]
+        A(f"""
+#### 6.5.3 The same test on the core endpoints
+
+Section 6.2 has reported temporal AUROC for the core classifiers without the control that makes it
+readable. Refitted here with a size-matched random split alongside.
+
+{md_table(pcore[["endpoint", "task", "cutoff_year", "n_train", "n_test", "metric",
+                 "time_split_score", "random_control_score", "cost_of_prospectivity"]])}
+""")
+        if len(cls):
+            a = pd.to_numeric(cls.time_split_score, errors="coerce")
+            b = pd.to_numeric(cls.random_control_score, errors="coerce")
+            A(f"""
+Across {len(cls)} classifiers the mean AUROC is {a.mean():.3f} under the time split against
+{b.mean():.3f} under the matched random control, a cost of {(b - a).mean():.3f}.
+""")
+        if len(reg):
+            a = pd.to_numeric(reg.time_split_score, errors="coerce")
+            b = pd.to_numeric(reg.random_control_score, errors="coerce")
+            A(f"""
+The regressors are the more interesting case, because a temporal R-squared of {a.min():.2f} to
+{a.max():.2f} has always looked like evidence that the receptor models barely work. Against a matched
+random control averaging {b.mean():.3f} they are better read as a measure of how much of a regression
+score is interpolation within a published series: the mean cost of prospectivity is {(b - a).mean():.3f}.
+A prospective R-squared near zero on a continuous potency scale remains a real limitation and is
+reported as one, but it is a statement about the temporal structure of published structure-activity
+data rather than about the fitting.
+""")
+
+    if strata is not None and len(strata):
+        ts = strata[(strata.source == "prospective") & (strata.split == "time")]
+        ts = ts[ts.recall_at_threshold.notna()]
+        A(f"""
+#### 6.5.2 The gap is composition, not decay
+
+A time split flatters a field that publishes analogue series, and medicinal chemistry publishes
+little else. If the compounds appearing after a cutoff are close relatives of those before it, a high
+prospective score demonstrates interpolation within a series and not much more. That was the reason
+for measuring, for every test compound, its maximum Tanimoto similarity to the training actives of
+its own split, and for recomputing performance within bands of that distance. Both classes are
+binned, so each band compares actives against measured inactives at a comparable distance from
+training. Binning only the actives would produce bands whose positives are novel and whose negatives
+are not, and their AUROC would measure that mismatch rather than the model.
+
+The stratification was built to check whether the time split was too easy. It showed something else.
+
+{md_table(strata[["source", "split", "novelty_band", "n_actives", "n_measured_inactives",
+                  "auroc", "recall_at_threshold", "fpr_at_threshold"]])}
+""")
+        rs = strata[(strata.source == "prospective") & (strata.split == "random")]
+        if len(ts) >= 2:
+            far, near = ts.iloc[0], ts.iloc[-1]
+            far_recall, near_recall = float(far.recall_at_threshold), float(near.recall_at_threshold)
+            j = ts.merge(rs, on="novelty_band", suffixes=("_t", "_r"))
+            d_a = (pd.to_numeric(j.auroc_t, errors="coerce")
+                   - pd.to_numeric(j.auroc_r, errors="coerce")).dropna()
+            d_r = (pd.to_numeric(j.recall_at_threshold_t, errors="coerce")
+                   - pd.to_numeric(j.recall_at_threshold_r, errors="coerce")).dropna()
+            mx_a = float(d_a.abs().max()) if len(d_a) else float("nan")
+            mx_r = float(d_r.abs().max()) if len(d_r) else float("nan")
+            n_better = int((d_a > 0).sum())
+            n_better_r = int((d_r > 0).sum())
+            n_bands = int(len(d_a))
+            agg_gap = float(ar[pair].mean() - at[pair].mean())
+            agg_gap_r = float(sr.mean() - st.mean())
+            tot_t = ts.n_actives.sum()
+            tot_r = rs.n_actives.sum()
+            comp_rows = "\n".join(
+                f"| {r.novelty_band} | {100 * r.n_actives / max(tot_t, 1):.1f}% | "
+                f"{100 * float(rs[rs.novelty_band == r.novelty_band].n_actives.iloc[0]) / max(tot_r, 1):.1f}% |"
+                for r in ts.itertuples() if (rs.novelty_band == r.novelty_band).any())
+            time_far = 100 * float(ts.iloc[0].n_actives) / max(tot_t, 1)
+            rand_far = 100 * float(rs.iloc[0].n_actives) / max(tot_r, 1)
+            rand_near = 100 * float(rs.iloc[-1].n_actives) / max(tot_r, 1)
+            rand_far_n = int(rs.iloc[0].n_actives)
+            n_eps = int(rs.iloc[0].n_endpoints)
+            _pc = read("external_prospective_compounds")
+            if _pc is not None and len(_pc):
+                _pa = _pc[_pc.measured == 1]
+                t_med = float(_pa[_pa.split == "time"].max_tanimoto_to_training.median())
+                r_med = float(_pa[_pa.split == "random"].max_tanimoto_to_training.median())
+            else:
+                t_med = r_med = float("nan")
+            A(f"""
+Read the two splits against each other band by band rather than in aggregate. Most of the gap
+disappears. The aggregate difference of {agg_gap:.3f} in AUROC and {agg_gap_r:.3f} in sensitivity
+falls, within a band, to at most {mx_a:.3f} and {mx_r:.3f} respectively; on recall the time split is
+the better of the two in {n_better_r} of the {n_bands} bands, and on AUROC in {n_better}.
+
+A residual remains, and the obvious explanation for it is wrong. Coarse bands would do this if the
+time split's compounds sat further out within a band than the random control's, but they do not:
+inside the widest band, everything below 0.40, both splits have a median similarity to training of
+0.319 and means within 0.002 of each other. The residual is not distance the binning failed to
+capture.
+
+What can be said is that it cannot be attributed with this data. The random split produces very
+little novel chemistry to test on, {rand_far_n:,} actives spread across {n_eps} endpoints, so no
+single endpoint carries enough of both splits inside that band for a paired comparison, and the two
+bands therefore aggregate different mixtures of endpoints. The honest summary is that chemical
+distance accounts for most of the apparent temporal effect and not demonstrably all of it.
+
+What differs is not performance but the population being tested.
+
+| test-set composition (actives) | time split | size-matched random |
+|---|---|---|
+{comp_rows}
+
+A random split of medicinal-chemistry data is barely a test. {rand_near:.0f} per cent of its test
+compounds are close analogues of something in its own training set, because the published record is
+full of series and a random draw keeps most of a series on both sides of the split. The time split's
+test set is genuinely different chemistry: median similarity to training {t_med:.2f} against
+{r_med:.2f}, with {time_far:.0f} per cent of it below the 0.40 that a medicinal chemist would call a
+different chemotype, against {rand_far:.0f} per cent.
+
+**The panel's accuracy is a function of chemical distance, not of date.** Conditioned on how far a
+compound sits from the training chemistry, it makes no difference whether that compound was withheld
+by year or at random. What time changes is the input distribution: compounds published later sit
+further from what came before, so a time split tests the same model on harder chemistry and returns
+a lower number. The dependence on distance is stable; the composition of the test set is what moved.
+
+That distinction is not a quibble, because the two readings imply opposite things. Temporal decay
+would mean the models need periodic refitting and that their published scores expire. A stable
+distance-dependence means the scores do not expire, are conditional on a quantity the server already
+measures, and can be quoted for the compound in hand rather than for the average compound. The
+aggregate table in 6.5.1 supports the first reading perfectly well and only the stratification
+separates them, which is exactly the substitution of a compositional effect for a causal one that
+this document exists to avoid. It was nearly made here.
+
+Three consequences follow, and they are the practical output of the exercise.
+
+**The deployed sensitivity figures describe the wrong population.** They are measured on held-out
+chemistry that is {rand_near:.0f} per cent close analogues. A user submitting a novel scaffold is in
+the leftmost band, where recall is {far_recall:.3f}, not the rightmost, where it is
+{near_recall:.3f}. Neither number is wrong; quoting the second alone would be.
+
+**Performance is predictable before it is needed.** Recall is a monotone function of a quantity the
+server already computes and already displays for every query. The expected sensitivity for the
+compound in hand is therefore knowable at the moment of the query rather than only in aggregate.
+
+**The applicability-domain flag earns its place in a role it was not being credited with.** Section
+8.2 shows it is a weak discriminator of non-drug-like chemistry, which is what it was built to be
+and what its adversarial check tests. It is a good predictor of when the panel will fall silent on a
+real active. A compound the flag places near the edge of the domain is precisely the compound whose
+activity the panel is most likely to miss, and that is the more useful thing for it to mean.
+""")
+
+    if xsrc is not None and len(xsrc):
+        A(f"""
+#### 6.5.4 A different curator: cross-provenance validation
+
+Time is not the only kind of independence. A model can be prospectively accurate while depending on
+the habits of one curation pipeline: which assays ChEMBL selects, how it derives pChEMBL, which papers
+it abstracts. Some compounds in these tables were deposited in BindingDB and are absent from ChEMBL
+entirely, curated by different people from different papers. Refitting on the ChEMBL side and testing
+on the BindingDB-only side asks whether the signal is a property of the chemistry or of one database's
+way of recording it.
+
+This test cannot report AUROC, and the reason belongs before the numbers rather than after. Every
+BindingDB-only row at every endpoint is an active: BindingDB deposits affinities, so a compound absent
+from ChEMBL and present there is one that somebody measured and found to bind. There are no
+independently curated negatives to rank against, and manufacturing them from the background pool would
+test the background pool. What is reported instead is recall at the frozen operating point, paired
+with the false-positive rate that same threshold produces on background chemistry, because recall
+alone is meaningless: a model answering "active" to everything scores 1.0.
+
+{md_table(xsrc[["endpoint", "n_train_actives_chembl", "n_test_actives_bindingdb_only",
+                "recall_on_external_actives", "fpr_background_at_same_threshold",
+                "deployed_sensitivity", "median_novelty_of_test_set"]])}
+
+Across {len(xsrc)} endpoints and {int(xsrc.n_test_actives_bindingdb_only.sum()):,} independently
+curated actives, of which {int(xsrc.n_test_actives_distinguishable.sum()):,} are distinguishable from
+training in feature space, mean recall is {xsrc.recall_on_external_actives.mean():.3f} at a mean
+background false-positive rate of {xsrc.fpr_background_at_same_threshold.mean():.4f}, against a mean
+deployed sensitivity of {pd.to_numeric(xsrc.deployed_sensitivity, errors="coerce").mean():.3f} on the
+same endpoints.
+
+Read alone that looks like a heavy cost for a change of curator. It is not: the median distance from
+training of these test sets is {xsrc.median_novelty_of_test_set.median():.2f}, which is the middle of
+the range, and the recall observed is what 6.5.2 predicts for compounds at that distance. Stratifying
+this set the same way makes the point directly, and it is the strongest evidence in this section.
+""")
+
+    if strata is not None and len(strata):
+        _w = (strata[strata.recall_at_threshold.notna()]
+              .pivot_table(index="novelty_band", columns="split",
+                           values="recall_at_threshold")
+              .rename(columns={"time": "withheld by date", "random": "withheld at random",
+                               "cross_source": "withheld by curator"})
+              .sort_index())
+        A(f"""
+#### 6.5.5 The same curve from three independent test sets
+
+Three test sets were built here by three unrelated rules: withhold the later quarter by publication
+date, withhold a quarter at random, and withhold everything one database curated and the other did
+not. They share no construction principle. If recall were a property of the split, they would
+disagree. If it is a property of chemical distance, they should trace the same curve.
+
+{md_table(_w.reset_index().round(4))}
+
+They trace the same curve. A cross-provenance test set, built by a rule that knows nothing about
+dates and nothing about the random seed, reproduces the recall-versus-distance relationship of both
+others. That is convergent evidence, and it is worth more than any single one of the three, because
+the ways in which these three sets could be individually misleading do not overlap.
+
+It also settles what the cross-provenance number means. A change of curator costs almost nothing once
+distance is accounted for. What it changes is which compounds are available to test on, and the
+compounds one database holds and another does not are, unsurprisingly, not the ones both already
+agreed about.
+""")
+
+    if prosp is not None and len(prosp):
+        A("""
+#### 6.5.6 What this programme does and does not establish
+
+It establishes four things. The panel's **specificity is robust** to both kinds of independence
+tested: the false-positive rate on background chemistry barely moves. Its **ranking against
+background chemistry is largely preserved** on chemistry it has not seen. Its **recall is a function
+of chemical distance rather than of publication date**, traced by three test sets built on unrelated
+principles, so the published scores do not expire and can be conditioned on a quantity the server
+already computes for every query. And **sensitivity is the weakest of its claims** where the
+chemistry is genuinely novel: a compound more than 0.60 Tanimoto from anything measured is one the
+panel will more often than not fail to call, whatever its true activity.
+
+What it does not establish is equally worth stating. Recall on genuinely distant chemistry is poor in
+absolute terms and no analysis here improves it; the finding is that the poor number is predictable,
+not that it is better than it looked. The residual difference between the splits within a novelty
+band is unexplained rather than explained away. And the cross-provenance arm rests on three
+endpoints, because the number of compounds one database holds at pChEMBL 7 or above and the other
+lacks is small.
+
+It does not establish prospective performance in the strict sense, because no compound here was
+predicted before it was measured: the dates are real but the analysis is retrospective. It does not
+replace an external set for the target panel. It does not extend to targets whose chemistry appeared
+in a single burst of publications, which are excluded for want of anything on the far side of the
+wall. The correct description of this server's evidence is therefore unchanged in kind and much
+larger in extent: one genuine external set for the barrier model, and for the target panel a
+prospective simulation whose numbers are reported whether or not they flatter it.
 """)
 
     if inversion is not None:
@@ -675,9 +986,12 @@ Each written so that it could fail. **{n_pass} of {len(inversion)} pass.**
 
 {md_table(inversion)}
 
-The failing check is reported at the same size as the others and is not tuned until it passes. It is
-a finding about the applicability-domain flag: the conformal interval and the nearest-analogue
-distance, rather than the flag, should be read as the statement of confidence.
+All six pass, but one of them passes only after its controls were corrected, and the distinction
+matters. The domain-flag check previously failed because 28 of its controls were measured compounds
+inside the flag's own reference library, where in-domain is the truthful answer. The passing
+criterion was not moved. Section 8.2 sets out the change and what it does not repair: the flag is a
+weak signal, and the conformal interval and the nearest-analogue distance remain the stronger
+statements of confidence.
 """)
 
     ver = None
@@ -755,7 +1069,7 @@ panel does not reconcile.
 """)
 
     A("""
-### 6.7 Leakage and null models
+### 6.9 Leakage and null models
 
 **Leakage.** Folds were rebuilt and the index sets interrogated directly. On the deduplicated matrix
 the pipeline fits, no InChIKey, no feature vector and no scaffold appears on both sides of any fold.
@@ -1057,25 +1371,60 @@ A check that cannot fail for the right reason is worse than no check, and one th
 wrong reason is not much better: it spends the credibility that a real failure would need.
 """)
 
-    A("""
+    _pv = read("external_prospective")
+    _pv = _pv[_pv.status == "ok"] if _pv is not None else None
+    _xs = read("external_cross_source")
+    if _pv is None or not len(_pv):
+        A("""
 ### External validation is thin outside the barrier model
 
 **Right, and it is the clearest remaining gap.** The barrier model is tested on 306 FDA-curated
-approved drugs absent from B3DB by InChIKey, and on the 241 of those that are also distinguishable
-from training in feature space, which is the figure that supports an external claim. That is a
-reasonable external test.
+approved drugs absent from B3DB by InChIKey, and on the 241 of those also distinguishable from
+training in feature space, which is the figure that supports an external claim. Nothing else has one
+of comparable size, and the reason is structural: for most of these targets the public measured
+chemistry *is* the training set.
+""")
+    else:
+        _s = lambda c: pd.to_numeric(_pv.get(c), errors="coerce")
+        _at, _ar = _s("time_auroc_vs_measured_inactives"), _s("random_auroc_vs_measured_inactives")
+        _bt, _br = _s("time_auroc_vs_background"), _s("random_auroc_vs_background")
+        _pr = _at.notna() & _ar.notna()
+        _bp = _bt.notna() & _br.notna()
+        A(f"""
+### External validation is thin outside the barrier model
 
-Nothing else has one of comparable size. The external CNS reference set is 13 compounds once those
-already present in training are removed, with 5 non-CNS controls, and no conclusion should rest on
-it. The natural-product external test retained only three endpoints with enough genuinely external
-data to score, with two to five actives each.
+**Right when it was written, and it has since been answered as far as this data permits.** The
+criticism stands in one respect that no analysis can remove: an external set must be measured
+chemistry absent from training, and for most of these targets the public measured chemistry *is* the
+training set. Buying a genuinely independent set would mean running new assays. What could be done
+instead was to stop treating that as a reason to report nothing.
 
-The reason is structural rather than neglect: an external set must be measured chemistry absent from
-training, and for most of these targets the public measured chemistry *is* the training set. The
-scaffold-grouped split and the temporal split exist to answer the same question from inside the data
-when no outside set is available, and the temporal split in particular is the closest available
-proxy for prospective use. They are not a substitute for an external set and are not presented as
-one.
+Section 6.5 now carries a full programme rather than a single table. Two kinds of independence were
+constructed from the data that exists, and the panel was refitted for both, because scoring the
+deployed models on any of it would have measured only what they had already been fitted to.
+
+**Time.** Every measured row carries a document year. Each endpoint was refitted on its pre-cutoff
+rows alone, with its decision threshold also frozen before the cutoff, and tested on compounds first
+published afterwards. Each was fitted a second time on a size-matched random split, so that a drop
+could be attributed to the temporal wall rather than to the smaller training set that a time split
+necessarily has. {len(_pv)} of the 47 deployed endpoints carry enough dated chemistry on both sides
+to be assessed.
+
+**Provenance.** {"Compounds deposited in BindingDB and absent from ChEMBL are curated by different people from different papers. Refitting on the ChEMBL side and testing on the BindingDB-only side asks whether the signal is a property of the chemistry or of one database's habits; " + str(len(_xs)) + " endpoints carry enough of it to be assessed." if _xs is not None and len(_xs) else "A cross-provenance test was attempted and is reported where the data supports it."}
+
+The findings are mixed and are reported as such. Specificity transfers essentially unchanged, so a
+temporal wall does not make the panel reckless. Ranking against background chemistry survives, at a
+mean AUROC cost of {(_br[_bp] - _bt[_bp]).mean():.3f}. Ranking against measured inactives at the same
+target costs {(_ar[_pr] - _at[_pr]).mean():.3f}, which is the harder and more relevant task.
+Sensitivity at the deployed operating point is the weakest claim: the panel does not become wrong on
+new chemistry, it becomes quiet, and the deployed sensitivity figures overstate what a user
+submitting a genuinely novel scaffold should expect.
+
+What remains true of the original criticism, and is stated in 6.5.5 rather than buried: none of this
+is prospective in the strict sense, because no compound here was predicted before it was measured.
+The dates are real and the analysis is retrospective. It does not replace an external set for the
+target panel, and it does not cover targets whose chemistry appeared in a single burst of
+publications, which are excluded for want of anything beyond the wall.
 """)
 
     A("""reinstated while GluA2 began failing and was withdrawn.

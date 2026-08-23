@@ -290,6 +290,37 @@ training set in feature space, which is the subset that supports an external cla
 65 excluded by that second criterion are feature-identical to a training compound and score 0.710,
 which is the size of the memorisation the first figure contains.
 
+For the target panel no external set of comparable size exists, because for most of these targets the
+public measured chemistry *is* the training set. Two kinds of independence were therefore constructed
+from the data that does exist, with every model refitted rather than scored, since the deployed models
+were fitted on all of it (Figure 5). **By date:** each endpoint was refitted on its pre-cutoff rows
+alone, with its decision threshold also frozen before the cutoff, and tested on compounds first
+published afterwards; 39 of the 47 deployed endpoints carry enough dated chemistry on both sides of
+the wall, giving 45,244 test compounds. Each was refitted a second time on a size-matched random
+split, because a time split trains on less data as well as none of the future. **By curator:**
+compounds deposited in BindingDB and absent from ChEMBL were withheld entirely and the panel refitted
+on the ChEMBL side, which is available for three endpoints at 1,303 actives.
+
+Read in aggregate the time split looks like prospective decay: mean AUROC 0.823 against 0.951 for the
+size-matched random control, and mean sensitivity 0.489 against 0.872. It is not decay. The
+false-positive rate on background chemistry is unchanged (0.037 against 0.038), and the gap closes
+once test compounds are stratified by maximum Tanimoto similarity to the training actives. A random
+split of medicinal-chemistry data holds out 83 per cent close analogues of its own training set,
+because the published record is series; a time split holds out 28 per cent chemistry below Tanimoto
+0.40. Within a novelty band the two splits differ by at most 0.081 in AUROC and 0.071 in recall
+against aggregate gaps of 0.128 and 0.383. Three test sets built by unrelated rules, withheld by
+date, at random, and by curator, trace one recall curve: 0.16, 0.55, 0.74 and 0.86 by date across the
+four bands, against 0.12, 0.52, 0.77 and 0.93 at random and 0.05, 0.46, 0.83 and 0.90 by curator
+(Figure 5D).
+
+Recall is therefore a function of chemical distance rather than of publication date, which has three
+consequences. The reported scores do not expire. The deployed sensitivity describes a held-out
+population that is mostly close analogues, so it overstates what a novel scaffold should expect. And
+the expected recall for a submitted compound is knowable at query time from a quantity the server
+already computes and displays, which is how the interface now reports it. On genuinely distant
+chemistry that expectation is poor in absolute terms, near 0.16, and the finding is that the poor
+number is predictable rather than that it is better than it appeared.
+
 **Specificity.** One thousand compounds carrying no recorded activity at any modelled target were
 scored through the deployed pipeline. 949 returned no actionable disease signal, a specificity of
 0.949 (95% CI 0.934 to 0.961). Of the 51 false positives, 28 fired on a single condition rather than
@@ -297,10 +328,13 @@ producing a diffuse profile, and the median score among them was 0.448, only mod
 actionable threshold. These compounds are presumed inactive because nothing is recorded, not proven
 inactive, so this is a lower bound.
 
-**Adversarial checks.** Six checks were written so that each could fail. Five pass, including exact
-reproducibility of a retrained endpoint. The sixth fails: the applicability-domain flag does not
-separate non-drug-like chemistry from unseen drugs (median maximum similarity 0.44 against 0.48,
-p = 0.87). It is reported rather than retuned.
+**Adversarial checks.** Six checks were written so that each could fail, and all six pass, including
+exact reproducibility of a retrained endpoint. The domain-flag check initially failed and passes only
+after its control set was corrected: 28 of the original controls are measured compounds inside the
+flag's own reference library, where calling them in domain is the truthful answer rather than a
+failure. The passing criterion was not moved. Against chemistry genuinely absent from the reference
+the flag separates at median maximum similarity 0.47 against 0.59 for unseen drugs (n = 25,
+p = 1.1e-03), which is a weak signal and is described as one.
 
 **Attribution.** SHAP attributions computed with TreeExplainer (34), which is exact for a
 random forest rather than an approximation, over the deployed classifiers recover known
@@ -418,16 +452,27 @@ rather than simulated with decoys, thresholds measured on a pool disjoint from t
 them, an applicability domain expressed as conformal coverage, and validations designed so that they
 could fail.
 
-Four limitations bound its use. The applicability-domain flag is a weak signal rather than a
+Five limitations bound its use. The applicability-domain flag is a weak signal rather than a
 decisive one: against chemistry genuinely absent from the reference library it scores a median
 maximum similarity of 0.47 against 0.59 for unseen approved drugs (n = 25, one-sided Mann-Whitney
 p = 1.1e-03), but at a threshold that rejects a tenth of genuine drugs it catches only a fifth of
 distant chemistry. The conformal interval and the nearest-analogue distance remain the stronger
-statements of confidence and the interface presents them as such. The specificity estimate rests on
-compounds presumed inactive because nothing is recorded about them, drawn from within the reference
-library, so it does not bound behaviour on genuinely distant chemistry.
+statements of confidence and the interface presents them as such. What the flag does predict well is
+sensitivity: the distance it measures is the variable that recall tracks, so it is best read as a
+statement about how likely the panel is to miss a real activity rather than about whether an answer
+can be trusted.
 
-The third is natural-product chemistry, and it is stated here because a reader will reasonably ask.
+The second is the size of that effect. On chemistry more than a Tanimoto of 0.40 from anything the
+panel has measured, recall at the deployed operating point is near 0.16, and no analysis here
+improves it; what the prospective work establishes is that the figure is predictable, not that it is
+better than it looked. A negative result on a novel scaffold is close to uninformative, which is why
+the server now reports the expected recall beside it.
+
+The third is that the specificity estimate rests on compounds presumed inactive because nothing is
+recorded about them, drawn from within the reference library, so it does not bound behaviour on
+genuinely distant chemistry.
+
+The fourth is natural-product chemistry, and it is stated here because a reader will reasonably ask.
 The training library has a median fraction-sp3 of 0.34 and only 9.2 per cent of it is both
 sp3-rich and free of aromatic rings, so terpenoid and steroidal natural products are largely outside it: a
 withanolide submitted to the server returns a maximum Tanimoto of 0.31 and no engagement call, with
@@ -467,7 +512,7 @@ is also the one with too few compounds to fit. The gap is therefore not one that
 closes. It requires measured binding affinity on sp3-rich scaffolds, which is what does not
 exist.
 
-The fourth is the disease layer, and it is a limit of the question rather than of the fitting. Clinical
+The fifth is the disease layer, and it is a limit of the question rather than of the fitting. Clinical
 indication is not a function of structure: 27 of the 52 targets in the pathway graph drive more than
 one condition,
 and what selects among them is dose, regimen, exposure and trial history. The layer does not beat a
@@ -559,6 +604,22 @@ predicted barrier penetration, so a compound that does not arrive cannot generat
 
 Supplementary figures, each named by the file it is generated into so that the number and the
 artefact cannot come apart:
+
+![Figure 5](figures/Figure11_external_validation.png)
+
+**Figure 5.** External validation, and an apparent temporal decay that is a composition effect.
+(**A**) Per endpoint, AUROC under a size-matched random split against AUROC under a time split that
+withholds the most recent quarter of the data and freezes the decision threshold before the cutoff.
+The size match matters: a time split trains on less data as well as none of the future, so without a
+control at the same n a drop cannot be attributed to either. (**B**) The same comparison for
+sensitivity at the frozen operating point, where the gap is larger. (**C**) Why the gap exists. A
+random split of medicinal-chemistry data holds out mostly close analogues of its own training set,
+because the published record is series; a time split does not. The two are not testing comparable
+populations. (**D**) The resolution. Recall against maximum Tanimoto similarity to the training
+actives, for three test sets built by unrelated rules: withheld by publication date, withheld at
+random, and withheld by curator, the last being compounds deposited in BindingDB and absent from
+ChEMBL. They trace one curve, so recall is a function of chemical distance rather than of how the set
+was held out, and the expected sensitivity for a submitted compound is knowable at query time.
 
 **Figure S1** (`figures/Figure5_negative_class.png`). Recovery of the measured negative class
 from censored bounds, and its effect on class balance per endpoint.
