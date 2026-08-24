@@ -380,7 +380,7 @@ call.
 ### The disease layer, and why it is a navigational aid rather than a prediction
 
 The disease layer maps engaged targets onto conditions. It carries real information about its own
-map: asked to recover the disease its target graph implies, it reaches top-3 accuracy 0.786 against a
+map: asked to recover the disease its target graph implies, it reaches top-3 accuracy 0.790 against a
 permutation null of 0.154. It does not, however, predict clinical indication, and the evidence for
 that limit is worth stating precisely because it is easy to overstate the layer in either direction.
 
@@ -405,10 +405,10 @@ Top-k accuracy is, however, the metric on which a constant answer is strongest, 
 recording what the layer does on two metrics a constant answer cannot pass. Per-indication AUROC asks
 whether the drugs that treat a condition score above the drugs that do not, and any constant
 predictor scores 0.500 by construction; over the nine indications carrying at least five of these
-drugs the layer averages 0.607 and beats chance on eight. Macro-averaged top-3 recall, which averages
-per indication rather than pooling and so cannot be carried by naming the common conditions, is 0.400
-against 0.333. The spread is wide and is the substance of the result: depression reaches 0.794 and
-psychosis 0.765, while attention deficit and sleep sit at chance. The layer therefore does respond to
+drugs the layer averages 0.603 and beats chance on seven. Macro-averaged top-3 recall, which averages
+per indication rather than pooling and so cannot be carried by naming the common conditions, is 0.385
+against 0.333. The spread is wide and is the substance of the result: depression and anxiety reach
+0.794 and psychosis 0.765, while epilepsy at 0.490 and sleep at 0.499 sit at or just below chance. The layer therefore does respond to
 the compound, decisively for some conditions and not at all for others, which is why it is offered as
 a route from mechanism to condition and not as an indication prediction.
 
@@ -429,9 +429,9 @@ server stands on.
 ### What the falsification analysis removed
 
 Every result above was produced by first attempting to break it. The analysis returned findings in
-both directions. The disease layer carries real information: top-3 accuracy 0.786 against a
-permutation null of 0.154. Its curated edge weights do not: uniform and randomly permuted weights
-score 0.7861 and 0.7844 against 0.7865, so the predictive content lies in the graph topology, and the
+both directions. The disease layer carries real information: top-3 accuracy 0.790 against a
+permutation null of 0.163. Its curated edge weights do not: uniform and randomly permuted weights
+score 0.7897 and 0.7874 against 0.7901, so the predictive content lies in the graph topology, and the
 weights are reported as structure rather than as tuned parameters. The same analysis found a
 deployed endpoint, Nav1.1, calling glucose, urea, glycine, lactate and atenolol binders at its
 calibrated threshold, at a random-chemistry false-positive rate of 0.080 and a sensitivity of

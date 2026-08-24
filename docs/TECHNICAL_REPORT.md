@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Document** | Technical report on the BrainSafe AI prediction panel |
-| **Generated** | 2026-08-23, automatically, from the deployed panel |
+| **Generated** | 2026-08-24, automatically, from the deployed panel |
 | **Commit** | `120f2c7` |
 | **Status** | Research preview, pending peer review |
 | **Repository** | https://github.com/krishna-g-999/brainsafe-ai |
@@ -47,6 +47,35 @@ or resolve chirality. Its disease layer is a route from a mechanism to the condi
 touches, not an indication prediction, and it does not beat a frequency baseline. Five endpoints
 were trained, tested and withdrawn. One adversarial check fails and is reported as failing. Section
 8 states these in full.
+
+---
+
+### 0.1 How to read this document
+
+This report is read by people with incompatible backgrounds. A statistician wants the estimator, the
+splitting scheme and the interval construction stated precisely, and will not accept prose where an
+equation belongs. A pharmacologist wants to know what the panel measures, whether the targets are the
+right ones, and what a number means for a compound they might make. Writing only for either one
+produces a document the other cannot check.
+
+The response here is not to compromise but to say the same things twice, in the register each reader
+needs, and to mark which is which. Prose sections carry the reasoning and the biology. Section 3.7
+restates the entire pipeline in notation, and is the one place where nothing is explained twice. The
+two must agree; if they do not, that is a defect in this document.
+
+| If you are | Start at | And you can skip |
+|---|---|---|
+| **A statistician or machine-learning reviewer** | **3.7**, the formal specification: estimator, splits, calibration, conformal construction, thresholds, aggregation, metrics. Then 6.1 (cross-validation), 6.5 (external validation), 6.9 (leakage and null models) | Section 2.3 and section 5's prose, which restate for a biological reader what 3.7 already says exactly |
+| **A pharmacologist, neuroscientist or clinician** | **1** (what the system is), then **2.3** (why these endpoints, by therapeutic axis), then **5** (how the layers combine) and **5.1** (a real query, read line by line) | Section 3.7 entirely, and the interval arithmetic in 3.3 and 3.4; sections 6.5.1 to 6.5.6 can be read from their opening paragraphs alone |
+| **A reviewer checking whether the claims are earned** | **6** in full, then **8** and **8.2**, where the five foreseeable criticisms are answered with measurements rather than argument | Nothing. That is the point of those sections |
+| **Someone deciding whether to use the server** | **0** (executive summary), **5.1** (a worked query), **8** (limitations) | Everything else |
+
+Three conventions hold throughout. Every number is read from an artefact in this repository at
+generation time, so no figure here was typed by hand and none can drift from what the code produced.
+Results that do not flatter the system are reported at the same size as results that do, and section
+6.7 exists because four of the nine falsification hypotheses were refuted. And where a claim rests on
+an assumption rather than a measurement, the assumption is named in the sentence that makes the
+claim, not in a footnote.
 
 ---
 
@@ -449,6 +478,153 @@ depends on run order:
 That the measured rate can now disagree with its target is the evidence that it is a measurement.
 
 
+### 3.7 Formal specification
+
+Everything above is stated in prose, because the reasoning is what most readers want. This section
+states the same system in notation, so that a reader who wants to check the arithmetic, reimplement a
+step, or locate the assumption hidden inside a sentence can do so without reading the source. Nothing
+here is new. It is the same pipeline written twice, and any disagreement between the two is a defect
+in this document rather than a choice.
+
+**Representation.** A molecule $m$ is standardised to its neutral parent (largest organic fragment,
+sanitised, counter-ion removed, protonation neutralised) and mapped by
+
+$$\varphi(m) = \big(\underbrace{h_1,\dots,h_{1024}}_{\text{ECFP-4, folded}},\;
+\underbrace{d_1,\dots,d_{12}}_{\text{descriptors}}\big)
+\in \{0,1\}^{1024}\times\mathbb{R}^{12} \subset \mathbb{R}^{1036}$$
+
+where $h_j = 1$ exactly when some atom environment of radius $\le 2$ has a hash congruent to $j$
+modulo $1024$. Folding is not injective: $h_j = 1$ says *some* environment hashing to $j$ is present,
+not which one. Chirality is excluded from the hash, so enantiomers have identical $\varphi$; section
+8.2.2 bounds what that costs.
+
+**Data.** For endpoint $t$, $D_t = \{(x_i, y_i)\}_{i=1}^{n_t}$ with $x_i = \varphi(m_i)$, and
+$y_i \in \{0,1\}$ for classification or $y_i \in \mathbb{R}$ (pChEMBL) for regression. Rows identical
+in $\varphi$ are collapsed before any split, and a collapsed group whose labels disagree is dropped
+rather than resolved by vote, because the featuriser cannot tell its members apart.
+
+**Estimator.** A random forest of $B = 300$ trees,
+
+$$\hat q_t(x) = \frac{1}{B}\sum_{b=1}^{B}\hat p_b(x),
+\qquad \hat f_t(x) = \frac{1}{B}\sum_{b=1}^{B} T_b(x)$$
+
+for classification and regression respectively, with $\hat p_b$ the class-1 leaf frequency of tree
+$b$. Trees are grown on bootstrap resamples, $\lfloor\sqrt{1036}\rfloor$ features considered per
+split, to a minimum leaf size of 2 for the core endpoints and 4 for the binder panel. Binder models
+weight class $c$ by $n / (2 n_c)$, so an endpoint that is 90 per cent active cannot be fitted by
+answering "active".
+
+**Splitting.** Let $\sigma(m)$ denote the Bemis-Murcko scaffold of $m$: ring systems and the linkers
+between them, side chains stripped, atom and bond types retained. Cross-validation is
+$\mathrm{GroupKFold}(10)$ with groups $\sigma(m_i)$, so that
+
+$$\sigma(m_i) = \sigma(m_j) \implies i \text{ and } j \text{ share a fold.}$$
+
+The random split is the same estimator under $\mathrm{StratifiedKFold}(10)$, reported only as the
+interpolation baseline. Acyclic molecules have no scaffold and are placed in one shared group, so a
+fold boundary never runs through them.
+
+**Calibration.** Core classifiers are calibrated by isotonic regression on out-of-fold predictions,
+
+$$\hat g_t = \operatorname*{arg\,min}_{g\ \text{non-decreasing}}
+\sum_i \big(g(\hat q_t^{(-k(i))}(x_i)) - y_i\big)^2$$
+
+solved by pool-adjacent-violators, where $\hat q_t^{(-k(i))}$ is fitted without the fold containing
+$i$. Because $\hat g_t$ is monotone it cannot reorder compounds, so AUROC is invariant under
+calibration and only the probability changes. Binder models instead use Platt scaling,
+$\hat g_t(p) = (1 + e^{-(ap + b)})^{-1}$, fitted by maximum likelihood on a stratified fifth withheld
+from the forest's own fit, because their positive class is too small for an isotonic step that would
+not overfit the calibrator.
+
+**Conformal prediction.** Inductive, Mondrian (class-conditional), at significance
+$\varepsilon = 0.10$. On a calibration set disjoint from training the nonconformity of a labelled
+compound is $\alpha_i = 1 - \hat q_t(y_i \mid x_i)$. For class $c$ with $n_c$ calibration points the
+threshold $\tau_c$ is the $k$-th smallest such $\alpha$ within that class, where
+
+$$k = \big\lceil (n_c + 1)(1 - \varepsilon) \big\rceil,$$
+
+and the prediction set for a new $x$ is
+
+$$\Gamma_\varepsilon(x) = \{\, c \;:\; 1 - \hat q_t(c \mid x) \le \tau_c \,\}.$$
+
+Under exchangeability this gives $\Pr[y \in \Gamma_\varepsilon(x)] \ge 1 - \varepsilon$ *within each
+class*. That is what the class-conditional form adds over the marginal one, and it is the reason for
+using it here: marginal coverage can be satisfied while the rare class fails systematically.
+$\Gamma_\varepsilon(x)$ may be empty, meaning the compound conforms to neither class, or contain both,
+meaning it separates neither. Both are informative and both are displayed.
+
+**Decision thresholds.** For binder endpoint $t$, let $I_t^{\mathrm{hold}}$ be the half of its
+measured inactives withheld from fitting. With target false-positive rate $\phi = 0.10$,
+
+$$\tau_t = \mathrm{clip}\Big(Q_{1-\phi}\big(\{\hat g_t(\hat q_t(x)) : x \in I_t^{\mathrm{hold}}\}\big),\
+0.05,\ 0.999\Big)$$
+
+with $Q_\gamma$ the empirical $\gamma$-quantile. The false-positive rate on $I_t^{\mathrm{hold}}$ is
+then $\phi$ by construction and is not evidence of anything; the rate that is reported is measured on
+the evaluation pool, disjoint from both the decoy pool used in fitting and the threshold pool used
+here. Section 3.6 gives the argument for why the three must be disjoint.
+
+**Applicability domain.** With $\mathcal{R}$ the measured reference library and $T$ the Tanimoto
+coefficient on 2048-bit Morgan fingerprints,
+
+$$a(x) = \max_{r \in \mathcal{R}} T(x, r).$$
+
+Section 6.5.2 shows that recall is a monotone function of $a$, which is the property that makes it
+useful. Section 8.2.4 shows it is a weak discriminator of non-drug-like chemistry, which is the
+property it was designed for and does not have.
+
+**Engagement signal.** The endpoints are not commensurable: each has its own base rate, its own
+threshold, and one has a continuous readout. Three maps carry them onto a common $[0,1]$ scale. Where
+the negatives are measured, with base rate $b_t$,
+
+$$E_t(p) = \begin{cases}
+\dfrac{p - b_t}{1 - b_t}, & p \ge b_t \\[2ex]
+\dfrac{p - b_t}{b_t}, & p < b_t
+\end{cases} \in [-1, 1],
+\qquad s_t(x) = \max\{0,\ E_t(\hat g_t(\hat q_t(x)))\}.$$
+
+$E_t$ is the signed enrichment over prevalence. A probability *below* the base rate is evidence of
+inactivity rather than weak evidence of activity, and mapping it to a small positive number would
+misstate it. For a decoy-trained binder the threshold takes the role the base rate takes above,
+
+$$s_t(x) = \max\left\{0,\ \frac{\hat g_t(\hat q_t(x)) - \tau_t}{1 - \tau_t}\right\},$$
+
+so a sub-threshold call, which by construction lies within the measured background false-positive
+rate, contributes exactly zero. For the antioxidant assay $s_t$ is the percentile of the predicted
+value against the measured training distribution. Only $s_t$ is comparable across endpoints, and the
+interface always shows the untransformed calibrated probability beside it.
+
+**Aggregation to conditions.** Let $G(d)$ be the curated set of (target, weight) pairs for condition
+$d$, and $P$ the set of conditions whose mechanism is peripheral. Then
+
+$$S_d(x) = \max_{(t,w)\in G(d)} w \cdot s_t(x),
+\qquad \tilde S_d(x) = \gamma_d(x)\, S_d(x),
+\qquad \gamma_d(x) = \begin{cases} 1, & d \in P \\ \hat q_{\mathrm{BBB}}(x), & \text{otherwise.}\end{cases}$$
+
+Two consequences follow from the algebra alone, and both have been misread in the past. First, the
+maximum rather than a sum means a condition is scored by its single strongest engaged mechanism, so
+engaging three of its targets scores exactly as engaging its strongest. That is deliberate: H8 found
+co-engaged targets are frequently homologues, and a sum would count one observation several times.
+Second, $\gamma_d$ does not depend on $d$ across the non-peripheral conditions, so it cannot change
+their relative order. It is an exposure filter deciding whether anything is reported at all, not a
+discriminator between conditions, which is why H3 is recorded as refuted by construction rather than
+by experiment.
+
+**Metrics.** With $n_1$ actives, $n_0$ inactives and $R_i$ the mid-rank of the $i$-th score,
+
+$$\mathrm{AUROC} = \frac{1}{n_1 n_0}\left(\sum_{i:\,y_i=1} R_i - \frac{n_1(n_1+1)}{2}\right)
+= \frac{U}{n_1 n_0},$$
+
+which is the Mann-Whitney $U$ statistic normalised. An AUROC and a $p$-value from that test are two
+readings of one quantity, which is why both appear together throughout section 6. Expected
+calibration error over $M$ equal-width confidence bins is
+
+$$\mathrm{ECE} = \sum_{j=1}^{M} \frac{|B_j|}{n}\,\big|\mathrm{acc}(B_j) - \mathrm{conf}(B_j)\big|.$$
+
+Binomial proportions are reported with Wilson intervals rather than normal-approximation intervals,
+because several of them sit near 0 or 1, where the normal interval leaves the unit interval.
+
+
 ---
 
 ## 4. Why 70 models and not one
@@ -547,6 +723,79 @@ flowchart TD
 The models are therefore combined by a **stated rule**, not by a learned one. Nothing is fitted on
 top of the panel. That is deliberate: a meta-model over seventy outputs would need its own training
 set of compounds labelled with ground-truth disease relevance, which does not exist.
+
+
+### 5.1 A real query, read line by line
+
+The description above is abstract. This section takes three compounds through the deployed pipeline
+and reads what comes back. The three were chosen before their outputs were seen, each to exercise a
+different part of the system, and whatever they returned is what is printed here.
+
+**Donepezil** is an approved acetylcholinesterase inhibitor that reaches the brain, so the panel
+should engage the target it was designed for and pass the exposure gate. **Atenolol** is a
+beta-blocker deliberately optimised *not* to enter the brain, so the exposure layer should say so and
+the disease layer should stay quiet whatever any target model reports. **Withanolide A** is a
+steroidal natural product from chemistry this library barely covers, so the domain distance should be
+low and the silence that follows should be marked as uninformative rather than as evidence.
+
+| compound | section | endpoint | value | unit | context |
+|---|---|---|---|---|---|
+| atenolol | Target and property models | BBB | 0.473 | calibrated probability | training base rate 0.635; enrichment -0.255 |
+| atenolol | Target and property models | AChE | 0.1766 | calibrated probability | training base rate 0.724; enrichment -0.756 |
+| atenolol | Target and property models | hERG | 0.0792 | calibrated probability | training base rate 0.413; enrichment -0.808 |
+| atenolol | Applicability domain | max_tanimoto | 1.0 | Tanimoto | In domain; nearest analogue CC(C)NCC(O)COc1ccc(CC(N)=O)cc1; measured recall for compounds at this distance 0.86 (n=2,586), so a silent endpoint here is reasonably strong evidence of inactivity |
+| atenolol | Expected sensitivity at this distance | expected_recall | 0.8616 | fraction | prospective validation, results/tables/external_novelty_strata.csv; recall is a function of chemical distance rather than of publication date |
+| atenolol | Disease layer | top_disease | 0.0 | score | nothing cleared the reporting threshold |
+| donepezil | Target and property models | BBB | 0.9907 | calibrated probability | training base rate 0.635; enrichment +0.974 |
+| donepezil | Target and property models | AChE | 1.0 | calibrated probability | training base rate 0.724; enrichment +1.000 |
+| donepezil | Target and property models | hERG | 0.7342 | calibrated probability | training base rate 0.413; enrichment +0.547 |
+| donepezil | Applicability domain | max_tanimoto | 1.0 | Tanimoto | In domain; nearest analogue COc1cc2c(cc1OC)C(=O)C(CC1CCN(Cc3ccccc3)CC1)C2; measured recall for compounds at this distance 0.86 (n=2,586), so a silent endpoint here is reasonably strong evidence of inactivity |
+| donepezil | Expected sensitivity at this distance | expected_recall | 0.8616 | fraction | prospective validation, results/tables/external_novelty_strata.csv; recall is a function of chemical distance rather than of publication date |
+| donepezil | Disease layer | top_disease | 0.9907 | score | Alzheimer's disease, driven by AChE |
+| withanolide A | Target and property models | BBB | 0.5926 | calibrated probability | training base rate 0.635; enrichment -0.067 |
+| withanolide A | Target and property models | AChE | 0.0848 | calibrated probability | training base rate 0.724; enrichment -0.883 |
+| withanolide A | Target and property models | hERG | 0.1049 | calibrated probability | training base rate 0.413; enrichment -0.746 |
+| withanolide A | Applicability domain | max_tanimoto | 0.4324 | Tanimoto | Near domain; nearest analogue CC(C)CCCC(C)C1CCC2C3CC=C4CC(O)CCC4(C)C3CCC12C; measured recall for compounds at this distance 0.55 (n=5,228), so a silent endpoint here is moderate evidence of inactivity |
+| withanolide A | Expected sensitivity at this distance | expected_recall | 0.5532 | fraction | prospective validation, results/tables/external_novelty_strata.csv; recall is a function of chemical distance rather than of publication date |
+| withanolide A | Disease layer | top_disease | 0.0 | score | nothing cleared the reporting threshold |
+
+**Reading the donepezil rows.** The AChE probability is 1.000 against a training base rate of 0.724,
+an enrichment of +1.000: the model is as confident as it can be, and the enrichment confirms that the
+confidence is not merely the base rate showing through. Barrier penetration is 0.991, so the exposure
+gate passes essentially unattenuated, and the top condition is Alzheimer's disease at 0.991 with AChE
+named as the driver. That is the correct answer for donepezil, and it is worth saying plainly that it
+is not evidence of anything: donepezil is a training compound, its domain distance is 1.000 because
+it is *in* the reference library, and a system that got this wrong would be broken rather than
+uninformative. The row shows what a positive looks like; it does not support a claim.
+
+The hERG probability of 0.734 is the more informative line. Donepezil does block hERG, and the
+enrichment of +0.547 over a base rate of 0.413 says the model is reporting a genuine liability rather
+than the prior. This is the safety axis doing what it exists for: the compound that scores at the top
+of the efficacy axis carries a flag a medicinal chemist would need to see.
+
+**Reading the atenolol rows.** Every target probability sits *below* its base rate, giving negative
+enrichments (AChE -0.756, hERG -0.808). Under the map in section 3.7 these become an engagement
+signal of exactly zero rather than a small positive number, which is the reason for using signed
+enrichment instead of the raw probability. Barrier penetration is 0.473 and the top condition scores
+0.0009, some three hundred times below the 0.30 reporting threshold. The server therefore says
+nothing, which for a peripherally restricted beta-blocker is correct.
+
+**Reading the withanolide rows.** The domain distance is 0.432, in the near-domain band, and the
+nearest measured neighbour is a steroid rather than anything from a medicinal-chemistry series. Every
+target signal is at or below base rate and the top condition scores 0.000. The line that matters is
+the expected sensitivity: 0.553, against 0.862 for the two drugs above. That figure comes from the
+prospective validation in section 6.5 and it changes what the silence means. For donepezil, silence
+at a target would be reasonably strong evidence of inactivity. For the withanolide it is weak
+evidence, because at this distance from the training chemistry the panel recovers barely half of the
+activities that are really present. The server reports that number beside the result rather than
+leaving a reader to assume all silences are equal.
+
+**What a user does with this.** The output is a triage instrument, and these three compounds show the
+three outcomes it can produce. A strong, gated, mechanistically named signal is a reason to look
+further and tells you which assay to run first. An unambiguous silence from a compound well inside
+the domain is a reason to deprioritise. A silence from a compound outside the domain is not a result
+at all, and the expected-sensitivity figure exists so that it is not read as one.
+
 
 
 ---
@@ -729,40 +978,6 @@ first draft of this section said exactly that. It is the wrong reading, and sect
 right one.
 
 
-#### 6.5.3 The same test on the core endpoints
-
-Section 6.2 has reported temporal AUROC for the core classifiers without the control that makes it
-readable. Refitted here with a size-matched random split alongside.
-
-| endpoint | task | cutoff_year | n_train | n_test | metric | time_split_score | random_control_score | cost_of_prospectivity |
-|---|---|---|---|---|---|---|---|---|
-| AChE | classification | 2020 | 4290 | 1028 | auroc | 0.7649 | 0.9691 | 0.2042 |
-| BChE | classification | 2021 | 2769 | 617 | auroc | 0.8144 | 0.9692 | 0.1548 |
-| BACE1 | classification | 2017 | 7289 | 1673 | auroc | 0.9131 | 0.9718 | 0.0587 |
-| GSK3B | classification | 2021 | 5094 | 546 | auroc | 0.7143 | 0.969 | 0.2547 |
-| MAO_A | classification | 2020 | 2970 | 819 | auroc | 0.7544 | 0.966 | 0.2116 |
-| MAO_B | classification | 2020 | 3883 | 923 | auroc | 0.8429 | 0.9586 | 0.1157 |
-| hERG | classification | 2020 | 8217 | 2059 | auroc | 0.715 | 0.9621 | 0.2471 |
-| D2 | regression | 2019 | 6992 | 1556 | r2 | 0.1031 | 0.6169 | 0.5138 |
-| A2A | regression | 2020 | 5485 | 1516 | r2 | 0.3005 | 0.7154 | 0.4149 |
-| HT2A | regression | 2020 | 5407 | 986 | r2 | 0.3685 | 0.6866 | 0.3181 |
-| SERT | regression | 2015 | 3777 | 1147 | r2 | 0.1366 | 0.6678 | 0.5312 |
-| antioxidant_DPPH | regression | 2016 | 2340 | 522 | r2 | 0.0073 | 0.7105 | 0.7032 |
-
-
-Across 7 classifiers the mean AUROC is 0.788 under the time split against
-0.967 under the matched random control, a cost of 0.178.
-
-
-The regressors are the more interesting case, because a temporal R-squared of 0.01 to
-0.37 has always looked like evidence that the receptor models barely work. Against a matched
-random control averaging 0.679 they are better read as a measure of how much of a regression
-score is interpolation within a published series: the mean cost of prospectivity is 0.496.
-A prospective R-squared near zero on a continuous potency scale remains a real limitation and is
-reported as one, but it is a statement about the temporal structure of published structure-activity
-data rather than about the fitting.
-
-
 #### 6.5.2 The gap is composition, not decay
 
 A time split flatters a field that publishes analogue series, and medicinal chemistry publishes
@@ -855,6 +1070,40 @@ compound in hand is therefore knowable at the moment of the query rather than on
 and what its adversarial check tests. It is a good predictor of when the panel will fall silent on a
 real active. A compound the flag places near the edge of the domain is precisely the compound whose
 activity the panel is most likely to miss, and that is the more useful thing for it to mean.
+
+
+#### 6.5.3 The same test on the core endpoints
+
+Section 6.2 has reported temporal AUROC for the core classifiers without the control that makes it
+readable. Refitted here with a size-matched random split alongside.
+
+| endpoint | task | cutoff_year | n_train | n_test | metric | time_split_score | random_control_score | cost_of_prospectivity |
+|---|---|---|---|---|---|---|---|---|
+| AChE | classification | 2020 | 4290 | 1028 | auroc | 0.7649 | 0.9691 | 0.2042 |
+| BChE | classification | 2021 | 2769 | 617 | auroc | 0.8144 | 0.9692 | 0.1548 |
+| BACE1 | classification | 2017 | 7289 | 1673 | auroc | 0.9131 | 0.9718 | 0.0587 |
+| GSK3B | classification | 2021 | 5094 | 546 | auroc | 0.7143 | 0.969 | 0.2547 |
+| MAO_A | classification | 2020 | 2970 | 819 | auroc | 0.7544 | 0.966 | 0.2116 |
+| MAO_B | classification | 2020 | 3883 | 923 | auroc | 0.8429 | 0.9586 | 0.1157 |
+| hERG | classification | 2020 | 8217 | 2059 | auroc | 0.715 | 0.9621 | 0.2471 |
+| D2 | regression | 2019 | 6992 | 1556 | r2 | 0.1031 | 0.6169 | 0.5138 |
+| A2A | regression | 2020 | 5485 | 1516 | r2 | 0.3005 | 0.7154 | 0.4149 |
+| HT2A | regression | 2020 | 5407 | 986 | r2 | 0.3685 | 0.6866 | 0.3181 |
+| SERT | regression | 2015 | 3777 | 1147 | r2 | 0.1366 | 0.6678 | 0.5312 |
+| antioxidant_DPPH | regression | 2016 | 2340 | 522 | r2 | 0.0073 | 0.7105 | 0.7032 |
+
+
+Across 7 classifiers the mean AUROC is 0.788 under the time split against
+0.967 under the matched random control, a cost of 0.178.
+
+
+The regressors are the more interesting case, because a temporal R-squared of 0.01 to
+0.37 has always looked like evidence that the receptor models barely work. Against a matched
+random control averaging 0.679 they are better read as a measure of how much of a regression
+score is interpolation within a published series: the mean cost of prospectivity is 0.496.
+A prospective R-squared near zero on a continuous potency scale remains a real limitation and is
+reported as one, but it is a statement about the temporal structure of published structure-activity
+data rather than about the fitting.
 
 
 #### 6.5.4 A different curator: cross-provenance validation
@@ -980,15 +1229,15 @@ The refutations are the most useful output this project has produced, and they c
 
 | hypothesis | verdict | what was measured |
 |---|---|---|
-| H1 the disease score is informative | SUPPORTED | top-3 accuracy 0.786 vs permutation null 0.154 (p=0.005) and frequency null 0.548 |
-| H2 the curated edge weights add value | REFUTED | curated 0.7865, uniform 0.7861, permuted 0.7844 |
+| H1 the disease score is informative | SUPPORTED | top-3 accuracy 0.790 vs permutation null 0.163 (p=0.005) and frequency null 0.551 |
+| H2 the curated edge weights add value | REFUTED | curated 0.7901, uniform 0.7897, permuted 0.7874 |
 | H3 BBB gating discriminates between diseases | REFUTED (by construction) | the gate multiplies every disease equally and cannot change their order |
 | H4 specificity transfers to novel chemistry | SUPPORTED | false-positive rate 0.016 on 61 distant compounds against 0.051 measured on library chemistry |
 | H5 read-across beats a frequency baseline | SUPPORTED | recall 0.973 against 0.059 |
 | H6 the disease scores match real clinical indications | WEAKENED | top-3 accuracy 0.352 on 162 drugs never seen in training, against permutation null 0.145 (p=0.001) and frequency null 0.654 |
-| H7 some panel targets are non-discriminative and explain the silent antiepileptics | REFUTED | none of 38 targets ranks below AUROC 0.70; the cause is the operating point, with median deployed sensitivity 0.79 and 7 targets under 0.50 |
-| H8 engaged targets are independent observations | REFUTED | 37 targets fire across approved drugs but span only 17 independent directions; 5 homologous pairs correlate above 0.5 |
-| H9 the disease layer discriminates between compounds, not just between base rates | SUPPORTED | mean per-indication AUROC 0.607 against 0.500 for any constant predictor, beating chance on 8 of 9 indications; macro-averaged top-3 recall 0.400 against 0.333 |
+| H7 some panel targets are non-discriminative and explain the silent antiepileptics | REFUTED | none of 37 targets ranks below AUROC 0.70; the cause is the operating point, with median deployed sensitivity 0.79 and 6 targets under 0.50 |
+| H8 engaged targets are independent observations | REFUTED | 36 targets fire across approved drugs but span only 16 independent directions; 5 homologous pairs correlate above 0.5 |
+| H9 the disease layer discriminates between compounds, not just between base rates | SUPPORTED | mean per-indication AUROC 0.603 against 0.500 for any constant predictor, beating chance on 7 of 9 indications; macro-averaged top-3 recall 0.385 against 0.333 |
 
 **What each refutation cost, and what was done about it.**
 
@@ -1255,14 +1504,14 @@ claim about a particular fit. When the panel was last retrained, Cav3.2 stopped 
 
 ---
 
-## 8.2 Criticisms anticipated, and what the evidence says
+### 8.2 Criticisms anticipated, and what the evidence says
 
 Five objections are foreseeable, and each is answered here with a measurement rather than an
 argument. Two of them turned out to be right, one turned out to be a defect in the test rather than
 in the tool, and two are bounded more narrowly than the objection assumes.
 
 
-### The disease layer does not beat a frequency baseline
+#### 8.2.1 The disease layer does not beat a frequency baseline
 
 **Partly right, and the comparison is the wrong one.** On top-3 accuracy over drugs never seen in
 training the layer scores 0.352 against a frequency null of 0.654, and that is reported as it stands.
@@ -1281,12 +1530,12 @@ Two metrics a constant predictor cannot pass were therefore measured, on the sam
 | Parkinson's disease | 15 | 0.6231 | 0.5 |
 | Addiction | 7 | 0.5659 | 0.5 |
 | Alzheimer's disease | 9 | 0.5479 | 0.5 |
-| Epilepsy | 15 | 0.522 | 0.5 |
 | ADHD | 12 | 0.5006 | 0.5 |
 | Sleep / wakefulness | 10 | 0.4993 | 0.5 |
+| Epilepsy | 15 | 0.4898 | 0.5 |
 
-Mean per-indication AUROC is **0.607** against **0.500** for any constant
-predictor, and the layer beats chance on **8 of 9** indications. Macro-averaged top-3
+Mean per-indication AUROC is **0.603** against **0.500** for any constant
+predictor, and the layer beats chance on **7 of 9** indications. Macro-averaged top-3
 recall, which averages per indication rather than pooling and so cannot be carried by naming the
 common conditions, is **0.400 against 0.333**.
 
@@ -1296,7 +1545,7 @@ worth shipping as a route from mechanism to condition and not worth shipping as 
 prediction, which is exactly how it is presented.
 
 
-### Chirality is not represented
+#### 8.2.2 Chirality is not represented
 
 **Right, and now bounded.** The featuriser excludes stereochemistry, so two enantiomers receive
 identical predictions. For a CNS panel this is the sharpest available criticism, and the correct
@@ -1327,7 +1576,7 @@ whose activity is known to be enantiomer-specific the prediction should be read 
 racemate.
 
 
-### Agonism and antagonism are not distinguished
+#### 8.2.3 Agonism and antagonism are not distinguished
 
 **Right, and it is a limitation of the labels rather than of the models.** The training label is a
 potency value: IC50, Ki, Kd or EC50. Those measure *affinity*, how tightly a compound binds, and an
@@ -1343,7 +1592,7 @@ accepting a much smaller training set per endpoint. That is a defensible next pi
 is not a correction to what is here.
 
 
-### The applicability-domain flag fails its own adversarial test
+#### 8.2.4 The applicability-domain flag fails its own adversarial test
 
 **The test was wrong, not the flag, and the test has been corrected.** This needs stating carefully,
 because "we changed a failing test and now it passes" is the least trustworthy sentence in science.
@@ -1397,7 +1646,7 @@ A check that cannot fail for the right reason is worse than no check, and one th
 wrong reason is not much better: it spends the credibility that a real failure would need.
 
 
-### External validation is thin outside the barrier model
+#### 8.2.5 External validation is thin outside the barrier model
 
 **Right when it was written, and it has since been answered as far as this data permits.** The
 criticism stands in one respect that no analysis can remove: an external set must be measured

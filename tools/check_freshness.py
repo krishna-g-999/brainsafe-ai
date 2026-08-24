@@ -133,6 +133,14 @@ GRAPH: list[tuple[str, list[str], str]] = [
      ["models_rf/binder_modes.json", "inversion/results/H6_clinical_indication_predictions.csv"],
      "python inversion/inv_disease_discrimination.py"),
 
+    # The worked example in section 5.1 of the technical report. It is the output of the deployed
+    # models on three named compounds, so it is stale the moment any of them is refitted. Quoting a
+    # prediction in a document without declaring it here is how the earlier supporting analyses
+    # drifted, and this one is quoted line by line.
+    ("results/tables/worked_example.csv",
+     ["models_rf/binder_modes.json", "results/tables/external_novelty_strata.csv"],
+     "python src/brainsafe/analysis/worked_example.py"),
+
     # The external-validation programme. These refit the panel rather than scoring it, so they do
     # not depend on the fitted models for their result; they depend on binder_modes.json only
     # because each row quotes the deployed figure beside the prospective one. They depend on the

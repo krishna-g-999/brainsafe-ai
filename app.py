@@ -80,18 +80,19 @@ ADME = {
 # (a calibrated probability is evidence of engagement only when it exceeds prevalence);
 # 'binder' = decoy-aware receptor binder probability; 'pct' = antioxidant/neuroprotection percentile.
 # Extended binder-only targets (decoy-aware classifiers), trained from ChEMBL, all binder-heavy.
-BINDER_TARGETS = ["HT1A", "HT6", "HT7", "H3", "DAT", "NET", "Sigma1", "CB1",
-                  "OPRK1", "OPRM1", "D3", "A1", "a7nAChR", "LRRK2",
-                  # second expansion: ALS, Huntington, neuroinflammation, epilepsy, sleep
-                  "NLRP3", "P2X7", "COX2", "CSF1R", "PDE10A", "HDAC1", "HDAC6", "GluN2B",
-                  "mGluR5", "GABA_A", "OX1", "OX2", "MT1", "mTOR", "SIRT1", "KEAP1",
-                  "GBA1", "PDE4B", "Nav1_5",
-                  # third expansion: pain, epilepsy, psychosis mechanisms
-                  "Nav1_7", "TAAR1", "GluA2",
-                  # fourth expansion; Nav1_1 was withdrawn here, see binder_modes.json
-                  "Nav1_6", "Nav1_8", "a4b2nAChR", "a3b4nAChR",
-                  # fifth expansion: migraine, multiple sclerosis, ALS-specific necroptosis
-                  "CGRP", "DHODH", "RIPK1"]
+# Derived from the panel registry, never written by hand. This list was hardcoded until an audit
+# found it had drifted from the registry in both directions at once: it still carried GluA2, which
+# had been withdrawn and was therefore being scored and allowed to drive an Epilepsy call, and it
+# omitted Cav3_2, which is deployed and validated and was never being scored at all. Neither raised
+# an error, and the panel-consistency check could not see it because it compares the registry with
+# the fitted models, not with this file. Deriving the list closes that gap by construction.
+def _deployed_binder_targets():
+    """Deployed binder endpoints, less the four that have their own regressor entry above."""
+    import panel as _panel
+    return sorted(set(_panel.names(deployed=True)) - set(RECEPTOR_REGRESSORS))
+
+
+BINDER_TARGETS = _deployed_binder_targets()
 TARGET_KIND = {"AChE": "enrich", "BChE": "enrich", "BACE1": "enrich", "GSK3B": "enrich",
                "MAO_A": "enrich", "MAO_B": "enrich", "SERT": "binder", "D2": "binder",
                "HT2A": "binder", "NEURO": "pct", **{t: "binder" for t in BINDER_TARGETS}}
@@ -229,7 +230,12 @@ KNOWLEDGE_GRAPH = {
     # TAAR1 agonism is the mechanism of the non-D2 antipsychotic class
     "TAAR1":  [("Trace-amine signalling", "IUPHAR:TAAR1", "Psychosis / schizophrenia", 0.7)],
     # AMPA receptor modulation in excitotoxicity and seizure control
-    "GluA2":  [("Glutamatergic excitotoxicity", "hsa04724", "Epilepsy", 0.6)],
+    # GluA2 held an Epilepsy edge here while being withdrawn from the panel, so a model the
+    # project had judged unfit to deploy was still able to drive a reported condition. The
+    # edge is removed rather than left inert, because a withdrawn endpoint has no business
+    # claiming a mechanism. Epilepsy retains GABA_A (1.0), Nav1_6 (0.85), A1 (0.8), GluN2B
+    # (0.8) and mGluR5 (0.7), every one weighted above the 0.6 this carried, and the score is
+    # a maximum, so removing it can only lower a score it seldom drove.
 }
 DISEASE_ORDER = ["Alzheimer's disease", "Parkinson's disease", "Amyotrophic lateral sclerosis",
                  "Huntington's disease", "Depression / anxiety", "Psychosis / schizophrenia",
@@ -594,6 +600,11 @@ def target_signal(r, neuro, tgt):
     kind = TARGET_KIND.get(tgt, "enrich")
     if kind == "pct":
         return neuro
+    # A target named in the graph but carrying no deployed model contributes nothing. This cannot
+    # happen while the registry and the graph agree, and the test suite pins that they do; the guard
+    # exists so that a future withdrawal degrades to silence rather than to a KeyError mid-query.
+    if kind == "enrich" and tgt not in r.get("targets", {}):
+        return 0.0
     if kind == "binder":
         p = r.get("receptor_binder", {}).get(tgt, 0.0)
         thr = binder_threshold(tgt)
@@ -1987,7 +1998,7 @@ def coverage_modelled():
         ("Dopamine and transporters", ["D2", "D3", "DAT", "NET", "SERT", "TAAR1"], "ChEMBL"),
         ("Opioid, cannabinoid, sigma", ["OPRM1", "OPRK1", "CB1", "Sigma1"], "ChEMBL"),
         ("Adenosine and nicotinic", ["A1", "A2A", "a7nAChR", "a4b2nAChR", "a3b4nAChR"], "ChEMBL"),
-        ("Glutamate and GABA", ["GluN2B", "GluA2", "mGluR5", "GABA_A"], "ChEMBL"),
+        ("Glutamate and GABA", ["GluN2B", "mGluR5", "GABA_A"], "ChEMBL"),
         ("Sleep and circadian", ["OX1", "OX2", "MT1"], "ChEMBL"),
         ("Neuroinflammation", ["NLRP3", "P2X7", "COX2", "CSF1R"], "ChEMBL"),
         ("Epigenetic and proteostasis", ["HDAC1", "HDAC6", "SIRT1", "mTOR", "KEAP1"], "ChEMBL"),
@@ -2161,8 +2172,16 @@ def result_frame(smiles, name, r):
         er = ad.get("expected_recall")
         note = f"{ad['tier']}; nearest analogue {ad['nearest_smiles']}"
         if er:
-            note += (f"; measured recall for compounds at this distance {er['recall']:.2f} "
-                     f"(n={er['n']:,}), so a silent endpoint here is weak evidence of inactivity")
+            # The strength of a negative depends on the recall at this distance, so the sentence
+            # has to depend on it too. Saying "weak evidence" for a compound the panel recovers
+            # 86 per cent of the time understates a real negative exactly as badly as saying
+            # "strong evidence" would overstate one at 0.16.
+            r_ = er["recall"]
+            strength = ("reasonably strong" if r_ >= 0.75 else
+                        "moderate" if r_ >= 0.50 else "weak")
+            note += (f"; measured recall for compounds at this distance {r_:.2f} "
+                     f"(n={er['n']:,}), so a silent endpoint here is {strength} evidence of "
+                     f"inactivity")
         add("Applicability domain", "max_tanimoto", "Similarity to nearest measured training compound",
             round(ad["max_sim"], 4), "Tanimoto", note)
         if er:

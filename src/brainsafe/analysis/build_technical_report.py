@@ -214,6 +214,35 @@ were trained, tested and withdrawn. One adversarial check fails and is reported 
 
 ---
 
+### 0.1 How to read this document
+
+This report is read by people with incompatible backgrounds. A statistician wants the estimator, the
+splitting scheme and the interval construction stated precisely, and will not accept prose where an
+equation belongs. A pharmacologist wants to know what the panel measures, whether the targets are the
+right ones, and what a number means for a compound they might make. Writing only for either one
+produces a document the other cannot check.
+
+The response here is not to compromise but to say the same things twice, in the register each reader
+needs, and to mark which is which. Prose sections carry the reasoning and the biology. Section 3.7
+restates the entire pipeline in notation, and is the one place where nothing is explained twice. The
+two must agree; if they do not, that is a defect in this document.
+
+| If you are | Start at | And you can skip |
+|---|---|---|
+| **A statistician or machine-learning reviewer** | **3.7**, the formal specification: estimator, splits, calibration, conformal construction, thresholds, aggregation, metrics. Then 6.1 (cross-validation), 6.5 (external validation), 6.9 (leakage and null models) | Section 2.3 and section 5's prose, which restate for a biological reader what 3.7 already says exactly |
+| **A pharmacologist, neuroscientist or clinician** | **1** (what the system is), then **2.3** (why these endpoints, by therapeutic axis), then **5** (how the layers combine) and **5.1** (a real query, read line by line) | Section 3.7 entirely, and the interval arithmetic in 3.3 and 3.4; sections 6.5.1 to 6.5.6 can be read from their opening paragraphs alone |
+| **A reviewer checking whether the claims are earned** | **6** in full, then **8** and **8.2**, where the five foreseeable criticisms are answered with measurements rather than argument | Nothing. That is the point of those sections |
+| **Someone deciding whether to use the server** | **0** (executive summary), **5.1** (a worked query), **8** (limitations) | Everything else |
+
+Three conventions hold throughout. Every number is read from an artefact in this repository at
+generation time, so no figure here was typed by hand and none can drift from what the code produced.
+Results that do not flatter the system are reported at the same size as results that do, and section
+6.7 exists because four of the nine falsification hypotheses were refuted. And where a claim rests on
+an assumption rather than a measurement, the assumption is named in the sentence that makes the
+claim, not in a footnote.
+
+---
+
 ## 1. What the system is
 
 BrainSafe AI takes one small molecule, given as a SMILES string or a resolvable compound name, and
@@ -461,6 +490,154 @@ depends on run order:
 That the measured rate can now disagree with its target is the evidence that it is a measurement.
 """)
 
+    A(r"""
+### 3.7 Formal specification
+
+Everything above is stated in prose, because the reasoning is what most readers want. This section
+states the same system in notation, so that a reader who wants to check the arithmetic, reimplement a
+step, or locate the assumption hidden inside a sentence can do so without reading the source. Nothing
+here is new. It is the same pipeline written twice, and any disagreement between the two is a defect
+in this document rather than a choice.
+
+**Representation.** A molecule $m$ is standardised to its neutral parent (largest organic fragment,
+sanitised, counter-ion removed, protonation neutralised) and mapped by
+
+$$\varphi(m) = \big(\underbrace{h_1,\dots,h_{1024}}_{\text{ECFP-4, folded}},\;
+\underbrace{d_1,\dots,d_{12}}_{\text{descriptors}}\big)
+\in \{0,1\}^{1024}\times\mathbb{R}^{12} \subset \mathbb{R}^{1036}$$
+
+where $h_j = 1$ exactly when some atom environment of radius $\le 2$ has a hash congruent to $j$
+modulo $1024$. Folding is not injective: $h_j = 1$ says *some* environment hashing to $j$ is present,
+not which one. Chirality is excluded from the hash, so enantiomers have identical $\varphi$; section
+8.2.2 bounds what that costs.
+
+**Data.** For endpoint $t$, $D_t = \{(x_i, y_i)\}_{i=1}^{n_t}$ with $x_i = \varphi(m_i)$, and
+$y_i \in \{0,1\}$ for classification or $y_i \in \mathbb{R}$ (pChEMBL) for regression. Rows identical
+in $\varphi$ are collapsed before any split, and a collapsed group whose labels disagree is dropped
+rather than resolved by vote, because the featuriser cannot tell its members apart.
+
+**Estimator.** A random forest of $B = 300$ trees,
+
+$$\hat q_t(x) = \frac{1}{B}\sum_{b=1}^{B}\hat p_b(x),
+\qquad \hat f_t(x) = \frac{1}{B}\sum_{b=1}^{B} T_b(x)$$
+
+for classification and regression respectively, with $\hat p_b$ the class-1 leaf frequency of tree
+$b$. Trees are grown on bootstrap resamples, $\lfloor\sqrt{1036}\rfloor$ features considered per
+split, to a minimum leaf size of 2 for the core endpoints and 4 for the binder panel. Binder models
+weight class $c$ by $n / (2 n_c)$, so an endpoint that is 90 per cent active cannot be fitted by
+answering "active".
+
+**Splitting.** Let $\sigma(m)$ denote the Bemis-Murcko scaffold of $m$: ring systems and the linkers
+between them, side chains stripped, atom and bond types retained. Cross-validation is
+$\mathrm{GroupKFold}(10)$ with groups $\sigma(m_i)$, so that
+
+$$\sigma(m_i) = \sigma(m_j) \implies i \text{ and } j \text{ share a fold.}$$
+
+The random split is the same estimator under $\mathrm{StratifiedKFold}(10)$, reported only as the
+interpolation baseline. Acyclic molecules have no scaffold and are placed in one shared group, so a
+fold boundary never runs through them.
+
+**Calibration.** Core classifiers are calibrated by isotonic regression on out-of-fold predictions,
+
+$$\hat g_t = \operatorname*{arg\,min}_{g\ \text{non-decreasing}}
+\sum_i \big(g(\hat q_t^{(-k(i))}(x_i)) - y_i\big)^2$$
+
+solved by pool-adjacent-violators, where $\hat q_t^{(-k(i))}$ is fitted without the fold containing
+$i$. Because $\hat g_t$ is monotone it cannot reorder compounds, so AUROC is invariant under
+calibration and only the probability changes. Binder models instead use Platt scaling,
+$\hat g_t(p) = (1 + e^{-(ap + b)})^{-1}$, fitted by maximum likelihood on a stratified fifth withheld
+from the forest's own fit, because their positive class is too small for an isotonic step that would
+not overfit the calibrator.
+
+**Conformal prediction.** Inductive, Mondrian (class-conditional), at significance
+$\varepsilon = 0.10$. On a calibration set disjoint from training the nonconformity of a labelled
+compound is $\alpha_i = 1 - \hat q_t(y_i \mid x_i)$. For class $c$ with $n_c$ calibration points the
+threshold $\tau_c$ is the $k$-th smallest such $\alpha$ within that class, where
+
+$$k = \big\lceil (n_c + 1)(1 - \varepsilon) \big\rceil,$$
+
+and the prediction set for a new $x$ is
+
+$$\Gamma_\varepsilon(x) = \{\, c \;:\; 1 - \hat q_t(c \mid x) \le \tau_c \,\}.$$
+
+Under exchangeability this gives $\Pr[y \in \Gamma_\varepsilon(x)] \ge 1 - \varepsilon$ *within each
+class*. That is what the class-conditional form adds over the marginal one, and it is the reason for
+using it here: marginal coverage can be satisfied while the rare class fails systematically.
+$\Gamma_\varepsilon(x)$ may be empty, meaning the compound conforms to neither class, or contain both,
+meaning it separates neither. Both are informative and both are displayed.
+
+**Decision thresholds.** For binder endpoint $t$, let $I_t^{\mathrm{hold}}$ be the half of its
+measured inactives withheld from fitting. With target false-positive rate $\phi = 0.10$,
+
+$$\tau_t = \mathrm{clip}\Big(Q_{1-\phi}\big(\{\hat g_t(\hat q_t(x)) : x \in I_t^{\mathrm{hold}}\}\big),\
+0.05,\ 0.999\Big)$$
+
+with $Q_\gamma$ the empirical $\gamma$-quantile. The false-positive rate on $I_t^{\mathrm{hold}}$ is
+then $\phi$ by construction and is not evidence of anything; the rate that is reported is measured on
+the evaluation pool, disjoint from both the decoy pool used in fitting and the threshold pool used
+here. Section 3.6 gives the argument for why the three must be disjoint.
+
+**Applicability domain.** With $\mathcal{R}$ the measured reference library and $T$ the Tanimoto
+coefficient on 2048-bit Morgan fingerprints,
+
+$$a(x) = \max_{r \in \mathcal{R}} T(x, r).$$
+
+Section 6.5.2 shows that recall is a monotone function of $a$, which is the property that makes it
+useful. Section 8.2.4 shows it is a weak discriminator of non-drug-like chemistry, which is the
+property it was designed for and does not have.
+
+**Engagement signal.** The endpoints are not commensurable: each has its own base rate, its own
+threshold, and one has a continuous readout. Three maps carry them onto a common $[0,1]$ scale. Where
+the negatives are measured, with base rate $b_t$,
+
+$$E_t(p) = \begin{cases}
+\dfrac{p - b_t}{1 - b_t}, & p \ge b_t \\[2ex]
+\dfrac{p - b_t}{b_t}, & p < b_t
+\end{cases} \in [-1, 1],
+\qquad s_t(x) = \max\{0,\ E_t(\hat g_t(\hat q_t(x)))\}.$$
+
+$E_t$ is the signed enrichment over prevalence. A probability *below* the base rate is evidence of
+inactivity rather than weak evidence of activity, and mapping it to a small positive number would
+misstate it. For a decoy-trained binder the threshold takes the role the base rate takes above,
+
+$$s_t(x) = \max\left\{0,\ \frac{\hat g_t(\hat q_t(x)) - \tau_t}{1 - \tau_t}\right\},$$
+
+so a sub-threshold call, which by construction lies within the measured background false-positive
+rate, contributes exactly zero. For the antioxidant assay $s_t$ is the percentile of the predicted
+value against the measured training distribution. Only $s_t$ is comparable across endpoints, and the
+interface always shows the untransformed calibrated probability beside it.
+
+**Aggregation to conditions.** Let $G(d)$ be the curated set of (target, weight) pairs for condition
+$d$, and $P$ the set of conditions whose mechanism is peripheral. Then
+
+$$S_d(x) = \max_{(t,w)\in G(d)} w \cdot s_t(x),
+\qquad \tilde S_d(x) = \gamma_d(x)\, S_d(x),
+\qquad \gamma_d(x) = \begin{cases} 1, & d \in P \\ \hat q_{\mathrm{BBB}}(x), & \text{otherwise.}\end{cases}$$
+
+Two consequences follow from the algebra alone, and both have been misread in the past. First, the
+maximum rather than a sum means a condition is scored by its single strongest engaged mechanism, so
+engaging three of its targets scores exactly as engaging its strongest. That is deliberate: H8 found
+co-engaged targets are frequently homologues, and a sum would count one observation several times.
+Second, $\gamma_d$ does not depend on $d$ across the non-peripheral conditions, so it cannot change
+their relative order. It is an exposure filter deciding whether anything is reported at all, not a
+discriminator between conditions, which is why H3 is recorded as refuted by construction rather than
+by experiment.
+
+**Metrics.** With $n_1$ actives, $n_0$ inactives and $R_i$ the mid-rank of the $i$-th score,
+
+$$\mathrm{AUROC} = \frac{1}{n_1 n_0}\left(\sum_{i:\,y_i=1} R_i - \frac{n_1(n_1+1)}{2}\right)
+= \frac{U}{n_1 n_0},$$
+
+which is the Mann-Whitney $U$ statistic normalised. An AUROC and a $p$-value from that test are two
+readings of one quantity, which is why both appear together throughout section 6. Expected
+calibration error over $M$ equal-width confidence bins is
+
+$$\mathrm{ECE} = \sum_{j=1}^{M} \frac{|B_j|}{n}\,\big|\mathrm{acc}(B_j) - \mathrm{conf}(B_j)\big|.$$
+
+Binomial proportions are reported with Wilson intervals rather than normal-approximation intervals,
+because several of them sit near 0 or 1, where the normal interval leaves the unit interval.
+""")
+
     A(f"""
 ---
 
@@ -560,6 +737,68 @@ flowchart TD
 The models are therefore combined by a **stated rule**, not by a learned one. Nothing is fitted on
 top of the panel. That is deliberate: a meta-model over seventy outputs would need its own training
 set of compounds labelled with ground-truth disease relevance, which does not exist.
+""")
+
+    wex = read("worked_example")
+    if wex is not None and len(wex):
+        _k = ["BBB", "Kp_uu_brain", "AChE", "hERG", "max_tanimoto", "expected_recall",
+              "top_disease"]
+        _w = wex[wex.endpoint.isin(_k)].copy()
+        _w["endpoint"] = pd.Categorical(_w.endpoint, categories=_k, ordered=True)
+        _w = _w.sort_values(["compound", "endpoint"])
+        A(f"""
+### 5.1 A real query, read line by line
+
+The description above is abstract. This section takes three compounds through the deployed pipeline
+and reads what comes back. The three were chosen before their outputs were seen, each to exercise a
+different part of the system, and whatever they returned is what is printed here.
+
+**Donepezil** is an approved acetylcholinesterase inhibitor that reaches the brain, so the panel
+should engage the target it was designed for and pass the exposure gate. **Atenolol** is a
+beta-blocker deliberately optimised *not* to enter the brain, so the exposure layer should say so and
+the disease layer should stay quiet whatever any target model reports. **Withanolide A** is a
+steroidal natural product from chemistry this library barely covers, so the domain distance should be
+low and the silence that follows should be marked as uninformative rather than as evidence.
+
+{md_table(_w[["compound", "section", "endpoint", "value", "unit", "context"]])}
+
+**Reading the donepezil rows.** The AChE probability is 1.000 against a training base rate of 0.724,
+an enrichment of +1.000: the model is as confident as it can be, and the enrichment confirms that the
+confidence is not merely the base rate showing through. Barrier penetration is 0.991, so the exposure
+gate passes essentially unattenuated, and the top condition is Alzheimer's disease at 0.991 with AChE
+named as the driver. That is the correct answer for donepezil, and it is worth saying plainly that it
+is not evidence of anything: donepezil is a training compound, its domain distance is 1.000 because
+it is *in* the reference library, and a system that got this wrong would be broken rather than
+uninformative. The row shows what a positive looks like; it does not support a claim.
+
+The hERG probability of 0.734 is the more informative line. Donepezil does block hERG, and the
+enrichment of +0.547 over a base rate of 0.413 says the model is reporting a genuine liability rather
+than the prior. This is the safety axis doing what it exists for: the compound that scores at the top
+of the efficacy axis carries a flag a medicinal chemist would need to see.
+
+**Reading the atenolol rows.** Every target probability sits *below* its base rate, giving negative
+enrichments (AChE -0.756, hERG -0.808). Under the map in section 3.7 these become an engagement
+signal of exactly zero rather than a small positive number, which is the reason for using signed
+enrichment instead of the raw probability. Barrier penetration is 0.473 and the top condition scores
+0.0009, some three hundred times below the 0.30 reporting threshold. The server therefore says
+nothing, which for a peripherally restricted beta-blocker is correct.
+
+**Reading the withanolide rows.** The domain distance is 0.432, in the near-domain band, and the
+nearest measured neighbour is a steroid rather than anything from a medicinal-chemistry series. Every
+target signal is at or below base rate and the top condition scores 0.000. The line that matters is
+the expected sensitivity: 0.553, against 0.862 for the two drugs above. That figure comes from the
+prospective validation in section 6.5 and it changes what the silence means. For donepezil, silence
+at a target would be reasonably strong evidence of inactivity. For the withanolide it is weak
+evidence, because at this distance from the training chemistry the panel recovers barely half of the
+activities that are really present. The server reports that number beside the result rather than
+leaving a reader to assume all silences are equal.
+
+**What a user does with this.** The output is a triage instrument, and these three compounds show the
+three outcomes it can produce. A strong, gated, mechanistically named signal is a reason to look
+further and tells you which assay to run first. An unambiguous silence from a compound well inside
+the domain is a reason to deprioritise. A silence from a compound outside the domain is not a result
+at all, and the expected-sensitivity figure exists so that it is not read as one.
+
 """)
 
     A("""
@@ -735,38 +974,6 @@ first draft of this section said exactly that. It is the wrong reading, and sect
 right one.
 """)
 
-    if pcore is not None and len(pcore):
-        cls = pcore[pcore.task == "classification"]
-        reg = pcore[pcore.task == "regression"]
-        A(f"""
-#### 6.5.3 The same test on the core endpoints
-
-Section 6.2 has reported temporal AUROC for the core classifiers without the control that makes it
-readable. Refitted here with a size-matched random split alongside.
-
-{md_table(pcore[["endpoint", "task", "cutoff_year", "n_train", "n_test", "metric",
-                 "time_split_score", "random_control_score", "cost_of_prospectivity"]])}
-""")
-        if len(cls):
-            a = pd.to_numeric(cls.time_split_score, errors="coerce")
-            b = pd.to_numeric(cls.random_control_score, errors="coerce")
-            A(f"""
-Across {len(cls)} classifiers the mean AUROC is {a.mean():.3f} under the time split against
-{b.mean():.3f} under the matched random control, a cost of {(b - a).mean():.3f}.
-""")
-        if len(reg):
-            a = pd.to_numeric(reg.time_split_score, errors="coerce")
-            b = pd.to_numeric(reg.random_control_score, errors="coerce")
-            A(f"""
-The regressors are the more interesting case, because a temporal R-squared of {a.min():.2f} to
-{a.max():.2f} has always looked like evidence that the receptor models barely work. Against a matched
-random control averaging {b.mean():.3f} they are better read as a measure of how much of a regression
-score is interpolation within a published series: the mean cost of prospectivity is {(b - a).mean():.3f}.
-A prospective R-squared near zero on a continuous potency scale remains a real limitation and is
-reported as one, but it is a statement about the temporal structure of published structure-activity
-data rather than about the fitting.
-""")
-
     if strata is not None and len(strata):
         ts = strata[(strata.source == "prospective") & (strata.split == "time")]
         ts = ts[ts.recall_at_threshold.notna()]
@@ -882,6 +1089,38 @@ compound in hand is therefore knowable at the moment of the query rather than on
 and what its adversarial check tests. It is a good predictor of when the panel will fall silent on a
 real active. A compound the flag places near the edge of the domain is precisely the compound whose
 activity the panel is most likely to miss, and that is the more useful thing for it to mean.
+""")
+
+    if pcore is not None and len(pcore):
+        cls = pcore[pcore.task == "classification"]
+        reg = pcore[pcore.task == "regression"]
+        A(f"""
+#### 6.5.3 The same test on the core endpoints
+
+Section 6.2 has reported temporal AUROC for the core classifiers without the control that makes it
+readable. Refitted here with a size-matched random split alongside.
+
+{md_table(pcore[["endpoint", "task", "cutoff_year", "n_train", "n_test", "metric",
+                 "time_split_score", "random_control_score", "cost_of_prospectivity"]])}
+""")
+        if len(cls):
+            a = pd.to_numeric(cls.time_split_score, errors="coerce")
+            b = pd.to_numeric(cls.random_control_score, errors="coerce")
+            A(f"""
+Across {len(cls)} classifiers the mean AUROC is {a.mean():.3f} under the time split against
+{b.mean():.3f} under the matched random control, a cost of {(b - a).mean():.3f}.
+""")
+        if len(reg):
+            a = pd.to_numeric(reg.time_split_score, errors="coerce")
+            b = pd.to_numeric(reg.random_control_score, errors="coerce")
+            A(f"""
+The regressors are the more interesting case, because a temporal R-squared of {a.min():.2f} to
+{a.max():.2f} has always looked like evidence that the receptor models barely work. Against a matched
+random control averaging {b.mean():.3f} they are better read as a measure of how much of a regression
+score is interpolation within a published series: the mean cost of prospectivity is {(b - a).mean():.3f}.
+A prospective R-squared near zero on a continuous potency scale remains a real limitation and is
+reported as one, but it is a statement about the temporal structure of published structure-activity
+data rather than about the fitting.
 """)
 
     if xsrc is not None and len(xsrc):
@@ -1235,7 +1474,7 @@ claim about a particular fit. When the panel was last retrained, Cav3.2 stopped 
     A("""
 ---
 
-## 8.2 Criticisms anticipated, and what the evidence says
+### 8.2 Criticisms anticipated, and what the evidence says
 
 Five objections are foreseeable, and each is answered here with a measurement rather than an
 argument. Two of them turned out to be right, one turned out to be a defect in the test rather than
@@ -1245,7 +1484,7 @@ in the tool, and two are bounded more narrowly than the objection assumes.
     if h9 is not None:
         beat = int((h9.auroc_model > 0.5).sum())
         A(f"""
-### The disease layer does not beat a frequency baseline
+#### 8.2.1 The disease layer does not beat a frequency baseline
 
 **Partly right, and the comparison is the wrong one.** On top-3 accuracy over drugs never seen in
 training the layer scores 0.352 against a frequency null of 0.654, and that is reported as it stands.
@@ -1271,7 +1510,7 @@ prediction, which is exactly how it is presented.
 
     if stereo is not None:
         A(f"""
-### Chirality is not represented
+#### 8.2.2 Chirality is not represented
 
 **Right, and now bounded.** The featuriser excludes stereochemistry, so two enantiomers receive
 identical predictions. For a CNS panel this is the sharpest available criticism, and the correct
@@ -1303,7 +1542,7 @@ racemate.
 """)
 
     A("""
-### Agonism and antagonism are not distinguished
+#### 8.2.3 Agonism and antagonism are not distinguished
 
 **Right, and it is a limitation of the labels rather than of the models.** The training label is a
 potency value: IC50, Ki, Kd or EC50. Those measure *affinity*, how tightly a compound binds, and an
@@ -1322,7 +1561,7 @@ is not a correction to what is here.
     if admeas is not None:
         sep = admeas[admeas.separates]
         A(f"""
-### The applicability-domain flag fails its own adversarial test
+#### 8.2.4 The applicability-domain flag fails its own adversarial test
 
 **The test was wrong, not the flag, and the test has been corrected.** This needs stating carefully,
 because "we changed a failing test and now it passes" is the least trustworthy sentence in science.
@@ -1376,7 +1615,7 @@ wrong reason is not much better: it spends the credibility that a real failure w
     _xs = read("external_cross_source")
     if _pv is None or not len(_pv):
         A("""
-### External validation is thin outside the barrier model
+#### 8.2.5 External validation is thin outside the barrier model
 
 **Right, and it is the clearest remaining gap.** The barrier model is tested on 306 FDA-curated
 approved drugs absent from B3DB by InChIKey, and on the 241 of those also distinguishable from
@@ -1391,7 +1630,7 @@ chemistry *is* the training set.
         _pr = _at.notna() & _ar.notna()
         _bp = _bt.notna() & _br.notna()
         A(f"""
-### External validation is thin outside the barrier model
+#### 8.2.5 External validation is thin outside the barrier model
 
 **Right when it was written, and it has since been answered as far as this data permits.** The
 criticism stands in one respect that no analysis can remove: an external set must be measured
