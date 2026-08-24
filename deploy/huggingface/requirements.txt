@@ -1,0 +1,30 @@
+# Runtime dependencies for the Hugging Face Space, which are not the repository's dependencies.
+#
+# The root requirements.txt is the environment that TRAINS and VALIDATES: it carries matplotlib for
+# the manuscript figures, python-docx and pypandoc_binary for the reports, and xgboost for the
+# model-family comparison. None of them is imported to answer a query, and pypandoc_binary alone
+# pulls a pandoc binary of over a hundred megabytes. Installing them on the Space lengthens every
+# cold build and adds four ways for it to fail, for no behaviour.
+#
+# The imports the served application actually makes are joblib, numpy, pandas, plotly, rdkit,
+# requests and streamlit, plus scikit-learn and scipy, which are needed to unpickle and evaluate the
+# estimators even though app.py never names them.
+#
+# Versions are pinned to the environment the deployed estimators were fitted under. scikit-learn
+# records its own version inside each pickle and warns on a mismatch; that warning was checked
+# rather than assumed harmless, with 630 model outputs across 10 unrelated compounds agreeing
+# exactly between 1.8.0 and 1.9.0 except for one value differing by 1e-12. The pin stands anyway, so
+# that what runs is what was validated.
+#
+# streamlit is deliberately absent. The Space card's sdk_version field installs it, and naming it
+# here as well invites a version conflict between the two mechanisms. Keep sdk_version in
+# README.md equal to the streamlit version this project validates against.
+
+rdkit==2026.03.2
+scikit-learn==1.8.0
+numpy==2.4.6
+pandas==3.0.3
+scipy==1.17.1
+joblib==1.5.3
+plotly==6.7.0
+requests
