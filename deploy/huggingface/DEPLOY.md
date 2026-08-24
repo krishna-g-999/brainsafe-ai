@@ -8,14 +8,33 @@ limit. Measure it again after any retrain with `psutil` rather than trusting thi
 
 | Host | Memory | Disk | Verdict |
 |---|---|---|---|
-| **Hugging Face Spaces** | 16 GB | 50 GB | **works**, with 6x headroom over the measured 2.57 GB. Free, permanent URL, models via git-LFS at no cost |
+| **Hugging Face Spaces** | 16 GB | 50 GB | works, with 6x headroom over the measured 2.57 GB, but **no longer free for this application**. See below |
 | Google Cloud Run | configurable | image | works, scales to zero, but needs a billing account attached even to stay inside the free tier |
 | Oracle Cloud Always Free | 24 GB | 200 GB | works, genuinely free with no time limit, but you administer the machine |
 | Streamlit Community Cloud | 1 GB | small | **does not fit.** The panel exceeds the memory limit once loaded |
 | Render / Fly.io free tiers | 256 MB - 1 GB | small | do not fit |
 
-Hugging Face Spaces is the recommendation: it is the only one that is free without qualification,
-needs no card, and is designed for exactly this shape of application.
+**Hugging Face changed its terms, and this was verified by hitting them rather than by reading the
+marketing page.** Two things are now true that were not when this file was first written:
+
+1. **The Streamlit SDK has been retired.** Not merely hidden in the creation form: the API rejects
+   it outright with `Invalid option: expected one of "gradio"|"docker"|"static"`. The
+   `huggingface_hub` client still lists `streamlit` in `SPACES_SDK_TYPES`, so the client validates a
+   value the server refuses, and the error arrives only from the Hub.
+2. **Only Static Spaces are free.** Creating a Docker Space returns `402 Payment Required`, with the
+   server stating that "Static Spaces are free for everyone, but hosting Gradio and Docker Spaces on
+   free cpu-basic requires a PRO subscription". PRO is $9/month and lists "Host ZeroGPU, Gradio &
+   Docker Spaces" among its benefits.
+
+A Static Space serves HTML and CSS and cannot execute Python, so it cannot host this application at
+any price. The route is therefore a **Docker Space on a PRO account**, with Streamlit running inside
+the container, or one of the alternatives below. The application itself is unchanged; only the
+wrapper differs.
+
+Weigh one thing before subscribing. A journal server should stay reachable for years, and a Space on
+a personal subscription stops when the subscription does. That is an argument for institutional
+hosting or a self-administered virtual machine, not against PRO, but it should be a decision rather
+than an accident.
 
 ## Before deploying: shrink the panel
 
@@ -47,19 +66,42 @@ survives you changing accounts and carries the institute's name in the URL.
 `admin`. With `read` you can see the organisation but the Owner dropdown in step 2 will not offer
 it, and nothing later will work. If you only have `read`, an admin has to raise it.
 
-**2. Create the Space.** Go to https://huggingface.co/new-space and set:
+**2. Create the Space, and not through the web form.** As of August 2026 the page at
+https://huggingface.co/new-space **no longer offers Streamlit**. It states that you may "choose
+between Gradio, Docker, or Static", and Docker is marked paid. The SDK a Space runs under is set by
+the `sdk:` field of the README's YAML block, and `streamlit` remains valid there and in the API,
+which still lists `['gradio', 'streamlit', 'docker', 'static']`. Only the creation form dropped it.
 
-| Field | Value |
-|---|---|
-| Owner | **the organisation**, not your username. This is the dropdown people miss |
-| Space name | `brainsafe-ai` |
-| Licence | MIT |
-| SDK | **Streamlit** |
-| Hardware | CPU basic, 2 vCPU, 16 GB. Free |
-| Visibility | Public |
+Create it through the client instead, which sets the SDK explicitly:
 
-The URL is then `https://huggingface.co/spaces/<org>/brainsafe-ai`. That is the address for the
+```bash
+brainsafe_env/Scripts/hf.exe auth login          # paste a Write token; it is stored, not typed into git
+brainsafe_env/Scripts/hf.exe repo create brainsafe-ai --repo-type space --space_sdk docker
+```
+
+`--space_sdk streamlit` is no longer accepted by the Hub and `docker` requires PRO, as set out
+above. With Docker the SDK line in the Space card becomes `sdk: docker`, and a `Dockerfile` at the
+repository root installs the runtime requirements and launches
+`streamlit run app.py --server.port 7860 --server.address 0.0.0.0`. Port 7860 is the port a Space
+exposes.
+
+Two further traps in the web form, if you use it for anything else. The Owner dropdown defaults to
+your personal account, so creating under an organisation is a deliberate change and easy to miss.
+And **hardware defaults to ZeroGPU**, which is a GPU tier with different constraints and is wrong
+for this application: it needs CPU Basic, 2 vCPU and 16 GB, against a measured 2.57 GB resident.
+
+The URL is then `https://huggingface.co/spaces/<owner>/brainsafe-ai`. That is the address for the
 manuscript.
+
+**On whether to use an organisation at all.** A public Space is readable by the entire internet, so
+organisation membership is not a confidentiality question; everything here is published on purpose.
+It is a question of control. Every member of an organisation with the write or admin role can
+modify or delete the Space that a published paper points at, and an audit log to establish who did
+so requires a paid plan. Before choosing an organisation, read
+`https://huggingface.co/organizations/<org>/settings/members` and check both the roles and the
+default role assigned to new members. A personal namespace is a perfectly ordinary address for a
+NAR web server, and a Space can be transferred to an organisation later, with the old URL
+redirecting.
 
 **3. Get a token that can write to the organisation.** A personal token is not automatically an
 organisational one. At https://huggingface.co/settings/tokens create a token with **Write** access,
@@ -130,6 +172,71 @@ log opens with "102 of 252 model files missing". The app runs correctly regardle
 clean, add a Space variable under Settings, Variables and secrets:
 
     BRAINSAFE_SKIP_MODEL_FETCH = 1
+
+## If the login fails with CERTIFICATE_VERIFY_FAILED
+
+On an institutional network this is the first thing that happens, and the error names the wrong
+culprit. It is not a broken `certifi`, and the fix is not to disable verification.
+
+The cause is TLS interception. A filtering appliance terminates the connection, inspects it, and
+re-signs it with its own certificate authority. Confirm it by reading the certificate actually
+presented rather than guessing:
+
+```powershell
+$tcp = New-Object Net.Sockets.TcpClient('huggingface.co', 443)
+$ssl = New-Object Net.Security.SslStream($tcp.GetStream(), $false, {$true})
+$ssl.AuthenticateAsClient('huggingface.co')
+$ssl.RemoteCertificate.Issuer
+```
+
+An issuer naming the site itself is a genuine certificate. An issuer naming a security vendor is
+interception. On this network it returns
+`CN=Sophos SSL CA_C320ABPCBJ8BQ6B, O=Sophos`.
+
+The browser accepts it because Windows trusts that CA; Python does not, because it uses `certifi`'s
+bundle rather than the Windows store. So give Python a bundle containing both. Export the
+interception roots from the Windows store and concatenate them onto `certifi`'s:
+
+```powershell
+Get-ChildItem Cert:\LocalMachine\Root | Where-Object { $_.Subject -like "*Sophos*" } |
+  ForEach-Object {
+    "-----BEGIN CERTIFICATE-----"
+    [Convert]::ToBase64String($_.RawData, 'InsertLineBreaks')
+    "-----END CERTIFICATE-----"
+  } | Set-Content "$HOME\.certs\sophos-roots.pem" -Encoding ascii
+```
+
+```python
+import certifi, pathlib
+d = pathlib.Path.home() / ".certs"
+(d / "ca-bundle.pem").write_text(
+    pathlib.Path(certifi.where()).read_text() + (d / "sophos-roots.pem").read_text())
+```
+
+Then point the tools at it. Both are needed: the Hub client uses `httpx`, and git-LFS does its own
+TLS and ignores the Python variables entirely, so a push fails the same way after the login
+succeeds.
+
+```powershell
+$env:SSL_CERT_FILE = "$HOME\.certs\ca-bundle.pem"
+$env:REQUESTS_CA_BUNDLE = "$HOME\.certs\ca-bundle.pem"
+git config --global http.sslCAInfo "$HOME\.certs\ca-bundle.pem"
+```
+
+Verify before spending a token on it. A 401 is the correct answer here: it means TLS succeeded and
+the request arrived unauthenticated.
+
+```python
+import httpx; print(httpx.get("https://huggingface.co/api/whoami-v2").status_code)
+```
+
+**What this means for the token, which is the part worth pausing on.** Interception is not a
+transport detail. The appliance holds the plaintext of every request, so a token pasted into
+`hf auth login` is readable by whoever administers it, as is anything else sent over that network.
+That is normal on a managed network and is not a reason to stop, but it is a reason to scope the
+token to writing your own repositories and nothing else, and to revoke it at
+https://huggingface.co/settings/tokens once the Space is pushed. A token that can write to an entire
+organisation should never cross a connection someone else can read.
 
 ## Two things to check after it is live
 
