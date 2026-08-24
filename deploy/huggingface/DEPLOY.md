@@ -1,12 +1,14 @@
 # Deploying BrainSafe AI to a free public URL
 
-The constraint is the panel. It is roughly 0.85 GB of fitted estimators after compression, and about
-0.70 GB of that is needed at runtime. Any host with less memory than that cannot serve the tool, and
-that single number decides the options.
+The constraint is the panel. It is roughly 0.85 GB of fitted estimators on disk after compression,
+and a warmed process holds **2.57 GB resident**: 2.31 GB once every model is loaded, rising to 2.57 GB
+after the applicability-domain reference and the read-across index are also in memory. That measured
+figure, not the size on disk, decides the options, and it is the number to check against any host's
+limit. Measure it again after any retrain with `psutil` rather than trusting this line.
 
 | Host | Memory | Disk | Verdict |
 |---|---|---|---|
-| **Hugging Face Spaces** | 16 GB | 50 GB | **works.** Free, permanent URL, models via git-LFS at no cost |
+| **Hugging Face Spaces** | 16 GB | 50 GB | **works**, with 6x headroom over the measured 2.57 GB. Free, permanent URL, models via git-LFS at no cost |
 | Google Cloud Run | configurable | image | works, scales to zero, but needs a billing account attached even to stay inside the free tier |
 | Oracle Cloud Always Free | 24 GB | 200 GB | works, genuinely free with no time limit, but you administer the machine |
 | Streamlit Community Cloud | 1 GB | small | **does not fit.** The panel exceeds the memory limit once loaded |
@@ -73,8 +75,29 @@ python deploy/huggingface/prepare_space.py --out brainsafe-ai
 
 `prepare_space.py` copies only what answers a query: the app, `src/`, `assets/`, `results/`,
 `docs/`, the four `data/` subdirectories the server reads, and `models_rf/` without `holdout/`. It
-also writes the Space card and the git-LFS rules. That is 0.80 GB. Copying the repository instead
+also writes the Space card and the git-LFS rules. That is 0.81 GB. Copying the repository instead
 would be 1.36 GB, most of it raw pulls and API caches that are never opened to serve a prediction.
+
+It ships `deploy/huggingface/requirements.txt`, not the repository's. The root file is the
+environment that trains and validates, and carries matplotlib, python-docx, `pypandoc_binary` and
+xgboost, none of which is imported to answer a query; `pypandoc_binary` alone pulls a pandoc binary
+of over a hundred megabytes. The runtime set is nine packages, pinned to the versions the estimators
+were fitted under. streamlit is deliberately not among them, because the Space card's `sdk_version`
+installs it and naming it twice invites a conflict. Keep `sdk_version` in the card equal to the
+streamlit version this project validates against; it is 1.58.0 today.
+
+**Verify the assembled directory before pushing.**
+
+```bash
+python deploy/huggingface/verify_space.py brainsafe-ai
+```
+
+This runs the app with the Space as the working directory and the repository's source roots removed
+from the path, loads every model, and predicts for three compounds chosen to exercise different
+paths. It exists because a file that failed to travel is invisible in a directory listing and
+obvious to the first visitor. It also checks that `results/tables/external_novelty_strata.csv`
+arrived, since the interface quotes an expected recall from it and would drop that row without
+comment if it were missing.
 
 **5. Track LFS before adding the models.** This ordering matters more than anything else here. Git
 refuses single files over 10 MB on the Hub, and once a large file is in a commit, adding LFS
@@ -89,7 +112,14 @@ git push
 ```
 
 When prompted, the username is your Hugging Face username and the **password is the token** from
-step 3, not your account password.
+step 3, not your account password. Alternatively authenticate once and let git use the stored
+credential, which avoids pasting the token into a terminal prompt where it may be logged:
+
+```bash
+brainsafe_env/Scripts/hf.exe auth login
+```
+
+The token is entered into the Hugging Face client, which stores it under `~/.cache/huggingface`.
 
 The push moves 0.8 GB and takes a while. The first build then takes several minutes because the
 scientific stack is large.
@@ -105,7 +135,13 @@ clean, add a Space variable under Settings, Variables and secrets:
 
 **The models load.** The first prediction is slow because the panel is read into memory once; every
 prediction after it is fast. If the Space restarts on the first query, the memory limit was hit and
-the panel needs trimming further.
+the panel needs trimming further, though at 2.57 GB measured against 16 GB available that should not
+happen.
+
+**The expected-recall row appears.** Submit a compound far from the training chemistry, a steroidal
+natural product will do, and confirm the result carries both an applicability-domain distance and
+the measured recall at that distance. If the recall row is missing, the novelty-strata table did not
+travel and `verify_space.py` was skipped.
 
 **The URL goes in the manuscript.** NAR requires the server address in the abstract. It is currently
 `[SERVER URL TO BE SUPPLIED]` in `manuscript/NAR_WebServer_BrainSafe_draft.md`, and the manuscript

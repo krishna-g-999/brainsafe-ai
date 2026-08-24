@@ -4,7 +4,7 @@ emoji: 🧠
 colorFrom: yellow
 colorTo: indigo
 sdk: streamlit
-sdk_version: 1.50.0
+sdk_version: 1.58.0
 app_file: app.py
 pinned: false
 license: mit
@@ -22,9 +22,13 @@ measured analogue, so a user can tell interpolation from extrapolation. Target s
 only in proportion to predicted blood-brain-barrier penetration, so potency at a target the compound
 cannot reach contributes nothing.
 
-The server reports where it does not work: five endpoints were trained, tested and withdrawn, one
-adversarial check fails and is shown failing, and compounds outside the applicability domain are
-flagged rather than guessed at.
+The server reports where it does not work. Five endpoints were trained, tested and withdrawn, and
+they are named. Four of nine falsification hypotheses were refuted and are published alongside the
+five that survived. Compounds outside the applicability domain are flagged rather than guessed at,
+and every prediction carries the recall the panel actually achieves at that distance from its
+training chemistry, which falls from 0.86 for close analogues to 0.16 for a genuinely new scaffold.
+A silent endpoint is therefore reported with the weight it deserves rather than as evidence of
+inactivity.
 
 - **Source, validation artefacts and reproduction:** https://github.com/krishna-g-999/brainsafe-ai
 - **Licence:** MIT for the code. Underlying data retain their sources' licences (ChEMBL CC BY-SA 3.0,

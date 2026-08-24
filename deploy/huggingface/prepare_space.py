@@ -21,8 +21,10 @@ ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
 
 # What the server reads at runtime. Anything not named here is not copied, which is the point.
+# requirements.txt is deliberately absent: the root one is the training environment and the Space
+# gets the runtime subset from this directory instead. See deploy/huggingface/requirements.txt.
 FILES = ["app.py", "api.py", "serve.py", "model_fetch.py", "models_manifest.json",
-         "requirements.txt", "CITATION.cff", "LICENSE"]
+         "CITATION.cff", "LICENSE"]
 DIRS = ["src", "assets", "results", "docs", ".streamlit"]
 
 # data/ is 582 MB and the server reads 18 MB of it. The rest is the raw pulls, the API caches and
@@ -105,6 +107,8 @@ def main(argv=None) -> None:
     print(f"  {n/1e6:8.2f} MB  models_rf/" + ("" if args.with_holdout else "  (holdout excluded)"))
 
     shutil.copy2(HERE / "README.md", out / "README.md")       # the Space card, with its YAML block
+    shutil.copy2(HERE / "requirements.txt", out / "requirements.txt")   # runtime subset, not root
+    print(f"  {'':8s}    requirements.txt  (runtime subset)")
     (out / ".gitattributes").write_text(LFS, encoding="utf-8")
     print(f"  {'':8s}    README.md  (Space card)")
     print(f"  {'':8s}    .gitattributes  (git-LFS rules)")
