@@ -10,10 +10,12 @@ B. Prospective sensitivity. Whole scaffold classes were withheld before the pane
    and one over four hundred are not the same evidence.
 C. Specificity on chemistry the server should stay quiet about: non-CNS compounds and, separately,
    an external set of approved drugs absent from the training source.
-D. The applicability-domain flag, which does not work, shown at the same size as the rest.
+D. The adversarial suite, every check at the same size whatever its verdict.
 
 Panel D is included deliberately. A validation figure that shows only the checks that passed is a
-selection of results, not a validation.
+selection of results, not a validation. All six now pass, but one of them passes only because its
+controls were corrected: most of the originals were measured compounds inside the flag's own
+reference library, where in-domain is the truthful answer. The passing criterion did not move.
 
 Reads calibration.csv, rf_conformal.csv, scaffold_holdout_results.csv,
 noncns_specificity_summary.csv, external_bbb_validation.csv, inversion_validation.csv.
@@ -128,7 +130,7 @@ def panel_c(ax, spec, ext) -> None:
 
 
 def panel_d(ax, inv) -> None:
-    """The adversarial suite, including the check that fails."""
+    """The adversarial suite, every check shown at the same size whatever its verdict."""
     ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.axis("off")
     d = inv.reset_index(drop=True)
     n_pass = int((d.result.astype(str).str.upper() == "PASS").sum())
@@ -166,7 +168,7 @@ def main() -> None:
     S.panel(a, "A", "probabilities that mean what they say", dx=-0.24, dy=1.10, gap=0.055)
     S.panel(b, "B", "sensitivity on chemistry withheld", dx=-0.13, dy=1.10, gap=0.055)
     S.panel(c, "C", "and quiet where it should be", dx=-0.55, dy=1.09, gap=0.075)
-    S.panel(d, "D", "including what does not work", dx=-0.02, dy=1.09, gap=0.045)
+    S.panel(d, "D", "and every adversarial check, passed or not", dx=-0.30, dy=1.09, gap=0.045)
     panel_a(a, cal, con); panel_b(b, hold); panel_c(c, spec, ext); panel_d(d, inv)
     S.save(fig, "Figure6_validation")
 
