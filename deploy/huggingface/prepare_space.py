@@ -108,7 +108,9 @@ def main(argv=None) -> None:
 
     shutil.copy2(HERE / "README.md", out / "README.md")       # the Space card, with its YAML block
     shutil.copy2(HERE / "requirements.txt", out / "requirements.txt")   # runtime subset, not root
+    shutil.copy2(HERE / "Dockerfile", out / "Dockerfile")               # the SDK no longer builds it
     print(f"  {'':8s}    requirements.txt  (runtime subset)")
+    print(f"  {'':8s}    Dockerfile")
     (out / ".gitattributes").write_text(LFS, encoding="utf-8")
     print(f"  {'':8s}    README.md  (Space card)")
     print(f"  {'':8s}    .gitattributes  (git-LFS rules)")

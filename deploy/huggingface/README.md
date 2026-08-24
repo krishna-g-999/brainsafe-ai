@@ -3,9 +3,8 @@ title: BrainSafe AI
 emoji: 🧠
 colorFrom: yellow
 colorTo: indigo
-sdk: streamlit
-sdk_version: 1.58.0
-app_file: app.py
+sdk: docker
+app_port: 7860
 pinned: false
 license: mit
 short_description: Calibrated, exposure-gated prediction of small-molecule action in the human brain

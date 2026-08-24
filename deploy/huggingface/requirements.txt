@@ -16,9 +16,11 @@
 # exactly between 1.8.0 and 1.9.0 except for one value differing by 1e-12. The pin stands anyway, so
 # that what runs is what was validated.
 #
-# streamlit is deliberately absent. The Space card's sdk_version field installs it, and naming it
-# here as well invites a version conflict between the two mechanisms. Keep sdk_version in
-# README.md equal to the streamlit version this project validates against.
+# streamlit IS listed here, which reverses an earlier decision and the reason matters. While the
+# Streamlit SDK existed, the Space card's sdk_version installed it and naming it here too invited a
+# conflict between the two mechanisms. That SDK has been retired: the Hub now accepts only gradio,
+# docker or static. Streamlit therefore runs inside a container of our own, nothing installs it
+# implicitly, and omitting it would produce a build that succeeds and a Space that never starts.
 
 rdkit==2026.03.2
 scikit-learn==1.8.0
@@ -28,3 +30,4 @@ scipy==1.17.1
 joblib==1.5.3
 plotly==6.7.0
 requests
+streamlit==1.58.0
