@@ -240,7 +240,10 @@ The 52 binder classifiers are validated not against the decoys used to train the
 compounds experimentally tested at the same target and found inactive. Across the 47 that are
 deployed they reach a mean AUROC of 0.917 and a mean sensitivity of 0.898 on actives withheld by
 scaffold, at thresholds constrained simultaneously by held-out measured inactives and by the
-false-positive rate on a disjoint pool of unrelated chemistry. Five are withdrawn: Nav1.1 and GluA2
+false-positive rate on a disjoint pool of unrelated chemistry. Both figures are means over 47
+endpoints and the spread behind them is wide: AUROC ranges from 0.719 at GABA-A to 0.985, and
+sensitivity from 0.639 at COX-2 to 0.997, so the two means describe the panel and not any particular
+endpoint. Supplementary Table S1 gives every endpoint separately. Five are withdrawn: Nav1.1 and GluA2
 for firing on trivial metabolites at every usable threshold, and three added to test
 natural-product coverage, reported in the limitations. Withdrawal is re-derived whenever the panel
 is refitted rather than carried forward, because it is a claim about a particular fit: when the

@@ -32,8 +32,16 @@ split and 0.925 under a
 scaffold-grouped split that withholds entire structural classes. The binder panel, validated against
 compounds measured at the same target and found inactive rather than against decoys, reaches a mean
 AUROC of 0.917 at a mean sensitivity of
-0.898. On 1,000 compounds with no recorded
-activity at any modelled target it stays silent 94.9% of the time.
+0.898. Both are means over 47 endpoints and
+the spread is wide, so the means alone flatter the panel: AUROC runs from
+0.719 to
+0.985 and sensitivity from
+0.639 to
+0.997, with the per-endpoint figures in section 2.1.
+On 1,000 compounds with no recorded activity at any modelled target it stays silent
+94.9% of the time. Those
+compounds are presumed inactive because nothing is recorded about them rather than proven inactive,
+so that figure is a lower bound.
 
 **What is distinctive.** Three things, each of which is a decision rather than a default. The
 negative class is *recovered from censored measurements* rather than simulated with decoys wherever

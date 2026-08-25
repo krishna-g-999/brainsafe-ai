@@ -3020,11 +3020,17 @@ def panel_facts():
         # believe every model saw it. No model did. The per-endpoint distribution is carried with
         # it so the aggregate cannot be mistaken for a training-set size: the median endpoint holds
         # about a twentieth of the total, and the smallest a fraction of a per cent.
+        # The per-endpoint span is reported over the DEPLOYED panel, matching the manuscript. Taken
+        # over all 63 tables the minimum is 140 rows at NR3C1, an endpoint that was trained and then
+        # withdrawn, so quoting it would describe a model no user can reach. Over the deployed
+        # endpoints the span is 387 at KEAP1 to 10,276 at hERG.
+        _served = set(TARGET_CLASSIFIERS) | set(BINDER_TARGETS) | set(RECEPTOR_REGRESSORS)
         n, sizes, structures = 0, [], set()
         for path in glob.glob(str(ROOT / "data" / "endpoints" / "*.csv")):
             d = pd.read_csv(path, usecols=["smiles"])
             n += len(d)
-            sizes.append(len(d))
+            if Path(path).stem in _served:
+                sizes.append(len(d))
             structures |= set(d["smiles"].astype(str))
         f["n_records"] = n
         f["n_endpoint_tables"] = len(sizes)
@@ -3085,9 +3091,11 @@ def render_about():
     cards = [
         ("Trained on", records,
          ("measured compound-endpoint records from ChEMBL, BindingDB and B3DB, summed over {} "
-          "endpoints and covering {:,} distinct structures. No single model saw this many: each "
-          "endpoint is trained on its own table, holding a median of {:,} rows and ranging from "
-          "{:,} to {:,}").format(f.get("n_endpoint_tables", "-"), f.get("n_structures", 0),
+          "endpoints and covering {:,} distinct SMILES, which collapse to 169,341 compounds once "
+          "keyed by the InChIKey of the desalted parent, the figure the manuscript quotes. No "
+          "single model saw this many: each "
+          "endpoint is trained on its own table alone, and across the deployed panel those tables "
+          "hold a median of {:,} rows, from {:,} to {:,}").format(f.get("n_endpoint_tables", "-"), f.get("n_structures", 0),
                                  f.get("rows_median", 0), f.get("rows_min", 0),
                                  f.get("rows_max", 0))
          if "rows_median" in f else
