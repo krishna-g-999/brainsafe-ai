@@ -247,6 +247,25 @@ token to writing your own repositories and nothing else, and to revoke it at
 https://huggingface.co/settings/tokens once the Space is pushed. A token that can write to an entire
 organisation should never cross a connection someone else can read.
 
+## Constraints the Space card must satisfy
+
+The card's YAML block is validated by the Hub on push, not on save, so a mistake here costs a
+rejected upload rather than an error in an editor. Two rules cost a push each here:
+
+- `short_description` must be **60 characters or fewer**. The natural one-line summary of this
+  project is 81, and it is rejected with `"short_description" length must be less than or equal to
+  60 characters long`.
+- `sdk` must be one of `gradio`, `docker` or `static`, and Docker additionally needs `app_port`.
+
+Check the length before pushing, rather than after uploading most of a gigabyte:
+
+```python
+import re, pathlib
+y = pathlib.Path("README.md").read_text().split("---")[1]
+d = re.search(r"short_description:\s*(.+)", y).group(1).strip()
+print(len(d), d)
+```
+
 ## Two things to check after it is live
 
 **The models load.** The first prediction is slow because the panel is read into memory once; every
