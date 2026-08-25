@@ -1,7 +1,9 @@
 # BrainSafe AI: exposure-gated prediction of small-molecule target engagement in the brain
 
-**Authors.** [NAME], [NAME], [NAME]. Sri Sathya Sai Institute of Higher Learning (SSSIHL),
-Prasanthi Nilayam, Andhra Pradesh, India. Corresponding author: [NAME], [EMAIL].
+**Authors.** Krishnasalini Gunanathan, Raghunatha Sarma, Sai Shyam, Ramya E. M.,
+Venketesh Sivaramakrishnan. Sri Sathya Sai Institute of Higher Learning (SSSIHL), Puttaparthi,
+Andhra Pradesh 515134, India. Corresponding author: Prof. Venketesh Sivaramakrishnan,
+svenketesh@sssihl.edu.in.
 
 **Server.** https://huggingface.co/spaces/Krishnag999/brainsafe-ai (live, no registration, MIT licence)
 
@@ -14,9 +16,10 @@ mode accepts up to 300 structures. No registration, no login, and no email addre
 Submitted structures are processed in memory and are not stored.
 
 **Output.** For one submission the server returns, in a few seconds: engagement of 54 molecular
-targets, each as a calibrated probability with a conformal interval; predicted blood-brain barrier
-penetration and a directly modelled unbound brain-to-plasma ratio; nine ADME and exposure endpoints;
-a cardiac hERG liability; and the distance to the nearest measured analogue with that analogue shown.
+targets, each as a calibrated probability, with conformal prediction intervals on the eight core
+classifiers; predicted blood-brain barrier penetration; nine ADME and exposure endpoints, among them
+a directly modelled unbound brain-to-plasma ratio and a cardiac hERG liability; and the distance to
+the nearest measured analogue, with that analogue shown.
 Engaged targets are traced through a curated pathway graph anchored to KEGG, Reactome and IUPHAR to
 the conditions those mechanisms touch. Output includes an interactive mechanism map, per-endpoint
 tables, and downloadable CSV, JSON and a self-contained HTML report.
@@ -25,8 +28,10 @@ tables, and downloadable CSV, JSON and a self-contained HTML report.
 from ChEMBL, BindingDB, B3DB, Therapeutics Data Commons and MoleculeNet, covering 169,341 compounds
 keyed by InChIKey. Each endpoint is fitted on its own measured set alone, of median 3,789 rows.
 Compounds are represented as a 1,024-bit ECFP-4 fingerprint with twelve physicochemical descriptors,
-and a random forest is fitted per endpoint after comparison against gradient boosting, XGBoost,
-logistic regression, nearest-neighbour read-across and a graph neural network.
+and a random forest is fitted per endpoint. That choice was made on a like-for-like comparison over
+the thirteen core endpoints against XGBoost, histogram gradient boosting, L2 logistic regression and
+a nearest-neighbour read-across, and against a graph neural network on four of them, which the
+random forest won on every endpoint tested.
 
 Three choices distinguish the method. The negative class is recovered from censored measurements
 rather than simulated with decoys, which returns experimentally tested non-binders to 57 endpoints.
