@@ -196,8 +196,16 @@ split and {cv[(cv.task=="classification") & (cv.split=="scaffold")].roc_auc_mean
 scaffold-grouped split that withholds entire structural classes. The binder panel, validated against
 compounds measured at the same target and found inactive rather than against decoys, reaches a mean
 AUROC of {np.mean([v["auroc_vs_measured_inactives"] for v in dep]):.3f} at a mean sensitivity of
-{np.mean([v["sensitivity_at_threshold"] for v in dep]):.3f}. On 1,000 compounds with no recorded
-activity at any modelled target it stays silent {float(spec[spec.metric.str.startswith("Specificity")].estimate.iloc[0]):.1%} of the time.
+{np.mean([v["sensitivity_at_threshold"] for v in dep]):.3f}. Both are means over 47 endpoints and
+the spread is wide, so the means alone flatter the panel: AUROC runs from
+{min(v["auroc_vs_measured_inactives"] for v in dep):.3f} to
+{max(v["auroc_vs_measured_inactives"] for v in dep):.3f} and sensitivity from
+{min(v["sensitivity_at_threshold"] for v in dep):.3f} to
+{max(v["sensitivity_at_threshold"] for v in dep):.3f}, with the per-endpoint figures in section 2.1.
+On 1,000 compounds with no recorded activity at any modelled target it stays silent
+{float(spec[spec.metric.str.startswith("Specificity")].estimate.iloc[0]):.1%} of the time. Those
+compounds are presumed inactive because nothing is recorded about them rather than proven inactive,
+so that figure is a lower bound.
 
 **What is distinctive.** Three things, each of which is a decision rather than a default. The
 negative class is *recovered from censored measurements* rather than simulated with decoys wherever
