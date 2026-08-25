@@ -7,7 +7,7 @@ sdk: docker
 app_port: 7860
 pinned: false
 license: mit
-short_description: Calibrated, exposure-gated prediction of small-molecule action in the human brain
+short_description: BBB-gated prediction of small-molecule action in the brain
 ---
 
 # BrainSafe AI
