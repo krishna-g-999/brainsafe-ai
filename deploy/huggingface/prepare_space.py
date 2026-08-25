@@ -38,10 +38,24 @@ DATA_SUBDIRS = ["endpoints", "endpoints_reg", "adme", "readacross"]
 # used for validation and is never consulted to answer a query.
 MODELS_SKIP = {"holdout"}
 
-LFS = """*.joblib filter=lfs diff=lfs merge=lfs -text
-*.pkl filter=lfs diff=lfs merge=lfs -text
-*.tar.gz filter=lfs diff=lfs merge=lfs -text
-*.xlsx filter=lfs diff=lfs merge=lfs -text
+# The Hub rejects a push containing ANY binary file that is not in LFS, whatever its size, with
+# "Your push was rejected because it contains binary files". Listing only the model formats is not
+# enough: a 104 kB logo is refused on the same rule as a 58 MB forest. Every binary extension the
+# assembled Space can contain is therefore named here, and the list is deliberately wider than what
+# the current contents happen to include, so adding a figure or a PDF later does not fail the push.
+_LFS_BINARY = ["joblib", "pkl", "tar.gz", "xlsx", "docx", "pdf", "png", "jpg", "jpeg", "gif",
+               "ico", "svgz", "woff", "woff2", "ttf", "otf", "zip", "npz", "npy", "parquet", "h5"]
+_LFS_RULE = "*.{} filter=lfs diff=lfs merge=lfs -text"
+LFS = "\n".join(_LFS_RULE.format(e) for e in _LFS_BINARY) + "\n"
+
+# Compiled bytecode is build output, not source, and must never reach the Space. copy_tree already
+# skips it, but anything that imports the app from inside the assembled directory recreates it, and
+# verify_space.py does exactly that. Without this the first push fails on a .pyc file that was not
+# there when the directory was assembled.
+IGNORE = """__pycache__/
+*.pyc
+*.pyo
+.ipynb_checkpoints/
 """
 
 
@@ -112,8 +126,10 @@ def main(argv=None) -> None:
     print(f"  {'':8s}    requirements.txt  (runtime subset)")
     print(f"  {'':8s}    Dockerfile")
     (out / ".gitattributes").write_text(LFS, encoding="utf-8")
+    (out / ".gitignore").write_text(IGNORE, encoding="utf-8")
     print(f"  {'':8s}    README.md  (Space card)")
-    print(f"  {'':8s}    .gitattributes  (git-LFS rules)")
+    print(f"  {'':8s}    .gitattributes  (git-LFS rules, {len(_LFS_BINARY)} binary patterns)")
+    print(f"  {'':8s}    .gitignore")
 
     print(f"\n  total {total/1e9:.2f} GB")
     print("\nNext, from inside that directory:")

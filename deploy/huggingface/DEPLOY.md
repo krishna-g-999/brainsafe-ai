@@ -141,9 +141,18 @@ obvious to the first visitor. It also checks that `results/tables/external_novel
 arrived, since the interface quotes an expected recall from it and would drop that row without
 comment if it were missing.
 
-**5. Track LFS before adding the models.** This ordering matters more than anything else here. Git
-refuses single files over 10 MB on the Hub, and once a large file is in a commit, adding LFS
-afterwards does not fix that commit.
+**5. Track LFS before adding anything.** This ordering matters more than anything else here, and the
+rule is stricter than the usual one about large files. The Hub rejects a push containing **any**
+binary that is not in LFS, whatever its size: `Your push was rejected because it contains binary
+files`. A 104 kB logo is refused on the same rule as a 58 MB forest, so a `.gitattributes` naming
+only the model formats is not enough. `prepare_space.py` writes patterns for every binary extension
+the Space can contain.
+
+It also writes a `.gitignore` for `__pycache__`, which matters more than it sounds. Running
+`verify_space.py` imports the application from inside the assembled directory and leaves compiled
+bytecode behind, so a `.pyc` that was absent at assembly time is present at commit time and fails
+the push. Once a binary is in a commit, adding LFS afterwards does not fix that commit; the commit
+has to be redone.
 
 ```bash
 cd brainsafe-ai
