@@ -1440,7 +1440,7 @@ Stated because a tool that reports only what works cannot be checked.
    aromatic rings. Extending the panel to targets natural products are actually assayed
    against was
    attempted, and the three endpoints added all failed and were withdrawn.
-4. **The disease layer does not predict indication.** 27 of the 52 targets in the pathway graph drive
+4. **The disease layer does not predict indication.** 27 of the 51 targets in the pathway graph drive
    more than one condition. It does not beat a frequency baseline at any reporting depth, and
    reporting more conditions widens the gap rather than closing it. It is a route from a mechanism to
    the conditions that mechanism touches.

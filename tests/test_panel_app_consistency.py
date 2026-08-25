@@ -75,6 +75,47 @@ class TestServedPanelMatchesRegistry(unittest.TestCase):
             f"base rate these endpoints do not have, and would fall through to a KeyError")
 
 
+class TestManuscriptCountsMatchThePanel(unittest.TestCase):
+    """The manuscript states the panel's shape in prose, and prose does not regenerate.
+
+    A prose pass found the abstract claiming 63 molecular targets where the server serves 54, and
+    three places saying the pathway graph holds 52 targets when it holds 51, the graph having lost
+    GluA2 when that endpoint was withdrawn from scoring. Neither number is produced by a training
+    run, so nothing rebuilt them and nothing complained.
+
+    check_manuscript_numbers.py cannot catch this. It asks whether a computed value appears
+    somewhere in the documents, and a bare integer like 51 matches inside 0.951 or 151, so a small
+    count is effectively unverifiable by substring search. This asserts the counts directly.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        import app
+        cls.app = app
+        cls.text = (ROOT / "manuscript" / "NAR_WebServer_BrainSafe_draft.md").read_text(
+            encoding="utf-8")
+
+    def test_pathway_graph_target_count(self):
+        import re
+        n = len(self.app.KNOWLEDGE_GRAPH)
+        stated = set(int(m) for m in re.findall(r"the (\d+) targets in the pathway graph", self.text))
+        self.assertTrue(stated, "the manuscript no longer states a pathway-graph target count")
+        self.assertEqual(
+            stated, {n},
+            f"the manuscript states {sorted(stated)} pathway-graph targets; the graph holds {n}")
+
+    def test_molecular_target_count(self):
+        import re
+        served = (set(self.app.TARGET_CLASSIFIERS) | set(self.app.BINDER_TARGETS)
+                  | set(self.app.RECEPTOR_REGRESSORS)) - {"BBB"}
+        stated = re.search(r"engagement of (\d+) molecular targets", self.text)
+        self.assertIsNotNone(stated, "the abstract no longer states a molecular-target count")
+        self.assertEqual(
+            int(stated.group(1)), len(served),
+            f"the abstract claims {stated.group(1)} molecular targets; the server serves "
+            f"{len(served)} excluding the barrier model")
+
+
 class TestOrphanTargetDegradesToSilence(unittest.TestCase):
     """The guard must return zero rather than raise, whatever the graph says."""
 
