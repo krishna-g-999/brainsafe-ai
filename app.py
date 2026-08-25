@@ -1273,8 +1273,9 @@ def render_header():
     # all of them core classifiers, and omitted the 43-endpoint binder panel entirely, so the
     # landing page advertised about a seventh of the tool. Deriving the counts also means they
     # cannot fall behind the registry the way a hand-written list did.
-    n_targets = len(set(TARGET_CLASSIFIERS) | set(BINDER_TARGETS) | set(RECEPTOR_REGRESSORS))
-    tags = [f"{n_targets} target endpoints", "BBB and K(p,uu) exposure", "hERG safety",
+    _sh = panel_shape()
+    n_targets = _sh.get("targets", "-")
+    tags = [f"{n_targets} molecular targets", "BBB and K(p,uu) exposure", "hERG safety",
             "Receptor potency", "Neuroprotection", f"{len(DISEASE_ORDER)} conditions",
             "Calibrated + conformal", "Applicability domain"]
     tagbar = "".join(f'<span class="header-tag">{t}</span>' for t in tags)
@@ -2933,9 +2934,9 @@ def render_glossary():
         for title, items in sections)
     st.markdown(
         f'<div class="bs-card"><div class="bs-h">What every number on this page means'
-        f'<span class="bs-h-sub">{len(set(TARGET_CLASSIFIERS) | set(BINDER_TARGETS) | set(RECEPTOR_REGRESSORS))} '
-        f'target endpoints, of which {n_binder} are the deployed binder panel, plus '
-        f'{len(ADME)} ADME endpoints and {len(DISEASE_ORDER)} conditions</span></div>'
+        f'<span class="bs-h-sub">{panel_shape().get("targets", "-")} molecular targets, of which '
+        f'{n_binder} are the deployed binder panel, plus {len(ADME)} ADME endpoints, the barrier '
+        f'model and {len(DISEASE_ORDER)} conditions</span></div>'
         f'<div class="bs-note">Read this before trusting any single figure. The quantities below are '
         f'not interchangeable: a binder probability, an enrichment over base rate and an engagement '
         f'signal are three different things on three different scales, and only the last is '
@@ -2944,6 +2945,46 @@ def render_glossary():
 
 
 @st.cache_data(show_spinner=False)
+@st.cache_data(show_spinner=False)
+def panel_shape():
+    """The one place that counts the panel, because it was being counted six different ways.
+
+    The interface had quoted 47, 52, 55, 63, 70 and 75 in different sections, each correct for a
+    different question and none of them reconciled, which reads as carelessness whatever the
+    arithmetic. The counts are these, and they add up exactly:
+
+      75 estimators trained, 70 deployed, 5 withdrawn.
+      70 deployed estimators cover 66 distinct predicted quantities, because A2A, D2, HT2A and SERT
+      each carry two models, a binder classifier and a potency regressor, for the same protein.
+      Of the 66: 54 are molecular targets, 10 are exposure and ADME properties, being the barrier
+      model and nine ADME endpoints, and 2 are other measured properties, the antioxidant DPPH
+      capacity and the most-basic pKa.
+      Of the 54 targets, 47 are the deployed binder panel, of 52 binder endpoints trained.
+
+    The barrier model is NOT a molecular target. It is an exposure term, and counting it among the
+    targets is how 54 became 55 in an earlier version of the header.
+    """
+    out = {}
+    try:
+        d = pd.read_csv(RESULTS / "MODEL_INVENTORY.csv")
+        dep = d[d.deployed.astype(str).str.lower().isin(("true", "1", "yes"))].copy()
+        dep["quantity"] = dep.model.astype(str).str.replace("_binder", "", regex=False)
+        adme = [m for m in dep.model.astype(str) if m.startswith("adme_")]
+        not_target = set(adme) | {"antioxidant_DPPH", "pka_basic", "BBB"}
+        out["trained"] = len(d)
+        out["deployed"] = len(dep)
+        out["withdrawn"] = len(d) - len(dep)
+        out["quantities"] = int(dep.quantity.nunique())
+        out["targets"] = len(set(dep.quantity) - not_target)
+        out["exposure"] = len(adme) + 1
+        out["other"] = 2
+        dbl = dep.quantity.value_counts()
+        out["dual_model"] = sorted(dbl[dbl > 1].index.tolist())
+    except Exception:
+        pass
+    return out
+
+
 def panel_facts():
     """Every number the About page states, read from the artefacts rather than typed.
 
@@ -3069,6 +3110,40 @@ def render_about():
                 ';line-height:1.15;margin:4px 0 6px">' + big + '</div>'
                 '<div class="bs-note" style="font-size:.82rem">' + sub + '</div></div>',
                 unsafe_allow_html=True)
+
+    # A reader who meets 47 in one section, 54 in another and 70 in a third is entitled to think
+    # nobody checked. Every one of those is correct for a different question, so the answer is not
+    # to pick one but to show the arithmetic once, here, and derive the rest from panel_shape().
+    sh = panel_shape()
+    if sh:
+        st.write("")
+        st.markdown(
+            f'<div class="bs-card"><div class="bs-h">What the panel contains'
+            f'<span class="bs-h-sub">the counts, reconciled, because they answer different '
+            f'questions</span></div>'
+            f'<table class="bs-table"><tbody>'
+            f'<tr><td><b>{sh["trained"]}</b></td><td>estimators trained in total</td></tr>'
+            f'<tr><td><b>{sh["deployed"]}</b></td><td>of them deployed and reachable from this page; '
+            f'{sh["withdrawn"]} were withdrawn and are named under Validated coverage</td></tr>'
+            f'<tr><td><b>{sh["quantities"]}</b></td><td>distinct quantities those {sh["deployed"]} '
+            f'estimators predict. The two figures differ because '
+            f'{", ".join(sh["dual_model"][:-1])} and {sh["dual_model"][-1]} each carry two models '
+            f'for the same protein, a binder classifier and a potency regressor</td></tr>'
+            f'<tr><td><b>{sh["targets"]}</b></td><td>of those quantities are <b>molecular '
+            f'targets</b>, the number to quote for what this server profiles</td></tr>'
+            f'<tr><td><b>{sh["exposure"]}</b></td><td>are exposure and ADME properties: the '
+            f'blood-brain barrier model and {len(ADME)} ADME endpoints. The barrier model is an '
+            f'exposure term, not a target, and is not counted among the '
+            f'{sh["targets"]}</td></tr>'
+            f'<tr><td><b>{sh["other"]}</b></td><td>are other measured properties: antioxidant DPPH '
+            f'capacity and the most-basic pKa</td></tr>'
+            f'</tbody></table>'
+            f'<div class="bs-note" style="margin-top:10px">{sh["targets"]} + {sh["exposure"]} + '
+            f'{sh["other"]} = {sh["quantities"]} quantities, from {sh["deployed"]} estimators. '
+            f'Separately, {len(DISEASE_ORDER)} conditions are scored from those targets through the '
+            f'pathway graph, and the endpoint tables behind all of it number 63, some endpoints '
+            f'drawing on more than one.</div></div>',
+            unsafe_allow_html=True)
 
     st.write("")
     render_glossary()

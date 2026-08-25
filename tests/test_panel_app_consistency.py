@@ -116,6 +116,49 @@ class TestManuscriptCountsMatchThePanel(unittest.TestCase):
             f"{len(served)} excluding the barrier model")
 
 
+class TestPanelCountsReconcile(unittest.TestCase):
+    """The panel was being counted six ways, and the counts must add up.
+
+    The interface quoted 47, 52, 55, 63, 70 and 75 in different sections. Each was correct for a
+    different question and none was reconciled, which reads as carelessness whatever the arithmetic.
+    panel_shape() is now the single source, and these assert the two identities that make its
+    figures a partition rather than a list.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        import app
+        cls.sh = app.panel_shape()
+        cls.app = app
+
+    def test_quantities_partition_into_targets_exposure_and_other(self):
+        s = self.sh
+        self.assertEqual(
+            s["targets"] + s["exposure"] + s["other"], s["quantities"],
+            "the panel breakdown does not sum to the number of distinct predicted quantities")
+
+    def test_estimators_exceed_quantities_only_by_dual_modelled_proteins(self):
+        s = self.sh
+        self.assertEqual(
+            s["quantities"] + len(s["dual_model"]), s["deployed"],
+            f"{s['deployed']} deployed estimators cover {s['quantities']} quantities, which is "
+            f"reconcilable only if exactly {s['deployed'] - s['quantities']} proteins carry two "
+            f"models; {len(s['dual_model'])} do: {s['dual_model']}")
+
+    def test_trained_is_deployed_plus_withdrawn(self):
+        s = self.sh
+        self.assertEqual(s["deployed"] + s["withdrawn"], s["trained"])
+
+    def test_barrier_model_is_not_counted_as_a_target(self):
+        """BBB is exposure. Counting it among the targets is how 54 became 55."""
+        served = (set(self.app.TARGET_CLASSIFIERS) | set(self.app.BINDER_TARGETS)
+                  | set(self.app.RECEPTOR_REGRESSORS))
+        self.assertIn("BBB", served, "the barrier model is no longer served")
+        self.assertEqual(
+            self.sh["targets"], len(served) - 1,
+            "the molecular-target count must exclude the barrier model, which is an exposure term")
+
+
 class TestOrphanTargetDegradesToSilence(unittest.TestCase):
     """The guard must return zero rather than raise, whatever the graph says."""
 
