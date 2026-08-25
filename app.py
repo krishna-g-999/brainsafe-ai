@@ -267,7 +267,11 @@ MECH_LABEL = {"AChE": "AChE", "BChE": "BChE", "BACE1": "BACE1", "GSK3B": "GSK-3Î
               # retained deliberately: the endpoint is withdrawn and no longer scored, but a stored
               # report or exported CSV from before the withdrawal still names it, and a label map
               # that forgets it would render those as a bare identifier.
-              "Cav3_2": "Cav3.2", "hERG": "hERG", "BBB": "blood-brain barrier"}
+              "Cav3_2": "Cav3.2", "hERG": "hERG", "BBB": "blood-brain barrier",
+              # Withdrawn endpoints still appear in the scope list, which names them, so they need
+              # labels too; without these the panel printed Nav1_1 beside AMPA GluA2.
+              "Nav1_1": "Nav1.1", "NFKB1": "NF-kB p105/p50", "NR3C1": "glucocorticoid receptor",
+              "NRF2": "NRF2"}
 
 # ---- BrainSafe visual identity (navy + gold, matching the earlier app) ----
 NAVY   = "#0D2137"
@@ -2121,15 +2125,23 @@ def coverage_withdrawn():
             if not v.get("deployed", True)]
 # What is not modelled, and why, with the measured evidence behind each claim.
 #
-# Every count below comes from a systematic ChEMBL query (results/unmodelled_target_data.csv) rather
-# than from recollection, because "there is not enough data" ages badly as ChEMBL grows. The reasons
+# Every count below comes from a systematic ChEMBL query (results/unmodelled_target_data.csv) or,
+# where stated, from results/tables/np_target_survey.csv, rather than from recollection, because
+# "there is not enough data" ages badly as ChEMBL grows. That claim was audited against the files
+# and four entries failed it: a kainate count attributed to GluK3 that the query records against a
+# generic receptor, an assay described as thioflavin-S that the query records only as a fibril
+# counterscreen, activity counts for SARM1 and KCNQ2 that appear in no table here, and 4 measured
+# inactives for GABA-A alpha5 where the endpoint table holds 12. All four are corrected. A number
+# in this list that cannot be traced to a file is worse than no number, because the list exists to
+# be trusted about limits. The reasons
 # are not interchangeable: too few ligands is a different problem from volume without diversity,
 # which is different again from a binding site that the target annotation does not separate, and
 # only the first is fixed by waiting. A health check asserts that nothing named here is in fact
 # deployed, which is how the previous version of this list was found to be wrong.
 COVERAGE_NO = [
-    "Kainate receptors GluK1, GluK2, GluK3: 244, 139 and 34 measured activities, far below the 800 "
-    "required to train an endpoint that survives a scaffold split",
+    "Kainate receptors: GluK1 has 244 measured activities and GluK2 has 139, far below the 800 "
+    "required to train an endpoint that survives a scaffold split. A further 34 are annotated to "
+    "a generic kainate-receptor target that does not resolve to a subunit at all",
     "The NMDA channel-blocker site used by ketamine and phencyclidine. ChEMBL annotates activity to "
     "the protein rather than the binding site, so channel blockers, glycine-site ligands and GluN2B "
     "allosteric modulators are pooled despite unrelated structure-activity relationships. The GluN2B "
@@ -2141,16 +2153,19 @@ COVERAGE_NO = [
     "survives a scaffold split. Cav3.2 is modelled and deployed",
     "Aggregation of alpha-synuclein, tau and huntingtin. These are phenotypic assays with no defined "
     "binding site. Tau carries 95,345 potency values, more than any deployed endpoint, but 86 per "
-    "cent come from a single thioflavin-S displacement campaign and a 1,000-activity sample draws on "
+    "cent come from a single high-throughput fibril-formation counterscreen and a 1,000-activity "
+    "sample draws on "
     "one document; huntingtin is 98 per cent one assay. A model trained on either learns the "
     "screening library, not the protein",
     "ALS genetics: SOD1 has 29 measured activities, TDP-43 has 9, and C9orf72 has no ChEMBL target "
     "record at all. Amyotrophic lateral sclerosis itself is scored, through eight mechanisms "
     "including RIPK1-mediated necroptosis, but none of them is one of the genetic lesions that "
     "define the familial forms",
-    "Axon-degeneration and excitability targets proposed for ALS: SARM1 has 85 measured activities "
-    "from 3 sources and KCNQ2 has 103 from 12, both far below the bar",
-    "GABA-A subtype alpha5-beta3-gamma2: 672 actives were fetched and audited but only 4 measured "
+    "Axon-degeneration and excitability targets proposed for ALS: SARM1 is recorded in this "
+    "project's target survey with a single compound and five measurements, and KCNQ2 was never "
+    "surveyed, so neither is anywhere near the bar and neither carries a count this repository "
+    "can support",
+    "GABA-A subtype alpha5-beta3-gamma2: 672 actives were fetched and audited but only 12 measured "
     "inactives exist, so no threshold could be set honestly. The pooled GABA-A endpoint is deployed "
     "in its place",
     "Stroke and cerebral ischaemia, the one condition on this list with no comparable small-molecule "
