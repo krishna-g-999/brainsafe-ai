@@ -22,7 +22,6 @@ from pathlib import Path
 import joblib
 import numpy as np
 import pandas as pd
-import plotly.graph_objects as go
 import streamlit as st
 from rdkit import Chem, DataStructs
 from rdkit.Chem import rdFingerprintGenerator
@@ -2722,27 +2721,6 @@ def load_results():
             "gnn": _read(ROOT / "results" / "gnn" / "gnn_vs_rf.csv")}
 
 
-def build_validation_chart():
-    cv = load_results()["cv"]
-    if cv is None:
-        return None
-    d = cv[(cv["split"] == "scaffold") & (cv["endpoint"].isin(CLF_ORDER))].set_index("endpoint")
-    eps = [e for e in CLF_ORDER if e in d.index][::-1]
-    auroc = [float(d.loc[e, "roc_auc_mean"]) for e in eps]
-    sd = [float(d.loc[e, "roc_auc_sd"]) for e in eps]
-    fig = go.Figure(go.Bar(
-        x=auroc, y=eps, orientation="h",
-        error_x=dict(type="data", array=sd, color="rgba(13,33,55,0.45)", thickness=1.2, width=4),
-        marker=dict(color=_hex_rgba(NAVY, 0.88), line=dict(color=GOLD, width=1.2)),
-        text=[f"{a:.3f}" for a in auroc], textposition="outside",
-        textfont=dict(size=11, color=INK), hovertemplate="%{y}: AUROC %{x:.3f}<extra></extra>"))
-    fig.update_layout(height=300, margin=dict(l=10, r=30, t=10, b=24),
-        paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
-        xaxis=dict(range=[0.5, 1.0], title="Scaffold 10-fold AUROC", gridcolor="#E6ECF5", zeroline=False),
-        yaxis=dict(tickfont=dict(size=12, color=INK)))
-    return fig
-
-
 def render_model_comparison():
     res = load_results()
     cmp, gnn = res["cmp"], res["gnn"]
@@ -2751,11 +2729,19 @@ def render_model_comparison():
                 '<div class="bs-note" style="margin-bottom:10px">Every endpoint was trained under random and '
                 'scaffold (grouped) 10-fold cross-validation and benchmarked across four model families. '
                 'Random forest matched or exceeded gradient boosting and a graph neural network on the '
-                'scaffold split, and was selected for deployment. All results below are on held-out folds.</div>',
+                'scaffold split, and was selected for deployment. All results below are on held-out folds. '
+                'They come from a benchmark that refits every family under one fold assignment, so the '
+                'random-forest column here differs from the cross-validation of the deployed model by up '
+                'to 0.012: two independent partitions of the same deduplicated data, not two different '
+                'results. The headline figures above are the deployed run.</div>',
                 unsafe_allow_html=True)
-    fig = build_validation_chart()
-    if fig is not None:
-        st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
+    # The bar chart that used to sit here plotted scaffold AUROC per endpoint from
+    # rf_cv_summary.csv, immediately above a table showing the same quantity per endpoint from
+    # model_comparison.csv. The two disagreed, by up to 0.012 at MAO_A, because they are separate
+    # cross-validation runs with independent fold assignments over the same deduplicated data. Both
+    # are correct for their own purpose, and showing them three inches apart without saying so
+    # presented one quantity as two. The chart carried nothing the table does not, except error
+    # bars, so it is the chart that goes and the note below that stays.
 
     if cmp is not None:
         c = cmp[(cmp["task"] == "classification") & (cmp["split"] == "scaffold") & (cmp["metric"] == "roc_auc")]

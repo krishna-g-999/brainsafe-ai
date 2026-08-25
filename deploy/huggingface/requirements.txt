@@ -6,8 +6,8 @@
 # pulls a pandoc binary of over a hundred megabytes. Installing them on the Space lengthens every
 # cold build and adds four ways for it to fail, for no behaviour.
 #
-# The imports the served application actually makes are joblib, numpy, pandas, plotly, rdkit,
-# requests and streamlit, plus scikit-learn and scipy, which are needed to unpickle and evaluate the
+# The imports the served application actually makes are joblib, numpy, pandas, rdkit, requests
+# and streamlit, plus scikit-learn and scipy, which are needed to unpickle and evaluate the
 # estimators even though app.py never names them.
 #
 # Versions are pinned to the environment the deployed estimators were fitted under. scikit-learn
@@ -28,6 +28,5 @@ numpy==2.4.6
 pandas==3.0.3
 scipy==1.17.1
 joblib==1.5.3
-plotly==6.7.0
 requests
 streamlit==1.58.0
