@@ -457,7 +457,7 @@ could fail.
 
 Five limitations bound its use. The applicability-domain flag is a weak signal rather than a
 decisive one: against chemistry genuinely absent from the reference library it scores a median
-maximum similarity of 0.47 against 0.59 for unseen approved drugs (n = 25, one-sided Mann-Whitney
+maximum similarity, in the adversarial check, of 0.47 against 0.59 for unseen approved drugs (n = 25, one-sided Mann-Whitney
 p = 1.1e-03), but at a threshold that rejects a tenth of genuine drugs it catches only a fifth of
 distant chemistry. The conformal interval and the nearest-analogue distance remain the stronger
 statements of confidence and the interface presents them as such. What the flag does predict well is

@@ -35,7 +35,9 @@ LAYOUT: list[tuple[str, list[tuple[str, str, str | None]]]] = [
         ("manuscript/NAR_proposal_onepage.docx", "proposal_one_page.docx", None),
     ]),
     ("02_MANUSCRIPT", [
-        ("manuscript/NAR_WebServer_BrainSafe.docx", "manuscript.docx", None),
+        ("manuscript/NAR_WebServer_BrainSafe_condensed.docx", "01_manuscript_for_NAR.docx", None),
+        ("manuscript/NAR_condensed_draft.md", "01_manuscript_for_NAR.md", None),
+        ("manuscript/NAR_WebServer_BrainSafe.docx", "02_manuscript_extended.docx", None),
         ("manuscript/NAR_WebServer_BrainSafe_built.md", "manuscript.md", None),
         ("manuscript/NAR_WebServer_BrainSafe_draft.md", "manuscript_source.md", None),
         ("manuscript/references.md", "references.md", None),
