@@ -2961,13 +2961,37 @@ def panel_facts():
         f["n_binder_trained"], f["n_binder_deployed"] = len(modes), len(dep)
         f["binder_auroc"] = sum(v["auroc_vs_measured_inactives"] for v in dep) / max(len(dep), 1)
         f["binder_sens"] = sum(v["sensitivity_at_threshold"] for v in dep) / max(len(dep), 1)
+        # Every other headline row states its range. This one did not, and it covers the most
+        # endpoints and has the widest spread of any of them: AUROC runs from 0.719 at GABA-A to
+        # 0.985, so a bare mean of 0.917 reads better than the panel is.
+        _a = [v["auroc_vs_measured_inactives"] for v in dep
+              if v.get("auroc_vs_measured_inactives") is not None]
+        _s = [v["sensitivity_at_threshold"] for v in dep
+              if v.get("sensitivity_at_threshold") is not None]
+        if _a:
+            f["binder_auroc_lo"], f["binder_auroc_hi"] = min(_a), max(_a)
+        if _s:
+            f["binder_sens_lo"], f["binder_sens_hi"] = min(_s), max(_s)
     except Exception:
         pass
     try:
-        n = 0
+        # The headline figure is a SUM over endpoints, and on its own it invites the reader to
+        # believe every model saw it. No model did. The per-endpoint distribution is carried with
+        # it so the aggregate cannot be mistaken for a training-set size: the median endpoint holds
+        # about a twentieth of the total, and the smallest a fraction of a per cent.
+        n, sizes, structures = 0, [], set()
         for path in glob.glob(str(ROOT / "data" / "endpoints" / "*.csv")):
-            n += len(pd.read_csv(path, usecols=["smiles"]))
+            d = pd.read_csv(path, usecols=["smiles"])
+            n += len(d)
+            sizes.append(len(d))
+            structures |= set(d["smiles"].astype(str))
         f["n_records"] = n
+        f["n_endpoint_tables"] = len(sizes)
+        f["n_structures"] = len(structures)
+        if sizes:
+            s = pd.Series(sizes)
+            f["rows_median"] = int(s.median())
+            f["rows_min"], f["rows_max"] = int(s.min()), int(s.max())
     except Exception:
         pass
     try:
@@ -3019,14 +3043,23 @@ def render_about():
     records = "{:,}".format(f["n_records"]) if "n_records" in f else "not available"
     cards = [
         ("Trained on", records,
+         ("measured compound-endpoint records from ChEMBL, BindingDB and B3DB, summed over {} "
+          "endpoints and covering {:,} distinct structures. No single model saw this many: each "
+          "endpoint is trained on its own table, holding a median of {:,} rows and ranging from "
+          "{:,} to {:,}").format(f.get("n_endpoint_tables", "-"), f.get("n_structures", 0),
+                                 f.get("rows_median", 0), f.get("rows_min", 0),
+                                 f.get("rows_max", 0))
+         if "rows_median" in f else
          "measured compound-endpoint records from ChEMBL, BindingDB and B3DB"),
         ("Target panel", str(f.get("n_binder_deployed", "-")),
-         "binder endpoints deployed of {} trained, at a mean AUROC of {} "
-         "against compounds measured and found inactive".format(
-             f.get("n_binder_trained", "-"), val("binder_auroc"))),
+         "binder endpoints deployed of {} trained, at a mean AUROC of {} against compounds "
+         "measured and found inactive, ranging from {} to {} across the panel".format(
+             f.get("n_binder_trained", "-"), val("binder_auroc"),
+             val("binder_auroc_lo"), val("binder_auroc_hi"))),
         ("Silent on non-CNS chemistry", val("spec"),
          "specificity, 95% CI {} to {}, over 1,000 compounds with no recorded activity at any "
-         "modelled target".format(val("spec_lo"), val("spec_hi"))),
+         "modelled target. They are presumed inactive because nothing is recorded about them, not "
+         "proven inactive, so this is a lower bound".format(val("spec_lo"), val("spec_hi"))),
     ]
     for col, (label, big, sub) in zip(st.columns(3, gap="medium"), cards):
         with col:
@@ -3226,10 +3259,13 @@ def render_methods():
         '<tr><td><b>Therapeutics Data Commons, MoleculeNet</b></td><td>Measured sets for the ADME '
         'and exposure endpoints.</td></tr>'
         '</tbody></table>'
-        '<div class="bs-note" style="margin-top:10px">The panel holds ' +
+        '<div class="bs-note" style="margin-top:10px">Across every endpoint the panel holds ' +
         ("{:,}".format(f["n_records"]) if "n_records" in f else "its") +
-        ' measured compound-endpoint records. No value is imputed, and no qualitative annotation '
-        'overrides a measurement.</div></div>',
+        ' measured compound-endpoint records, which is a total and not a training-set size: each '
+        'endpoint is fitted on its own table, of median ' +
+        ("{:,}".format(f["rows_median"]) if "rows_median" in f else "a few thousand") +
+        ' rows. No value is imputed, and no qualitative annotation overrides a measurement.'
+        '</div></div>',
         unsafe_allow_html=True)
 
 
@@ -3257,10 +3293,13 @@ def render_validation():
         '<tr><td><b>Temporal split, AUROC</b></td><td>' + val("temporal_lo") + ' to ' +
         val("temporal_hi") + ' across ' + str(f.get("temporal_n", "-")) + ' endpoints</td></tr>'
         '<tr><td><b>Binder panel vs measured non-binders</b></td><td>mean AUROC ' +
-        val("binder_auroc") + ', mean sensitivity ' + val("binder_sens") +
-        ' on actives withheld by scaffold</td></tr>'
+        val("binder_auroc") + ' (range ' + val("binder_auroc_lo") + ' to ' +
+        val("binder_auroc_hi") + '), mean sensitivity ' + val("binder_sens") +
+        ' (range ' + val("binder_sens_lo") + ' to ' + val("binder_sens_hi") +
+        ') on actives withheld by scaffold</td></tr>'
         '<tr><td><b>Specificity on non-CNS chemistry</b></td><td>' + val("spec") + ' (95% CI ' +
-        val("spec_lo") + ' to ' + val("spec_hi") + ') over 1,000 compounds</td></tr>'
+        val("spec_lo") + ' to ' + val("spec_hi") + ') over 1,000 compounds presumed inactive '
+        'because nothing is recorded about them, so a lower bound</td></tr>'
         '</tbody></table></div>',
         unsafe_allow_html=True)
 
