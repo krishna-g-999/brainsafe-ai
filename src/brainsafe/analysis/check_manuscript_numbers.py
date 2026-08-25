@@ -115,6 +115,27 @@ def truth() -> list[dict]:
                           "value": round(float(s.estimate.iloc[0]), 4),
                           "source": "results/tables/noncns_specificity_summary.csv"})
 
+    # Two counts that describe the panel's shape rather than its performance, and that a prose pass
+    # found stale in the abstract. The manuscript claimed 63 molecular targets where the server
+    # serves 54, and 51 pathway-graph targets were still written as 52 in three places, the graph
+    # having lost GluA2 when that endpoint was withdrawn from scoring. Neither is produced by a
+    # training run, so nothing regenerated them and nothing complained.
+    try:
+        import importlib.util as _ilu
+        _spec = _ilu.spec_from_file_location("_bs_app", ROOT / "app.py")
+        _app = _ilu.module_from_spec(_spec)
+        _spec.loader.exec_module(_app)
+        _targets = (set(_app.TARGET_CLASSIFIERS) | set(_app.BINDER_TARGETS)
+                    | set(_app.RECEPTOR_REGRESSORS)) - {"BBB"}
+        facts += [
+            {"quantity": "molecular targets served (excluding the barrier model)",
+             "value": len(_targets), "source": "app.py registry-derived panel"},
+            {"quantity": "targets in the pathway graph",
+             "value": len(_app.KNOWLEDGE_GRAPH), "source": "app.py KNOWLEDGE_GRAPH"},
+        ]
+    except Exception as _exc:                       # never let a doc check break on an import
+        print(f"  (panel-shape counts unavailable: {type(_exc).__name__})")
+
     bm_path = ROOT / "models_rf" / "binder_modes.json"
     if bm_path.exists():
         bm = json.loads(bm_path.read_text())

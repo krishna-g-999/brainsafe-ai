@@ -14,7 +14,7 @@
 
 BrainSafe AI is a web server that profiles the mechanism by which a small molecule may act on the
 human brain, from structure alone. For a submitted SMILES string or compound name it returns, in a
-few seconds, engagement of 63 molecular targets spanning the principal neurodegenerative,
+few seconds, engagement of 54 molecular targets spanning the principal neurodegenerative,
 psychiatric, neuroinflammatory, analgesic and sleep-related axes, predicted blood-brain barrier
 penetration, two cardiac safety liabilities, and a nine-endpoint ADME and exposure layer including a
 directly modelled unbound brain-to-plasma ratio. Every target score is admitted only in proportion to
@@ -32,7 +32,7 @@ than a guess for compounds outside its competence: on non-CNS chemistry its spec
 the same target rather than against decoys, reaches a mean AUROC of 0.917 and recovers the
 pharmacologically correct driving target for reference drugs. Disease-level scores are presented as a
 route from a mechanism to the conditions it touches, not as an indication prediction, because 27 of
-the 52 targets in the pathway graph drive more than one condition and structure alone does not
+the 51 targets in the pathway graph drive more than one condition and structure alone does not
 resolve which. BrainSafe AI is freely available without registration at https://huggingface.co/spaces/Krishnag999/brainsafe-ai, with source code, trained models and all validation artefacts at
 https://github.com/krishna-g-999/brainsafe-ai.
 
@@ -413,7 +413,7 @@ the compound, decisively for some conditions and not at all for others, which is
 a route from mechanism to condition and not as an indication prediction.
 
 The reason is structural rather than a deficiency of fitting, and it is visible in the graph: 27 of
-the 52 targets in the pathway graph drive more than one condition. GABA-A alone contributes to depression and
+the 51 targets in the pathway graph drive more than one condition. GABA-A alone contributes to depression and
 anxiety, sleep and wakefulness, and epilepsy. One molecular event genuinely underlies several
 indications, and what selects among them, dose, regimen, exposure duration, patient population and
 trial history, is not present in a structure. Consistent with this, the median rank of the true
@@ -513,7 +513,7 @@ closes. It requires measured binding affinity on sp3-rich scaffolds, which is wh
 exist.
 
 The fifth is the disease layer, and it is a limit of the question rather than of the fitting. Clinical
-indication is not a function of structure: 27 of the 52 targets in the pathway graph drive more than
+indication is not a function of structure: 27 of the 51 targets in the pathway graph drive more than
 one condition,
 and what selects among them is dose, regimen, exposure and trial history. The layer does not beat a
 frequency baseline at any reporting depth, and reporting more conditions widens rather than closes
