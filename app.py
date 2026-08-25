@@ -1287,9 +1287,18 @@ def render_header():
 def render_summary(mol, r):
     kpuu = r["adme"]["kpuu"]; bbb = r["targets"]["BBB"]; herg = r["targets"]["hERG"]
     label, colour, note = verdict(kpuu, bbb)
+    # Both tiles state which quantity they show. The panel reports two different numbers for the
+    # same endpoint: the calibrated probability, and the enrichment of that probability over the
+    # training base rate, which is what the disease layer consumes and what the engagement chart
+    # plots. For hERG on donepezil they are 73 per cent and 65 per cent, and a reader given both
+    # without a label sees a contradiction rather than two answers to two questions.
+    herg_e = enrichment("hERG", herg)
     kpis = (_kpi("Predicted K<sub>p,uu</sub>", f"{kpuu:.2f}", "unbound brain / plasma", colour)
-            + _kpi("BBB penetration", f"{bbb:.0%}", "probability of crossing", BLUE)
-            + _kpi("hERG liability", f"{herg:.0%}", "cardiac risk, lower is safer", _risk_colour(herg)))
+            + _kpi("BBB penetration", f"{bbb:.0%}",
+                   f"calibrated probability &middot; base rate {base_rate('BBB'):.0%}", BLUE)
+            + _kpi("hERG liability", f"{herg:.0%}",
+                   f"calibrated probability &middot; enrichment {herg_e:.0%} over a "
+                   f"{base_rate('hERG'):.0%} base rate", _risk_colour(herg)))
     st.markdown(
         f"""
         <div class="bs-card bs-summary" style="--vc:{colour}">
@@ -1927,6 +1936,22 @@ def render_reliability_banner(smiles):
             body += (f" On future compounds in this regime the classifiers approach chance, {auroc_txt}, "
                      f"and the potency models retain {rho_txt}.")
         body += (" Use the qualitative direction only, and confirm experimentally.")
+
+    # Two different domain stratifications exist in this project and a reader meeting both without
+    # warning sees a contradiction. This banner reports ranking quality (AUROC and rank correlation)
+    # in the three bands the deployed applicability flag uses, at Tanimoto 0.3 and 0.5. The
+    # prospective validation reports recall in four narrower bands, at 0.40, 0.55 and 0.70, because
+    # recall turned out to vary within what this banner treats as one band. They measure different
+    # things on different cuts, and both are quoted here rather than leaving the user to reconcile
+    # a number in the interface with a number in the paper.
+    er = ad.get("expected_recall")
+    if er:
+        body += (f" Measured recall for compounds at this distance is {er['recall']:.2f} "
+                 f"(n={er['n']:,}), from a separate prospective analysis that bands distance more "
+                 f"finely than the three tiers used here.")
+    if st_ and st_.get("n_endpoints"):
+        body += (f" Averaged over {st_['n_endpoints']} classifiers; the gradient is a tendency and "
+                 f"not monotone for every endpoint.")
     st.markdown(
         f'<div class="bs-card" style="border-left:5px solid {col};margin-bottom:16px">'
         f'<div style="display:flex;align-items:center;gap:9px;margin-bottom:5px">'
@@ -2298,14 +2323,21 @@ def result_json(smiles, name, r):
 
 
 def build_profile_svg(r, top_n=18):
-    """Target engagement profile: every modelled mechanism against its own reporting threshold.
+    """Target engagement, with engaged mechanisms and near-misses in separate blocks.
 
     A bar chart of raw probabilities would be misleading, because each endpoint carries a different
     threshold and a different training base rate, so 0.8 means engagement at one target and nothing
-    at another. This plots the distance each target sits above or below its own cut, which is the
-    quantity the disease layer actually consumes and the only one comparable across endpoints."""
+    at another. This plots the distance each target sits above its own cut, which is the quantity
+    the disease layer consumes and the only one comparable across endpoints.
+
+    The two classes are drawn apart rather than ranked together. A single ordered list put TAAR1 at
+    "95 per cent of cut" second for donepezil, above D2 and BACE1, purely because it came closest to
+    a threshold it never crossed. Position reads as magnitude whatever the caption says, so the
+    engaged targets get the chart and the near-misses get a separate, visibly quieter block beneath
+    a rule, under a heading that states they are not findings.
+    """
     neuro = neuro_signal(r)
-    items = []
+    engaged, near = [], []
     for t in sorted(TARGET_KIND):
         if t == "NEURO":
             continue
@@ -2315,49 +2347,69 @@ def build_profile_svg(r, top_n=18):
             p = r["targets"].get(t)
         if p is None:
             continue
-        # Engaged targets rank first. Below the cut, targets are ordered by how close they came,
-        # measured as a fraction of their own threshold, so that a compound engaging nothing still
-        # shows where it came nearest rather than an empty figure.
         thr = binder_threshold(t) if TARGET_KIND.get(t) == "binder" else 1.0
-        items.append((t, s, float(p), float(p) / thr if thr > 0 else 0.0))
-    items.sort(key=lambda x: (-x[1], -x[3]))
-    items = items[:top_n]
-    if not items:
+        frac = float(p) / thr if thr > 0 else 0.0
+        (engaged if s > 0 else near).append((t, s, float(p), frac))
+    engaged.sort(key=lambda x: -x[1])
+    near.sort(key=lambda x: -x[3])
+    near = near[:max(0, top_n - len(engaged))][:8]
+    if not engaged and not near:
         return ""
 
     W, rowh, pad_l, pad_t = 720, 22, 150, 34
-    H = pad_t + rowh * len(items) + 30
+    gap = 34 if (engaged and near) else 0
+    H = pad_t + rowh * (len(engaged) + len(near)) + gap + 34
     track_x, track_w = pad_l, W - pad_l - 74
     out = [f'<svg viewBox="0 0 {W} {H}" width="100%" style="max-width:{W}px;display:block" '
            f'xmlns="http://www.w3.org/2000/svg" role="img" '
            f'aria-label="Target engagement profile">']
+    head = "ENGAGED MECHANISMS" if engaged else "NO MECHANISM REACHED ITS THRESHOLD"
     out.append(f'<text x="0" y="14" font-size="11" font-weight="700" fill="{NAVY}" '
-               f'letter-spacing="1.1">TARGET ENGAGEMENT ABOVE REPORTING THRESHOLD</text>')
-    for g in range(5):
-        x = track_x + track_w * g / 4
-        out.append(f'<line x1="{x:.1f}" y1="{pad_t - 8}" x2="{x:.1f}" y2="{H - 26}" '
-                   f'stroke="#E9EEF6" stroke-width="1"/>')
-        out.append(f'<text x="{x:.1f}" y="{H - 12}" font-size="9.5" fill="{MUTE2}" '
-                   f'text-anchor="middle">{g * 25}%</text>')
-    for i, (t, s, p, frac) in enumerate(items):
-        y = pad_t + i * rowh
-        col = ADVERSE if t in ("hERG", "Nav1_5") else (GREEN if s >= 0.5 else
-                                                      (BLUE if s > 0 else MUTE2))
-        out.append(f'<text x="{pad_l - 10}" y="{y + 11}" font-size="11" fill="{INK}" '
-                   f'text-anchor="end">{MECH_LABEL.get(t, t)}</text>')
-        out.append(f'<rect x="{track_x}" y="{y + 4}" width="{track_w}" height="9" rx="4.5" '
-                   f'fill="#EEF2F8"/>')
-        if s > 0:
+               f'letter-spacing="1.1">{head}</text>')
+
+    def gridlines(y0, y1):
+        for g in range(5):
+            x = track_x + track_w * g / 4
+            out.append(f'<line x1="{x:.1f}" y1="{y0}" x2="{x:.1f}" y2="{y1}" '
+                       f'stroke="#E9EEF6" stroke-width="1"/>')
+
+    y = pad_t
+    if engaged:
+        gridlines(pad_t - 8, pad_t + rowh * len(engaged) - 4)
+        for t, s, _p, _f in engaged:
+            col = ADVERSE if t in ("hERG", "Nav1_5") else (GREEN if s >= 0.5 else BLUE)
+            out.append(f'<text x="{pad_l - 10}" y="{y + 11}" font-size="11" fill="{INK}" '
+                       f'text-anchor="end">{MECH_LABEL.get(t, t)}</text>')
+            out.append(f'<rect x="{track_x}" y="{y + 4}" width="{track_w}" height="9" rx="4.5" '
+                       f'fill="#EEF2F8"/>')
             out.append(f'<rect x="{track_x}" y="{y + 4}" width="{max(2.0, track_w * s):.1f}" '
                        f'height="9" rx="4.5" fill="{col}"/>')
-        else:
-            # a hairline showing how far under its own threshold the target sits
+            out.append(f'<text x="{track_x + track_w + 8}" y="{y + 12}" font-size="10.5" '
+                       f'font-weight="700" fill="{col}">{s:.0%}</text>')
+            y += rowh
+        for g in range(5):
+            x = track_x + track_w * g / 4
+            out.append(f'<text x="{x:.1f}" y="{y + 12}" font-size="9.5" fill="{MUTE2}" '
+                       f'text-anchor="middle">{g * 25}%</text>')
+
+    if near:
+        if engaged:
+            y += gap - 12
+            out.append(f'<line x1="0" y1="{y - 8}" x2="{W}" y2="{y - 8}" stroke="#DDE4EE" '
+                       f'stroke-width="1" stroke-dasharray="3 3"/>')
+        out.append(f'<text x="0" y="{y + 6}" font-size="10" font-weight="700" fill="{MUTE2}" '
+                   f'letter-spacing="1.1">BELOW THRESHOLD &#183; NOT ENGAGED, SHOWN FOR CONTEXT'
+                   f'</text>')
+        y += 16
+        for t, _s, _p, frac in near:
+            out.append(f'<text x="{pad_l - 10}" y="{y + 11}" font-size="10.5" fill="{MUTE2}" '
+                       f'text-anchor="end">{MECH_LABEL.get(t, t)}</text>')
             out.append(f'<rect x="{track_x}" y="{y + 7}" '
                        f'width="{max(1.5, track_w * min(1.0, frac) * 0.5):.1f}" height="3" rx="1.5" '
                        f'fill="#CBD5E4"/>')
-        txt = f"{s:.0%}" if s > 0 else f"{frac:.0%} of cut"
-        out.append(f'<text x="{track_x + track_w + 8}" y="{y + 12}" font-size="10.5" '
-                   f'font-weight="{700 if s > 0 else 500}" fill="{col if s > 0 else MUTE2}">{txt}</text>')
+            out.append(f'<text x="{track_x + track_w + 8}" y="{y + 12}" font-size="10" '
+                       f'font-weight="500" fill="{MUTE2}">{frac:.0%} of cut</text>')
+            y += rowh
     out.append("</svg>")
     return "".join(out)
 
@@ -3358,6 +3410,17 @@ def main():
                 go = st.button("Predict", type="primary", use_container_width=True)
             picks = st.pills("Examples", list(EXAMPLES), selection_mode="single", default=None) \
                 if hasattr(st, "pills") else st.selectbox("Examples", ["(none)"] + list(EXAMPLES))
+            # These are approved drugs, and approved drugs are in the measured public data these
+            # models are fitted to. Their profiles therefore demonstrate what the output looks like
+            # and what a correct answer contains; they are not evidence that the panel predicts
+            # well, because the panel has seen them. Each result's applicability-domain row says so
+            # numerically, reporting a maximum Tanimoto of 1.00, but a reader who clicks an example
+            # before reading that row should be told first.
+            st.caption(
+                "These examples are approved drugs and appear in the training data, so their "
+                "maximum Tanimoto is 1.00. They show what a result contains, not how well the "
+                "panel generalises. For that see the prospective validation in the About tab, or "
+                "submit a compound of your own.")
             st.checkbox(
                 "High-precision screening mode",
                 key="screening_mode",
