@@ -92,8 +92,13 @@ class TestManuscriptCountsMatchThePanel(unittest.TestCase):
     def setUpClass(cls):
         import app
         cls.app = app
-        cls.text = (ROOT / "manuscript" / "NAR_WebServer_BrainSafe_draft.md").read_text(
-            encoding="utf-8")
+        # Both manuscripts are checked. The condensed draft is what would go to NAR at 4 to 5
+        # printed pages; the full draft is the extended version the technical report draws on. Two
+        # documents stating the same counts is two places for one of them to fall behind.
+        cls.text = "\n".join(
+            (ROOT / "manuscript" / f).read_text(encoding="utf-8")
+            for f in ("NAR_WebServer_BrainSafe_draft.md", "NAR_condensed_draft.md")
+            if (ROOT / "manuscript" / f).exists())
 
     def test_pathway_graph_target_count(self):
         import re
