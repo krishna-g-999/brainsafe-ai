@@ -13,6 +13,7 @@ Run:  python deploy/huggingface/prepare_space.py --out ../brainsafe-space
 from __future__ import annotations
 
 import argparse
+import json
 import shutil
 import sys
 from pathlib import Path
@@ -23,8 +24,9 @@ HERE = Path(__file__).resolve().parent
 # What the server reads at runtime. Anything not named here is not copied, which is the point.
 # requirements.txt is deliberately absent: the root one is the training environment and the Space
 # gets the runtime subset from this directory instead. See deploy/huggingface/requirements.txt.
-FILES = ["app.py", "api.py", "serve.py", "model_fetch.py", "models_manifest.json",
-         "CITATION.cff", "LICENSE"]
+# models_manifest.json is absent here on purpose: it is rewritten below to describe the shipped
+# subset rather than the repository, so the integrity check passes on what actually travelled.
+FILES = ["app.py", "api.py", "serve.py", "model_fetch.py", "CITATION.cff", "LICENSE"]
 DIRS = ["src", "assets", "results", "docs", ".streamlit"]
 
 # data/ is 582 MB and the server reads 18 MB of it. The rest is the raw pulls, the API caches and
@@ -46,7 +48,18 @@ MODELS_SKIP = {"holdout"}
 _LFS_BINARY = ["joblib", "pkl", "tar.gz", "xlsx", "docx", "pdf", "png", "jpg", "jpeg", "gif",
                "ico", "svgz", "woff", "woff2", "ttf", "otf", "zip", "npz", "npy", "parquet", "h5"]
 _LFS_RULE = "*.{} filter=lfs diff=lfs merge=lfs -text"
-LFS = "\n".join(_LFS_RULE.format(e) for e in _LFS_BINARY) + "\n"
+
+# Every file is stored and checked out byte for byte, with no line-ending translation. This is not
+# tidiness. models_manifest.json records a size and a SHA-256 for each model file, and model_fetch
+# refuses to serve predictions when a file does not match. Those figures are computed on the machine
+# that assembles the Space, and Python writing JSON in text mode on Windows produces CRLF. Git then
+# normalises the committed copy to LF, so binder_modes.json is 57,123 bytes on the build machine and
+# 55,648 inside a Linux container, and 63 of the 64 metadata files fail the integrity check on a
+# Space that is otherwise perfectly built. The models themselves are unaffected, being binary and in
+# LFS, which is why the symptom looked like a partial upload rather than a text conversion.
+_NO_EOL_CONVERSION = "* -text"
+LFS = (_NO_EOL_CONVERSION + "\n"
+       + "\n".join(_LFS_RULE.format(e) for e in _LFS_BINARY) + "\n")
 
 # Compiled bytecode is build output, not source, and must never reach the Space. copy_tree already
 # skips it, but anything that imports the app from inside the assembled directory recreates it, and
@@ -119,6 +132,29 @@ def main(argv=None) -> None:
     n = copy_tree(ROOT / "models_rf", out / "models_rf", skip=skip)
     total += n
     print(f"  {n/1e6:8.2f} MB  models_rf/" + ("" if args.with_holdout else "  (holdout excluded)"))
+
+    # The manifest must describe what was shipped, not what exists in the repository. It lists 252
+    # files including the 102 scaffold-hold-out twins that models_rf/holdout deliberately leaves
+    # behind, and model_fetch.ensure_models() refuses to serve predictions when a manifest entry is
+    # absent. That is the correct behaviour: a server that quietly loads whatever it finds returns
+    # answers that are wrong in ways nothing reports. The wrong fix is to disable the check with
+    # BRAINSAFE_SKIP_MODEL_FETCH, which removes the integrity guarantee for every file including the
+    # ones that did travel. The right fix is to describe the shipped set accurately, so the check
+    # still verifies every model the Space actually serves.
+    manifest = json.loads((ROOT / "models_manifest.json").read_text(encoding="utf-8"))
+    if args.with_holdout:
+        kept = manifest["files"]
+    else:
+        kept = {k: v for k, v in manifest["files"].items()
+                if not any(f"/{s}/" in k for s in MODELS_SKIP)}
+    dropped = len(manifest["files"]) - len(kept)
+    manifest["files"] = kept
+    manifest["n_files"] = len(kept)
+    manifest["note"] = (manifest.get("note", "") +
+                        f" Space build: {dropped} hold-out entries removed, as models_rf/holdout is "
+                        f"not served.").strip()
+    (out / "models_manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+    print(f"  {'':8s}    models_manifest.json  ({len(kept)} entries, {dropped} hold-out removed)")
 
     shutil.copy2(HERE / "README.md", out / "README.md")       # the Space card, with its YAML block
     shutil.copy2(HERE / "requirements.txt", out / "requirements.txt")   # runtime subset, not root
