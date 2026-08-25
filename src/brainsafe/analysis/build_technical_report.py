@@ -321,7 +321,7 @@ measurement and a negative class drawn from property-matched decoys.
 A censored bound settles a label whenever the entire interval it defines falls on one side of the
 activity cut. `IC50 > 10 uM` places the true potency strictly below pChEMBL 5.0 and is a measured
 non-binder. `IC50 > 100 nM` spans both classes and is discarded as undecidable rather than guessed
-at. Recovering these added 21,994 measured non-binders across 57 endpoints.
+at. Recovering these added 29,751 measured non-binders across 57 endpoints.
 
 ### 2.3 Why these endpoints
 
@@ -1437,7 +1437,7 @@ class* instead.
 
 Stated because a tool that reports only what works cannot be checked.
 
-1. **The applicability-domain flag fails its own adversarial test.** It does not separate
+1. **The applicability-domain flag is a weak signal.** Its adversarial check now passes, after its controls were corrected, but it separates only weakly and does not cleanly separate
    non-drug-like chemistry from unseen drugs. Read the conformal interval and the nearest-analogue
    distance instead.
 2. **Specificity is a lower bound.** It rests on compounds presumed inactive because nothing is
@@ -1508,10 +1508,10 @@ Two metrics a constant predictor cannot pass were therefore measured, on the sam
 Mean per-indication AUROC is **{h9.auroc_model.mean():.3f}** against **0.500** for any constant
 predictor, and the layer beats chance on **{beat} of {len(h9)}** indications. Macro-averaged top-3
 recall, which averages per indication rather than pooling and so cannot be carried by naming the
-common conditions, is **0.400 against 0.333**.
+common conditions, is **0.385 against 0.333**.
 
 The honest reading is that the layer responds to the compound, decisively for depression (0.794) and
-psychosis (0.765), weakly for epilepsy (0.522), and not at all for ADHD or sleep. That is a layer
+psychosis (0.765), and not at all for epilepsy (0.490) or sleep (0.499), both of which sit at or just below chance. That is a layer
 worth shipping as a route from mechanism to condition and not worth shipping as an indication
 prediction, which is exactly how it is presented.
 """)
@@ -1569,7 +1569,7 @@ is not a correction to what is here.
     if admeas is not None:
         sep = admeas[admeas.separates]
         A(f"""
-#### 8.2.4 The applicability-domain flag fails its own adversarial test
+#### 8.2.4 The applicability-domain flag fails its own adversarial test, as it then did
 
 **The test was wrong, not the flag, and the test has been corrected.** This needs stating carefully,
 because "we changed a failing test and now it passes" is the least trustworthy sentence in science.
