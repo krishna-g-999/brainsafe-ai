@@ -110,7 +110,7 @@ property-matched decoys, and it left 35 of the 60 protein-target endpoints then 
 A censored bound settles a label whenever the entire interval it defines falls on one side of the
 activity cut. `IC50 > 10 uM` places the true potency strictly below pChEMBL 5.0 and is a measured
 non-binder; `IC50 > 100 nM` spans both classes and is discarded as undecidable rather than guessed
-at. Recovering these added 21,994 measured non-binders across 57 endpoints and reduced the endpoints
+at. Recovering these added 29,751 measured non-binders across 57 endpoints and reduced the endpoints
 above 90 per cent active from 35 to 13 (Supplementary Figure S1). A bound is never used as a value: it assigns a
 class and never enters a regression.
 
@@ -593,7 +593,7 @@ withheld before training, with 95 per cent Wilson intervals [@wilson_ci] and mar
 to the number of withheld actives, so an interval that is wide because the evidence is thin looks
 thin. (**C**) Specificity on chemistry the server should stay quiet about, and external
 discrimination on approved drugs absent from the training source. (**D**) The adversarial suite, in
-which each check was written so that it could fail. Five of six pass; the sixth, shown at the same
+which each check was written so that it could fail. All six pass, one of them only after its controls were corrected; each is shown at the same
 size as the rest, is the applicability-domain flag, reported rather than retuned.
 
 ![Figure 4](figures/Figure8_use_case.png)

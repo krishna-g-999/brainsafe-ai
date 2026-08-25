@@ -74,8 +74,12 @@ chirality could change a class call is 0.19 per cent.
 
 **Models.** A random forest is fitted per endpoint. That choice was made on a like-for-like
 comparison over thirteen core endpoints against XGBoost, histogram gradient boosting, L2 logistic
-regression and a nearest-neighbour read-across, and against a graph neural network on four of them;
-the random forest won every endpoint tested. Classifiers are isotonically calibrated on out-of-fold
+regression and a nearest-neighbour read-across, and against a graph neural network on four of
+them, which the forest won on all four. Under the scaffold split the forest is best on seven of
+eight classification endpoints, losing AChE to histogram gradient boosting, and on none of the
+five regressions, where boosting scores higher. It was deployed for its stability under
+hyperparameters, for not extrapolating beyond the training range, and because TreeSHAP is exact
+for it rather than approximate. Classifiers are isotonically calibrated on out-of-fold
 predictions, so no compound contributes to the calibrator that scores it. Binder models use Platt
 scaling, the withheld set for one target often being too small to fit a step function.
 
@@ -236,7 +240,7 @@ withheld before training, with 95 per cent Wilson intervals [@wilson_ci] and mar
 to the number of withheld actives, so an interval that is wide because the evidence is thin looks
 thin. (**C**) Specificity on chemistry the server should stay quiet about, and external
 discrimination on approved drugs absent from the training source. (**D**) The adversarial suite, in
-which each check was written so that it could fail. Five of six pass; the sixth, shown at the same
+which each check was written so that it could fail. All six pass, one of them only after its controls were corrected; each is shown at the same
 size as the rest, is the applicability-domain flag, reported rather than retuned.
 
 ![Figure 4](figures/Figure8_use_case.png)

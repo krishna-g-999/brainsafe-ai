@@ -133,6 +133,13 @@ GRAPH: list[tuple[str, list[str], str]] = [
      ["models_rf/binder_modes.json", "inversion/results/H6_clinical_indication_predictions.csv"],
      "python inversion/inv_disease_discrimination.py"),
 
+    # An orphan found by a reviewer-style audit: written by an earlier binder training, regenerated
+    # by nothing, declared nowhere, and therefore three weeks behind the panel while shipping in the
+    # institutional review package. It read a mean AUROC of 0.9765 where the registry holds 0.9113
+    # over the same 47 targets. It is now derived from the registry and declared here.
+    ("results/tables/binder_vs_measured_inactives.csv", ["models_rf/binder_modes.json"],
+     "python src/brainsafe/evaluation/binder_vs_measured_inactives.py"),
+
     # The two artefacts the LIVE SERVER quotes on every query, and the two that were outside this
     # graph the longest. Both were found stale by a reviewer-style audit of the deployed interface,
     # three weeks behind the models they describe.

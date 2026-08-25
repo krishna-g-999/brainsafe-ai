@@ -31,7 +31,10 @@ Compounds are represented as a 1,024-bit ECFP-4 fingerprint with twelve physicoc
 and a random forest is fitted per endpoint. That choice was made on a like-for-like comparison over
 the thirteen core endpoints against XGBoost, histogram gradient boosting, L2 logistic regression and
 a nearest-neighbour read-across, and against a graph neural network on four of them, which the
-random forest won on every endpoint tested.
+random forest won on all four. On the scaffold split the forest is best on seven of the eight
+classification endpoints and on none of the five regressions, where gradient boosting scores
+higher; it was deployed for stability under hyperparameters, for not extrapolating at the edge
+of the applicability domain, and because TreeSHAP is exact for it.
 
 Three choices distinguish the method. The negative class is recovered from censored measurements
 rather than simulated with decoys, which returns experimentally tested non-binders to 57 endpoints.

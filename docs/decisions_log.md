@@ -28,7 +28,7 @@ addition neither inflates nor degrades performance; A2A regression gained the mo
 ## 2026-07-21, External validation on approved drugs held out of training
 Decision: hold the 306 FDA-curated BBB compounds that are absent from B3DB out as an external test
 rather than adding them to training. Reason: an independent approved-drug test is more informative than
-a small training augmentation. Result: BBB model AUROC 0.774 (accuracy 0.739, sensitivity 0.798,
+a small training augmentation. Result: BBB model AUROC 0.7645 (this entry read 0.774 until an audit compared it with results/tables/external_bbb_validation.csv) (accuracy 0.739, sensitivity 0.798,
 specificity 0.621) on these unseen approved drugs. Evidence:
 `results/tables/external_bbb_validation.csv`, `src/brainsafe/evaluation/external_validation.py`.
 
