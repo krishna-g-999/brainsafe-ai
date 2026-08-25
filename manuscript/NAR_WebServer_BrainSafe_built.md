@@ -33,7 +33,7 @@ the same target rather than against decoys, reaches a mean AUROC of 0.917 and re
 pharmacologically correct driving target for reference drugs. Disease-level scores are presented as a
 route from a mechanism to the conditions it touches, not as an indication prediction, because 27 of
 the 52 targets in the pathway graph drive more than one condition and structure alone does not
-resolve which. BrainSafe AI is freely available without registration at [SERVER URL TO BE SUPPLIED], with source code, trained models and all validation artefacts at
+resolve which. BrainSafe AI is freely available without registration at https://huggingface.co/spaces/Krishnag999/brainsafe-ai, with source code, trained models and all validation artefacts at
 https://github.com/krishna-g-999/brainsafe-ai.
 
 ---

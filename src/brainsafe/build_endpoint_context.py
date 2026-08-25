@@ -5,7 +5,14 @@ is only evidence of engagement when it EXCEEDS this. For each regression endpoin
 antioxidant) we store distribution quantiles so a prediction can be expressed as a percentile
 against measured chemistry (and flagged when the model is non-discriminative).
 
-Writes models_rf/endpoint_context.json. Run once.
+Writes models_rf/endpoint_context.json.
+
+Re-run after ANY retraining. This is not optional housekeeping: the interface reports
+engagement as enrichment over the training base rate, so a base rate that predates the
+models silently mis-scores every query. This docstring previously said "Run once", and
+the file was three weeks behind the panel in production as a result, reporting a
+compound at 0.70 against AChE as no engagement when the correct answer is 0.26.
+tools/check_freshness.py now enforces it.
 """
 from __future__ import annotations
 

@@ -133,6 +133,25 @@ GRAPH: list[tuple[str, list[str], str]] = [
      ["models_rf/binder_modes.json", "inversion/results/H6_clinical_indication_predictions.csv"],
      "python inversion/inv_disease_discrimination.py"),
 
+    # The two artefacts the LIVE SERVER quotes on every query, and the two that were outside this
+    # graph the longest. Both were found stale by a reviewer-style audit of the deployed interface,
+    # three weeks behind the models they describe.
+    #
+    # endpoint_context.json is the more serious of the two. It carries the training base rate for
+    # each classifier, and the interface reports engagement as enrichment over that rate, so a
+    # stale prior silently mis-scores every query. Its base rates predated the neutralisation
+    # retrain, and were high by up to 0.185: a compound scoring 0.70 at AChE was reported as no
+    # engagement at all when the correct figure is 0.26. Its generator's docstring said "Run once",
+    # which is precisely why nobody ran it again.
+    ("models_rf/endpoint_context.json",
+     ["models_rf/BBB.joblib", "models_rf/binder_modes.json"],
+     "python src/brainsafe/build_endpoint_context.py"),
+
+    # temporal_by_domain.csv backs the reliability banner shown above every result, which states the
+    # AUROC and rank correlation to expect at the query's own distance from training chemistry.
+    ("results/tables/temporal_by_domain.csv", ["models_rf/BBB.joblib"],
+     "python src/brainsafe/analysis/temporal_diagnosis.py"),
+
     # The worked example in section 5.1 of the technical report. It is the output of the deployed
     # models on three named compounds, so it is stale the moment any of them is refitted. Quoting a
     # prediction in a document without declaring it here is how the earlier supporting analyses

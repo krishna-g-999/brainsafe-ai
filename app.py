@@ -1849,33 +1849,84 @@ def render_decision_guidance():
         """, unsafe_allow_html=True)
 
 
+@st.cache_data(show_spinner=False)
+def _domain_reliability():
+    """Prospective performance by applicability-domain stratum, read from the artefact.
+
+    These three figures are shown above every result, and they were hardcoded as 0.83, 0.74 and 0.57
+    until an audit of the deployed server found the table behind them three weeks older than the
+    models it described. Quoting a constant in the interface is the same defect as quoting a stale
+    file: neither can be checked, and neither changes when the panel is refitted. The spread across
+    endpoints is carried too, because averaging seven endpoints whose in-domain AUROC ranges from
+    0.70 to 0.93 into a single number states more precision than the data holds.
+    """
+    p = ROOT / "results" / "tables" / "temporal_by_domain.csv"
+    if not p.exists():
+        return {}
+    try:
+        d = pd.read_csv(p)
+        out = {}
+        for s in d.stratum.unique():
+            c = d[(d.stratum == s) & (d.task == "classification")].auroc.dropna()
+            r = d[(d.stratum == s) & (d.task == "regression")].spearman.dropna()
+            if not len(c):
+                continue
+            out[s] = {"auroc": float(c.mean()), "auroc_lo": float(c.min()),
+                      "auroc_hi": float(c.max()),
+                      "spearman": float(r.mean()) if len(r) else float("nan"),
+                      "n_endpoints": int(len(c))}
+        return out
+    except Exception:
+        return {}
+
+
 def render_reliability_banner(smiles):
     """Prospective-reliability statement based on the query's applicability domain.
 
     Temporal validation (train on past compounds, test on future ones) shows that predictive power
-    is retained inside the domain and lost outside it: classifier AUROC 0.83 in-domain, 0.74
-    near-domain and 0.57 out-of-domain; potency rank correlation 0.56, 0.30 and 0.06 respectively.
-    The banner tells the user which regime their compound falls into."""
+    is retained inside the domain and degrades outside it. The figures are read from
+    results/tables/temporal_by_domain.csv rather than written here, because they move whenever the
+    panel is refitted and a number in a docstring does not.
+
+    Two honesty notes travel with the banner. The per-endpoint spread is quoted alongside the mean,
+    since in-domain AUROC ranges roughly 0.70 to 0.93 across seven classifiers and a single average
+    overstates what is known. And the gradient is not monotone for every endpoint: BACE1 and GSK3B
+    score higher near the domain edge than inside it, on strata of a few dozen compounds. The
+    banner describes a tendency, not a law."""
     ad = assess_domain(smiles)
     if ad is None:
         return
     s = ad["max_sim"]
+    stratum = "in_domain (T>=0.5)" if s >= 0.5 else               "near_domain (0.3-0.5)" if s >= 0.3 else "out_domain (T<0.3)"
+    st_ = _domain_reliability().get(stratum)
+    if st_ is None:                       # artefact absent; say less rather than quote a constant
+        auroc_txt = rho_txt = None
+    else:
+        auroc_txt = (f"an AUROC of about {st_['auroc']:.2f} "
+                     f"(per endpoint {st_['auroc_lo']:.2f} to {st_['auroc_hi']:.2f})")
+        rho_txt = f"a rank correlation of about {st_['spearman']:.2f}"
+
     if s >= 0.5:
         col, head = GREEN, "Inside the applicability domain"
         body = ("This compound resembles measured training chemistry (max Tanimoto "
-                f"{s:.2f}). On future compounds in this regime the classifiers hold an AUROC of about "
-                "0.83 and the potency models a rank correlation of about 0.56.")
+                f"{s:.2f}).")
+        if auroc_txt:
+            body += (f" On future compounds in this regime the classifiers hold {auroc_txt} and the "
+                     f"potency models {rho_txt}.")
     elif s >= 0.3:
         col, head = AMBER, "Near the edge of the applicability domain"
-        body = (f"This compound is only moderately similar to training chemistry (max Tanimoto {s:.2f}). "
-                "On future compounds in this regime the classifiers fall to about 0.74 AUROC and the "
-                "potency models to about 0.30 rank correlation. Treat the profile as indicative.")
+        body = (f"This compound is only moderately similar to training chemistry (max Tanimoto {s:.2f}).")
+        if auroc_txt:
+            body += (f" On future compounds in this regime the classifiers fall to {auroc_txt} and the "
+                     f"potency models to {rho_txt}.")
+        body += " Treat the profile as indicative."
     else:
         col, head = ADVERSE, "Outside the applicability domain"
-        body = (f"This compound is structurally unlike the measured training data (max Tanimoto {s:.2f}). "
-                "On future compounds in this regime the classifiers approach chance (about 0.57 AUROC) and "
-                "the potency models carry no rank information. Use the qualitative direction only, and "
-                "confirm experimentally.")
+        body = (f"This compound is structurally unlike the measured training data (max Tanimoto {s:.2f}).")
+        if auroc_txt:
+            body += (f" On future compounds in this regime the classifiers approach chance, {auroc_txt}, "
+                     f"and the potency models retain {rho_txt}.")
+        body += (" Use the qualitative direction only, and confirm experimentally.")
     st.markdown(
         f'<div class="bs-card" style="border-left:5px solid {col};margin-bottom:16px">'
         f'<div style="display:flex;align-items:center;gap:9px;margin-bottom:5px">'

@@ -2,10 +2,10 @@
   "schema": 1,
   "version": "1.1",
   "archive": "brainsafe_models_v1.1.tar.gz",
-  "archive_bytes": 863978469,
-  "archive_sha256": "2bfb2f0609f7f0d0ac6182507b1ae753ddccac38faf2ebe57e61a5b5f64e13f7",
+  "archive_bytes": 863978507,
+  "archive_sha256": "195483c3060daa951aac774b9cb7919f1c8c86fb195f9d09f9adab6dcabd68b5",
   "n_files": 252,
-  "unpacked_bytes": 920390699,
+  "unpacked_bytes": 920390701,
   "urls": [],
   "doi": "",
   "note": "Fetched at start-up by model_fetch.py when models_rf/ is absent. Every file is verified against its checksum before the server loads anything.",
@@ -263,8 +263,8 @@
       "sha256": "0bc638be5b0a4d26878620d075182f011e0dbaf82e561a3ae9ad245e688162f0"
     },
     "models_rf/endpoint_context.json": {
-      "bytes": 2213,
-      "sha256": "5dbcfe8f83741b0b06571b59446df25c0a0fd5da26a3f092f0965976ab57a620"
+      "bytes": 2215,
+      "sha256": "9660eb3f92f90b972b1c1dff63f6eb431f7e268ba69bf4f6bda150e9865da701"
     },
     "models_rf/feature_names.json": {
       "bytes": 13370,
