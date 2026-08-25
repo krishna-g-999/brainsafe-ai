@@ -1295,6 +1295,14 @@ def render_header():
         computational decision-support tool for research prioritisation and hypothesis generation. It predicts
         <i>molecular target engagement and physicochemical properties</i>, not clinical efficacy, and has not
         undergone wet-lab or clinical validation. Not for medical, diagnostic, or treatment decisions.</div>
+        <div class="bs-note" style="margin:-4px 0 12px;font-size:.78rem">
+        Free to use without registration, for any purpose including commercial, under the
+        <a href="https://opensource.org/licenses/MIT" target="_blank" rel="noopener">MIT licence</a>.
+        Source, trained models and every validation artefact:
+        <a href="https://github.com/krishna-g-999/brainsafe-ai" target="_blank" rel="noopener">github.com/krishna-g-999/brainsafe-ai</a>.
+        Underlying data retain their own licences (ChEMBL CC BY-SA 3.0, BindingDB, B3DB, Therapeutics
+        Data Commons, MoleculeNet; pathway annotations from KEGG, Reactome and IUPHAR/BPS).
+        Submitted structures are processed in memory and are not stored, logged or shared.</div>
         """,
         unsafe_allow_html=True,
     )
