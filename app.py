@@ -261,7 +261,13 @@ MECH_LABEL = {"AChE": "AChE", "BChE": "BChE", "BACE1": "BACE1", "GSK3B": "GSK-3Î
               "Nav1_5": "Nav1.5", "Nav1_7": "Nav1.7", "TAAR1": "TAAR1",
               "GluA2": "AMPA GluA2", "Nav1_6": "Nav1.6", "Nav1_8": "Nav1.8",
               "a4b2nAChR": "alpha4beta2-nAChR", "a3b4nAChR": "alpha3beta4-nAChR",
-              "CGRP": "CGRP receptor", "DHODH": "DHODH", "RIPK1": "RIPK1"}
+              "CGRP": "CGRP receptor", "DHODH": "DHODH", "RIPK1": "RIPK1",
+              # Cav3_2 and hERG were served without a display label, so the interface printed their
+              # internal identifiers beside properly typeset names like Nav1.5. GluA2's label is
+              # retained deliberately: the endpoint is withdrawn and no longer scored, but a stored
+              # report or exported CSV from before the withdrawal still names it, and a label map
+              # that forgets it would render those as a bare identifier.
+              "Cav3_2": "Cav3.2", "hERG": "hERG", "BBB": "blood-brain barrier"}
 
 # ---- BrainSafe visual identity (navy + gold, matching the earlier app) ----
 NAVY   = "#0D2137"
@@ -1260,8 +1266,14 @@ def render_header():
                  f'<div class="header-logo" style="display:flex;align-items:center;justify-content:center;'
                  f'background:{NAVY_MD};color:{GOLD};font-size:2rem;font-weight:800;">B</div>')
     inst_html = f'<div class="header-div"></div><img class="header-inst" src="data:image/png;base64,{inst}"/>' if inst else ""
-    tags = ["BBB penetration", "AChE / BChE", "BACE1", "GSK-3Î²", "MAO-A / MAO-B", "hERG safety",
-            "Antioxidant", "Druggability / CNS-MPO", "Calibrated + conformal", "Evidence-grounded"]
+    # Counted from what is actually served, not written by hand. This list named eight endpoints,
+    # all of them core classifiers, and omitted the 43-endpoint binder panel entirely, so the
+    # landing page advertised about a seventh of the tool. Deriving the counts also means they
+    # cannot fall behind the registry the way a hand-written list did.
+    n_targets = len(set(TARGET_CLASSIFIERS) | set(BINDER_TARGETS) | set(RECEPTOR_REGRESSORS))
+    tags = [f"{n_targets} target endpoints", "BBB and K(p,uu) exposure", "hERG safety",
+            "Receptor potency", "Neuroprotection", f"{len(DISEASE_ORDER)} conditions",
+            "Calibrated + conformal", "Applicability domain"]
     tagbar = "".join(f'<span class="header-tag">{t}</span>' for t in tags)
     st.markdown(
         f"""
@@ -1270,7 +1282,7 @@ def render_header():
           <div class="header-div"></div>
           <div class="header-textblk">
             <div class="header-title">Brain<span>Safe</span> AI</div>
-            <div class="header-sub">Multi-endpoint prediction of small-molecule effects on the human brain</div>
+            <div class="header-sub">Calibrated, exposure-gated prediction of small-molecule action in the human brain</div>
             <div class="header-tags">{tagbar}</div>
           </div>
           {inst_html}
@@ -2920,8 +2932,9 @@ def render_glossary():
         for title, items in sections)
     st.markdown(
         f'<div class="bs-card"><div class="bs-h">What every number on this page means'
-        f'<span class="bs-h-sub">{n_binder} target endpoints, {len(ADME)} ADME endpoints, '
-        f'{len(DISEASE_ORDER)} conditions</span></div>'
+        f'<span class="bs-h-sub">{len(set(TARGET_CLASSIFIERS) | set(BINDER_TARGETS) | set(RECEPTOR_REGRESSORS))} '
+        f'target endpoints, of which {n_binder} are the deployed binder panel, plus '
+        f'{len(ADME)} ADME endpoints and {len(DISEASE_ORDER)} conditions</span></div>'
         f'<div class="bs-note">Read this before trusting any single figure. The quantities below are '
         f'not interchangeable: a binder probability, an enrichment over base rate and an engagement '
         f'signal are three different things on three different scales, and only the last is '
