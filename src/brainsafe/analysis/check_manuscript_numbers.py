@@ -177,6 +177,40 @@ def truth() -> list[dict]:
         facts.append({"quantity": "mean per-target prospective recall",
                       "value": round(float(hold.holdout_recall.mean()), 4),
                       "source": "results/tables/scaffold_holdout_results.csv"})
+
+    # The model-family means. These were absent from this list until 2026-08-26, and the manuscript
+    # was found stating eight of them wrong, with the ordering of the two boosting methods reversed
+    # in both tasks: it read the forest at 0.9228 where the artefact gives 0.9212, and had XGBoost
+    # behind histogram gradient boosting on classification where it is in fact ahead. Nothing
+    # regenerates a prose sentence, so nothing complained. Every family mean is checked here, not
+    # only the forest's, because the claim the manuscript makes is a ranking and a ranking is wrong
+    # if any member of it is.
+    cmp_ = _csv("model_comparison.csv")
+    if len(cmp_):
+        for split in ("random", "scaffold"):
+            for task, metric in (("classification", "AUROC"), ("regression", "R2")):
+                g = cmp_[(cmp_.split == split) & (cmp_.task == task)]
+                for model, sub in g.groupby("model"):
+                    facts.append({
+                        "quantity": f"{model} mean {metric}, {split} split ({task})",
+                        "value": round(float(sub["mean"].mean()), 4),
+                        "source": "results/tables/model_comparison.csv"})
+        # The margin the manuscript quotes as the forest's justification, and the gap it concedes.
+        sc = cmp_[cmp_.split == "scaffold"]
+        cls = sc[sc.task == "classification"]
+        reg = sc[sc.task == "regression"]
+        if len(cls):
+            rf = cls[cls.model == "RandomForest"]["mean"].mean()
+            kn = cls[cls.model == "kNN read-across"]["mean"].mean()
+            facts.append({"quantity": "forest margin over read-across, scaffold classification",
+                          "value": round(float(rf - kn), 4),
+                          "source": "results/tables/model_comparison.csv"})
+        if len(reg):
+            rf = reg[reg.model == "RandomForest"]["mean"].mean()
+            best = reg.groupby("model")["mean"].mean().max()
+            facts.append({"quantity": "cost of deploying the forest on the regressions, scaffold R2",
+                          "value": round(float(best - rf), 4),
+                          "source": "results/tables/model_comparison.csv"})
     return facts
 
 

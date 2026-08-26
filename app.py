@@ -3102,8 +3102,9 @@ def render_about():
           "endpoints and covering {:,} distinct SMILES, which collapse to 169,341 compounds once "
           "keyed by the InChIKey of the desalted parent, the figure the manuscript quotes. No "
           "single model saw this many: each "
-          "endpoint is trained on its own table alone, and across the deployed panel those tables "
-          "hold a median of {:,} rows, from {:,} to {:,}").format(f.get("n_endpoint_tables", "-"), f.get("n_structures", 0),
+          "endpoint is trained on its own table alone, and across every deployed model owning a "
+          "training table, the barrier model included, those tables hold a median of {:,} rows, "
+          "from {:,} to {:,}").format(f.get("n_endpoint_tables", "-"), f.get("n_structures", 0),
                                  f.get("rows_median", 0), f.get("rows_min", 0),
                                  f.get("rows_max", 0))
          if "rows_median" in f else
