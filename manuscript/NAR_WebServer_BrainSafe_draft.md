@@ -98,7 +98,10 @@ approved drugs; the nine ADME endpoints use measured sets from Therapeutics Data
 MoleculeNet [@moleculenet], B3DB and ChEMBL. The panel holds 228,200 measured compound-endpoint
 records over 169,341 unique compounds keyed by the InChIKey of the desalted parent. No value is
 imputed and no annotation overrides a measurement. Each endpoint is trained on its own measured set
-alone; across the deployed panel those sets span from 387 compounds (KEAP1) to 10,276 (hERG).
+alone; across the deployed panel those sets span from 387 compounds (KEAP1) to 10,276 (hERG),
+with a median of 3,789. That set is every deployed model owning a table in data/endpoints, the
+barrier model included; excluding it, since it is an exposure rather than a target endpoint,
+gives 54 tables and a median of 3,587.
 
 A bioactivity record describes what was found to bind. A compound assayed and found inactive is
 frequently deposited only as a censored bound, `standard_relation` `>` with no pChEMBL value, and the
@@ -155,14 +158,17 @@ scikit-learn [@sklearn], on the deduplicated matrix the deployed pipeline fits. 
 reader is entitled to demand: a five-nearest-neighbour read-across on Tanimoto similarity, which is
 what a medicinal chemist does by eye, and L2-regularised logistic regression. Three are ensembles: a
 random forest [@random_forest], XGBoost [@xgboost] and histogram gradient boosting. On the scaffold
-split the random forest leads classification at 0.9228 mean AUROC, ahead of histogram gradient
-boosting (0.9160), XGBoost (0.9144), the read-across (0.8844) and logistic regression (0.8338), and
-it exceeds the read-across on all thirteen endpoints. It does not lead regression: XGBoost and
-histogram gradient boosting reach mean scaffold R² of 0.5453 and 0.5452 against 0.5186. A random
-forest is nonetheless deployed everywhere, because it leads where the principal claims are made,
-calibrates stably, supplies the vote distribution the conformal layer consumes, and needs no GPU. The
-cost of that uniformity is about 0.03 R² on the potency regressions and is stated rather than left
-for a reader to find.
+split the random forest leads classification at 0.9212 mean AUROC, ahead of XGBoost (0.9156),
+histogram gradient boosting (0.9149), the read-across (0.8829) and logistic regression (0.8352), and
+it exceeds the read-across on all thirteen endpoints, by margins running from 0.0095 at D2 to 0.1099
+on the antioxidant assay. It is best on seven of the eight classification endpoints, losing AChE to
+histogram gradient boosting at 0.9148 against 0.9241. It does not lead regression at all: histogram
+gradient boosting and XGBoost reach mean scaffold R² of 0.5424 and 0.5413 against 0.5190, and the
+forest is best on none of the five. A random forest is nonetheless deployed everywhere, because it
+leads where the principal claims are made, calibrates stably, supplies the vote distribution the
+conformal layer consumes, does not extrapolate beyond the training range, and is exactly rather than
+approximately explainable by TreeSHAP [@shap_trees]. The cost of that uniformity is 0.023 mean R² on
+the potency regressions and is stated rather than left for a reader to find.
 
 ### Cross-validation, calibration and uncertainty
 

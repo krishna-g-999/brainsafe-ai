@@ -98,7 +98,10 @@ approved drugs; the nine ADME endpoints use measured sets from Therapeutics Data
 MoleculeNet (18), B3DB and ChEMBL. The panel holds 228,200 measured compound-endpoint
 records over 169,341 unique compounds keyed by the InChIKey of the desalted parent. No value is
 imputed and no annotation overrides a measurement. Each endpoint is trained on its own measured set
-alone; across the deployed panel those sets span from 387 compounds (KEAP1) to 10,276 (hERG).
+alone; across the deployed panel those sets span from 387 compounds (KEAP1) to 10,276 (hERG),
+with a median of 3,789. That set is every deployed model owning a table in data/endpoints, the
+barrier model included; excluding it, since it is an exposure rather than a target endpoint,
+gives 54 tables and a median of 3,587.
 
 A bioactivity record describes what was found to bind. A compound assayed and found inactive is
 frequently deposited only as a censored bound, `standard_relation` `>` with no pChEMBL value, and the
@@ -155,19 +158,22 @@ scikit-learn (20), on the deduplicated matrix the deployed pipeline fits. Two ar
 reader is entitled to demand: a five-nearest-neighbour read-across on Tanimoto similarity, which is
 what a medicinal chemist does by eye, and L2-regularised logistic regression. Three are ensembles: a
 random forest (21), XGBoost (22) and histogram gradient boosting. On the scaffold
-split the random forest leads classification at 0.9228 mean AUROC, ahead of histogram gradient
-boosting (0.9160), XGBoost (0.9144), the read-across (0.8844) and logistic regression (0.8338), and
-it exceeds the read-across on all thirteen endpoints. It does not lead regression: XGBoost and
-histogram gradient boosting reach mean scaffold R² of 0.5453 and 0.5452 against 0.5186. A random
-forest is nonetheless deployed everywhere, because it leads where the principal claims are made,
-calibrates stably, supplies the vote distribution the conformal layer consumes, and needs no GPU. The
-cost of that uniformity is about 0.03 R² on the potency regressions and is stated rather than left
-for a reader to find.
+split the random forest leads classification at 0.9212 mean AUROC, ahead of XGBoost (0.9156),
+histogram gradient boosting (0.9149), the read-across (0.8829) and logistic regression (0.8352), and
+it exceeds the read-across on all thirteen endpoints, by margins running from 0.0095 at D2 to 0.1099
+on the antioxidant assay. It is best on seven of the eight classification endpoints, losing AChE to
+histogram gradient boosting at 0.9148 against 0.9241. It does not lead regression at all: histogram
+gradient boosting and XGBoost reach mean scaffold R² of 0.5424 and 0.5413 against 0.5190, and the
+forest is best on none of the five. A random forest is nonetheless deployed everywhere, because it
+leads where the principal claims are made, calibrates stably, supplies the vote distribution the
+conformal layer consumes, does not extrapolate beyond the training range, and is exactly rather than
+approximately explainable by TreeSHAP (23). The cost of that uniformity is 0.023 mean R² on
+the potency regressions and is stated rather than left for a reader to find.
 
 ### Cross-validation, calibration and uncertainty
 
 Every endpoint is cross-validated ten-fold in two regimes: a random split, and a split grouped on
-Bemis-Murcko scaffolds (23) that withholds entire structural classes. The two answer
+Bemis-Murcko scaffolds (24) that withholds entire structural classes. The two answer
 different questions, and the distance between them is the honest statement of how far a model
 travels. Across 74 cross-validated estimators, spanning 70 distinct endpoints because four
 receptors carry both a potency regression and a binder classifier, this is 1,480 fitted models
@@ -175,7 +181,7 @@ standing behind the deployed panel. A complete inventory of every estimator, wit
 validation scheme, calibration and fitting date, is given in Supplementary Table S1 and regenerates
 with one command.
 
-Classifiers are isotonically calibrated (24) on out-of-fold predictions, so no compound
+Classifiers are isotonically calibrated (25) on out-of-fold predictions, so no compound
 contributes to the calibrator that scores it; mean expected calibration error falls from 0.0801 to
 0.0147. The reported value is specific to how the calibrator is nested, and the nesting is therefore
 stated: isotonic regression is fitted by five-fold `cross_val_predict` over the pooled out-of-fold
@@ -184,9 +190,9 @@ defensible nesting, gives 0.0063 on the same data. Both are honest estimates of 
 estimators, and the difference is larger than any of the calibration gains it might be used to
 compare, so the protocol is reported rather than the number alone. Each prediction additionally
 carries a Mondrian conformal interval, which converts the
-applicability domain from a caveat into a coverage statement (25): empirical coverage is
+applicability domain from a caveat into a coverage statement (26): empirical coverage is
 0.889 to 0.921 against a 0.90 target. The applicability domain itself is the maximum ECFP-4 Tanimoto
-similarity of the query to that endpoint's own measured chemistry (26), reported with the
+similarity of the query to that endpoint's own measured chemistry (27), reported with the
 nearest measured analogue and its structure.
 
 ### Binder classifiers, and thresholds measured where they were not set
@@ -194,8 +200,8 @@ nearest measured analogue and its structure.
 Receptor, transporter and kinase targets are reported in ChEMBL almost entirely as actives, so a
 naive potency regressor learns the training median. Each is therefore modelled as a binder
 classifier: positives are measured binders, negatives are measured non-binders where they exist plus
-property-matched decoys (27) with Tanimoto below 0.35 to any positive. Binder classifiers use
-sigmoid calibration (28), because the withheld set for one endpoint is often too small to fit a
+property-matched decoys (28) with Tanimoto below 0.35 to any positive. Binder classifiers use
+sigmoid calibration (29), because the withheld set for one endpoint is often too small to fit a
 step function without overfitting it.
 
 Decoys create a specific failure. If a decision threshold is chosen as a quantile of a sample and the
@@ -213,13 +219,13 @@ previous procedure was arithmetically impossible. That the number can now disagr
 Because several training sets are active-heavy, a raw calibrated probability is not evidence of
 engagement unless it exceeds the endpoint base rate; targets are therefore scored by enrichment over
 that base rate. A curated, versioned graph maps each target through a pathway to the diseases it
-informs, anchored to KEGG synapse and disease maps (29), the Reactome KEAP1-NFE2L2 oxidative
-stress response (30) and IUPHAR/BPS Guide to Pharmacology associations (31). A
+informs, anchored to KEGG synapse and disease maps (30), the Reactome KEAP1-NFE2L2 oxidative
+stress response (31) and IUPHAR/BPS Guide to Pharmacology associations (32). A
 disease score is the strongest engaged target for that disease scaled by predicted barrier
 penetration; taking the strongest rather than an average prevents unrelated mechanisms from diluting
 a real signal.
 
-The server is a single-page application built with Streamlit (32) and RDKit (33),
+The server is a single-page application built with Streamlit (33) and RDKit (34),
 accepting a SMILES string or a compound name resolved through PubChem. Models are loaded once and
 cached; a complete profile across all 70 deployed estimators, including both applicability-domain
 calculations against the 158,890-compound reference library, returns in a few seconds on one CPU
@@ -260,7 +266,7 @@ The mechanism call is correct where it can be checked against pharmacology that 
 For donepezil, haloperidol, morphine and fluoxetine the server names acetylcholinesterase, D2, the
 mu-opioid receptor and the serotonin transporter respectively as the driving target (Figure 4A).
 Attribution supports the same conclusion from a different direction: SHAP values computed with
-TreeExplainer (34), which is exact for a random forest rather than an approximation, recover
+TreeExplainer (23), which is exact for a random forest rather than an approximation, recover
 known physicochemistry that was never supplied to the models. For the barrier model, larger TPSA,
 molecular weight and hydrogen-bond donor count all push away from penetration (Spearman correlation
 between feature value and SHAP value of -0.93, -0.95 and -0.90) while drug-likeness pushes towards it
@@ -339,7 +345,7 @@ failure. The passing criterion was not moved. Against chemistry genuinely absent
 the flag separates at median maximum similarity 0.47 against 0.59 for unseen drugs (n = 25,
 p = 1.1e-03), which is a weak signal and is described as one.
 
-**Attribution.** SHAP attributions computed with TreeExplainer (34), which is exact for a
+**Attribution.** SHAP attributions computed with TreeExplainer (23), which is exact for a
 random forest rather than an approximation, over the deployed classifiers recover known
 physicochemistry rather than artefacts. For the barrier model, larger TPSA, molecular weight and
 hydrogen-bond donor count all push away from penetration (Spearman correlation between feature value
@@ -665,16 +671,16 @@ Every entry was resolved by a live query against CrossRef or Europe PMC and acce
 20. Pedregosa F, Varoquaux G, Gramfort A et al. Scikit-learn: Machine Learning in Python. Journal of Machine Learning Research. 2011;12:2825-2830. https://www.jmlr.org/papers/v12/pedregosa11a.html
 21. Breiman L. Random Forests. Machine Learning. 2001. doi:10.1023/a:1010933404324.
 22. Chen T, Guestrin C. XGBoost: A Scalable Tree Boosting System. Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining. 2016. doi:10.1145/2939672.2939785.
-23. Bemis G, Murcko M. The Properties of Known Drugs. 1. Molecular Frameworks. Journal of Medicinal Chemistry. 1996. doi:10.1021/jm9602928.
-24. Niculescu-Mizil A, Caruana R. Predicting good probabilities with supervised learning. Proceedings of the 22nd international conference on Machine learning  - ICML '05. 2005. doi:10.1145/1102351.1102430.
-25. Norinder U, Carlsson L, Boyer S et al. Introducing Conformal Prediction in Predictive Modeling. A Transparent and Flexible Alternative to Applicability Domain Determination. Journal of Chemical Information and Modeling. 2014. doi:10.1021/ci5001168.
-26. Jaworska J, Nikolova-Jeliazkova N, Aldenberg T. QSAR Applicability Domain Estimation by Projection of the Training Set in Descriptor Space: A Review. Alternatives to Laboratory Animals. 2005. doi:10.1177/026119290503300508.
-27. Mysinger M, Carchia M, Irwin J et al. Directory of Useful Decoys, Enhanced (DUD-E): Better Ligands and Decoys for Better Benchmarking. Journal of Medicinal Chemistry. 2012. doi:10.1021/jm300687e.
-28. Lin H, Lin C, Weng R. A note on Platt’s probabilistic outputs for support vector machines. Machine Learning. 2007. doi:10.1007/s10994-007-5018-6.
-29. Kanehisa M, Goto S. KEGG: kyoto encyclopedia of genes and genomes. Nucleic acids research. 2000. doi:10.1093/nar/28.1.27.
-30. Milacic M, Beavers D, Conley P, Gong C, Gillespie M, Griss J, Haw R, Jassal B, Matthews L, May B, Petryszak R, Ragueneau E, Rothfels K, Sevilla C, Shamovsky V, Stephan R, Tiwari K, Varusai T, Weiser J, Wright A, Wu G, Stein L, Hermjakob H, D'Eustachio P. The Reactome Pathway Knowledgebase 2024. Nucleic acids research. 2024. doi:10.1093/nar/gkad1025.
-31. Harding SD, Armstrong JF, Faccenda E, Southan C, Alexander SPH, Davenport AP, Spedding M, Davies JA. The IUPHAR/BPS Guide to PHARMACOLOGY in 2024. Nucleic acids research. 2024. doi:10.1093/nar/gkad944.
-32. Streamlit: an open-source app framework. https://streamlit.io
-33. RDKit: Open-source cheminformatics. https://www.rdkit.org
-34. Lundberg S, Erion G, Chen H et al. From local explanations to global understanding with explainable AI for trees. Nature Machine Intelligence. 2020. doi:10.1038/s42256-019-0138-9.
+23. Lundberg S, Erion G, Chen H et al. From local explanations to global understanding with explainable AI for trees. Nature Machine Intelligence. 2020. doi:10.1038/s42256-019-0138-9.
+24. Bemis G, Murcko M. The Properties of Known Drugs. 1. Molecular Frameworks. Journal of Medicinal Chemistry. 1996. doi:10.1021/jm9602928.
+25. Niculescu-Mizil A, Caruana R. Predicting good probabilities with supervised learning. Proceedings of the 22nd international conference on Machine learning  - ICML '05. 2005. doi:10.1145/1102351.1102430.
+26. Norinder U, Carlsson L, Boyer S et al. Introducing Conformal Prediction in Predictive Modeling. A Transparent and Flexible Alternative to Applicability Domain Determination. Journal of Chemical Information and Modeling. 2014. doi:10.1021/ci5001168.
+27. Jaworska J, Nikolova-Jeliazkova N, Aldenberg T. QSAR Applicability Domain Estimation by Projection of the Training Set in Descriptor Space: A Review. Alternatives to Laboratory Animals. 2005. doi:10.1177/026119290503300508.
+28. Mysinger M, Carchia M, Irwin J et al. Directory of Useful Decoys, Enhanced (DUD-E): Better Ligands and Decoys for Better Benchmarking. Journal of Medicinal Chemistry. 2012. doi:10.1021/jm300687e.
+29. Lin H, Lin C, Weng R. A note on Platt’s probabilistic outputs for support vector machines. Machine Learning. 2007. doi:10.1007/s10994-007-5018-6.
+30. Kanehisa M, Goto S. KEGG: kyoto encyclopedia of genes and genomes. Nucleic acids research. 2000. doi:10.1093/nar/28.1.27.
+31. Milacic M, Beavers D, Conley P, Gong C, Gillespie M, Griss J, Haw R, Jassal B, Matthews L, May B, Petryszak R, Ragueneau E, Rothfels K, Sevilla C, Shamovsky V, Stephan R, Tiwari K, Varusai T, Weiser J, Wright A, Wu G, Stein L, Hermjakob H, D'Eustachio P. The Reactome Pathway Knowledgebase 2024. Nucleic acids research. 2024. doi:10.1093/nar/gkad1025.
+32. Harding SD, Armstrong JF, Faccenda E, Southan C, Alexander SPH, Davenport AP, Spedding M, Davies JA. The IUPHAR/BPS Guide to PHARMACOLOGY in 2024. Nucleic acids research. 2024. doi:10.1093/nar/gkad944.
+33. Streamlit: an open-source app framework. https://streamlit.io
+34. RDKit: Open-source cheminformatics. https://www.rdkit.org
 35. Wilson E. Probable Inference, the Law of Succession, and Statistical Inference. Journal of the American Statistical Association. 1927. doi:10.1080/01621459.1927.10502953.

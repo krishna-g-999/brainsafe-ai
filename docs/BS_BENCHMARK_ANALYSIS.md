@@ -1,3 +1,15 @@
+> **SUPERSEDED, 18 July 2026. Retained for history; do not cite.**
+>
+> This analysis describes the earlier ensemble engine and predates the August retrain. It reports
+> 64,474 measured records where the panel now holds 228,200, and it knows nothing of the 47-endpoint
+> binder panel, which did not then exist. Its opening claim that every number is read from a saved
+> validation report was true when written and is not true now, which is precisely why it carries this
+> banner rather than a correction: the numbers below are a record of what was believed in July, not
+> of what the system does.
+>
+> For current figures see `docs/TECHNICAL_REPORT.md`, or `submission_package/EVIDENCE_MAP.md` for
+> every claim beside the artefact that produces it.
+
 # BrainSafe AI: Benchmark & Competitive Analysis
 
 *Our numbers are read straight from the saved validation reports; external numbers come from the

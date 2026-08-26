@@ -53,6 +53,9 @@ endpoints use measured sets from Therapeutics Data Commons, MoleculeNet, B3DB an
 holds 228,200 measured compound-endpoint records over 169,341 unique compounds keyed by the InChIKey
 of the desalted parent. Each endpoint is trained on its own measured set alone; across the deployed
 panel those sets hold a median of 3,789 rows and span 387 compounds (KEAP1) to 10,276 (hERG).
+That set is every deployed model owning a table in data/endpoints, the barrier model included;
+excluding it, since it is an exposure rather than a target endpoint, gives 54 tables and a
+median of 3,587.
 
 **Recovery of the negative class.** A compound assayed and found inactive is often deposited only as
 a censored bound, and the conventional query discards exactly those rows, leaving a training set of
