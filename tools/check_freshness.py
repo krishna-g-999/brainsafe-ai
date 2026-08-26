@@ -229,6 +229,25 @@ GRAPH: list[tuple[str, list[str], str]] = [
      "python src/brainsafe/figures/fig06_validation.py"),
     ("manuscript/figures/Figure7_binder_panel.png", ["models_rf/binder_modes.json"],
      "python src/brainsafe/figures/fig07_binder_panel.py"),
+    # Five figures were outside this graph entirely, and one of them mattered. Figure 8 shows real
+    # predictions for eight drugs, so it runs through disease_scores and therefore through the
+    # training base rates in endpoint_context.json. That file was corrected on 25 August, and the
+    # figure predated it by six days, which means the worked example in the manuscript was drawn
+    # with the base rates that suppressed real signal. The others are schematics or panel summaries,
+    # but a schematic that quotes a panel size goes stale the same way.
+    ("manuscript/figures/Figure8_use_case.png",
+     ["models_rf/binder_modes.json", "models_rf/endpoint_context.json"],
+     "python src/brainsafe/figures/fig08_use_case.py"),
+    ("manuscript/figures/Figure9_model_atlas.png",
+     ["models_rf/binder_modes.json", "results/tables/rf_cv_summary.csv"],
+     "python src/brainsafe/figures/fig09_model_atlas.py"),
+    ("manuscript/figures/Figure10_endpoint_selection.png", ["models_rf/binder_modes.json"],
+     "python src/brainsafe/figures/fig10_endpoint_selection.py"),
+    ("manuscript/figures/Figure1_architecture.png", ["models_rf/binder_modes.json"],
+     "python src/brainsafe/figures/fig01_architecture.py"),
+    ("manuscript/figures/Figure2_feature_vector.png", ["models_rf/binder_modes.json"],
+     "python src/brainsafe/figures/fig02_feature_vector.py"),
+
     ("manuscript/figures/Figure11_external_validation.png",
      ["results/tables/external_prospective.csv", "results/tables/external_novelty_strata.csv",
       "results/tables/external_cross_source.csv"],
