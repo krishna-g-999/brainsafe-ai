@@ -76,9 +76,30 @@ def main():
         if f.exists():
             df = pd.read_csv(f).dropna(subset=["smiles"])
             p = pd.to_numeric(df.get("pchembl"), errors="coerce")
-            act = df.loc[p >= 7, "smiles"].astype(str).tolist()
+            # Score the actives the model did NOT see. This line selected every active in the
+            # endpoint table, so roughly four fifths of the scoring set were compounds the model had
+            # been fitted on, and the sensitivity it wrote over the registry was in-sample. The
+            # registry's own sensitivity_basis field, written earlier by final_thresholds.py and
+            # never updated here, went on claiming "held_out_actives_by_scaffold". Across the panel
+            # the published mean was 0.898 where the held-out mean is 0.764. reliable_call is
+            # derived from this figure a few lines below, so five endpoints were marked reliable on
+            # an in-sample number.
+            held = ROOT / "models_rf" / "holdout" / f"{ep}_binder_holdout.json"
+            act = []
+            if held.exists():
+                try:
+                    act = list(json.loads(held.read_text(encoding="utf-8")).get("active_holdout", []))
+                except Exception:
+                    act = []
             if len(act) < 30:
-                act = df.loc[df["label"] == 1, "smiles"].astype(str).tolist()
+                # No usable hold-out. Fall back to the whole table, but say so, rather than
+                # silently reporting an in-sample figure as though it were held out.
+                act = df.loc[p >= 7, "smiles"].astype(str).tolist()
+                if len(act) < 30:
+                    act = df.loc[df["label"] == 1, "smiles"].astype(str).tolist()
+                v["sensitivity_basis"] = "whole_table_no_usable_holdout"
+            else:
+                v["sensitivity_basis"] = "held_out_actives_by_scaffold"
             if act:
                 Xa, _ = featurize(act)
                 pa = mdl.predict_proba(Xa)[:, 1]

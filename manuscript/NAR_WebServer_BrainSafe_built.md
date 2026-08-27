@@ -244,7 +244,11 @@ weaknesses are reported in their own section rather than folded into the headlin
 
 The 52 binder classifiers are validated not against the decoys used to train them but against
 compounds experimentally tested at the same target and found inactive. Across the 47 that are
-deployed they reach a mean AUROC of 0.917 and a mean sensitivity of 0.898 on actives withheld by
+deployed they reach a mean AUROC of 0.917 and a mean sensitivity of 0.764 on actives
+genuinely withheld by scaffold. The registry reports 0.898 for that field and labels it as held out,
+but the script that writes it last scores every active in the endpoint table, about four fifths of
+which the model was fitted on; the difference of 0.134 is the cost of scoring a
+model on its own training compounds. Measured on actives withheld by
 scaffold, at thresholds constrained simultaneously by held-out measured inactives and by the
 false-positive rate on a disjoint pool of unrelated chemistry. Both figures are means over 47
 endpoints and the spread behind them is wide: AUROC ranges from 0.719 at GABA-A to 0.985, and

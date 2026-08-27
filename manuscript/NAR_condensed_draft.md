@@ -109,7 +109,16 @@ calibration, and conformal prediction on the eight core classifiers achieves emp
 them but against compounds experimentally tested at the same target and found inactive. Across the 47
 deployed they reach a mean AUROC of 0.917 and a mean sensitivity of 0.898 on actives withheld by
 scaffold. Both are means over 47 endpoints and the spread is wide: AUROC ranges from 0.719 at GABA-A
-to 0.985, sensitivity from 0.639 at COX-2 to 0.997. Five endpoints were withdrawn for firing on
+to 0.985, sensitivity from 0.639 at COX-2 to 0.997.
+
+That sensitivity figure requires a correction we make here rather than leave for a reader to
+find. The registry reports 0.898 and labels it as measured on scaffold-held-out actives, but
+the script that last writes the field scores every active in the endpoint table, so roughly
+four fifths of the scoring set are compounds the model was fitted on. Measured only on the
+actives withheld by scaffold, the panel mean is 0.764, a range of
+0.303 to 0.993, and the difference of 0.134 is the cost of
+scoring a model on its own training compounds. The held-out figure is the one that estimates
+behaviour on chemistry the panel has not seen, and it is the one to quote. Five endpoints were withdrawn for firing on
 trivial metabolites at every usable threshold.
 
 **Leakage and null models.** On the deduplicated matrix the pipeline fits, no InChIKey, no feature
