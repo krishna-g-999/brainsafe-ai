@@ -108,6 +108,38 @@ GRAPH: list[tuple[str, list[str], str]] = [
     ("results/tables/integrity_audit.csv", ["models_rf/BBB.joblib"],
      "python src/brainsafe/evaluation/integrity_audit.py"),
 
+    # The applicability-domain outputs, absent from this graph until 2026-08-26 and stale by six
+    # days when a thesis audit compared them with the file next to them. Both were built on
+    # 13 August against the pre-retrain barrier model and never rebuilt, so
+    # applicability_bbb_validation.csv reported AUROC 0.7608 on the 306 approved drugs where
+    # external_bbb_validation.csv, generated from the same model on the same compounds, reported
+    # 0.7645. Two artefacts describing one test set disagreed, and nothing complained, because
+    # neither was declared here. Rebuilt, they agree exactly. This is the third artefact in this
+    # project found stale for want of a declaration rather than for want of a rebuild, so the rule
+    # is worth stating: an output that no entry here names is unprotected, whatever else is true
+    # of it.
+    ("results/tables/applicability_bbb_validation.csv", ["models_rf/BBB.joblib"],
+     "python src/brainsafe/evaluation/applicability_domain.py"),
+    ("results/tables/applicability_coverage.csv", ["models_rf/BBB.joblib"],
+     "python src/brainsafe/evaluation/applicability_domain.py"),
+
+    # Per-target calibration for the binder panel. The headline calibration figure covers the eight
+    # isotonically calibrated core classifiers; this covers the 38 Platt-scaled binder endpoints,
+    # whose expected calibration error is about five times larger. It is the artefact behind the
+    # only honest statement of how well the panel's probabilities are calibrated as a whole.
+    ("results/tables/integrity_calibration_per_target.csv", ["models_rf/binder_modes.json"],
+     "python src/brainsafe/evaluation/integrity_audit.py"),
+
+    # Reconciles the four figures this project reports for deployed binder sensitivity. Written
+    # after a thesis audit found the registry storing a value computed over every active in the
+    # endpoint table under a label saying held-out-by-scaffold, which made the published mean
+    # 0.898 where the held-out figure is 0.764. It depends on the registry and on the held-out
+    # definitions, because it is a claim about the relationship between them.
+    ("results/tables/sensitivity_reconciliation.csv",
+     ["models_rf/binder_modes.json", "models_rf/holdout"],
+     "python src/brainsafe/evaluation/sensitivity_reconciliation.py"),
+
+
     # Two supporting analyses that were absent from this graph and had gone stale unnoticed. Both
     # predate the neutralisation retrain by a month, and both are quoted in the technical report, so
     # nothing would have caught them except someone checking file dates by hand. Being outside the
