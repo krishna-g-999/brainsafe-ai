@@ -27,6 +27,7 @@ from sklearn.metrics import roc_auc_score
 
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / "src" / "brainsafe"))
+import panel  # noqa: E402
 from features.featurize import featurize  # noqa: E402
 
 M = ROOT / "models_rf"
@@ -78,8 +79,8 @@ def main():
                 })
                 # A target is only useful if it still recovers a reasonable share of true binders
                 # once the false-positive rate is held at the target level.
-                rec["reliable_call"] = bool(rec["sensitivity_at_threshold"] >= 0.60
-                                            and rec["auroc_vs_measured_inactives"] >= 0.75)
+                rec["reliable_call"] = panel.passes_gate(
+                    rec["sensitivity_at_threshold"], rec["auroc_vs_measured_inactives"])
                 print(f"[{ep:10}] thr={thr:.2f} (was 0.50) | AUROC vs measured inactives "
                       f"{rec['auroc_vs_measured_inactives']:.3f} | FPR {rec['fpr_at_threshold']:.2f} "
                       f"| sensitivity {rec['sensitivity_at_threshold']:.2f} | n_inact={len(pi)}", flush=True)

@@ -216,8 +216,8 @@ def main():
                 "n_background_evaluation": int(len(p_eval)),
                 "sensitivity_at_threshold": round(float((pa >= thr).mean()), 3),
                 "sensitivity_basis": "held_out_actives_by_scaffold"})
-            rec["reliable_call"] = bool(rec["sensitivity_at_threshold"] >= 0.60
-                                        and rec["auroc_vs_measured_inactives"] >= 0.75)
+            rec["reliable_call"] = panel.passes_gate(
+                rec["sensitivity_at_threshold"], rec["auroc_vs_measured_inactives"])
             old = modes.get(ep, {})
             print(f"[{ep:8}] AUROC {rec['auroc_vs_measured_inactives']:.3f} "
                   f"(was {old.get('auroc_vs_measured_inactives','-')}) | sens "

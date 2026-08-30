@@ -45,6 +45,27 @@ MODES = MODELS / "binder_modes.json"
 HYBRID = "hybrid_decoys_plus_measured_inactives"
 MEASURED_LABEL = "measured_labels_holdout"
 
+# The reliability gate: one definition, imported by everything that writes it, draws it or displays
+# it. A call is reliable only above both floors, on actives withheld by scaffold and against compounds
+# measured at that same target and found inactive.
+#
+# It previously lived in six places and disagreed with itself in three of them. The two training
+# stages gated sensitivity at 0.60 and the two threshold stages that overwrite them at 0.50, so the
+# deployed rule was 0.50 by accident of ordering rather than by decision. Figure 10 drew its line at
+# 0.60 and labelled it the gate, placing three endpoints that clear the gate below a line that claimed
+# to be it. app.py listed low-sensitivity endpoints at a third cut of 0.65 of its own, so the About
+# page named ten endpoints while six failed the gate. None of those numbers was wrong on its own
+# terms, which is the difficulty: a reader has no way to tell two measurements of different things
+# apart from one measurement being wrong, and the project cannot ask them to.
+MIN_SENSITIVITY = 0.50
+MIN_AUROC = 0.75
+
+
+def passes_gate(sensitivity: float | None, auroc: float | None) -> bool:
+    """Whether an endpoint's numbers clear the reliability gate. Missing either is not a pass."""
+    return (sensitivity is not None and auroc is not None
+            and sensitivity >= MIN_SENSITIVITY and auroc >= MIN_AUROC)
+
 
 @dataclass(frozen=True)
 class Endpoint:

@@ -40,10 +40,13 @@ import style as S  # noqa: E402
 
 TAB = ROOT / "results" / "tables"
 
-# The reliability gate, mirrored from models/calibrate_background_specificity.py, the last script to
-# write reliable_call. Panel B draws it, so a copy that drifts would mislabel the figure rather than
-# merely misconfigure it; tests/test_panel_app_consistency.py fails if these two ever disagree.
-SENS_FLOOR, AUROC_FLOOR = 0.50, 0.75
+# The reliability gate, imported rather than copied. Panel B draws it, so a copy that drifted would
+# mislabel the figure rather than merely misconfigure it, which is what happened when this file held
+# its own 0.60.
+sys.path.insert(0, str(ROOT / "src" / "brainsafe"))
+import panel  # noqa: E402
+
+SENS_FLOOR, AUROC_FLOOR = panel.MIN_SENSITIVITY, panel.MIN_AUROC
 
 
 def load():
@@ -97,11 +100,9 @@ def panel_b(ax, d):
         h = g[g.deployed == dep]
         ax.scatter(h.auroc_inactives, h.sensitivity, s=26, c=col, alpha=.85,
                    edgecolors="white", linewidths=.5, label=lab, zorder=3)
-    # The gate is two-sided, so it is drawn as the corner it is rather than as one line. The floors
-    # are MIN_SENS and the AUROC constant in models/calibrate_background_specificity.py, the script
-    # that last writes reliable_call; tests/test_panel_app_consistency.py pins these to that source.
-    # This panel previously drew a single line at 0.60, the floor used by the earlier training
-    # stages, which put three deployed endpoints on the wrong side of a line labelled as the gate.
+    # The gate is two-sided, so it is drawn as the corner it is rather than as one line. This panel
+    # previously drew a single line at 0.60, the floor used by the earlier training stages, which put
+    # three deployed endpoints on the wrong side of a line labelled as the gate.
     ax.axhline(SENS_FLOOR, color=S.WITHHELD, lw=1.2, ls="--", zorder=2)
     ax.axvline(AUROC_FLOOR, color=S.WITHHELD, lw=1.2, ls="--", zorder=2)
     ax.text(0.365, SENS_FLOOR + 0.015, f"sensitivity floor {SENS_FLOOR:.2f}", fontsize=S.pt(6.5),

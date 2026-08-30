@@ -10,8 +10,8 @@ held-out figure from models_rf/holdout and is verified against final_thresholds.
 
     sensitivity_at_threshold  the held-out value
     sensitivity_basis         a label that matches what was measured
-    reliable_call             recomputed from the held-out value under the deployed rule,
-                              sensitivity >= 0.60 and AUROC vs measured inactives >= 0.75
+    reliable_call             recomputed from the held-out value under the gate
+                              defined in panel.py, the one definition every writer imports
 
 Nothing else is touched, and that restraint is the point. Every threshold, every background
 false-positive rate and every AUROC is left byte-identical, because thresholds are the operating
@@ -19,8 +19,8 @@ parameters of a deployed panel and re-running the threshold sequence caused a re
 project once already. Sensitivity is a reported quantity, not an operating one: correcting it
 changes what the server says about itself, not what it does.
 
-The consequence is visible and intended. Endpoints listed as low-sensitivity in the interface go
-from two to ten, and endpoints marked reliable go from 46 to 38.
+The consequence is visible and intended. Endpoints passing the gate go from 46 to 41, and the About
+page's list of endpoints below it, which is selected on the same field, goes from two to six.
 
 Run:  python tools/correct_registry_sensitivity.py --check
       python tools/correct_registry_sensitivity.py --apply
@@ -30,6 +30,7 @@ from __future__ import annotations
 import argparse
 import json
 import shutil
+import sys
 from datetime import datetime
 from pathlib import Path
 
@@ -39,24 +40,8 @@ ROOT = Path(__file__).resolve().parents[1]
 REG = ROOT / "models_rf" / "binder_modes.json"
 RECON = ROOT / "results" / "tables" / "sensitivity_reconciliation.csv"
 
-MIN_AUROC = 0.75
-
-
-def deployed_sensitivity_floor() -> float:
-    """Read the floor from the script that last wrote reliable_call, so the two cannot drift.
-
-    The panel carries two floors. train_binders_hybrid.py and calibrate_binder_thresholds.py gate at
-    0.60; final_thresholds.py and calibrate_background_specificity.py, which run after them and
-    overwrite the field, gate at 0.50. The last writer decides, so 0.50 is the deployed rule and the
-    one this script must apply. Hardcoding 0.60 here would smuggle a policy change into a correction
-    that is only supposed to fix which population the sensitivity was measured on.
-    """
-    src = (ROOT / "src" / "brainsafe" / "models" / "calibrate_background_specificity.py")
-    for line in src.read_text(encoding="utf-8").splitlines():
-        if line.startswith("MIN_SENS"):
-            return float(line.split("=", 1)[1].split("#")[0].strip())
-    raise SystemExit("could not read MIN_SENS from calibrate_background_specificity.py")
-
+sys.path.insert(0, str(ROOT / "src" / "brainsafe"))
+import panel  # noqa: E402
 
 UNTOUCHED = ["threshold", "background_fpr_at_threshold", "auroc_vs_measured_inactives",
              "scaffold_cv_auroc", "screening_threshold", "deployed"]
@@ -68,8 +53,8 @@ def main() -> None:
     ap.add_argument("--check", action="store_true")
     args = ap.parse_args()
 
-    min_sens = deployed_sensitivity_floor()
-    print(f"deployed sensitivity floor {min_sens:.2f}, AUROC floor {MIN_AUROC:.2f}\n")
+    min_sens = panel.MIN_SENSITIVITY
+    print(f"gate: sensitivity {min_sens:.2f}, AUROC {panel.MIN_AUROC:.2f}\n")
 
     modes = json.loads(REG.read_text(encoding="utf-8"))
     rec = pd.read_csv(RECON).set_index("target")
@@ -82,8 +67,7 @@ def main() -> None:
         held = float(rec.loc[ep, "sensitivity_heldout"])
         old_s = v.get("sensitivity_at_threshold")
         old_r = bool(v.get("reliable_call"))
-        new_r = bool(held >= min_sens
-                     and (v.get("auroc_vs_measured_inactives") or 1.0) >= MIN_AUROC)
+        new_r = panel.passes_gate(held, v.get("auroc_vs_measured_inactives"))
         changed.append((ep, old_s, round(held, 3), old_r, new_r))
         if old_r != new_r:
             rel_flips.append(ep)

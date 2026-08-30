@@ -31,6 +31,7 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / "src" / "brainsafe"))
+import panel  # noqa: E402
 from features.featurize import featurize  # noqa: E402
 from models.pools import background_pools  # noqa: E402
 
@@ -38,7 +39,7 @@ M = ROOT / "models_rf"
 TARGET_FPR = 0.10
 BACKGROUND_FPR = 0.05
 N_BACKGROUND = 3000
-MIN_SENS = 0.50
+MIN_SENS = panel.MIN_SENSITIVITY   # the gate lives in panel.py; see the note there on why
 rng = np.random.default_rng(7)
 
 
@@ -115,8 +116,7 @@ def main():
         if sens is not None:
             v["sensitivity_basis"] = "held_out_actives_by_scaffold"
             v["sensitivity_at_threshold"] = round(sens, 3)
-            v["reliable_call"] = bool(sens >= MIN_SENS
-                                      and (v.get("auroc_vs_measured_inactives") or 1.0) >= 0.75)
+            v["reliable_call"] = panel.passes_gate(sens, v.get("auroc_vs_measured_inactives"))
         modes[ep] = v
         rows.append({"target": ep, "threshold": round(thr, 4),
                      "from_measured_inactives": round(thr_in, 4) if thr_in else None,
