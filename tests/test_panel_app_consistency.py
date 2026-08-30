@@ -26,6 +26,7 @@ warnings.filterwarnings("ignore")
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "src" / "brainsafe"))
+sys.path.insert(0, str(ROOT / "src" / "brainsafe" / "figures"))
 
 import panel  # noqa: E402
 
@@ -162,6 +163,46 @@ class TestPanelCountsReconcile(unittest.TestCase):
         self.assertEqual(
             self.sh["targets"], len(served) - 1,
             "the molecular-target count must exclude the barrier model, which is an exposure term")
+
+
+class TestReliabilityGateIsStatedConsistently(unittest.TestCase):
+    """One gate, four scripts and a figure that draws it.
+
+    reliable_call is written by four scripts in sequence. The two training stages gate sensitivity at
+    0.60 and the two threshold stages at 0.50, and since the threshold stages run last, 0.50 is the
+    deployed rule. Figure 10 panel B drew its line at 0.60 and labelled it the floor for a reliable
+    call, which placed a7nAChR, KEAP1 and Nav1_6 visibly below a line they in fact clear. These tests
+    pin the figure to the script that actually decides, and pin the registry to its own rule.
+    """
+
+    @staticmethod
+    def _floor(script: str, name: str) -> float:
+        src = ROOT / "src" / "brainsafe" / "models" / script
+        for line in src.read_text(encoding="utf-8").splitlines():
+            if line.startswith(name):
+                return float(line.split("=", 1)[1].split("#")[0].split(",")[0].strip())
+        raise AssertionError(f"{name} not found in {script}")
+
+    def test_figure_draws_the_deployed_floor(self):
+        import fig10_endpoint_selection as fig
+        self.assertEqual(fig.SENS_FLOOR,
+                         self._floor("calibrate_background_specificity.py", "MIN_SENS"),
+                         "Figure 10 draws a sensitivity floor the deployed gate does not use")
+
+    def test_registry_reliable_call_follows_its_own_rule(self):
+        floor = self._floor("calibrate_background_specificity.py", "MIN_SENS")
+        wrong = [e.name for e in panel.binders(deployed=True)
+                 if e.sensitivity is not None and e.auroc is not None
+                 and e.reliable != (e.sensitivity >= floor and e.auroc >= 0.75)]
+        self.assertEqual(wrong, [], "reliable_call disagrees with the gate it is defined by")
+
+    def test_sensitivity_is_measured_where_it_claims_to_be(self):
+        """The label said held out while the number was measured over the training compounds."""
+        import json
+        modes = json.loads((ROOT / "models_rf" / "binder_modes.json").read_text(encoding="utf-8"))
+        bad = [k for k, v in modes.items() if v.get("deployed", True)
+               and v.get("sensitivity_basis") != "held_out_actives_by_scaffold"]
+        self.assertEqual(bad, [], "a deployed endpoint reports sensitivity on an undeclared basis")
 
 
 class TestOrphanTargetDegradesToSilence(unittest.TestCase):
