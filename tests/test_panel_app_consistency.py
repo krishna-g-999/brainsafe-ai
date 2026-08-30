@@ -166,35 +166,60 @@ class TestPanelCountsReconcile(unittest.TestCase):
 
 
 class TestReliabilityGateIsStatedConsistently(unittest.TestCase):
-    """One gate, four scripts and a figure that draws it.
+    """One gate, one definition, and no script allowed a copy of it.
 
-    reliable_call is written by four scripts in sequence. The two training stages gate sensitivity at
-    0.60 and the two threshold stages at 0.50, and since the threshold stages run last, 0.50 is the
-    deployed rule. Figure 10 panel B drew its line at 0.60 and labelled it the floor for a reliable
-    call, which placed a7nAChR, KEAP1 and Nav1_6 visibly below a line they in fact clear. These tests
-    pin the figure to the script that actually decides, and pin the registry to its own rule.
+    reliable_call was written by four scripts and read by two more. The two training stages gated
+    sensitivity at 0.60 and the two threshold stages that overwrite them at 0.50, so 0.50 was the
+    deployed rule by accident of ordering. Figure 10 drew 0.60 and labelled it the gate, placing
+    a7nAChR, KEAP1 and Nav1_6 below a line they clear. app.py listed low-sensitivity endpoints at a
+    third cut of 0.65, naming ten where six carried the low-power marker. Every one of those numbers
+    was right about what it measured, which is why none of them failed. The gate now has a single
+    definition in panel.py and these tests fail if a literal copy of it reappears anywhere.
     """
 
-    @staticmethod
-    def _floor(script: str, name: str) -> float:
-        src = ROOT / "src" / "brainsafe" / "models" / script
-        for line in src.read_text(encoding="utf-8").splitlines():
-            if line.startswith(name):
-                return float(line.split("=", 1)[1].split("#")[0].split(",")[0].strip())
-        raise AssertionError(f"{name} not found in {script}")
+    GATE_HOLDERS = ["src/brainsafe/models/final_thresholds.py",
+                    "src/brainsafe/models/calibrate_background_specificity.py",
+                    "src/brainsafe/models/calibrate_binder_thresholds.py",
+                    "src/brainsafe/models/train_binders_hybrid.py",
+                    "src/brainsafe/models/train_measured_label_holdout.py",
+                    "src/brainsafe/figures/fig10_endpoint_selection.py",
+                    "app.py"]
 
-    def test_figure_draws_the_deployed_floor(self):
+    def test_no_script_keeps_its_own_copy_of_the_gate(self):
+        """A bare 0.60 or 0.65 beside reliable_call is the defect this class exists to prevent."""
+        for rel in self.GATE_HOLDERS:
+            src = (ROOT / rel).read_text(encoding="utf-8")
+            body = "\n".join(ln for ln in src.splitlines()
+                             if not ln.lstrip().startswith("#"))
+            for literal in ("0.60", "0.65"):
+                self.assertNotIn(
+                    literal, body,
+                    f"{rel} contains a bare {literal}; the gate belongs to panel.py alone")
+
+    def test_figure_draws_the_gate_it_imports(self):
         import fig10_endpoint_selection as fig
-        self.assertEqual(fig.SENS_FLOOR,
-                         self._floor("calibrate_background_specificity.py", "MIN_SENS"),
-                         "Figure 10 draws a sensitivity floor the deployed gate does not use")
+        self.assertEqual((fig.SENS_FLOOR, fig.AUROC_FLOOR),
+                         (panel.MIN_SENSITIVITY, panel.MIN_AUROC),
+                         "Figure 10 draws floors the deployed gate does not use")
 
-    def test_registry_reliable_call_follows_its_own_rule(self):
-        floor = self._floor("calibrate_background_specificity.py", "MIN_SENS")
+    def test_registry_reliable_call_follows_the_gate(self):
         wrong = [e.name for e in panel.binders(deployed=True)
-                 if e.sensitivity is not None and e.auroc is not None
-                 and e.reliable != (e.sensitivity >= floor and e.auroc >= 0.75)]
+                 if e.reliable != panel.passes_gate(e.sensitivity, e.auroc)]
         self.assertEqual(wrong, [], "reliable_call disagrees with the gate it is defined by")
+
+    def test_about_page_list_is_the_low_power_set(self):
+        """The About page and the marker on a result must be one statement, not two."""
+        import app
+        listed = {t for t, _why in app.coverage_low()}
+        marked = {app.MECH_LABEL.get(e.name, e.name) for e in panel.binders(deployed=True)
+                  if app.low_power_target(e.name)}
+        self.assertEqual(listed, marked,
+                         "the About page names a different set than the low-power marker")
+
+    def test_missing_metrics_do_not_pass_the_gate(self):
+        """An unmeasured AUROC used to be read as 1.0, which is a pass by omission."""
+        self.assertFalse(panel.passes_gate(0.99, None))
+        self.assertFalse(panel.passes_gate(None, 0.99))
 
     def test_sensitivity_is_measured_where_it_claims_to_be(self):
         """The label said held out while the number was measured over the training compounds."""

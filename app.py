@@ -41,6 +41,7 @@ except (ImportError, OSError):
 
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT / "src" / "brainsafe"))
+import panel as _panel  # noqa: E402
 from features.featurize import featurize_one, feature_names  # noqa: E402
 
 MODELS = ROOT / "models_rf"
@@ -87,7 +88,6 @@ ADME = {
 # the fitted models, not with this file. Deriving the list closes that gap by construction.
 def _deployed_binder_targets():
     """Deployed binder endpoints, less the four that have their own regressor entry above."""
-    import panel as _panel
     return sorted(set(_panel.names(deployed=True)) - set(RECEPTOR_REGRESSORS))
 
 
@@ -1641,8 +1641,8 @@ def render_disease(r):
                if drv and d["signal"] > 0 else f'no engaged mechanism · BBB {bbb:.0%}')
         if drv and d["signal"] > 0 and low_power_target(drv[0]):
             sub += (f' &middot; <span style="color:{AMBER};font-weight:700">the '
-                    f'{MECH_LABEL.get(drv[0], drv[0])} model has low sensitivity, so this may be '
-                    f'under-called</span>')
+                    f'{MECH_LABEL.get(drv[0], drv[0])} model is below the reliability gate, so this '
+                    f'may be under-called</span>')
         if d["gated"] < MIN_ACTIONABLE_SCORE:
             sub += (f' &middot; <span style="color:{MUTE2}">below the actionable threshold of '
                     f'{MIN_ACTIONABLE_SCORE:.0%}, treat as no finding</span>')
@@ -2065,19 +2065,31 @@ COVERAGE_YES = [
 # genuinely qualified. A coverage statement that is wrong about its own models is worse than none,
 # because it is read as an audit. Everything below is therefore derived from binder_modes.json at
 # render time and cannot disagree with what is deployed.
-LOW_SENSITIVITY_CUT = 0.65
+#
+# It then acquired a second defect of the same family. Selection used a 0.65 cut of its own, while
+# low_power_target() marked results using the 0.50 reliability gate, so this page named ten endpoints
+# where six carried the marker. Both numbers were correct about what they measured and the page gave
+# a reader no way to see that. Selection is now the gate, so the list on this page and the marker on
+# a result are the same statement made twice.
 
 
 def coverage_low():
-    """Deployed endpoints whose sensitivity is low enough that a negative call carries little."""
+    """Deployed endpoints that fail the reliability gate, so a negative call from them carries little.
+
+    Selected on reliable_call, the field low_power_target() reads, and explained in terms of whichever
+    floor the endpoint actually missed rather than assuming it was sensitivity.
+    """
     out = []
     for ep, v in sorted(load_binder_modes().items()):
-        if not v.get("deployed", True):
+        if not v.get("deployed", True) or v.get("reliable_call") is not False:
             continue
-        s = v.get("sensitivity_at_threshold")
-        if s is None or s >= LOW_SENSITIVITY_CUT:
-            continue
-        why = f"sensitivity {s:.2f} at the deployed threshold"
+        s, a = v.get("sensitivity_at_threshold"), v.get("auroc_vs_measured_inactives")
+        missed = []
+        if s is not None and s < _panel.MIN_SENSITIVITY:
+            missed.append(f"sensitivity {s:.2f} on actives withheld by scaffold")
+        if a is not None and a < _panel.MIN_AUROC:
+            missed.append(f"AUROC {a:.2f} against compounds measured inactive")
+        why = " and ".join(missed) if missed else "below the reliability gate"
         if v.get("sensitivity_note"):
             why += ", by necessity rather than miscalibration"
         out.append((MECH_LABEL.get(ep, ep), why))
@@ -2813,8 +2825,8 @@ def render_coverage_card():
     _low = coverage_low()
     low = ("".join(f'<li><b>{t}</b> <span class="bs-ctx">· {why}</span></li>' for t, why in _low)
            if _low else
-           f'<li class="bs-note">No deployed endpoint falls below a sensitivity of '
-           f'{LOW_SENSITIVITY_CUT:.2f}.</li>')
+           f'<li class="bs-note">Every deployed endpoint clears the reliability gate of '
+           f'{_panel.MIN_SENSITIVITY:.2f} sensitivity and {_panel.MIN_AUROC:.2f} AUROC.</li>')
     _wd = coverage_withdrawn()
     withdrawn = ("".join(f'<li><b>{t}</b> <span class="bs-ctx">· {why}</span></li>' for t, why in _wd)
                  if _wd else "")
@@ -2842,10 +2854,15 @@ def render_coverage_card():
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
               <div><div class="about-eyebrow" style="color:{AMBER}">Not yet modelled</div>
                 <ul class="bs-note" style="margin:6px 0 0;padding-left:18px;line-height:1.7">{no}</ul></div>
-              <div><div class="about-eyebrow" style="color:{AMBER}">Modelled, lower sensitivity</div>
+              <div><div class="about-eyebrow" style="color:{AMBER}">Modelled, below the reliability
+                gate</div>
                 <ul class="bs-note" style="margin:6px 0 0;padding-left:18px;line-height:1.7">{low}</ul>
-                <div class="bs-note" style="margin-top:6px">For these a positive call carries
-                information but a negative one does not rule engagement out.</div>
+                <div class="bs-note" style="margin-top:6px">The gate is a sensitivity of
+                {_panel.MIN_SENSITIVITY:.2f} on actives withheld by scaffold and an AUROC of
+                {_panel.MIN_AUROC:.2f} against compounds measured at the same target and found
+                inactive. For an endpoint below it a positive call carries information but a negative
+                one does not rule engagement out, and a result driven by one of these is marked as
+                such where it appears.</div>
                 {f'<div class="about-eyebrow" style="color:{ADVERSE};margin-top:12px">Trained then withdrawn</div><ul class="bs-note" style="margin:6px 0 0;padding-left:18px;line-height:1.7">{withdrawn}</ul><div class="bs-note" style="margin-top:6px">Endpoints that were trained, tested against trivial metabolites and random chemistry, and withheld because no threshold separated real ligands from background. They are listed because a panel showing only what survived is a selection rather than an inventory.</div>' if withdrawn else ''}
               </div>
             </div>
