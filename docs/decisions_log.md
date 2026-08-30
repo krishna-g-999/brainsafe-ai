@@ -3,6 +3,61 @@
 A dated record of methodological decisions and their rationale. Newest first. Every entry states the
 decision, the reason, and where the supporting evidence lives.
 
+## 2026-08-27, Panel sensitivity corrected to the held-out figure; five endpoints demoted, none withdrawn
+Decision: publish 0.7638 as the panel mean sensitivity, not 0.8983; recompute `reliable_call` from the
+corrected figure, which demotes COX2, GluN2B, P2X7, SIRT1 and TAAR1 to below the gate; withdraw none of
+them; and leave every operating threshold untouched.
+
+Reason, in four parts.
+
+*Why the number changed.* Four scripts write `sensitivity_at_threshold` in sequence.
+`train_binders_hybrid.py` and `final_thresholds.py` measure it on scaffold-held-out actives.
+`calibrate_background_specificity.py`, which runs last and therefore decides, selected actives as
+`df.loc[p >= 7, "smiles"]`, the whole endpoint table, roughly four fifths of which the model was fitted
+on. It overwrote the held-out figure with an in-sample one and did not touch `sensitivity_basis`, which
+went on reading `held_out_actives_by_scaffold`. Nothing was fabricated and nothing disagreed with
+itself, which is why the defect survived: a substring check for the number finds it stated identically
+everywhere. It was in fact caught once before, corrected to a mean of 0.7513 when the reviewer package
+was built, and then silently undone the next time the calibration stage ran. Inflation across the panel
+is 0.1344, and the label made it invisible.
+
+*Why the five endpoints fail, and whether anything better was available.* Their thresholds are set by
+the harder of two constraints: separating actives from random chemistry, or separating them from
+compounds measured at that same target and found inactive. For COX2, GluN2B and P2X7 the second binds
+far harder. The slack between the deployed threshold and the background-only threshold is +0.652,
++0.930 and +0.905 respectively, so sensitivity could be restored to near unity by relaxing to the
+background constraint alone. That was tested and rejected: the compounds it would admit are not unknown
+chemistry, they are compounds an experiment has already reported as non-binders at that target. The
+result would be a higher sensitivity and a less truthful server. TAAR1's two constraints agree
+independently (slack 0.0022), so its weakness is the model's, not the threshold's. SIRT1 has 37
+held-out actives and a 95% interval of 0.240 to 0.539; that is a sample-size problem, not a model one.
+The alternative was tried, measured, and is worse.
+
+*Why none is withdrawn.* Withdrawal is reserved for endpoints that fire on unrelated chemistry, which
+is what removed GluA2, NFKB1, NR3C1, NRF2 and Nav1_1. All five here hold their background
+false-positive rate at or below target (0.0063 to 0.05). They are weak, not misleading, and the
+demoted flag says exactly that. Removing TAAR1, the ulotaront mechanism, would cost a genuine CNS
+target for no honesty the flag does not already deliver.
+
+*Why thresholds were not recomputed.* Sensitivity is a reported quantity; a threshold is an operating
+one. Re-running the threshold sequence to refresh a reported number caused a regression in this project
+once already. The registry was patched in place from `sensitivity_reconciliation.csv` with a guard that
+aborts if any threshold, background rate or AUROC moves by a byte. None did.
+
+Consequence, all of it visible to a user: endpoints listed as low-sensitivity in the interface go from
+two to ten; endpoints passing the gate go from 46 to 41; `low_power_target()` now warns on five more
+driving mechanisms. A separate defect surfaced in the same pass and is fixed: Figure 10 panel B drew
+the reliability floor at 0.60, the value used by the earlier training stages, while the deployed gate
+is 0.50, so three endpoints that clear the gate were drawn below a line labelled as the gate. The
+figure now draws both floors of what is a two-sided gate.
+
+Evidence: `tools/correct_registry_sensitivity.py`, `results/tables/sensitivity_reconciliation.csv`,
+`results/tables/final_thresholds.csv` (which the registry now matches on all 47 deployed endpoints with
+zero disagreements), `src/brainsafe/models/calibrate_background_specificity.py`,
+`tests/test_panel_app_consistency.py::TestReliabilityGateIsStatedConsistently`. The pre-correction
+registry is commit `93720d5`, where the 47 deployed endpoints carry a mean of 0.8983 under the same
+`held_out_actives_by_scaffold` label; `git show 93720d5:models_rf/binder_modes.json` recovers it.
+
 ## 2026-07-21, Measured inactives (PubChem) tested and reverted from the primary model
 Decision: do not add bulk PubChem high-throughput inactives to the classifiers. Reason: on GSK-3-beta
 (the worst-skewed endpoint, 93% active) adding 4,276 measured inactives corrected the DrugBank base

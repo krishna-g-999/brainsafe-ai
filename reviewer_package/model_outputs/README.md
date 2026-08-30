@@ -138,13 +138,26 @@ copying it. No calibration and no thresholds: these are read as values, not call
 
 ## Reading the numbers honestly
 
-- **Sensitivity is now measured on withheld actives.** The panel mean fell from 0.8942 to **0.7513**
-  when it stopped being measured on the compounds the models were fitted to. The earlier figure was
-  recall of the training set.
-- **The background false-positive rate can now exceed its target** (maximum 0.0590 against a 0.05
-  bound). Before it could not, by construction.
-- **Six endpoints fail the reliability gate:** COX2, GBA1, GluA2, Nav1_6, TAAR1 and Nav1_1. That is
-  the honest count, against two before.
+- **Sensitivity is measured on withheld actives.** The panel mean is **0.7638** over 47 deployed
+  endpoints, median 0.835, range 0.303 (GABA_A) to 0.993 (CGRP).
+
+  This correction had to be made twice, and the reason is worth stating because it is the kind of
+  defect a reader should expect a project to disclose rather than tidy away. It was first made when
+  this package was assembled, taking the mean from 0.8942 to 0.7513. It was then undone: four scripts
+  write `sensitivity_at_threshold` in sequence, and the last of them,
+  `calibrate_background_specificity.py`, recomputed the figure over each endpoint's whole table,
+  roughly four fifths of which the model had been fitted on. It left the
+  `sensitivity_basis` field reading `held_out_actives_by_scaffold` while the number underneath it was
+  no longer held out, so the label went on asserting what had stopped being true and the mean drifted
+  back to 0.8983. The script now scores `models_rf/holdout/` and declares its basis when it cannot;
+  `tests/test_panel_app_consistency.py` fails if any deployed endpoint reports an undeclared basis.
+- **The background false-positive rate is at or under its 0.05 target on every deployed endpoint**,
+  maximum 0.05 (D3).
+- **Six endpoints fail the reliability gate:** COX2, GABA_A, GluN2B, P2X7, SIRT1 and TAAR1. The gate
+  is sensitivity of at least 0.50 on held-out actives and AUROC of at least 0.75 against compounds
+  measured at that target and found inactive. Five of the six fail only on the corrected sensitivity;
+  they were marked reliable on the in-sample figure. A further five endpoints are withdrawn outright
+  and not served: GluA2, NFKB1, NR3C1, NRF2 and Nav1_1.
 - **Three binder thresholds are hand-set** and should not be inherited: a3b4nAChR 0.450, SIRT1 0.650,
   RIPK1 0.500. Each was chosen against the **previous** models to stop a specific compound firing, so
   they are both improperly derived and now stale.

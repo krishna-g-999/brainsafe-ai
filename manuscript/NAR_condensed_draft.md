@@ -107,19 +107,21 @@ calibration, and conformal prediction on the eight core classifiers achieves emp
 
 **The binder panel.** The 52 binder classifiers are validated not against the decoys used to train
 them but against compounds experimentally tested at the same target and found inactive. Across the 47
-deployed they reach a mean AUROC of 0.917 and a mean sensitivity of 0.898 on actives withheld by
-scaffold. Both are means over 47 endpoints and the spread is wide: AUROC ranges from 0.719 at GABA-A
-to 0.985, sensitivity from 0.639 at COX-2 to 0.997.
+deployed they reach a mean AUROC of 0.917 and a mean sensitivity of 0.764, both on actives withheld
+by scaffold. Both are means over 47 endpoints and the spread is wide: AUROC ranges from 0.719 at
+GABA-A to 0.985 at CGRP, sensitivity from 0.303 at GABA-A to 0.993 at CGRP with a median of 0.835.
 
-That sensitivity figure requires a correction we make here rather than leave for a reader to
-find. The registry reports 0.898 and labels it as measured on scaffold-held-out actives, but
-the script that last writes the field scores every active in the endpoint table, so roughly
-four fifths of the scoring set are compounds the model was fitted on. Measured only on the
-actives withheld by scaffold, the panel mean is 0.764, a range of
-0.303 to 0.993, and the difference of 0.134 is the cost of
-scoring a model on its own training compounds. The held-out figure is the one that estimates
-behaviour on chemistry the panel has not seen, and it is the one to quote. Five endpoints were withdrawn for firing on
-trivial metabolites at every usable threshold.
+That sensitivity figure carries a correction we report rather than leave for a reader to find. Four
+scripts write it in sequence, and the last scored every active in the endpoint table, so roughly four
+fifths of the scoring set were compounds the model had been fitted on, while the field's own basis
+annotation went on reading that the measurement was held out. The panel mean was published as 0.898
+against a held-out 0.764, an inflation of 0.134. The registry has been recomputed from the
+scaffold-held-out partition, it agrees with the threshold table on all 47 deployed endpoints, and a
+regression test fails if any endpoint reports sensitivity on an undeclared basis. Six endpoints fall
+below the reliability gate on the corrected figure, against one before; each holds its background
+false-positive rate at or below target, so each is weak rather than misleading and stays deployed
+with a low-power marker on any negative call. Five further endpoints are withdrawn outright for
+firing on trivial metabolites at every usable threshold.
 
 **Leakage and null models.** On the deduplicated matrix the pipeline fits, no InChIKey, no feature
 vector and no scaffold appears on both sides of any fold. With labels permuted the same pipeline

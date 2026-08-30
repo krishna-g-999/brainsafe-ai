@@ -40,6 +40,11 @@ import style as S  # noqa: E402
 
 TAB = ROOT / "results" / "tables"
 
+# The reliability gate, mirrored from models/calibrate_background_specificity.py, the last script to
+# write reliable_call. Panel B draws it, so a copy that drifts would mislabel the figure rather than
+# merely misconfigure it; tests/test_panel_app_consistency.py fails if these two ever disagree.
+SENS_FLOOR, AUROC_FLOOR = 0.50, 0.75
+
 
 def load():
     modes = json.loads((ROOT / "models_rf" / "binder_modes.json").read_text(encoding="utf-8"))
@@ -92,9 +97,18 @@ def panel_b(ax, d):
         h = g[g.deployed == dep]
         ax.scatter(h.auroc_inactives, h.sensitivity, s=26, c=col, alpha=.85,
                    edgecolors="white", linewidths=.5, label=lab, zorder=3)
-    ax.axhline(0.60, color=S.WITHHELD, lw=1.2, ls="--", zorder=2)
-    ax.text(0.365, 0.615, "sensitivity floor for a reliable call", fontsize=S.pt(6.5),
+    # The gate is two-sided, so it is drawn as the corner it is rather than as one line. The floors
+    # are MIN_SENS and the AUROC constant in models/calibrate_background_specificity.py, the script
+    # that last writes reliable_call; tests/test_panel_app_consistency.py pins these to that source.
+    # This panel previously drew a single line at 0.60, the floor used by the earlier training
+    # stages, which put three deployed endpoints on the wrong side of a line labelled as the gate.
+    ax.axhline(SENS_FLOOR, color=S.WITHHELD, lw=1.2, ls="--", zorder=2)
+    ax.axvline(AUROC_FLOOR, color=S.WITHHELD, lw=1.2, ls="--", zorder=2)
+    ax.text(0.365, SENS_FLOOR + 0.015, f"sensitivity floor {SENS_FLOOR:.2f}", fontsize=S.pt(6.5),
             color=S.WITHHELD)
+    ax.text(AUROC_FLOOR + 0.008, -0.005, f"AUROC floor {AUROC_FLOOR:.2f}", fontsize=S.pt(6.5),
+            color=S.WITHHELD)
+    ax.text(0.365, 0.94, "a call is reliable only above both", fontsize=S.pt(6.5), color=S.FAINT)
     # Name the endpoints that discriminate well and are still not deployable: they are the argument.
     for r in g[(~g.deployed) & (g.auroc_inactives >= 0.75)].itertuples():
         ax.annotate(r.endpoint, (r.auroc_inactives, r.sensitivity), fontsize=S.pt(6.5),

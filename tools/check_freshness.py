@@ -454,11 +454,18 @@ def main(argv=None) -> None:
         print()
         if bad:
             print(f"{len(bad)} artefact(s) are stale or missing. Rebuild, in this order:")
+            # One command per line. Several rebuild recipes are && chains, which is fine in bash and
+            # a parse error in Windows PowerShell 5.1, the shell this project is developed in: it
+            # rejects && as a statement separator outright, so a pasted chain fails before the first
+            # script runs. Splitting the chain keeps the ordering visible and the lines runnable in
+            # either shell.
             seen = set()
             for r in bad:
-                if r["rebuild"] not in seen:
-                    print(f"    {r['rebuild']}")
-                    seen.add(r["rebuild"])
+                if r["rebuild"] in seen:
+                    continue
+                seen.add(r["rebuild"])
+                for step in r["rebuild"].split("&&"):
+                    print(f"    {step.strip()}")
         else:
             print("every declared artefact is newer than its inputs")
 

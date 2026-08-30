@@ -165,14 +165,15 @@ Every hypothesis was stated so that it could fail. Where predictive power was at
 
 | Hypothesis | Verdict | Evidence |
 |---|---|---|
-| H1 the disease score is informative | **SUPPORTED** | top-3 accuracy 0.769 vs permutation null 0.152 (p=0.005) and frequency null 0.560 |
-| H2 the curated edge weights add value | **REFUTED** | curated 0.7691, uniform 0.7678, permuted 0.7670 |
+| H1 the disease score is informative | **SUPPORTED** | top-3 accuracy 0.790 vs permutation null 0.163 (p=0.005) and frequency null 0.551 |
+| H2 the curated edge weights add value | **REFUTED** | curated 0.7901, uniform 0.7897, permuted 0.7874 |
 | H3 BBB gating discriminates between diseases | **REFUTED (by construction)** | the gate multiplies every disease equally and cannot change their order |
-| H4 specificity transfers to novel chemistry | **SUPPORTED** | false-positive rate 0.033 on 61 distant compounds against 0.080 measured on library chemistry |
-| H5 read-across beats a frequency baseline | **SUPPORTED** | recall 0.973 against 0.060 |
+| H4 specificity transfers to novel chemistry | **SUPPORTED** | false-positive rate 0.016 on 61 distant compounds against 0.051 measured on library chemistry |
+| H5 read-across beats a frequency baseline | **SUPPORTED** | recall 0.973 against 0.059 |
 | H6 the disease scores match real clinical indications | **WEAKENED** | top-3 accuracy 0.352 on 162 drugs never seen in training, against permutation null 0.145 (p=0.001) and frequency null 0.654 |
-| H7 some panel targets are non-discriminative and explain the silent antiepileptics | **REFUTED** | none of 35 targets ranks below AUROC 0.70; the cause is the operating point, with median deployed sensitivity 0.83 and 3 targets under 0.50 |
-| H8 engaged targets are independent observations | **REFUTED** | 38 targets fire across approved drugs but span only 15 independent directions; 5 homologous pairs correlate above 0.5 |
+| H7 some panel targets are non-discriminative and explain the silent antiepileptics | **REFUTED** | none of 37 targets ranks below AUROC 0.70; the cause is the operating point, with median deployed sensitivity 0.79 and 6 targets under 0.50 |
+| H8 engaged targets are independent observations | **REFUTED** | 37 targets fire across approved drugs but span only 16 independent directions; 5 homologous pairs correlate above 0.5 |
+| H9 the disease layer discriminates between compounds, not just between base rates | **SUPPORTED** | mean per-indication AUROC 0.616 against 0.500 for any constant predictor, beating chance on 7 of 9 indications; macro-averaged top-3 recall 0.358 against 0.333 |
 
 
 ## Table 8. Recovery of approved clinical indications, by condition
@@ -200,12 +201,12 @@ Candidates were selected because the clinical-indication test identified epileps
 
 | Candidate | Actives | Scaffolds | Measured inactives | AUROC vs inactives | Sensitivity | Outcome | Reason if rejected |
 |---|---|---|---|---|---|---|---|
-| a4b2nAChR | 796 | 278 | 146 | 0.923 | 0.863 | deployed |  |
-| a3b4nAChR | 398 | 153 | 187 | 0.974 | 0.970 | deployed |  |
-| Nav1_6 | 681 | 187 | 45 | 0.862 | 0.764 | deployed |  |
-| Nav1_8 | 501 | 163 | 39 | 0.956 | 0.947 | deployed |  |
-| Cav3_2 | 633 | 201 | 33 | 0.982 | 0.980 | deployed |  |
+| a4b2nAChR | 796 | 278 | 146 | 0.923 | 0.754 | deployed |  |
+| a3b4nAChR | 398 | 153 | 187 | 0.974 | 0.906 | deployed |  |
+| Nav1_6 | 681 | 187 | 45 | 0.862 | 0.532 | deployed |  |
+| Nav1_8 | 501 | 163 | 39 | 0.956 | 0.892 | deployed |  |
+| Cav3_2 | 633 | 201 | 33 | 0.982 | 0.975 | deployed |  |
 | GABAA_a5 | 672 | 284 | 4 | n/a | n/a | not trained | only 4 measured inactives, cannot set a threshold honestly |
-| CGRP | 761 | 333 | 26 | 0.985 | 0.997 | deployed | only 26 measured inactives, cannot set a threshold honestly |
-| DHODH | 1421 | 360 | 145 | 0.966 | 0.981 | deployed |  |
-| RIPK1 | 2349 | 826 | 719 | 0.966 | 0.984 | deployed |  |
+| CGRP | 761 | 333 | 26 | 0.985 | 0.993 | deployed | only 26 measured inactives, cannot set a threshold honestly |
+| DHODH | 1421 | 360 | 145 | 0.966 | 0.948 | deployed |  |
+| RIPK1 | 2349 | 826 | 719 | 0.966 | 0.938 | deployed |  |

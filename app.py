@@ -778,8 +778,12 @@ def read_across_targets(smiles, pool=READ_ACROSS_POOL, min_sim=READ_ACROSS_MIN_S
 
 
 def low_power_target(tgt):
-    """True when a binder model, held at a 10% false-positive rate on measured inactives, recovers
-    too few genuine binders to be relied on for a negative call."""
+    """True when a binder model fails the reliability gate, so a negative call from it carries little.
+
+    The gate is sensitivity of at least 0.50 on scaffold-held-out actives at the deployed threshold,
+    and AUROC of at least 0.75 against compounds measured at that same target and found inactive. It
+    is not a fixed false-positive rate, which is what sets the threshold rather than what judges it.
+    """
     info = load_binder_modes().get(tgt, {})
     return info.get("reliable_call") is False
 

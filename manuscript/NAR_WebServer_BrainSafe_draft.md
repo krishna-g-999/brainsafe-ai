@@ -244,16 +244,28 @@ weaknesses are reported in their own section rather than folded into the headlin
 
 The 52 binder classifiers are validated not against the decoys used to train them but against
 compounds experimentally tested at the same target and found inactive. Across the 47 that are
-deployed they reach a mean AUROC of 0.917 and a mean sensitivity of 0.764 on actives
-genuinely withheld by scaffold. The registry reports 0.898 for that field and labels it as held out,
-but the script that writes it last scores every active in the endpoint table, about four fifths of
-which the model was fitted on; the difference of 0.134 is the cost of scoring a
-model on its own training compounds. Measured on actives withheld by
-scaffold, at thresholds constrained simultaneously by held-out measured inactives and by the
-false-positive rate on a disjoint pool of unrelated chemistry. Both figures are means over 47
-endpoints and the spread behind them is wide: AUROC ranges from 0.719 at GABA-A to 0.985, and
-sensitivity from 0.639 at COX-2 to 0.997, so the two means describe the panel and not any particular
-endpoint. Supplementary Table S1 gives every endpoint separately. Five are withdrawn: Nav1.1 and GluA2
+deployed they reach a mean AUROC of 0.917 and a mean sensitivity of 0.764, both measured on actives
+withheld by scaffold, at thresholds constrained simultaneously by held-out measured inactives and by
+the false-positive rate on a disjoint pool of unrelated chemistry. Both figures are means over 47
+endpoints and the spread behind them is wide: AUROC ranges from 0.719 at GABA-A to 0.985 at CGRP,
+and sensitivity from 0.303 at GABA-A to 0.993 at CGRP with a median of 0.835, so the two means
+describe the panel and not any particular endpoint. Supplementary Table S1 gives every endpoint
+separately.
+
+The sensitivity figure carries a correction we report rather than leave for a reader to find. Four
+scripts write this field in sequence, and the last of them scored every active in the endpoint table,
+roughly four fifths of which the model had been fitted on, while leaving the field's own basis
+annotation reading that the measurement was held out. The panel mean was therefore published as 0.898
+against a held-out 0.764, an inflation of 0.134, with nothing in the record disagreeing with anything
+else. The scoring script now reads the scaffold-held-out partition and declares its basis when it
+cannot, the registry has been recomputed from that partition and agrees with the threshold table on
+all 47 deployed endpoints, and a regression test fails if any deployed endpoint reports sensitivity
+on an undeclared basis. Six endpoints fall below the reliability gate on the corrected figure, against
+one before: COX-2, GABA-A, GluN2B, P2X7, SIRT1 and TAAR1. They remain deployed, because each holds
+its background false-positive rate at or below target and is therefore weak rather than misleading,
+and the interface marks a negative call from any of them as low-powered.
+
+Five endpoints are withdrawn outright: Nav1.1 and GluA2
 for firing on trivial metabolites at every usable threshold, and three added to test
 natural-product coverage, reported in the limitations. Withdrawal is re-derived whenever the panel
 is refitted rather than carried forward, because it is a claim about a particular fit: when the
