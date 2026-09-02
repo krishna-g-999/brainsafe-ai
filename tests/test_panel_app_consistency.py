@@ -230,6 +230,52 @@ class TestReliabilityGateIsStatedConsistently(unittest.TestCase):
         self.assertEqual(bad, [], "a deployed endpoint reports sensitivity on an undeclared basis")
 
 
+class TestReportedTablesAgreeWithRegistry(unittest.TestCase):
+    """A table that restates the registry must not disagree with it.
+
+    background_specificity.csv reported a mean sensitivity of 0.8983 and 46 of 47 endpoints reliable
+    for as long as the registry said 0.7638 and 41, because the sensitivity correction changed the
+    figure computed from the fitted models without changing the models themselves. The freshness
+    graph is a timestamp check and could not see it; worse, the artefact cannot be declared against
+    the registry at all, because the registry is a co-output of the same threshold sequence that
+    writes the table (tools/check_freshness.py:110). A byte-identical copy ships in the submission
+    package, so the disagreement was visible to reviewers before it was visible to us.
+
+    Refresh with src/brainsafe/evaluation/refresh_background_specificity.py.
+    """
+
+    def _rows(self):
+        import csv
+        with (ROOT / "results" / "tables" / "background_specificity.csv").open(encoding="utf-8") as f:
+            return list(csv.DictReader(f))
+
+    def test_sensitivity_and_reliability_match_the_registry(self):
+        import json
+        modes = json.loads((ROOT / "models_rf" / "binder_modes.json").read_text(encoding="utf-8"))
+        wrong = []
+        for r in self._rows():
+            rec = modes.get(r["target"])
+            if rec is None:
+                wrong.append(f"{r['target']}: absent from the registry")
+                continue
+            if abs(float(r["sensitivity_after"]) - float(rec["sensitivity_at_threshold"])) > 1e-9:
+                wrong.append(f"{r['target']}: sensitivity {r['sensitivity_after']} "
+                             f"vs registry {rec['sensitivity_at_threshold']}")
+            if (r["reliable"].strip().lower() == "true") != bool(rec["reliable_call"]):
+                wrong.append(f"{r['target']}: reliable {r['reliable']} "
+                             f"vs registry {rec['reliable_call']}")
+        self.assertEqual(wrong, [], "background_specificity.csv disagrees with the registry")
+
+    def test_shipped_copy_is_not_left_behind(self):
+        """The copy a reviewer opens is the one that matters."""
+        shipped = ROOT / "submission_package" / "08_VALIDATION_RESULTS" / "background_specificity.csv"
+        if not shipped.exists():
+            self.skipTest("no submission package in this checkout")
+        live = ROOT / "results" / "tables" / "background_specificity.csv"
+        self.assertEqual(shipped.read_bytes(), live.read_bytes(),
+                         "the shipped table differs from the one the project maintains")
+
+
 class TestOrphanTargetDegradesToSilence(unittest.TestCase):
     """The guard must return zero rather than raise, whatever the graph says."""
 

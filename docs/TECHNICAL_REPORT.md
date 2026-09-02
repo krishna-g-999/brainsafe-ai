@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Document** | Technical report on the BrainSafe AI prediction panel |
-| **Generated** | 2026-08-25, automatically, from the deployed panel |
+| **Generated** | 2026-09-02, automatically, from the deployed panel |
 | **Commit** | `120f2c7` |
 | **Status** | Research preview, pending peer review |
 | **Repository** | https://github.com/krishna-g-999/brainsafe-ai |
@@ -32,16 +32,19 @@ split and 0.925 under a
 scaffold-grouped split that withholds entire structural classes. The binder panel, validated against
 compounds measured at the same target and found inactive rather than against decoys, reaches a mean
 AUROC of 0.917 at a mean sensitivity of
-0.764, the latter measured on actives withheld by scaffold. Both are means over 47 endpoints and
+0.764. Both are means over 47 endpoints and
 the spread is wide, so the means alone flatter the panel: AUROC runs from
-0.719 at GABA-A to
-0.985 at CGRP and sensitivity from
-0.303 at GABA-A to
-0.993 at CGRP, median 0.835, with the per-endpoint figures in section 2.1. Six endpoints fall below
-the reliability gate of sensitivity 0.50 and AUROC 0.75, and the server marks a negative call from
-any of them as low-powered.
+0.719 to
+0.985 and sensitivity from
+0.303 to
+0.993, with the per-endpoint figures in section 2.1.
+Sensitivity is measured on actives withheld by scaffold. 6
+endpoints fall below the reliability gate, which is a sensitivity of 0.50 on
+those withheld actives and an AUROC of 0.75 against compounds measured at the same
+target and found inactive; each stays deployed because it holds its background false-positive rate at
+or below target, and the server marks a negative call from any of them as low-powered.
 On 1,000 compounds with no recorded activity at any modelled target it stays silent
-94.9% of the time. Those
+92.5% of the time. Those
 compounds are presumed inactive because nothing is recorded about them rather than proven inactive,
 so that figure is a lower bound.
 
@@ -751,20 +754,20 @@ low and the silence that follows should be marked as uninformative rather than a
 | compound | section | endpoint | value | unit | context |
 |---|---|---|---|---|---|
 | atenolol | Target and property models | BBB | 0.473 | calibrated probability | training base rate 0.635; enrichment -0.255 |
-| atenolol | Target and property models | AChE | 0.1766 | calibrated probability | training base rate 0.724; enrichment -0.756 |
-| atenolol | Target and property models | hERG | 0.0792 | calibrated probability | training base rate 0.413; enrichment -0.808 |
+| atenolol | Target and property models | AChE | 0.1766 | calibrated probability | training base rate 0.596; enrichment -0.704 |
+| atenolol | Target and property models | hERG | 0.0792 | calibrated probability | training base rate 0.236; enrichment -0.665 |
 | atenolol | Applicability domain | max_tanimoto | 1.0 | Tanimoto | In domain; nearest analogue CC(C)NCC(O)COc1ccc(CC(N)=O)cc1; measured recall for compounds at this distance 0.86 (n=2,586), so a silent endpoint here is reasonably strong evidence of inactivity |
 | atenolol | Expected sensitivity at this distance | expected_recall | 0.8616 | fraction | prospective validation, results/tables/external_novelty_strata.csv; recall is a function of chemical distance rather than of publication date |
 | atenolol | Disease layer | top_disease | 0.0 | score | nothing cleared the reporting threshold |
 | donepezil | Target and property models | BBB | 0.9907 | calibrated probability | training base rate 0.635; enrichment +0.974 |
-| donepezil | Target and property models | AChE | 1.0 | calibrated probability | training base rate 0.724; enrichment +1.000 |
-| donepezil | Target and property models | hERG | 0.7342 | calibrated probability | training base rate 0.413; enrichment +0.547 |
+| donepezil | Target and property models | AChE | 1.0 | calibrated probability | training base rate 0.596; enrichment +1.000 |
+| donepezil | Target and property models | hERG | 0.7342 | calibrated probability | training base rate 0.236; enrichment +0.652 |
 | donepezil | Applicability domain | max_tanimoto | 1.0 | Tanimoto | In domain; nearest analogue COc1cc2c(cc1OC)C(=O)C(CC1CCN(Cc3ccccc3)CC1)C2; measured recall for compounds at this distance 0.86 (n=2,586), so a silent endpoint here is reasonably strong evidence of inactivity |
 | donepezil | Expected sensitivity at this distance | expected_recall | 0.8616 | fraction | prospective validation, results/tables/external_novelty_strata.csv; recall is a function of chemical distance rather than of publication date |
 | donepezil | Disease layer | top_disease | 0.9907 | score | Alzheimer's disease, driven by AChE |
 | withanolide A | Target and property models | BBB | 0.5926 | calibrated probability | training base rate 0.635; enrichment -0.067 |
-| withanolide A | Target and property models | AChE | 0.0848 | calibrated probability | training base rate 0.724; enrichment -0.883 |
-| withanolide A | Target and property models | hERG | 0.1049 | calibrated probability | training base rate 0.413; enrichment -0.746 |
+| withanolide A | Target and property models | AChE | 0.0848 | calibrated probability | training base rate 0.596; enrichment -0.858 |
+| withanolide A | Target and property models | hERG | 0.1049 | calibrated probability | training base rate 0.236; enrichment -0.556 |
 | withanolide A | Applicability domain | max_tanimoto | 0.4324 | Tanimoto | Near domain; nearest analogue CC(C)CCCC(C)C1CCC2C3CC=C4CC(O)CCC4(C)C3CCC12C; measured recall for compounds at this distance 0.55 (n=5,228), so a silent endpoint here is moderate evidence of inactivity |
 | withanolide A | Expected sensitivity at this distance | expected_recall | 0.5532 | fraction | prospective validation, results/tables/external_novelty_strata.csv; recall is a function of chemical distance rather than of publication date |
 | withanolide A | Disease layer | top_disease | 0.0 | score | nothing cleared the reporting threshold |
@@ -914,8 +917,8 @@ poor recall.
 ### 6.4 Specificity: does it stay quiet when it should?
 
 1,000 compounds with no recorded activity at any modelled target were scored through the
-deployed pipeline. **949** returned no actionable disease signal: specificity
-**0.949** (95% CI 0.934 to 0.961).
+deployed pipeline. **925** returned no actionable disease signal: specificity
+**0.925** (95% CI 0.907 to 0.940).
 
 These compounds are *presumed* inactive because nothing is recorded about them, not proven inactive,
 so this is a lower bound.
@@ -969,7 +972,7 @@ are excluded for want of post-cutoff compounds, never for a poor result.
 |---|---|---|---|
 | mean AUROC against measured inactives | **0.823** | 0.951 | 0.918 |
 | mean AUROC against background chemistry | **0.913** | 0.975 | - |
-| mean sensitivity at the frozen threshold | **0.489** | 0.872 | 0.900 |
+| mean sensitivity at the frozen threshold | **0.489** | 0.872 | 0.768 |
 | mean false-positive rate on background | **0.0373** | 0.0376 | - |
 
 Two of those rows are reassuring and two are not, and the difference between them is the whole
@@ -1135,15 +1138,15 @@ alone is meaningless: a model answering "active" to everything scores 1.0.
 
 | endpoint | n_train_actives_chembl | n_test_actives_bindingdb_only | recall_on_external_actives | fpr_background_at_same_threshold | deployed_sensitivity | median_novelty_of_test_set |
 |---|---|---|---|---|---|---|
-| A2A | 3343 | 758 | 0.6332 | 0.0332 | 0.928 | 0.5145 |
-| D2 | 3571 | 86 | 0.6163 | 0.069 | 0.829 | 0.6257 |
-| HT2A | 3358 | 459 | 0.3508 | 0.0657 | 0.846 | 0.5195 |
+| A2A | 3343 | 758 | 0.6332 | 0.0332 | 0.824 | 0.5145 |
+| D2 | 3571 | 86 | 0.6163 | 0.069 | 0.654 | 0.6257 |
+| HT2A | 3358 | 459 | 0.3508 | 0.0657 | 0.67 | 0.5195 |
 
 Across 3 endpoints and 1,303 independently
 curated actives, of which 1,264 are distinguishable from
 training in feature space, mean recall is 0.533 at a mean
 background false-positive rate of 0.0560, against a mean
-deployed sensitivity of 0.868 on the
+deployed sensitivity of 0.716 on the
 same endpoints.
 
 Read alone that looks like a heavy cost for a change of curator. It is not: the median distance from
@@ -1228,11 +1231,11 @@ statements of confidence.
 ### 6.7 The falsification suite
 
 Cross-validation asks how well a model scores. It cannot ask whether the thing the system claims to
-do is real. A suite of 9 hypotheses was therefore written, each stating a claim the
+do is real. A suite of 10 hypotheses was therefore written, each stating a claim the
 system makes about itself and each paired with a null model capable of producing the same apparent
 success by accident, and each was run to
 see whether it survived. A test that cannot fail is not evidence, so the suite was designed to be
-able to embarrass the tool, and it did: **4 of the 9 hypotheses were refuted and only
+able to embarrass the tool, and it did: **4 of the 10 hypotheses were refuted and only
 4 were supported outright.**
 
 The refutations are the most useful output this project has produced, and they changed the design.
@@ -1242,12 +1245,13 @@ The refutations are the most useful output this project has produced, and they c
 | H1 the disease score is informative | SUPPORTED | top-3 accuracy 0.790 vs permutation null 0.163 (p=0.005) and frequency null 0.551 |
 | H2 the curated edge weights add value | REFUTED | curated 0.7901, uniform 0.7897, permuted 0.7874 |
 | H3 BBB gating discriminates between diseases | REFUTED (by construction) | the gate multiplies every disease equally and cannot change their order |
-| H4 specificity transfers to novel chemistry | SUPPORTED | false-positive rate 0.016 on 61 distant compounds against 0.051 measured on library chemistry |
+| H4 specificity transfers to novel chemistry | SUPPORTED | false-positive rate 0.016 on 61 distant compounds against 0.075 measured on library chemistry |
 | H5 read-across beats a frequency baseline | SUPPORTED | recall 0.973 against 0.059 |
 | H6 the disease scores match real clinical indications | WEAKENED | top-3 accuracy 0.352 on 162 drugs never seen in training, against permutation null 0.145 (p=0.001) and frequency null 0.654 |
 | H7 some panel targets are non-discriminative and explain the silent antiepileptics | REFUTED | none of 37 targets ranks below AUROC 0.70; the cause is the operating point, with median deployed sensitivity 0.79 and 6 targets under 0.50 |
-| H8 engaged targets are independent observations | REFUTED | 36 targets fire across approved drugs but span only 16 independent directions; 5 homologous pairs correlate above 0.5 |
-| H9 the disease layer discriminates between compounds, not just between base rates | SUPPORTED | mean per-indication AUROC 0.603 against 0.500 for any constant predictor, beating chance on 7 of 9 indications; macro-averaged top-3 recall 0.385 against 0.333 |
+| H8 engaged targets are independent observations | REFUTED | 37 targets fire across approved drugs but span only 16 independent directions; 5 homologous pairs correlate above 0.5 |
+| H9 the disease layer discriminates between compounds, not just between base rates | SUPPORTED | mean per-indication AUROC 0.616 against 0.500 for any constant predictor, beating chance on 7 of 9 indications; macro-averaged top-3 recall 0.358 against 0.333 |
+| H10 the barrier model earns its place over a descriptor rule | WEAKENED | on unseen approved drugs the deployed forest scores 0.7934 against 0.7701 for a forest on the twelve descriptors alone, a margin of -0.0233 whose bootstrap interval reaches +0.0106 |
 
 **What each refutation cost, and what was done about it.**
 
@@ -1306,14 +1310,28 @@ the pipeline fits, no InChIKey, no feature vector and no scaffold appears on bot
 On the raw table the feature-vector overlap reaches 544, which is precisely what deduplication
 removes.
 
-**Null models.** With labels permuted, the same pipeline on the same folds returns mean AUROC 0.4938
-random and 0.4921 scaffold, worst single endpoint 0.5174. Whole scaffold classes do not carry enough
-class-frequency information for a label-free model to beat chance, so the scaffold figures are not
-inflated by that route.
+**Null models.** With labels permuted, the same pipeline on the same folds returns mean AUROC 0.4959
+random and 0.5026 scaffold over the eight core classifiers, every one of the sixteen values within
+0.0200 of chance, against margins over each endpoint's own null of 0.3860 to 0.4887. The smallest
+margin is 19.3 times the largest departure from chance the null itself produces. Scaffold grouping
+alone confers nothing: paired by endpoint the scaffold null exceeds the random null by a mean of
+0.0067, Wilcoxon p = 0.25, and is negative in three of the eight. Whole scaffold classes therefore do
+not carry enough class-frequency information for a label-free model to beat chance, and the scaffold
+figures are not inflated by that route. Artefact: `results/tables/permutation_null.csv`, written by
+`src/brainsafe/evaluation/permutation_null.py`, which imports `train_rf` so that the featuriser,
+deduplication, Bemis-Murcko grouping, fold objects and hyper-parameters are identical by
+construction rather than by reimplementation.
+
+An earlier edition of this section reported 0.4938 random and 0.4921 scaffold. Those figures were
+stated here and held in no file: no artefact contained them and no script computed them, which made
+the one claim establishing that the cross-validation is not inflated by leakage the one claim a
+reader could not check. They are corroborated by the values above rather than reproduced by them,
+because the original run recorded no seed and cannot be re-executed.
 
 **Independent reproduction.** The entire cross-validation was re-run from the endpoint tables and
 scored with separately written metric code. All 26 core values reproduced, maximum deviation
-4.7 × 10⁻⁵.
+4.7 × 10⁻⁵. This figure is reported as recorded at the time; like the null models above it was never
+written to a file, and unlike them it has not been re-derived.
 
 
 ---
@@ -1534,17 +1552,17 @@ Two metrics a constant predictor cannot pass were therefore measured, on the sam
 
 | indication | n_drugs_with_it | auroc_model | auroc_frequency_null |
 |---|---|---|---|
-| Depression / anxiety | 31 | 0.7944 | 0.5 |
+| Depression / anxiety | 31 | 0.7981 | 0.5 |
 | Psychosis / schizophrenia | 18 | 0.7647 | 0.5 |
+| Alzheimer's disease | 9 | 0.6565 | 0.5 |
 | Chronic pain | 64 | 0.6456 | 0.5 |
-| Parkinson's disease | 15 | 0.6231 | 0.5 |
+| Parkinson's disease | 15 | 0.622 | 0.5 |
 | Addiction | 7 | 0.5659 | 0.5 |
-| Alzheimer's disease | 9 | 0.5479 | 0.5 |
 | ADHD | 12 | 0.5006 | 0.5 |
 | Sleep / wakefulness | 10 | 0.4993 | 0.5 |
 | Epilepsy | 15 | 0.4898 | 0.5 |
 
-Mean per-indication AUROC is **0.603** against **0.500** for any constant
+Mean per-indication AUROC is **0.616** against **0.500** for any constant
 predictor, and the layer beats chance on **7 of 9** indications. Macro-averaged top-3
 recall, which averages per indication rather than pooling and so cannot be carried by naming the
 common conditions, is **0.385 against 0.333**.

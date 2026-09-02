@@ -127,7 +127,14 @@ def main():
                 joint = float((x * y).mean())
             # of compounds firing a, what fraction also fire b
             cond = float((x * y).sum() / x.sum()) if x.sum() else np.nan
+            # Counts as well as rates. A rate of 0.0025 on this drug set is one compound, and
+            # p_b_given_a computed from it reads 1.000, which is indistinguishable in the file from
+            # a well-supported certainty. app.py reads this table to label co-firing on a result
+            # page, so it needs the denominator to refuse the pairs that rest on one observation.
             fam_rows.append({"family": fam, "target_a": a, "target_b": b,
+                             "n_drugs": int(len(x)),
+                             "n_a": int(x.sum()), "n_b": int(y.sum()),
+                             "n_joint": int((x * y).sum()),
                              "rate_a": round(float(x.mean()), 4),
                              "rate_b": round(float(y.mean()), 4),
                              "joint_rate": round(joint, 4),

@@ -1,21 +1,21 @@
-family,target_a,target_b,rate_a,rate_b,joint_rate,phi_correlation,p_b_given_a
-voltage-gated sodium,Nav1_5,Nav1_6,0.015,0.0,0.0,,0.0
-voltage-gated sodium,Nav1_5,Nav1_7,0.015,0.0,0.0,,0.0
-voltage-gated sodium,Nav1_5,Nav1_8,0.015,0.0,0.0,,0.0
-voltage-gated sodium,Nav1_6,Nav1_7,0.0,0.0,0.0,,
-voltage-gated sodium,Nav1_6,Nav1_8,0.0,0.0,0.0,,
-voltage-gated sodium,Nav1_7,Nav1_8,0.0,0.0,0.0,,
-neuronal nicotinic,a7nAChR,a4b2nAChR,0.0025,0.01,0.0025,0.498,1.0
-neuronal nicotinic,a7nAChR,a3b4nAChR,0.0025,0.0275,0.0,-0.008,0.0
-neuronal nicotinic,a4b2nAChR,a3b4nAChR,0.01,0.0275,0.0075,0.444,0.75
-monoamine transporters,SERT,DAT,0.1825,0.085,0.05,0.32,0.274
-monoamine transporters,SERT,NET,0.1825,0.1375,0.1225,0.732,0.671
-monoamine transporters,DAT,NET,0.085,0.1375,0.0525,0.425,0.618
-opioid,OPRM1,OPRK1,0.0875,0.0575,0.0575,0.798,0.657
-dopamine,D2,D3,0.115,0.105,0.0825,0.72,0.717
-serotonin GPCR,HT1A,HT2A,0.0875,0.1025,0.0425,0.391,0.486
-serotonin GPCR,HT1A,HT6,0.0875,0.0775,0.02,0.175,0.229
-serotonin GPCR,HT1A,HT7,0.0875,0.09,0.055,0.583,0.629
-serotonin GPCR,HT2A,HT6,0.1025,0.0775,0.01,0.025,0.098
-serotonin GPCR,HT2A,HT7,0.1025,0.09,0.0675,0.671,0.659
-serotonin GPCR,HT6,HT7,0.0775,0.09,0.005,-0.026,0.065
+family,target_a,target_b,n_drugs,n_a,n_b,n_joint,rate_a,rate_b,joint_rate,phi_correlation,p_b_given_a
+voltage-gated sodium,Nav1_5,Nav1_6,400,6,0,0,0.015,0.0,0.0,,0.0
+voltage-gated sodium,Nav1_5,Nav1_7,400,6,0,0,0.015,0.0,0.0,,0.0
+voltage-gated sodium,Nav1_5,Nav1_8,400,6,0,0,0.015,0.0,0.0,,0.0
+voltage-gated sodium,Nav1_6,Nav1_7,400,0,0,0,0.0,0.0,0.0,,
+voltage-gated sodium,Nav1_6,Nav1_8,400,0,0,0,0.0,0.0,0.0,,
+voltage-gated sodium,Nav1_7,Nav1_8,400,0,0,0,0.0,0.0,0.0,,
+neuronal nicotinic,a7nAChR,a4b2nAChR,400,1,4,1,0.0025,0.01,0.0025,0.498,1.0
+neuronal nicotinic,a7nAChR,a3b4nAChR,400,1,11,0,0.0025,0.0275,0.0,-0.008,0.0
+neuronal nicotinic,a4b2nAChR,a3b4nAChR,400,4,11,3,0.01,0.0275,0.0075,0.444,0.75
+monoamine transporters,SERT,DAT,400,73,34,20,0.1825,0.085,0.05,0.32,0.274
+monoamine transporters,SERT,NET,400,73,55,49,0.1825,0.1375,0.1225,0.732,0.671
+monoamine transporters,DAT,NET,400,34,55,21,0.085,0.1375,0.0525,0.425,0.618
+opioid,OPRM1,OPRK1,400,35,23,23,0.0875,0.0575,0.0575,0.798,0.657
+dopamine,D2,D3,400,46,42,33,0.115,0.105,0.0825,0.72,0.717
+serotonin GPCR,HT1A,HT2A,400,35,41,17,0.0875,0.1025,0.0425,0.391,0.486
+serotonin GPCR,HT1A,HT6,400,35,31,8,0.0875,0.0775,0.02,0.175,0.229
+serotonin GPCR,HT1A,HT7,400,35,36,22,0.0875,0.09,0.055,0.583,0.629
+serotonin GPCR,HT2A,HT6,400,41,31,4,0.1025,0.0775,0.01,0.025,0.098
+serotonin GPCR,HT2A,HT7,400,41,36,27,0.1025,0.09,0.0675,0.671,0.659
+serotonin GPCR,HT6,HT7,400,31,36,2,0.0775,0.09,0.005,-0.026,0.065
