@@ -259,6 +259,49 @@ def main():
                        f"list a user reads; H9 is the fair description of whether the layer is doing "
                        f"anything. Both belong in the report.")
 
+    # H10 reads its verdict from its own artefact instead of having it recomputed here.
+    #
+    # Every hypothesis above has its verdict derived twice, once in the test script and once in this
+    # file, and a thesis audit found that for H2 the two copies disagree: the script prints WEAKENED
+    # and this file publishes REFUTED. H10 was added after that finding and does not repeat it. The
+    # test decides, writes the decision and the basis for it into the CSV, and this file reports what
+    # it finds. H1 to H9 should be migrated to the same arrangement.
+    h10 = read("H10_barrier_necessity.csv")
+    if h10 is not None and len(h10) and "verdict" in h10.columns:
+        dep = h10[h10.method.str.startswith("deployed")]
+        nul = h10[~h10.method.str.startswith("deployed")]
+        best = {p: g.sort_values("auroc").iloc[-1] for p, g in nul.groupby("population")}
+        sc, ex = best["scaffold hold-out"], best["external approved"]
+        d_sc = float(dep[dep.population == "scaffold hold-out"].auroc.iloc[0])
+        d_ex = float(dep[dep.population == "external approved"].auroc.iloc[0])
+        verdicts.append({
+            "hypothesis": "H10 the barrier model earns its place over a descriptor rule",
+            "verdict": str(h10.verdict.iloc[0]),
+            "headline": f"on unseen approved drugs the deployed forest scores {d_ex:.4f} against "
+                        f"{float(ex.auroc):.4f} for a forest on the twelve descriptors alone, a "
+                        f"margin of {float(ex.delta_vs_deployed):+.4f} whose bootstrap interval "
+                        f"reaches {float(ex.delta_ci95_high):+.4f}"})
+        notes["H10"] = (
+            f"The suite had no hypothesis for the component the architecture is named for. The null "
+            f"is that permeability is a bulk property, the twelve descriptors already in the feature "
+            f"vector encode it, and the fingerprint adds nothing. It is not a straw man: polar "
+            f"surface area, molecular weight and hydrogen-bond donors are the terms of every "
+            f"published CNS-permeability heuristic. On the scaffold hold-out the fingerprint clearly "
+            f"earns its place, {d_sc:.4f} against {float(sc.auroc):.4f} for a descriptor-only forest "
+            f"on the same Bemis-Murcko folds, a margin of {abs(float(sc.delta_vs_deployed)):.4f} "
+            f"whose interval excludes zero. On {int(ex.n)} approved drugs the model has never seen, "
+            f"the same comparison gives {d_ex:.4f} against {float(ex.auroc):.4f}, a margin of "
+            f"{abs(float(ex.delta_vs_deployed)):.4f} whose paired bootstrap interval runs "
+            f"{float(ex.delta_ci95_low):+.4f} to {float(ex.delta_ci95_high):+.4f} and therefore "
+            f"includes zero. The verdict is WEAKENED rather than SUPPORTED for that reason alone, "
+            f"and the reason matters: the same criticism was made of H4, whose rule compares point "
+            f"estimates and ignores an interval containing its own comparator. What the tool is "
+            f"entitled to say is that the fingerprint demonstrably helps on the training "
+            f"distribution and that its advantage over twelve descriptors on genuinely novel "
+            f"approved chemistry is not established on this sample. The published heuristic of "
+            f"TPSA at most 90 and molecular weight at most 400 is far behind either, at "
+            f"{float(nul[(nul.population == 'external approved') & nul.method.str.startswith('CNS')].auroc.iloc[0]):.4f}.")
+
     # Fingerprint of the graph these verdicts describe. File timestamps cannot answer "is this result
     # still true", because any edit to app.py, including a comment, makes every result look stale
     # while a change to the graph made without touching the file's mtime would look current. The

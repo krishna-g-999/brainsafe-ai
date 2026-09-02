@@ -19,13 +19,15 @@ from pptx.util import Inches, Pt
 
 from deck_common import (
     ROOT, TAB, PKG, W, M, INK, DEEP, TEAL, AMBER, CRIMSON, MUTED, TINT, PAPER, CHALK,
-    HEAD, BODY, Deck, rows, num, fmt,
+    HEAD, BODY, Deck, rows, num, fmt, at_revision,
 )
 
 sys.path.insert(0, str(ROOT / "src"))
 from brainsafe.models.pools import role_of, SHARES, AD_REFERENCE  # noqa: E402
 
 OUT = Path(__file__).resolve().parent / "chapter05_defence.pptx"
+# The commit that repaired the sensitivity defect; its parent holds the figure as published before.
+PRE_CORRECTION = "ab88039^"
 
 
 def facts() -> dict:
@@ -65,20 +67,24 @@ def facts() -> dict:
 
     rec = rows(TAB / "sensitivity_reconciliation.csv")
     h = [num(r["sensitivity_heldout"]) for r in rec if r["sensitivity_heldout"]]
-    p = [num(r["sensitivity_published"]) for r in rec if r["sensitivity_published"]]
+    # The registry was corrected on 2026-08-30, so `sensitivity_published` in the reconciliation now
+    # equals the held-out figure. The pre-correction values are read from git rather than typed.
+    pre = at_revision("models_rf/binder_modes.json", PRE_CORRECTION)
+    predep = {k: v for k, v in pre.items() if v.get("deployed")}
+    p = [v["sensitivity_at_threshold"] for v in predep.values()
+         if v.get("sensitivity_at_threshold") is not None]
     d["held"] = (st.mean(h), st.median(h), min(h), max(h), sum(1 for v in h if v < 0.5))
     d["pub"] = (st.mean(p), st.median(p), min(p), max(p), sum(1 for v in p if v < 0.5))
     d["n_sens"] = len(h)
     hm = {r["target"]: num(r["sensitivity_heldout"]) for r in rec if r["sensitivity_heldout"]}
-    pm = {r["target"]: num(r["sensitivity_published"]) for r in rec if r["sensitivity_published"]}
+    pm = {k: v["sensitivity_at_threshold"] for k, v in predep.items()
+          if v.get("sensitivity_at_threshold") is not None}
     d["held_min_ep"] = min(hm, key=hm.get)
     d["pub_min_ep"] = min(pm, key=pm.get)
-    dv = [num(r["published_minus_heldout"]) for r in rec if r["published_minus_heldout"]]
+    dv = [pm[k] - hm[k] for k in hm if k in pm]
     d["higher_on"] = sum(1 for v in dv if v > 0)
     d["mean_gap"] = st.mean(dv)
-    d["worst"] = sorted(((r["target"], num(r["sensitivity_heldout"]),
-                          num(r["sensitivity_published"]), num(r["published_minus_heldout"]))
-                         for r in rec if r["published_minus_heldout"]),
+    d["worst"] = sorted(((k, hm[k], pm[k], pm[k] - hm[k]) for k in hm if k in pm),
                         key=lambda x: -x[3])[:5]
     tf = [num(r["train_fraction_of_published_set"]) for r in rec
           if r["train_fraction_of_published_set"] and num(r["train_fraction_of_published_set"]) <= 1]
@@ -276,7 +282,7 @@ D.notes(s, "The systematic direction is not an error: for 39 of 47 endpoints the
 s = D.dark()
 D.text(s, M, 0.92, 9.0, 0.5, "One quantity, four numbers", size=15, color=AMBER, bold=True)
 D.text(s, M, 1.34, 11.9, 0.76,
-       "The published sensitivity is measured on the training set.",
+       "The published sensitivity was measured on the training set.",
        size=28, bold=True, font=HEAD, color=PAPER, line=1.10)
 D.text(s, M, 2.24, 11.4, 0.85,
        "The threshold sequence runs final_thresholds.py and then calibrate_background_specificity.py. "
@@ -296,8 +302,8 @@ D.text(s, M + 6.35, 3.92, 5.1, 0.85,
        "were used to fit the model.",
        size=12.5, color=CHALK, line=1.24)
 D.text(s, M, 5.15, 11.6, 0.55,
-       f"The registry keeps the second script's number and the first script's label. All "
-       f"{F['n_sens']} deployed entries still read sensitivity_basis: held_out_actives_by_scaffold.",
+       f"The registry kept the second script's number and the first script's label, on all "
+       f"{F['n_sens']} deployed entries. Repaired at the source on 2026-08-30, commit ab88039.",
        size=14, bold=True, color=PAPER, line=1.24)
 facts_line = [(f"published higher on {F['higher_on']} of {F['n_sens']}", ""),
               (f"by a mean of {F['mean_gap']:+.4f}", ""),
@@ -315,9 +321,9 @@ s = D.light()
 D.head(s, "5", "What the honest figure is, and what it changes",
        f"Measured on held-out actives only, across the {F['n_sens']} deployed binder endpoints")
 p, h = F["pub"], F["held"]
-D.text(s, M + 4.55, 1.88, 2.3, 0.3, "as published", size=11.5, bold=True, color=MUTED,
+D.text(s, M + 4.55, 1.88, 2.3, 0.3, "before the fix", size=11.5, bold=True, color=MUTED,
        align=PP_ALIGN.RIGHT)
-D.text(s, M + 7.30, 1.88, 2.3, 0.3, "held out only", size=11.5, bold=True, color=DEEP,
+D.text(s, M + 7.30, 1.88, 2.3, 0.3, "as published now", size=11.5, bold=True, color=DEEP,
        align=PP_ALIGN.RIGHT)
 lines = [("mean sensitivity", fmt(p[0], 4), fmt(h[0], 4), False),
          ("median", fmt(p[1], 4), fmt(h[1], 4), False),

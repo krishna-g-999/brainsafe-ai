@@ -1,0 +1,9 @@
+metric,value,note
+distinct SMILES in the endpoint tables,170619.0,before parsing; a structure RDKit cannot read is excluded below
+structures parsed as a desalted parent,170617.0,the population every figure below is computed on
+median fraction sp3,0.3448,RDKit CalcFractionCSP3 on the parent the featuriser sees
+mean fraction sp3,0.3528,
+"fraction sp3, 25th percentile",0.2308,
+"fraction sp3, 75th percentile",0.4615,
+"sp3-rich and at most one aromatic ring, count",15749.0,fraction sp3 >= 0.55 and aromatic rings <= 1
+"sp3-rich and at most one aromatic ring, per cent",9.23,the share of the library in which terpenoid and steroidal chemistry would sit

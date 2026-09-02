@@ -17,10 +17,11 @@ from pptx.util import Inches, Pt
 
 from deck_common import (
     ROOT, TAB, PKG, W, M, INK, DEEP, TEAL, AMBER, CRIMSON, MUTED, TINT, PAPER, CHALK,
-    HEAD, BODY, Deck, rows, num, fmt,
+    HEAD, BODY, Deck, rows, num, fmt, at_revision,
 )
 
 OUT = Path(__file__).resolve().parent / "chapter06_defence.pptx"
+PRE_CORRECTION = "ab88039^"   # parent of the commit that repaired the sensitivity defect
 
 
 def facts() -> dict:
@@ -59,9 +60,13 @@ def facts() -> dict:
 
     rec = rows(TAB / "sensitivity_reconciliation.csv")
     h = [num(r["sensitivity_heldout"]) for r in rec if r["sensitivity_heldout"]]
-    p = [num(r["sensitivity_published"]) for r in rec if r["sensitivity_published"]]
+    pre = at_revision("models_rf/binder_modes.json", PRE_CORRECTION)
+    predep = {k: v for k, v in pre.items() if v.get("deployed")}
+    p = [v["sensitivity_at_threshold"] for v in predep.values()
+         if v.get("sensitivity_at_threshold") is not None]
     hm = {r["target"]: num(r["sensitivity_heldout"]) for r in rec if r["sensitivity_heldout"]}
-    pm = {r["target"]: num(r["sensitivity_published"]) for r in rec if r["sensitivity_published"]}
+    pm = {k: v["sensitivity_at_threshold"] for k, v in predep.items()
+          if v.get("sensitivity_at_threshold") is not None}
     d["held"] = (st.mean(h), st.median(h), min(h), max(h), sum(1 for v in h if v < 0.5))
     d["pub"] = (st.mean(p), st.median(p), min(p), max(p), sum(1 for v in p if v < 0.5))
     d["held_min_ep"], d["pub_min_ep"] = min(hm, key=hm.get), min(pm, key=pm.get)
@@ -227,9 +232,9 @@ D.text(s, M, 1.40, 11.7, 0.76,
        "The panel fires for about three quarters of the actives it should.",
        size=28, bold=True, font=HEAD, color=PAPER, line=1.10)
 p, h = F["pub"], F["held"]
-D.text(s, M + 5.20, 2.42, 2.6, 0.3, "as published", size=11.5, bold=True, color=CHALK,
+D.text(s, M + 5.20, 2.42, 2.6, 0.3, "before the fix", size=11.5, bold=True, color=CHALK,
        align=PP_ALIGN.RIGHT)
-D.text(s, M + 8.30, 2.42, 2.6, 0.3, "held out only", size=11.5, bold=True, color=AMBER,
+D.text(s, M + 8.30, 2.42, 2.6, 0.3, "as published now", size=11.5, bold=True, color=AMBER,
        align=PP_ALIGN.RIGHT)
 lines = [("mean sensitivity", fmt(p[0], 4), fmt(h[0], 4), False),
          ("median", fmt(p[1], 4), fmt(h[1], 4), False),

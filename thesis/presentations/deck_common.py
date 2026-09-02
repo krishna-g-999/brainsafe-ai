@@ -14,6 +14,8 @@ Nothing else should be introduced without a reason of the same kind.
 from __future__ import annotations
 
 import csv
+import json
+import subprocess
 from pathlib import Path
 
 from pptx import Presentation
@@ -49,6 +51,21 @@ M = 0.62
 def rows(path: Path) -> list[dict]:
     with open(path, encoding="utf-8", errors="replace", newline="") as fh:
         return list(csv.DictReader(fh))
+
+
+def at_revision(path: str, rev: str):
+    """Read a JSON artefact as it stood at a git revision.
+
+    Some figures in this thesis are historical: a defect was found, quantified and repaired, and the
+    corrected value now sits in the artefact where the wrong one used to be. Showing the correction
+    needs both, and hard-coding the old one would be exactly the practice the thesis argues against.
+    Git holds it, so it is read from git.
+    """
+    out = subprocess.run(["git", "show", f"{rev}:{path}"], cwd=ROOT,
+                         capture_output=True, text=True, encoding="utf-8")
+    if out.returncode != 0:
+        raise RuntimeError(f"cannot read {path} at {rev}: {out.stderr.strip()}")
+    return json.loads(out.stdout)
 
 
 def num(v):

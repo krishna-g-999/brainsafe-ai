@@ -70,6 +70,30 @@ GRAPH: list[tuple[str, list[str], str]] = [
     ("results/tables/rf_cv_folds.csv", ["models_rf/BBB.joblib"],
      "python src/brainsafe/models/train_rf.py"),
 
+    # The label-permutation null for the eight core classifiers. Written after a thesis audit found
+    # the technical report asserting mean AUROCs of 0.4938 random and 0.4921 scaffold under permuted
+    # labels with those numbers hard-coded in a prose block and no file holding them. It is the
+    # evidence that the cross-validated figures are not obtainable without the labels, and that
+    # scaffold grouping alone confers nothing, so it belongs in the graph beside the figures it
+    # supports. It depends on the endpoint tables, because it refits from them.
+    ("results/tables/permutation_null.csv", ["data/endpoints/*.csv"],
+     "python src/brainsafe/evaluation/permutation_null.py"),
+
+    # H10, the falsification suite's test of the barrier model itself. Added after a thesis audit
+    # found that the component the architecture is named for was the one component no hypothesis
+    # tested. It compares the deployed forest against descriptor rules and descriptor-only models on
+    # the same Bemis-Murcko folds and on the external approved-drug set, so it depends on the served
+    # model and on the stored out-of-fold predictions.
+    # The two library-composition figures behind the natural-product limitation. They were measured
+    # inside build_technical_report.py and written to no file, so no other document could cite them
+    # and nothing checked them. The artefact reproduces the generator's values exactly.
+    ("results/tables/library_sp3_coverage.csv", ["data/endpoints/*.csv"],
+     "python src/brainsafe/evaluation/library_sp3_coverage.py"),
+
+    ("inversion/results/H10_barrier_necessity.csv",
+     ["models_rf/BBB.joblib", "data/processed/cv_predictions/BBB_scaffold_oof.csv"],
+     "python inversion/inv_barrier_necessity.py"),
+
     # ---- calibration sits on the core models --------------------------------------------------
     ("results/tables/calibration.csv", ["models_rf/BBB.joblib"],
      "python src/brainsafe/models/calibrate.py"),

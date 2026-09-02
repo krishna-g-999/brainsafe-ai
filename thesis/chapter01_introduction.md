@@ -196,10 +196,13 @@ model to 0.976 for BACE1, and 0.925 under a scaffold-grouped split that withhold
 classes, ranging 0.878 to 0.965 (`results/tables/rf_cv_summary.csv`). Over the 47 deployed binder
 classifiers, validated against compounds tested at the same target and found inactive rather than
 against decoys, mean AUROC is 0.9174 with a median of 0.947, ranging from 0.719 at GABA-A to 0.985 at
-the CGRP receptor; mean sensitivity is 0.8983 with a median of 0.932, ranging from 0.639 at COX-2 to
-0.997 (`submission_package/07_MODELS/binder_panel_registry.json`). Quoting either mean without its
-range would flatter the panel, and the endpoints at the bottom of those ranges are named wherever the
-means appear.
+the CGRP receptor. Sensitivity at the deployed threshold, on actives withheld by scaffold, has a
+mean of 0.7638 and a median of 0.8350, ranging from 0.303 at GABA-A to 0.993 at the CGRP receptor,
+with six of the 47 firing for fewer than half their own held-out actives
+(`models_rf/binder_modes.json`). That sensitivity figure was corrected during the writing of this
+thesis, having previously read 0.8983 through a set that was mostly training compounds; Chapter 5
+sets out the defect and its repair. Quoting either mean without its range would flatter the panel,
+and the endpoints at the bottom of those ranges are named wherever the means appear.
 
 **Five endpoints were trained, tested and withdrawn**, and the panel is reported as an inventory of
 52 binder endpoints rather than as a selection of 47. GluA2 and Nav1.1 fired on glucose, urea and
@@ -212,12 +215,12 @@ held-out measured inactives.
 information beyond the graph's topology, scoring 0.7901 curated against 0.7897 uniform and 0.7874
 randomly permuted. Exposure gating cannot discriminate between conditions. Silence at a target
 reflects the operating point rather than a non-discriminative model. And engaged targets are not
-independent observations: 36 targets fire across approved drugs but span only 16 independent
+independent observations: 37 targets fire across approved drugs but span only 16 independent
 directions.
 
 **Specificity is a lower bound.** On 1,000 compounds with no recorded activity at any modelled
-target, 949 returned no actionable disease signal, a specificity of 0.949 with a 95 per cent interval
-of 0.9336 to 0.961 (`results/tables/noncns_specificity_summary.csv`). Those compounds are presumed
+target, 925 returned no actionable disease signal, a specificity of 0.925 with a 95 per cent interval
+of 0.907 to 0.9397 (`results/tables/noncns_specificity_summary.csv`). Those compounds are presumed
 inactive because nothing is recorded about them, not proven inactive, and the artefact itself labels
 the paired false-positive rate an upper bound.
 

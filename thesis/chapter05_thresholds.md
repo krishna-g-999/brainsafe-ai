@@ -196,6 +196,16 @@ the model was fitted with.
 
 ## 5.9 What the honest figure is, and what it changes
 
+> **Resolved.** The defect described in section 5.8 was corrected in the repository on 2026-08-30
+> (commit `ab88039`). `models_rf/binder_modes.json` now stores the held-out figure on all 47 deployed
+> endpoints, `sensitivity_reconciliation.csv` reports a gap of +0.000 across the panel, and the
+> submission package has been rebuilt so that both copies of the registry agree. The source was fixed
+> so the overwrite cannot recur. The commit record notes that the same correction had been made once
+> before, reaching a mean of 0.7513 when the reviewer package was assembled, and was silently undone
+> the next time the calibration stage ran, which is the reason the repair was made at the source
+> rather than by patching the artefact. Section 5.8 is retained as the record of how the defect was
+> found; the figures below are now the published ones.
+
 Measured on held-out actives only, across the 47 deployed binder endpoints:
 
 | | Published | Held out |
@@ -216,7 +226,7 @@ the silent antiepileptics were explained by non-discriminative targets, conclude
 reported that the cause was the operating point with a median deployed sensitivity of 0.79 and six
 targets under 0.50. Its six are COX-2, GABA-A, KEAP1, P2X7, SIRT1 and TAAR1, five of which are the
 same six found here. H7 scored held-out actives against random PubChem chemistry, an unrelated
-construction, and landed within 0.03 of the held-out mean. The published figure was the outlier all
+construction, and landed 0.031 from the held-out mean. The published figure was the outlier all
 along, and the suite designed to embarrass the tool had already said so.
 
 The consequences are three, and none of them is that the system is worse than believed.
@@ -264,13 +274,12 @@ that is correct behaviour, but nothing asserts it.
 
 ## Outstanding items for this chapter
 
-1. **The published binder sensitivity is measured on a set that is mostly training compounds and is
-   labelled as held out.** The manuscript, `submission_package/EVIDENCE_MAP.md`, the technical
-   report and Chapter 1 of this thesis quote 0.898. The held-out figure is 0.764, with six endpoints
-   below 0.50 where the published figure has none. This is a correction to a published number and
-   should be made before anything further is sent.
-2. `calibrate_background_specificity.py` should score held-out actives, as `final_thresholds.py`
-   does, or the registry field should be renamed to say what it is.
+1. ~~The published binder sensitivity is measured on a set that is mostly training compounds.~~
+   **Done, 2026-08-30.** The registry now stores the held-out figure on all 47 endpoints and the
+   reconciliation reports a gap of +0.000. The manuscript, `EVIDENCE_MAP.md` and the technical report
+   still need the same correction propagated to their prose.
+2. ~~`calibrate_background_specificity.py` should score held-out actives.~~ **Done at the source**,
+   so the overwrite cannot recur.
 3. Nav1.5, SIRT1 and TAAR1 define "active" differently in the two scripts. One definition should win.
 4. A test should assert that `sensitivity_basis` matches the population the stored sensitivity was
    computed on.

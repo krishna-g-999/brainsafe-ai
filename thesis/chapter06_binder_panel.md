@@ -88,11 +88,12 @@ The active hold-outs are more comfortable, with a median of 299 and a range of 2
 ## 6.4 Sensitivity, corrected
 
 Chapter 5 established that the sensitivity figure stored in the panel registry, and quoted in every
-document downstream of it, is computed over every active in the endpoint table rather than over the
-held-out actives its own label claims. The correction belongs here too, because this is the chapter
-where the panel's operating behaviour is reported.
+document downstream of it, was computed over every active in the endpoint table rather than over the
+held-out actives its own label claimed. That defect was corrected in the repository on 2026-08-30,
+and the registry now stores the held-out figure on all 47 deployed endpoints. The table below
+therefore compares what was published before the correction with what is published now.
 
-| | As published | Held out only |
+| | As published before 2026-08-30 | As published now, held out |
 |---|---:|---:|
 | Mean sensitivity | 0.8983 | **0.7638** |
 | Median | 0.9320 | 0.8350 |
@@ -198,8 +199,10 @@ Putting the corrected figures together, the deployed binder panel:
 1. **Per-endpoint AUROC against measured inactives carries no interval.** The reported range, 0.719
    to 0.985, has its two extremes computed on 37 and 23 compounds. Wilson or bootstrap intervals
    would settle how much of that spread is real, and are cheap.
-2. **The sensitivity correction from Chapter 5 must propagate.** The manuscript, the evidence map and
-   the technical report all quote 0.8983 with the qualifier "on actives withheld by scaffold".
+2. **The sensitivity correction has been applied to the registry but not to the prose.** The
+   manuscript, the evidence map and the technical report still quote 0.8983 with the qualifier "on
+   actives withheld by scaffold". The registry, the reconciliation artefact and the submission
+   package now all read 0.7638.
 3. **TAAR1 should be reviewed for withdrawal or for a warning flag.** It is the least trustworthy
    deployed endpoint on four independent measures, and nothing in the interface says so beyond the
    generic reliability flag.
