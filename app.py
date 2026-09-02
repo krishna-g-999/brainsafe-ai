@@ -99,9 +99,15 @@ TARGET_KIND = {"AChE": "enrich", "BChE": "enrich", "BACE1": "enrich", "GSK3B": "
 # Curated target -> pathway -> disease knowledge graph. Each entry is (pathway, source_id, disease,
 # weight).
 #
-# On the weights: an ablation over 15,609 scaffold-held-out compounds found that curated, uniform and
-# randomly permuted weights give top-3 disease accuracy of 0.7917, 0.7911 and 0.7899 respectively
-# (inversion/results/H2_weight_ablation.csv). The predictive information is carried by the graph's
+# On the weights: an ablation over the 7,008 compounds of the disease-layer evaluation set found that
+# curated, uniform and randomly permuted weights give top-3 disease accuracy of 0.7901, 0.7897 and
+# 0.7874 respectively (inversion/results/H2_weight_ablation.csv, n from H1_disease_layer.csv). This
+# comment previously reported 0.7917, 0.7911 and 0.7899 over 15,609 compounds, none of which the
+# ablation ever used: 15,609 is the pooled-recall denominator of the scaffold hold-out, a different
+# experiment, recorded at audit/AUDIT_REPORT.md:824 as 12,325/15,609 = 0.790. That the wrong
+# denominator sat beside a right-looking accuracy for so long is explained by the coincidence that
+# the two quantities agree to three decimals. Audit item BS-M-04, closed in the manuscript and until
+# now left open here. The predictive information is carried by the graph's
 # TOPOLOGY, which target connects to which disease, and not by these numbers. They are retained as a
 # mechanistic prior expressing which link is the more direct, and they still scale the reported
 # score, but they are NOT tuned parameters and must not be described as such.
@@ -525,16 +531,60 @@ TARGET_FAMILIES = {
     "Neuronal nicotinic": ["a7nAChR", "a4b2nAChR", "a3b4nAChR"],
     "Voltage-gated sodium": ["Nav1_5", "Nav1_6", "Nav1_7", "Nav1_8"],
 }
-# phi correlation of joint firing across approved drugs, strongest measured pair per family
-FAMILY_COFIRE = {
-    "Dopamine D2-like": (0.81, "D2 and D3 fire together for 78% of compounds engaging D2"),
-    "Opioid": (0.79, "kappa fires for 65% of compounds engaging mu"),
-    "Monoamine transporters": (0.64, "NET fires for 84% of compounds engaging DAT"),
-    "Serotonin receptors": (0.70, "5-HT7 fires for 78% of compounds engaging 5-HT2A"),
-    "Neuronal nicotinic": (0.35, "the least correlated family measured; largely independent"),
-    "Voltage-gated sodium": (None, "too few joint engagements among approved drugs to estimate"),
-}
 _TARGET_TO_FAMILY = {t: f for f, ts in TARGET_FAMILIES.items() for t in ts}
+
+# Below this many approved drugs engaging both targets, a conditional probability is noise. Without
+# the guard the nicotinic family reports "fires for 100% of compounds", from one compound.
+MIN_JOINT_DRUGS = 10
+
+
+@st.cache_data(show_spinner=False)
+def family_cofire():
+    """Strongest measured co-firing pair per family, read from the falsification suite's artefact.
+
+    These figures were written down, and had drifted from the artefact on five of five correlations
+    and three of four conditional probabilities. The monoamine entry was the clearest failure: it
+    displayed DAT to NET at r = 0.64 and 84%, where the artefact measures that pair at 0.425 and
+    61.8%, and where the family's strongest pair is not DAT to NET at all but SERT to NET at 0.732.
+    A badge reading "correlated, r = 0.81" renders beside two engaged targets, so the reader deciding
+    how much independent evidence the pair represents was given a number no artefact supported.
+
+    Deriving them ends the class of defect rather than the instance: the numbers cannot drift from
+    inversion/results/H8_family_correlation.csv because they are read from it.
+
+    Returns {family: (phi, note)}. A family with no adequately supported pair returns (None, note),
+    which suppresses the badge and says why.
+    """
+    src = ROOT / "inversion" / "results" / "H8_family_correlation.csv"
+    out = {}
+    try:
+        rows = pd.read_csv(src).to_dict("records")
+    except Exception:
+        return {}
+    best = {}
+    for r in rows:
+        fam = _TARGET_TO_FAMILY.get(str(r.get("target_a")))
+        if fam is None or fam != _TARGET_TO_FAMILY.get(str(r.get("target_b"))):
+            continue
+        phi, joint = r.get("phi_correlation"), r.get("n_joint")
+        # An artefact without the count columns predates the guard; treat support as unknown and
+        # decline to report, rather than repeating the one-compound certainty this guard exists for.
+        if phi is None or phi != phi or joint is None or joint != joint:
+            continue
+        if int(joint) < MIN_JOINT_DRUGS:
+            continue
+        if fam not in best or float(phi) > float(best[fam].get("phi_correlation", -1)):
+            best[fam] = r
+    for fam in TARGET_FAMILIES:
+        r = best.get(fam)
+        if r is None:
+            out[fam] = (None, "too few approved drugs engage both members to measure co-firing")
+            continue
+        a, b = str(r["target_a"]), str(r["target_b"])
+        out[fam] = (float(r["phi_correlation"]),
+                    f'{MECH_LABEL.get(b, b)} fires for {float(r["p_b_given_a"]):.0%} of the '
+                    f'{int(r["n_a"])} approved drugs engaging {MECH_LABEL.get(a, a)}')
+    return out
 
 
 def independent_mechanisms(engaged):
@@ -1560,7 +1610,7 @@ def render_independence(r):
             chips += (f'<div style="margin:6px 0"><span class="bs-chip">unrelated</span> '
                       f'<span style="font-size:.82rem">{labels}</span></div>')
             continue
-        phi, note = FAMILY_COFIRE.get(fam, (None, ""))
+        phi, note = family_cofire().get(fam, (None, ""))
         tag = (f'<span class="bs-badge" style="background:{AMBER}14;color:{AMBER};'
                f'border-color:{AMBER}33">correlated, r = {phi:.2f}</span>'
                if (len(ts) > 1 and phi) else "")

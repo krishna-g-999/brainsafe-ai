@@ -241,6 +241,27 @@ GRAPH: list[tuple[str, list[str], str]] = [
      ["results/tables/external_prospective.csv", "results/tables/external_cross_source.csv"],
      "python src/brainsafe/evaluation/external_novelty_strata.py"),
 
+    # The technical report itself. It was the one generated document outside this graph, and it went
+    # stale exactly as the graph exists to prevent: it computes its cross-provenance sensitivity from
+    # external_cross_source.csv, that artefact was regenerated after the sensitivity correction, and
+    # the report went on stating 0.868 where the artefact said 0.716 because nothing declared the
+    # dependency. Every table its `read()` helper opens is listed, so a regenerated input now fails
+    # the check until the report is rebuilt from it.
+    ("docs/TECHNICAL_REPORT.md",
+     ["models_rf/binder_modes.json", "inversion/results/VERDICTS.csv",
+      "inversion/results/H9_disease_discrimination.csv",
+      "results/tables/adme_cv_summary.csv", "results/tables/applicability_measures.csv",
+      "results/tables/calibration.csv", "results/tables/external_bbb_validation.csv",
+      "results/tables/external_cross_source.csv", "results/tables/external_novelty_strata.csv",
+      "results/tables/external_prospective.csv", "results/tables/external_prospective_core.csv",
+      "results/tables/feature_block_ablation.csv", "results/tables/inversion_validation.csv",
+      "results/tables/learning_curve.csv", "results/tables/model_comparison.csv",
+      "results/tables/noncns_specificity_summary.csv", "results/tables/permutation_null.csv",
+      "results/tables/rf_conformal.csv", "results/tables/rf_cv_summary.csv",
+      "results/tables/rf_temporal.csv", "results/tables/scaffold_holdout_results.csv",
+      "results/tables/stereochemistry_audit.csv", "results/tables/worked_example.csv"],
+     "python src/brainsafe/analysis/build_technical_report.py"),
+
     # The two analyses written to answer foreseeable reviewer criticisms. Both are quoted verbatim in
     # section 8.2 of the technical report, which is precisely the condition that let earlier
     # supporting analyses drift: quoted in a document, named by no dependency.

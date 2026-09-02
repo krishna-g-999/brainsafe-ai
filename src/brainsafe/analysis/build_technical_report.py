@@ -31,6 +31,8 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / "src" / "brainsafe"))
+import panel  # noqa: E402
+
 TAB = ROOT / "results" / "tables"
 OUT = ROOT / "docs" / "TECHNICAL_REPORT.md"
 
@@ -202,6 +204,11 @@ the spread is wide, so the means alone flatter the panel: AUROC runs from
 {max(v["auroc_vs_measured_inactives"] for v in dep):.3f} and sensitivity from
 {min(v["sensitivity_at_threshold"] for v in dep):.3f} to
 {max(v["sensitivity_at_threshold"] for v in dep):.3f}, with the per-endpoint figures in section 2.1.
+Sensitivity is measured on actives withheld by scaffold. {sum(1 for v in dep if not v.get("reliable_call", True))}
+endpoints fall below the reliability gate, which is a sensitivity of {panel.MIN_SENSITIVITY:.2f} on
+those withheld actives and an AUROC of {panel.MIN_AUROC:.2f} against compounds measured at the same
+target and found inactive; each stays deployed because it holds its background false-positive rate at
+or below target, and the server marks a negative call from any of them as low-powered.
 On 1,000 compounds with no recorded activity at any modelled target it stays silent
 {float(spec[spec.metric.str.startswith("Specificity")].estimate.iloc[0]):.1%} of the time. Those
 compounds are presumed inactive because nothing is recorded about them rather than proven inactive,
@@ -1323,14 +1330,28 @@ the pipeline fits, no InChIKey, no feature vector and no scaffold appears on bot
 On the raw table the feature-vector overlap reaches 544, which is precisely what deduplication
 removes.
 
-**Null models.** With labels permuted, the same pipeline on the same folds returns mean AUROC 0.4938
-random and 0.4921 scaffold, worst single endpoint 0.5174. Whole scaffold classes do not carry enough
-class-frequency information for a label-free model to beat chance, so the scaffold figures are not
-inflated by that route.
+**Null models.** With labels permuted, the same pipeline on the same folds returns mean AUROC 0.4959
+random and 0.5026 scaffold over the eight core classifiers, every one of the sixteen values within
+0.0200 of chance, against margins over each endpoint's own null of 0.3860 to 0.4887. The smallest
+margin is 19.3 times the largest departure from chance the null itself produces. Scaffold grouping
+alone confers nothing: paired by endpoint the scaffold null exceeds the random null by a mean of
+0.0067, Wilcoxon p = 0.25, and is negative in three of the eight. Whole scaffold classes therefore do
+not carry enough class-frequency information for a label-free model to beat chance, and the scaffold
+figures are not inflated by that route. Artefact: `results/tables/permutation_null.csv`, written by
+`src/brainsafe/evaluation/permutation_null.py`, which imports `train_rf` so that the featuriser,
+deduplication, Bemis-Murcko grouping, fold objects and hyper-parameters are identical by
+construction rather than by reimplementation.
+
+An earlier edition of this section reported 0.4938 random and 0.4921 scaffold. Those figures were
+stated here and held in no file: no artefact contained them and no script computed them, which made
+the one claim establishing that the cross-validation is not inflated by leakage the one claim a
+reader could not check. They are corroborated by the values above rather than reproduced by them,
+because the original run recorded no seed and cannot be re-executed.
 
 **Independent reproduction.** The entire cross-validation was re-run from the endpoint tables and
 scored with separately written metric code. All 26 core values reproduced, maximum deviation
-4.7 × 10⁻⁵.
+4.7 × 10⁻⁵. This figure is reported as recorded at the time; like the null models above it was never
+written to a file, and unlike them it has not been re-derived.
 """)
 
     A("""
