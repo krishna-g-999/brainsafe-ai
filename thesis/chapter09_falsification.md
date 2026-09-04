@@ -348,6 +348,11 @@ three".
 The falsification results are not, so a rerun that silently flipped a verdict would be caught only by
 a person reading the report.
 
+> **Resolved, items 3, 4 and 5.** All three were repaired on 2026-09-02 in commit `1f91925`, after
+> this chapter was written. They are retained as found rather than deleted, because the record of a
+> defect and the record of its repair are both evidence, and because the repair of item 4 turned up
+> something worse than this chapter had noticed. Each item carries a note below saying what changed.
+
 **3. `app.py` still quotes a withdrawn version of H2.** The comment at `app.py:102-104` reads: an
 ablation "over 15,609 scaffold-held-out compounds found that curated, uniform and randomly permuted
 weights give top-3 disease accuracy of 0.7917, 0.7911 and 0.7899". The artefact it cites now reads
@@ -358,6 +363,10 @@ experiment at all. On the day the comment was written the artefact said 7,524, a
 different quantity from a different table. The project's own audit recorded this as item BS-M-04,
 "weight ablation, two triples for one experiment", and named `app.py` explicitly. It was corrected in
 the manuscript and not in the source.
+
+*Fixed.* The comment now states the current triple over 7,008 compounds and records what it used to
+say and why the wrong denominator survived: 15,609 agrees with the H2 accuracy to three decimals, so
+a wrong number sat beside a right-looking one.
 
 **4. The interface quotes co-firing correlations that no longer match the artefact, and this one is
 user-visible.** `FAMILY_COFIRE` at `app.py:529` supplies both a badge reading "correlated, r = 0.81"
@@ -378,6 +387,16 @@ redundant", where the artefact says 37 and 16, a factor of 2.31. Every discrepan
 reverses a conclusion, but these are numbers presented to a scientist deciding how much weight two
 engaged targets deserve, and the monoamine row names the wrong pair as the family's strongest.
 
+*Fixed, and the fix found a worse defect than this chapter had.* `FAMILY_COFIRE` is now derived from
+the artefact by a function rather than restated, so it cannot drift again. Deriving it required the
+artefact to carry denominators, because every rate in it is a multiple of 1/400 and a conditional
+probability of 1.000 computed from a single joint compound is indistinguishable in the file from a
+well-supported certainty. That is exactly what the nicotinic row was: the interface asserted
+"r = 0.35, the least correlated family measured", a family-level conclusion, on a pair whose joint
+engagement rests on **one** approved drug. `inv_panel_independence.py` now records `n_drugs`, `n_a`,
+`n_b` and `n_joint`, and a pair is reported only when at least ten approved drugs engage both.
+Regenerating reproduced every pre-existing column exactly and left `VERDICTS.csv` unchanged.
+
 **5. `results/tables/background_specificity.csv` is the output of a script that has since been fixed
 and never re-run.** It still reports a mean sensitivity of 0.8983 across 47 endpoints and marks 46 of
 them reliable. The registry, `final_thresholds.csv` and the reviewer package all say 0.7638 and 41 of
@@ -388,6 +407,16 @@ freshness graph does not catch it because the graph's inputs are data and models
 generator can be corrected without anything marking its output stale. That is a real gap in a tool
 this project relies on. It is stated here rather than fixed, because regenerating this file means
 re-running the sequence the correction was designed to avoid.
+
+*Fixed, without re-running the sequence.* The dilemma above was real and the resolution is narrower
+than either horn of it. Four of the file's six columns were already correct; only the two reported
+ones were stale. `refresh_background_specificity.py` updates those two from the registry and leaves
+every operating threshold untouched, which is verifiable: after the repair no threshold and no
+background false-positive rate moved on any of the 47 endpoints, and the file now agrees with the
+registry on all 47 with zero disagreements. A byte-identical copy shipped in the submission package
+and was updated with it, which matters more than the local file: **the disagreement was visible to
+reviewers before it was visible to us.** Two tests now pin both, since the freshness graph cannot
+catch this class for the reason recorded at `check_freshness.py:110`.
 
 **6. Three pieces of explanatory prose have drifted from their artefacts.** The H7 script's docstring
 says deployed sensitivity "ranges from 0.26 to 0.98"; the artefact says 0.000 to 0.990. The H4
@@ -448,19 +477,19 @@ suite that reads the column rather than the tables will overstate what it found.
 
 ## Outstanding items for this chapter
 
-1. **Correct `app.py:102-104`** to the current H2 triple and population, or delete the numbers and
-   cite the artefact. This is audit item BS-M-04, closed everywhere except the source.
-2. **Derive `FAMILY_COFIRE` from `H8_family_correlation.csv`** rather than restating it, so the
-   user-visible correlations cannot drift again, and correct the monoamine entry, which names the
-   wrong pair.
-3. **Give each hypothesis one verdict rule.** Move the rules into `summarise.py` and have the test
-   scripts import them, as `panel.py` now does for the reliability gate.
-4. **Pin the verdicts with a test**, so a rerun that flips one fails loudly.
-5. **Add a hypothesis for the barrier model**, testing whether the BBB term can be replaced by a
-   descriptor rule without loss to the gated score.
+1. ~~Correct `app.py:102-104` to the current H2 triple and population.~~ **Done, 2026-09-02**
+   (`1f91925`). Audit item BS-M-04 is now closed in the source as well as the manuscript.
+2. ~~Derive `FAMILY_COFIRE` from `H8_family_correlation.csv` rather than restating it.~~
+   **Done, 2026-09-02.** The artefact now carries denominators and suppresses any pair supported by
+   fewer than ten approved drugs, which removed a family-level claim resting on one compound.
+3. **Give each hypothesis one verdict rule.** H10 reads its verdict from its own artefact, which is
+   the arrangement to adopt; H1 to H9 still derive theirs twice, and for H2 the two copies disagree.
+4. **Pin the verdicts with a test**, so a rerun that flips one fails loudly. Still open: the test
+   suite has grown to 73 and none of it reads `inversion/`.
+5. ~~Add a hypothesis for the barrier model.~~ **Done.** H10, argued in section 10.3.
 6. **Make the freshness graph aware of code.** An artefact whose generator has changed since the
    artefact was written is stale, and nothing currently says so.
-7. **Regenerate `background_specificity.csv`**, but only as part of a deliberate rerun of the
-   threshold sequence with the guard described in commit `ab88039`.
+7. ~~Regenerate `background_specificity.csv`.~~ **Done, 2026-09-02**, by refreshing the two reported
+   columns from the registry rather than by re-running the threshold sequence. No threshold moved.
 8. **Refresh or delete the three 4 August logs** in `inversion/`, which now record a superseded
    verdict.

@@ -15,7 +15,7 @@ tidying. Sections 10.2 to 10.6.
 
 **What the record gets wrong**, which is a property of this project's housekeeping and is fixable.
 Section 10.7 identifies the one structural defect behind most of it, and section 10.8 is the full
-ledger of 41 items raised across the preceding nine chapters.
+ledger of 41 items raised across the preceding nine chapters, ten of which are now closed.
 
 **What should be done next**, ordered by what it would change rather than by how interesting it is.
 Section 10.9.
@@ -223,7 +223,7 @@ The instances, in the order they were found:
 | 8 | The label-permutation null, 0.4938 and 0.4921 | hard-coded in a literal prose block |
 | 8 | The independent-reproduction figure, 26 values to 4.7 × 10⁻⁵ | hard-coded in the same block |
 | 9 | The H2 weight ablation, 0.7917 / 0.7911 / 0.7899 over 15,609 compounds | hard-coded in `app.py` |
-| 9 | Five co-firing correlations and three conditional probabilities | hard-coded in `app.py`, and user-visible |
+| 9 | Five co-firing correlations and three conditional probabilities | hard-coded in `app.py`, user-visible, since derived from the artefact |
 | 10 | The natural-product coverage figures | computed inside the report generator, held by no file until this chapter |
 
 The last row is the mildest and the most instructive. Those two figures are genuinely *measured* at
@@ -250,11 +250,11 @@ section 10.8:
 
 ## 10.8 The ledger
 
-41 items were raised across Chapters 1 to 9. Five of them are now closed, and a sixth was raised
-and closed within this chapter. They are listed as closed rather than removed, because a thesis that
-silently drops its own outstanding items is doing the thing this chapter is about.
+41 items were raised across Chapters 1 to 9. Ten are now closed. They are listed as closed rather
+than removed, because a thesis that silently drops its own outstanding items is doing the thing this
+chapter is about.
 
-**Closed while writing.**
+**Closed while writing.** Six were closed in the course of writing Chapters 5 to 10.
 
 | Item | Raised | Closed by |
 |---|---|---|
@@ -265,52 +265,62 @@ silently drops its own outstanding items is doing the thing this chapter is abou
 | The falsification suite has no hypothesis for the barrier model | 9 | H10, section 10.3 |
 | The natural-product coverage figures have no artefact | 10 | `results/tables/library_sp3_coverage.csv`, built for this chapter |
 
-**Open, ordered by consequence.** The first four change something a user sees or a reader would
-quote; the rest are housekeeping.
+**Closed after writing.** Four more were repaired on 2026-09-02 in commit `1f91925`, which audited
+Chapters 8 to 10 against the files they cite. They are recorded here because the ledger is the
+chapter's own claim about the state of the project, and a ledger that goes stale is the defect
+section 10.7 describes.
 
-1. **The interface quotes co-firing correlations that no longer match the artefact.** Five of five
-   correlations and three of four conditional probabilities disagree, and the monoamine entry names
-   the wrong pair as its family's strongest. This is rendered on a result page. `FAMILY_COFIRE`
-   should be derived from `H8_family_correlation.csv`, not restated. (9)
-2. **The sensitivity correction has reached the registry and not the prose.** The manuscript,
-   `EVIDENCE_MAP.md` and the technical report still quote 0.8983 under the qualifier "on actives
-   withheld by scaffold". The correct figure is 0.7638. (5, 6)
-3. **The headline calibration figure should be qualified everywhere it appears**, since 0.0801 to
+| Item | Raised | Closed by |
+|---|---|---|
+| The interface quotes co-firing correlations that no longer match the artefact | 9 | `FAMILY_COFIRE` is now derived from the artefact by a function. The repair found a worse defect than Chapter 9 had: the nicotinic entry asserted a family-level conclusion resting on **one** joint approved drug, which the file could not distinguish from a certainty because every rate in it is a multiple of 1/400. The artefact now carries `n_drugs`, `n_a`, `n_b` and `n_joint`, and suppresses any pair supported by fewer than ten drugs |
+| `app.py:102-104` quotes the withdrawn H2 triple | 9 | Corrected to 0.7901 / 0.7897 / 0.7874 over 7,008, with a note recording what it used to say. Audit item BS-M-04 now closed in the source |
+| `background_specificity.csv` holds pre-correction output | 9 | Refreshed by updating only its two reported columns from the registry. **No threshold and no background false-positive rate moved on any of the 47 endpoints**, and the shipped copy in the submission package was updated with it. Two tests pin both |
+| The technical report's cross-provenance section is stale | 8 | The 0.868 was not hard-coded; the report computes it and had never been rebuilt, because `TECHNICAL_REPORT.md` was the one generated document outside the freshness graph. It is now declared against all 23 of its inputs and rebuilt at 0.716 |
+
+The third of those deserves a sentence, because Chapter 9 posed it as a dilemma and the resolution is
+narrower than either horn. Four of that file's six columns were already correct; only the two
+reported ones were stale, so refreshing those two from the registry avoids re-running the sequence
+that would rewrite every operating threshold to correct a reported one. And the version a reviewer
+holds was corrected at the same time as the local one, which is the part that mattered: **the
+disagreement was visible to reviewers before it was visible to us.**
+
+**Open, ordered by consequence.** The first two change something a reader would quote; the rest are
+housekeeping.
+
+1. **The sensitivity correction has reached the registry and not all of the prose.** The manuscript
+   and `EVIDENCE_MAP.md` still quote 0.8983 under the qualifier "on actives withheld by scaffold".
+   The correct figure is 0.7638. The technical report has been rebuilt; these two have not. (5, 6)
+2. **The headline calibration figure should be qualified everywhere it appears**, since 0.0801 to
    0.0147 covers eight of the deployed estimators and the 38 binder endpoints sit at a mean of
    0.0762. Section 10.5 adds that the barrier model is the worst of the eight. (4)
-4. **The technical report's cross-provenance section is stale**, stating a mean deployed sensitivity
-   of 0.868 where the artefact gives 0.7160; the scaffold hold-out is 41 targets at median recall
-   0.8180 where the report says 39 and 0.815. (8)
-5. `app.py:102-104` still quotes the withdrawn H2 triple over a population that never matched. Audit
-   item BS-M-04, closed in the manuscript and not in the source. (9)
-6. Give each hypothesis one verdict rule, as H10 now has, and pin the verdicts with a test. (9)
-7. Make the freshness graph aware of code, so a corrected generator marks its output stale. (9)
-8. Regenerate `background_specificity.csv`, but only within a deliberate rerun of the threshold
-   sequence with the guard described in `ab88039`. (9)
-9. Two citation gaps remain in Chapter 1: a CNS attrition series, and verified citations for the
+3. Give each hypothesis one verdict rule, as H10 now has, and pin the verdicts with a test. The
+   suite has grown to 73 tests and none of them reads `inversion/`. (9)
+4. Make the freshness graph aware of code, so a corrected generator marks its output stale. The
+   repairs above were all found by reading rather than by a check. (9)
+5. Two citation gaps remain in Chapter 1: a CNS attrition series, and verified citations for the
    named comparison servers. (1)
-10. The unique-compound count of 169,341 keyed by InChIKey is quoted in the manuscript and the
-    evidence map and has not been re-derived. Counting distinct SMILES gives 170,619, which is
-    consistent with the two being different quantities but verifies nothing. (1, 2)
-11. Per-endpoint AUROC and sensitivity carry no intervals anywhere, and the two extremes of the
-    reported 0.719 to 0.985 range rest on 37 and 23 compounds. Wilson or bootstrap intervals are
-    cheap and would settle how much of that spread is real. (4, 6)
-12. TAAR1 should be reviewed for withdrawal or an explicit warning; it is the least trustworthy
-    deployed endpoint on four independent measures. (6)
-13. Nav1.5, SIRT1 and TAAR1 define "active" differently in two scripts, and a test should assert
-    that `sensitivity_basis` matches the population the stored sensitivity was computed on. (5)
-14. The H3 refutation has an unstated exception: gating is rank-invariant across the 14
+6. The unique-compound count of 169,341 keyed by InChIKey is quoted in the manuscript and the
+   evidence map and has not been re-derived. Counting distinct SMILES gives 170,619, which is
+   consistent with the two being different quantities but verifies nothing. (1, 2)
+7. Per-endpoint AUROC and sensitivity carry no intervals anywhere, and the two extremes of the
+   reported 0.719 to 0.985 range rest on 37 and 23 compounds. Wilson or bootstrap intervals are
+   cheap and would settle how much of that spread is real. (4, 6)
+8. TAAR1 should be reviewed for withdrawal or an explicit warning; it is the least trustworthy
+   deployed endpoint on four independent measures. (6)
+9. Nav1.5, SIRT1 and TAAR1 define "active" differently in two scripts, and a test should assert
+   that `sensitivity_basis` matches the population the stored sensitivity was computed on. (5)
+10. The H3 refutation has an unstated exception: gating is rank-invariant across the 14
     non-peripheral conditions but not between those and migraine and multiple sclerosis. (7)
-15. The haloperidol figures in the manuscript describe a fixed defect without saying so, and the
+11. The haloperidol figures in the manuscript describe a fixed defect without saying so, and the
     learning-curve conclusion in the technical report is not supported by its own table. (3)
-16. Two evidence pointers in `docs/decisions_log.md` cite paths that do not exist and describe the
+12. Two evidence pointers in `docs/decisions_log.md` cite paths that do not exist and describe the
     superseded ensemble. (3)
-17. `in_domain` in the artefacts means T ≥ 0.30, which is the interface's "in or near domain". The
+13. `in_domain` in the artefacts means T ≥ 0.30, which is the interface's "in or near domain". The
     naming should be reconciled. (4)
-18. The eight endpoints excluded from the prospective arm should be listed with their reasons. (8)
-19. The three 4 August logs in `inversion/` record a superseded verdict and should be refreshed or
+14. The eight endpoints excluded from the prospective arm should be listed with their reasons. (8)
+15. The three 4 August logs in `inversion/` record a superseded verdict and should be refreshed or
     deleted. (9)
-20. The alternative median in the manuscript should read 3,587.5, not 3,587. (2)
+16. The alternative median in the manuscript should read 3,587.5, not 3,587. (2)
 
 ## 10.9 What should be done next, ordered by what it would change
 
