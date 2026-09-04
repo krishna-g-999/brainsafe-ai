@@ -29,6 +29,14 @@ HERE = Path(__file__).resolve().parent
 FILES = ["app.py", "api.py", "serve.py", "model_fetch.py", "CITATION.cff", "LICENSE"]
 DIRS = ["src", "assets", "results", "docs", ".streamlit"]
 
+# inversion/results is 176 KB of falsification-suite output and was omitted until app.py began
+# reading it. family_cofire() derives the co-firing badge from H8_family_correlation.csv, and a
+# missing file there returns {} and silently drops the badge: the page would have looked correct
+# while quietly losing a feature, which is the failure mode a deployment check is for. The interface
+# also cites H2, H3, H7 and H8 by path in its own explanatory text, so shipping the directory rather
+# than the one file means those citations point at something the reader can actually open.
+EXTRA_DIRS = [Path("inversion") / "results"]
+
 # data/ is 582 MB and the server reads 18 MB of it. The rest is the raw pulls, the API caches and
 # the external sets that the training and validation scripts consume, none of which is opened to
 # answer a query: app.py reads data/endpoints only, and does not import the pools module that
@@ -118,6 +126,15 @@ def main(argv=None) -> None:
         n = copy_tree(src, out / name)
         total += n
         print(f"  {n/1e6:8.2f} MB  {name}/")
+
+    for rel in EXTRA_DIRS:
+        src = ROOT / rel
+        if not src.exists():
+            print(f"  missing, skipped   {rel.as_posix()}/")
+            continue
+        n = copy_tree(src, out / rel)
+        total += n
+        print(f"  {n/1e6:8.2f} MB  {rel.as_posix()}/")
 
     for sub in DATA_SUBDIRS:
         src = ROOT / "data" / sub
