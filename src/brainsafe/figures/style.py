@@ -136,10 +136,17 @@ def note(fig, text: str, y: float = -0.01) -> None:
     fig.text(0.5, y, text, ha="center", va="top", fontsize=6.5, color=MUTED, wrap=True)
 
 
-def save(fig, name: str) -> Path:
-    """Write PNG for review and PDF for submission; vector where the journal wants vector."""
+def save(fig, name: str, outdir: Path | None = None) -> Path:
+    """Write PNG for review and PDF for submission; vector where the journal wants vector.
+
+    outdir lets the thesis figures share this style while living beside the chapters that cite them.
+    They are the same visual system and must stay so: a reader meeting Figure 3 in the manuscript and
+    Figure T1 in the thesis should not have to relearn what a colour means.
+    """
     FIGDIR.mkdir(parents=True, exist_ok=True)
-    png, pdf = FIGDIR / f"{name}.png", FIGDIR / f"{name}.pdf"
+    d = Path(outdir) if outdir else FIGDIR
+    d.mkdir(parents=True, exist_ok=True)
+    png, pdf = d / f"{name}.png", d / f"{name}.pdf"
     fig.savefig(png)
     fig.savefig(pdf)
     plt.close(fig)

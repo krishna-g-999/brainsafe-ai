@@ -79,6 +79,21 @@ def main() -> int:
             failures.append(f"{name}: results/tables/external_novelty_strata.csv did not travel, "
                             f"so the interface would drop the expected-recall row in silence")
 
+    # The same failure shape as expected_recall above, and the reason this check exists:
+    # family_cofire() returns {} when inversion/results/H8_family_correlation.csv does not travel,
+    # and the co-firing badge then disappears from every result page without raising anything. The
+    # directory was outside the shipping list until the interface began reading it.
+    cofire = A.family_cofire()
+    supported = sorted(f for f, (phi, _note) in cofire.items() if phi)
+    print(f"  co-firing        {len(supported)} of {len(cofire)} families have a supported pair "
+          f"{supported}")
+    if not cofire:
+        failures.append("inversion/results/H8_family_correlation.csv did not travel, so the "
+                        "co-firing badge would vanish from result pages in silence")
+    elif not supported:
+        failures.append("the co-firing artefact travelled but no family has a pair meeting the "
+                        "support floor, so every badge would be suppressed")
+
     print()
     if failures:
         for f in failures:
