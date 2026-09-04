@@ -82,22 +82,22 @@ def panel_a(ax) -> None:
     w, gap = 0.1235, 0.0193
     x = 0.0
     for i, (name, body, col, ref) in enumerate(steps):
-        ax.add_patch(FancyBboxPatch((x, 0.40), w, 0.50,
+        ax.add_patch(FancyBboxPatch((x, 0.50), w, 0.46,
                                     boxstyle="round,pad=0.005,rounding_size=0.010",
                                     linewidth=0.8, edgecolor=col, facecolor=col + "14", zorder=2))
-        ax.text(x + w / 2, 0.805, name, ha="center", va="center",
+        ax.text(x + w / 2, 0.865, name, ha="center", va="center",
                 fontsize=S.pt(7.4), fontweight="bold", color=col)
-        ax.text(x + w / 2, 0.575, body, ha="center", va="center",
+        ax.text(x + w / 2, 0.675, body, ha="center", va="center",
                 fontsize=S.pt(6.5), color=S.INK, linespacing=1.4)
         if ref:
-            ax.text(x + w / 2, 0.335, ref, ha="center", va="top",
+            ax.text(x + w / 2, 0.455, ref, ha="center", va="top",
                     fontsize=S.pt(6.5), color=S.FAINT, style="italic")
         if i < n - 1:
-            ax.add_patch(FancyArrowPatch((x + w + 0.003, 0.65), (x + w + gap - 0.003, 0.65),
+            ax.add_patch(FancyArrowPatch((x + w + 0.003, 0.73), (x + w + gap - 0.003, 0.73),
                                          arrowstyle="-|>", mutation_scale=7,
                                          linewidth=0.8, color=S.FAINT, zorder=1))
         x += w + gap
-    ax.text(0.5, 0.03,
+    ax.text(0.5, 0.10,
             r"$\tilde{S}_d(x)\;=\;\gamma_d(x)\cdot\max_{(t,w)\in G(d)}\;w\cdot"
             r"\max\!\left(0,\,E_t(\hat{q}_t(x))\right)$",
             ha="center", va="bottom", fontsize=S.pt(9), color=S.INK)
@@ -192,8 +192,8 @@ def main() -> None:
     S.use()
     F = scored()
     fig = plt.figure(figsize=(S.DOUBLE, 6.9))
-    gs = fig.add_gridspec(2, 3, height_ratios=[0.44, 1.0], width_ratios=[1.0, 0.86, 1.12],
-                          hspace=0.34, wspace=0.62,
+    gs = fig.add_gridspec(2, 3, height_ratios=[0.40, 1.0], width_ratios=[1.0, 0.80, 1.18],
+                          hspace=0.20, wspace=0.72,
                           left=0.078, right=0.955, top=0.945, bottom=0.10)
     a = fig.add_subplot(gs[0, :])
     b = fig.add_subplot(gs[1, 0])
@@ -206,10 +206,10 @@ def main() -> None:
     panel_d(d, F)
 
     S.panel(a, "A", "five operations, each changing what the number means",
-            dx=-0.048, dy=1.00, gap=0.022)
-    S.panel(b, "B", "probability against base rate", dx=-0.36, dy=1.045, gap=0.070)
-    S.panel(c, "C", "one condition's targets", dx=-0.34, dy=1.045, gap=0.080)
-    S.panel(d, "D", "what is reported", dx=-0.52, dy=1.045, gap=0.058)
+            dx=-0.046, dy=1.02, gap=0.024)
+    S.panel(b, "B", "probability against base rate", dx=-0.38, dy=1.05, gap=0.125)
+    S.panel(c, "C", "one condition's targets", dx=-0.42, dy=1.05, gap=0.155)
+    S.panel(d, "D", "what is reported", dx=-0.56, dy=1.05, gap=0.098)
 
     S.note(fig, "Worked on donepezil. It is a training compound of the AChE endpoint at a maximum "
                 "Tanimoto of 1.000, so its AChE probability is recall rather than prediction. This "
