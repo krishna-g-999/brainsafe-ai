@@ -46,8 +46,12 @@ import style as S  # noqa: E402
 OUTDIR = ROOT / "thesis" / "figures"
 DONEPEZIL = "COc1cc2c(cc1OC)C(=O)C(CC1CCN(Cc3ccccc3)CC1)C2"
 CORE = ["AChE", "BChE", "BACE1", "GSK3B", "MAO_A", "MAO_B", "hERG", "BBB"]
+# Registry identifiers are not names a reader should meet. NEURO in particular is not a protein:
+# it is the neuroprotection axis, a percentile against measured chemistry rather than a binding
+# model, and printing its internal token in a published figure invites a reader to look for a gene.
 LABEL = {"AChE": "AChE", "BChE": "BChE", "BACE1": "BACE1", "GSK3B": "GSK-3β",
-         "MAO_A": "MAO-A", "MAO_B": "MAO-B", "hERG": "hERG", "BBB": "BBB"}
+         "MAO_A": "MAO-A", "MAO_B": "MAO-B", "hERG": "hERG", "BBB": "BBB",
+         "NLRP3": "NLRP3", "a7nAChR": "α7 nAChR", "NEURO": "neuroprotection axis"}
 SHORT = {"Neuroprotection / oxidative stress": "Neuroprotection / ox. stress",
          "Amyotrophic lateral sclerosis": "ALS"}
 
@@ -117,14 +121,14 @@ def panel_b(ax, F) -> None:
     ax.set_yticks(y)
     ax.set_yticklabels([LABEL[ep] for ep, *_ in core], fontsize=S.pt(7))
     ax.set_xlim(0, 1)
-    ax.set_ylim(-0.9, len(core) - 0.3)
+    ax.set_ylim(-0.55, len(core) - 0.3)
     ax.set_xticks([0, 0.5, 1.0])
     ax.set_xlabel("calibrated probability", fontsize=S.pt(7))
     ax.text(1.06, len(core) - 0.35, "$E_t$", fontsize=S.pt(7.5), color=S.INK,
             fontweight="bold", ha="left", va="center")
     S.strip(ax, x=True, y=False)
-    ax.text(0.0, -0.80, "tick = endpoint base rate,  dot = this compound",
-            fontsize=S.pt(6.5), color=S.MUTED, ha="left", va="center")
+    ax.text(0.0, -0.17, "tick = endpoint base rate,  dot = this compound",
+            transform=ax.transAxes, fontsize=S.pt(6.5), color=S.MUTED, ha="left", va="top")
 
 
 def panel_c(ax, F) -> None:
@@ -138,19 +142,22 @@ def panel_c(ax, F) -> None:
         if p > 0:
             ax.text(p - 0.03, i, f"{w:.2f} × {s:.2f}", ha="right", va="center",
                     fontsize=S.pt(6.5), color="white", fontweight="bold")
+        else:
+            ax.plot([0.006], [i], marker="|", markersize=6.5, color=S.FAINT,
+                    markeredgewidth=1.2, zorder=3)
     ax.set_yticks(y)
-    ax.set_yticklabels([t for t, _, _ in ad], fontsize=S.pt(6.8))
+    ax.set_yticklabels([LABEL.get(t, t) for t, _, _ in ad], fontsize=S.pt(6.8))
     for lab, p in zip(ax.get_yticklabels(), prod):
         lab.set_color(S.INK if p > 0 else S.FAINT)
     ax.set_xlim(0, 1.0)
-    ax.set_ylim(-0.9, len(ad) - 0.35)
+    ax.set_ylim(-0.55, len(ad) - 0.35)
     ax.set_xticks([0, 0.5, 1.0])
     ax.set_xlabel("edge weight × engagement", fontsize=S.pt(7))
     ax.axvline(best, color=S.BINDER, linewidth=0.8, linestyle=(0, (2.5, 1.6)), zorder=3)
     ax.text(0.96, 2.4, "the maximum becomes\nthe condition score", ha="right", va="center",
             fontsize=S.pt(6.5), color=S.BINDER, fontweight="bold", linespacing=1.35)
-    ax.text(0.0, -0.80, "grey = engaged signal is zero", fontsize=S.pt(6.5),
-            color=S.MUTED, ha="left", va="center")
+    ax.text(0.0, -0.17, "tick at zero = engaged signal is exactly zero",
+            transform=ax.transAxes, fontsize=S.pt(6.5), color=S.MUTED, ha="left", va="top")
     S.strip(ax, x=True, y=False)
 
 
@@ -172,11 +179,11 @@ def panel_d(ax, F) -> None:
     for lab, d in zip(ax.get_yticklabels(), order):
         lab.set_color(S.INK if d["gated"] >= floor else S.FAINT)
     ax.set_xlim(0, 1.0)
-    ax.set_ylim(-0.9, len(order) - 0.35)
+    ax.set_ylim(-0.55, len(order) - 0.35)
     ax.set_xticks([0, 0.5, 1.0])
     ax.axvline(floor, color=S.WITHHELD, linewidth=0.9, zorder=4)
-    ax.text(floor + 0.02, -0.80, "reporting threshold 0.30", fontsize=S.pt(6.5),
-            color=S.WITHHELD, ha="left", va="center", fontweight="bold")
+    ax.text(0.0, -0.17, "orange line = the 0.30 reporting threshold",
+            transform=ax.transAxes, fontsize=S.pt(6.5), color=S.WITHHELD, ha="left", va="top")
     ax.set_xlabel("gated condition score", fontsize=S.pt(7))
     S.strip(ax, x=True, y=False)
     dom = F["dom"]
@@ -194,7 +201,7 @@ def main() -> None:
     fig = plt.figure(figsize=(S.DOUBLE, 6.9))
     gs = fig.add_gridspec(2, 3, height_ratios=[0.40, 1.0], width_ratios=[1.0, 0.80, 1.18],
                           hspace=0.20, wspace=0.72,
-                          left=0.078, right=0.955, top=0.945, bottom=0.10)
+                          left=0.078, right=0.955, top=0.945, bottom=0.145)
     a = fig.add_subplot(gs[0, :])
     b = fig.add_subplot(gs[1, 0])
     c = fig.add_subplot(gs[1, 1])
@@ -214,7 +221,7 @@ def main() -> None:
     S.note(fig, "Worked on donepezil. It is a training compound of the AChE endpoint at a maximum "
                 "Tanimoto of 1.000, so its AChE probability is recall rather than prediction. This "
                 "figure explains what the pipeline computes; how well it computes it on novel "
-                "chemistry is Figure 11.", y=0.042)
+                "chemistry is Figure 11.", y=0.028)
     S.save(fig, "FigureT1_scoring_pipeline", outdir=OUTDIR)
 
 

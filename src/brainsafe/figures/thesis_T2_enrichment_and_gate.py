@@ -52,6 +52,16 @@ SHORT = {"Neuroprotection / oxidative stress": "Neuroprotection",
          "Depression / anxiety": "Depression"}
 GAMMAS = [1.0, 0.6, 0.3]
 
+# Panel A's three curves are the same function at three base rates, so base rate is a magnitude and
+# the encoding is sequential: one hue, light to dark as the base rate rises. The first draft used the
+# figure set's EXPOSURE, TARGET and BINDER hues, which was wrong twice over. It spent three semantic
+# colours on three endpoints that all belong to the same family, and the palette validator scores the
+# TARGET-EXPOSURE pair at a normal-vision Delta E of 11.3, below the floor of 15, so a reader with
+# ordinary colour vision would struggle to tell the teal curve from the blue one. Each step here is
+# at least 3:1 against white, and each curve is also labelled at its own kink, so identity never
+# rests on hue alone.
+SEQ = ["#6C94BA", "#1B5C93", "#08243D"]   # validator: all checks pass, worst normal-vision dE 19.2
+
 
 def facts() -> dict:
     import app
@@ -72,30 +82,40 @@ def facts() -> dict:
 
 def panel_a(ax, F) -> None:
     p = np.linspace(0, 1, 601)
-    picks = [("MAO_A", S.EXPOSURE), ("AChE", S.TARGET), ("BACE1", S.BINDER)]
-    for ep, col in picks:
+    picks = sorted((("MAO_A", None), ("AChE", None), ("BACE1", None)),
+                   key=lambda t: F["rates"][t[0]])
+    # Above the kink the curve is shallow and below it steep, so a label placed on the shallow arm
+    # sits clear of the other two curves.
+    for (ep, _), col in zip(picks, SEQ):
         b = F["rates"][ep]
         e = np.where(p >= b, (p - b) / (1 - b), (p - b) / b)
-        ax.plot(p, e, color=col, linewidth=1.5, zorder=3,
-                label=f"{LABEL[ep]},  b = {b:.3f}")
-        ax.plot([b], [0], marker="o", markersize=3.6, color=col,
-                markeredgecolor="white", markeredgewidth=0.5, zorder=4)
+        ax.plot(p, e, color=col, linewidth=1.6, zorder=3, solid_capstyle="round")
+        ax.plot([b], [0], marker="o", markersize=4.0, markerfacecolor="white",
+                markeredgecolor=col, markeredgewidth=1.1, zorder=5)
+        ax.annotate(f"{LABEL[ep]}\nb = {b:.3f}", xy=(b, 0), xytext=(b, -0.30),
+                    ha="center", va="top", fontsize=S.pt(6.5), color=col,
+                    fontweight="bold", linespacing=1.35, zorder=6,
+                    # A label that lands on a neighbouring curve is harder to read than one that
+                    # does not; a nearly opaque white pad costs a sliver of the line and buys back
+                    # the legibility.
+                    bbox=dict(facecolor="white", edgecolor="none", pad=1.4, alpha=0.88),
+                    arrowprops=dict(arrowstyle="-", linewidth=0.6, color=col,
+                                    shrinkA=0.5, shrinkB=2.5))
     ax.axhline(0, color=S.MUTED, linewidth=0.7, zorder=2)
     ax.set_xlim(0, 1)
-    ax.set_ylim(-1.05, 1.05)
+    ax.set_ylim(-1.05, 1.10)
     ax.set_xlabel("calibrated probability  $\\hat{q}_t$", fontsize=S.pt(7))
     ax.set_ylabel("enrichment  $E_t$", fontsize=S.pt(7))
     ax.set_xticks([0, 0.25, 0.5, 0.75, 1.0])
     ax.set_yticks([-1, -0.5, 0, 0.5, 1])
-    ax.legend(loc="upper left", fontsize=S.pt(6.5), handlelength=1.3, borderpad=0.2,
-              labelspacing=0.35)
     S.strip(ax, x=True, y=True)
-    ax.text(0.98, -0.94, "dot marks the kink at $p = b$", ha="right", va="bottom",
-            fontsize=S.pt(6.5), color=S.MUTED)
-    ax.text(0.985, 0.06, "engaged", ha="right", va="bottom", fontsize=S.pt(6.5),
-            color=S.GOOD, style="italic")
-    ax.text(0.985, -0.06, "clipped to zero", ha="right", va="top", fontsize=S.pt(6.5),
-            color=S.FAINT, style="italic")
+    ax.text(0.030, 1.03, "above the base rate: engaged", ha="left", va="top",
+            fontsize=S.pt(6.5), color=S.GOOD, style="italic")
+    ax.text(0.975, -0.88, "below it: clipped to zero,\nthe target contributes nothing",
+            ha="right", va="center", fontsize=S.pt(6.5), color=S.FAINT, style="italic",
+            linespacing=1.35)
+    ax.text(0.0, -0.26, "open circle marks the kink at $p = b$;  darker curve = higher base rate",
+            transform=ax.transAxes, fontsize=S.pt(6.5), color=S.MUTED, ha="left", va="top")
 
 
 def panel_b(ax, F) -> None:
@@ -126,7 +146,7 @@ def panel_c(ax, F) -> None:
     n = len(central)
     x = np.arange(n)
     width = 0.26
-    shades = [S.EXPOSURE, "#5A93C4", "#A9C6DE"]
+    shades = [SEQ[2], SEQ[1], SEQ[0]]
     for k, (g, col) in enumerate(zip(GAMMAS, shades)):
         ax.bar(x + (k - 1) * width, [r["signal"] * g for r in central], width=width * 0.92,
                color=col, edgecolor="none", zorder=2,

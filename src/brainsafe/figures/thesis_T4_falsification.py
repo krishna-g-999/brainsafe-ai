@@ -61,11 +61,13 @@ COST = {
 }
 H10_SHOW = ["descriptor forest, 12 features", "descriptor logistic regression",
             "tpsa alone", "hbd alone", "CNS heuristic: TPSA <= 90 and MW <= 400"]
-H10_NICE = {"descriptor forest, 12 features": "random forest, 12 descriptors",
-            "descriptor logistic regression": "logistic regression, 12 descriptors",
+# Short enough to sit in panel C's own margin. The first draft used the full method names, which
+# were wide enough to run back across the gutter and print on top of panel B's data points.
+H10_NICE = {"descriptor forest, 12 features": "forest, 12 desc.",
+            "descriptor logistic regression": "logistic, 12 desc.",
             "tpsa alone": "TPSA alone",
-            "hbd alone": "H-bond donors alone",
-            "CNS heuristic: TPSA <= 90 and MW <= 400": "CNS rule: TPSA ≤ 90, MW ≤ 400"}
+            "hbd alone": "H-bond donors",
+            "CNS heuristic: TPSA <= 90 and MW <= 400": "CNS rule"}
 
 
 def rows(p: Path) -> list[dict]:
@@ -144,8 +146,15 @@ def panel_b(ax, F) -> None:
     ms = st.mean(float(r["permuted_roc_auc_mean"]) for r in pn if r["split"] == "scaffold")
     ax.text(0.505, len(eps) - 0.45, "chance", fontsize=S.pt(6.5), color=S.INK, ha="left",
             va="center")
+    ax.text(0.74, len(eps) - 0.45, "permuted labels", fontsize=S.pt(6.8), color=S.WARN,
+            ha="right", va="center", fontweight="bold")
+    ax.text(0.76, len(eps) - 0.45, "→", fontsize=S.pt(6.8), color=S.FAINT, ha="center",
+            va="center")
+    ax.text(0.78, len(eps) - 0.45, "true labels", fontsize=S.pt(6.8), color=S.TARGET,
+            ha="left", va="center", fontweight="bold")
     ax.text(0.0, -0.20,
-            f"circle = random split, square = scaffold.  permuted means {mr:.4f} and {ms:.4f},\n"
+            f"red = permuted labels, teal = true;  circle = random split, square = scaffold.\n"
+            f"Permuted means {mr:.4f} and {ms:.4f}, """
             f"all sixteen within {max(abs(v - 0.5) for v in nulls):.4f} of chance",
             transform=ax.transAxes, fontsize=S.pt(6.5), color=S.MUTED, ha="left", va="top",
             linespacing=1.5)
@@ -169,13 +178,13 @@ def panel_c(ax, F) -> None:
 
     ax.axvline(0, color=S.INK, linewidth=0.8, zorder=1)
     ax.set_yticks(y)
-    ax.set_yticklabels([f"{H10_NICE[m]}   {float(ext[m]['auroc']):.4f}" for m in shown],
+    ax.set_yticklabels([f"{H10_NICE[m]}  {float(ext[m]['auroc']):.4f}" for m in shown],
                        fontsize=S.pt(6.8))
     ax.set_ylim(-0.55, len(shown) - 0.35)
     ax.set_xlabel("AUROC margin against the deployed forest, 95% paired bootstrap",
                   fontsize=S.pt(7))
-    ax.text(0.0, len(shown) - 0.45, f"deployed forest {float(dep['auroc']):.4f}",
-            fontsize=S.pt(6.5), color=S.INK, ha="center", va="center", fontweight="bold")
+    ax.text(-0.004, len(shown) - 0.45, f"deployed forest  {float(dep['auroc']):.4f}",
+            fontsize=S.pt(6.5), color=S.INK, ha="right", va="center", fontweight="bold")
     worst = ext["descriptor forest, 12 features"]
     ax.text(0.0, -0.20,
             f"on {int(float(dep['n']))} approved drugs the model has never seen, the strongest "
@@ -191,7 +200,7 @@ def main() -> None:
     F = facts()
     fig = plt.figure(figsize=(S.DOUBLE, 6.55))
     gs = fig.add_gridspec(2, 2, height_ratios=[0.98, 1.02], width_ratios=[1.0, 1.0],
-                          hspace=0.24, wspace=0.34,
+                          hspace=0.24, wspace=0.46,
                           left=0.075, right=0.975, top=0.935, bottom=0.145)
     a = fig.add_subplot(gs[0, :])
     b = fig.add_subplot(gs[1, 0])
