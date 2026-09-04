@@ -315,6 +315,36 @@ for _lab, _fn in [("mean", st.mean), ("median", st.median), ("min", min), ("max"
           (lambda f: lambda: round(float(f(col(TAB / "integrity_calibration_per_target.csv",
                                                "ece"))), 4))(_fn))
 
+# The uncertainty layers do not all stop at the same endpoint, and an earlier draft of section 10.5
+# collapsed that into "38 binder endpoints". 38 is how many carry a measured calibration error; the
+# panel is 47. Each coverage count is pinned separately so the two can never be conflated again.
+def _deployed() -> set:
+    reg = json.loads((ROOT / "models_rf" / "binder_modes.json").read_text(encoding="utf-8"))
+    return {k for k, v in reg.items() if v.get("deployed")}
+
+
+def _ad_reference() -> set:
+    import sys as _sys
+    _sys.path.insert(0, str(ROOT))
+    import app as _app
+    return set(_app.load_ad_per_endpoint())
+
+
+claim("10", "deployed binder endpoints", "binder_modes.json",
+      lambda: len(_deployed()), "{:d}")
+claim("10", "deployed binders with a per-endpoint applicability reference",
+      "app.load_ad_per_endpoint",
+      lambda: len(_deployed() & _ad_reference()), "{:d}")
+claim("10", "deployed binders with no measured calibration error",
+      "integrity_calibration_per_target.csv",
+      lambda: len(_deployed() - {r["endpoint"]
+                                 for r in rows(TAB / "integrity_calibration_per_target.csv")}),
+      "{:d}")
+claim("10", "ADME and auxiliary estimators", "models_rf/adme",
+      lambda: len(list((ROOT / "models_rf" / "adme").glob("*.joblib")))
+      + len([q for q in (ROOT / "models_rf").glob("*.joblib")
+             if q.stem in ("antioxidant_DPPH", "pka_basic")]), "{:d}")
+
 claim("10", "natural-product candidates", "external_natural_products_summary.csv",
       lambda: sum(int(r["n_candidates"])
                   for r in rows(TAB / "external_natural_products_summary.csv")), "{:,}")

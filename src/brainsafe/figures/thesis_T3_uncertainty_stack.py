@@ -14,10 +14,17 @@ B. And the worst of the eight is the barrier model, at nearly three times that m
 C. Conformal coverage holds where it is measured. Empirical coverage against the 0.90 target, with
    the average set size beside it: a set size near 1 means the interval is informative rather than
    returning both labels to be safe.
-D. Where each layer stops. The binder panel carries Platt scaling and nothing else, at a calibration
-   error about five times the core figure, and no conformal statement of any kind.
+D. Where each layer stops, counted per layer rather than asserted. The layers do not all stop at
+   the same place: nine of the 47 deployed binder endpoints carry no measured calibration error and
+   eight carry no per-endpoint applicability reference, so a yes/no matrix would overstate two cells
+   and understate none. Counts are read from the artefacts and the registry at build time.
 
-Reads calibration.csv, rf_conformal.csv, integrity_calibration_per_target.csv and binder_modes.json.
+An earlier draft of this figure headed the middle column "38 binder endpoints". That is the number
+with a measured calibration error, not the number of endpoints: the eight core classifiers are not
+in binder_modes.json at all, so the panel is 47 deployed binder endpoints of which 38 are measured.
+
+Reads calibration.csv, rf_conformal.csv, integrity_calibration_per_target.csv, binder_modes.json
+and the per-endpoint applicability reference.
 
 Run:  brainsafe_env/Scripts/python.exe src/brainsafe/figures/thesis_T3_uncertainty_stack.py
 Out:  thesis/figures/FigureT3_uncertainty_stack.png and .pdf
@@ -41,6 +48,13 @@ OUTDIR = ROOT / "thesis" / "figures"
 TAB = ROOT / "results" / "tables"
 LABEL = {"AChE": "AChE", "BChE": "BChE", "BACE1": "BACE1", "GSK3B": "GSK-3β",
          "MAO_A": "MAO-A", "MAO_B": "MAO-B", "hERG": "hERG", "BBB": "BBB"}
+# Registry identifiers are not protein names. Anything a reader sees is spelled the way a
+# pharmacologist writes it, and identically in every panel of every figure.
+NICE = {"GABA_A": "GABA-A", "GluN2B": "GluN2B", "Nav1_5": "Nav1.5", "Nav1_8": "Nav1.8",
+        "a3b4nAChR": "α3β4 nAChR", "a4b2nAChR": "α4β2 nAChR", "a7nAChR": "α7 nAChR",
+        "GSK3B": "GSK-3β", "MAO_A": "MAO-A", "MAO_B": "MAO-B", "mGluR5": "mGluR5",
+        "NEURO": "neuroprotection", "Cav3_2": "Cav3.2", "Nav1_6": "Nav1.6", "Nav1_1": "Nav1.1",
+        "Nav1_7": "Nav1.7"}
 
 
 def rows(p: Path) -> list[dict]:
@@ -51,13 +65,40 @@ def rows(p: Path) -> list[dict]:
 def facts() -> dict:
     cal = rows(TAB / "calibration.csv")
     conf = {r["endpoint"]: r for r in rows(TAB / "rf_conformal.csv")}
-    binder = [float(r["ece"]) for r in rows(TAB / "integrity_calibration_per_target.csv")]
+    ece_rows = rows(TAB / "integrity_calibration_per_target.csv")
+    binder = [float(r["ece"]) for r in ece_rows]
     reg = json.loads((ROOT / "models_rf" / "binder_modes.json").read_text(encoding="utf-8"))
+    dep = {k for k, v in reg.items() if v.get("deployed")}
+    core = {r["endpoint"] for r in cal}
+
+    # Per-endpoint applicability references, counted from the file the server reads rather than
+    # assumed to cover everything.
+    ad_path = ROOT / "models_rf" / "ad_per_endpoint.json"
+    if ad_path.exists():
+        ad = set(json.loads(ad_path.read_text(encoding="utf-8")))
+    else:
+        import sys as _sys
+        _sys.path.insert(0, str(ROOT))
+        import app as _app
+        ad = set(_app.load_ad_per_endpoint())
+
+    n_adme = len(list((ROOT / "models_rf" / "adme").glob("*.joblib")))
+    aux = [q for q in (ROOT / "models_rf").glob("*.joblib")
+           if q.stem in ("antioxidant_DPPH", "pka_basic")]
+    n_aux = n_adme + len(aux)
+    ad_aux = sum(1 for name in ("antioxidant", "antioxidant_DPPH", "pka_basic") if name in ad)
+
     return {
         "cal": [(r["endpoint"], float(r["ece_raw"]), float(r["ece_calibrated"])) for r in cal],
         "conf": conf,
         "binder": binder,
-        "n_dep": sum(1 for v in reg.values() if v.get("deployed")),
+        "n_core": len(core),
+        "n_dep": len(dep),
+        "n_ece": len([r for r in ece_rows if r["endpoint"] in dep]),
+        "n_ad_dep": len(dep & ad),
+        "n_aux": n_aux,
+        "n_ad_aux": ad_aux,
+        "no_ece": sorted(dep - {r["endpoint"] for r in ece_rows}),
     }
 
 
@@ -66,7 +107,8 @@ def panel_a(ax, F) -> None:
     y = list(range(len(cal)))[::-1]
     for i, (ep, raw, fin) in zip(y, cal):
         ax.plot([fin, raw], [i, i], color=S.HAIR, linewidth=2.2, solid_capstyle="round", zorder=1)
-        ax.plot([raw], [i], marker="o", markersize=4.0, color=S.FAINT, zorder=3)
+        ax.plot([raw], [i], marker="o", markersize=4.2, markerfacecolor="white",
+                markeredgecolor=S.MUTED, markeredgewidth=0.9, zorder=3)
         worst = fin == max(c[2] for c in cal)
         ax.plot([fin], [i], marker="o", markersize=4.6,
                 color=S.WARN if worst else S.TARGET, markeredgecolor="white",
@@ -147,38 +189,53 @@ def panel_c(ax, F) -> None:
 
 
 def panel_d(ax, F) -> None:
+    """Coverage counted, not asserted.
+
+    A yes/no matrix would say the binder panel has an applicability band and a calibration error.
+    It has both for most of its endpoints and neither for some, and the difference is the whole
+    point of the panel, so each cell carries the count and is shaded by the fraction it covers.
+    """
     ax.set_axis_off()
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
     b = F["binder"]
     core_mean = st.mean(c[2] for c in F["cal"])
+    nc, nd, na = F["n_core"], F["n_dep"], F["n_aux"]
     layers = ["isotonic\ncalibration", "conformal\nset", "applicability\nband",
               "per-endpoint\ncalibration error"]
-    groups = [("8 core\nclassifiers", [1, 1, 1, 1]),
-              ("38 binder\nendpoints", [0, 0, 1, 1]),
-              ("ADME and\nauxiliary", [0, 0, 1, 0])]
-    x0, y0, cw, ch = 0.30, 0.30, 0.215, 0.135
+    groups = [
+        (f"{nc} core\nclassifiers", nc, [nc, nc, nc, nc]),
+        (f"{nd} binder\nendpoints", nd, [0, 0, F["n_ad_dep"], F["n_ece"]]),
+        (f"{na} ADME,\nauxiliary", na, [0, 0, F["n_ad_aux"], 0]),
+    ]
+    x0, y0, cw, ch = 0.315, 0.315, 0.222, 0.132
     for j, lay in enumerate(layers):
-        ax.text(x0 - 0.025, y0 + (len(layers) - 1 - j) * ch + ch / 2, lay,
+        ax.text(x0 - 0.022, y0 + (len(layers) - 1 - j) * ch + ch / 2, lay,
                 ha="right", va="center", fontsize=S.pt(6.5), color=S.INK, linespacing=1.3)
-    for i, (g, flags) in enumerate(groups):
-        ax.text(x0 + i * cw + cw / 2, y0 + len(layers) * ch + 0.035, g,
-                ha="center", va="bottom", fontsize=S.pt(6.8), color=S.INK,
+    for i, (g, total, counts) in enumerate(groups):
+        ax.text(x0 + i * cw + cw / 2, y0 + len(layers) * ch + 0.030, g,
+                ha="center", va="bottom", fontsize=S.pt(6.5), color=S.INK,
                 fontweight="bold", linespacing=1.3)
-        for j, f in enumerate(flags):
+        for j, k in enumerate(counts):
             yy = y0 + (len(layers) - 1 - j) * ch
-            ax.add_patch(plt.Rectangle((x0 + i * cw + 0.006, yy + 0.012),
-                                       cw - 0.012, ch - 0.024,
-                                       facecolor=S.TARGET if f else S.HAIR,
-                                       edgecolor="none", zorder=2))
-            ax.text(x0 + i * cw + cw / 2, yy + ch / 2, "yes" if f else "no",
-                    ha="center", va="center", fontsize=S.pt(6.5),
-                    color="white" if f else S.MUTED, fontweight="bold")
-    ax.text(0.5, 0.185,
-            f"binder calibration error: mean {st.mean(b):.4f}, median {st.median(b):.4f}, "
-            f"range {min(b):.4f} to {max(b):.4f}\nagainst {core_mean:.4f} for the core, "
-            f"about five times larger, on {len(b)} of the {F['n_dep']} deployed endpoints",
-            ha="center", va="top", fontsize=S.pt(6.8), color=S.WARN, linespacing=1.5)
+            frac = k / total if total else 0.0
+            if frac >= 0.999:
+                face, ink, txt = S.TARGET, "white", f"{k} of {total}"
+            elif frac > 0:
+                face, ink, txt = "#BFD9D5", S.INK, f"{k} of {total}"
+            else:
+                face, ink, txt = S.HAIR, S.MUTED, "none"
+            ax.add_patch(plt.Rectangle((x0 + i * cw + 0.006, yy + 0.011),
+                                       cw - 0.012, ch - 0.022,
+                                       facecolor=face, edgecolor="none", zorder=2))
+            ax.text(x0 + i * cw + cw / 2, yy + ch / 2, txt, ha="center", va="center",
+                    fontsize=S.pt(6.5), color=ink, fontweight="bold")
+    ax.text(0.5, 0.215,
+            f"Binder calibration error, over the {len(b)} that carry one: mean {st.mean(b):.4f}, "
+            f"median {st.median(b):.4f},\nrange {min(b):.4f} to {max(b):.4f}, against "
+            f"{core_mean:.4f} for the core. The remaining {nd - len(b)} carry none:\n"
+            + ", ".join(NICE.get(e, e) for e in F["no_ece"]),
+            ha="center", va="top", fontsize=S.pt(6.5), color=S.WARN, linespacing=1.55)
 
 
 def main() -> None:
@@ -203,8 +260,8 @@ def main() -> None:
     S.panel(b, "B", "and the gate is the worst of them", dx=-0.185, dy=1.055, gap=0.070)
     S.panel(d, "D", "where each layer stops", dx=-0.075, dy=1.055, gap=0.062)
 
-    S.note(fig, "The stack is fullest for the eight endpoints a user rarely queries and thinnest for "
-                "the thirty-eight they query constantly. Extending it to the panel needs no new "
+    S.note(fig, "The stack is fullest for the eight endpoints a user rarely queries and thinnest "
+                "for the forty-seven they query constantly. Extending it to the panel needs no new "
                 "data and is the largest single improvement available.", y=0.030)
     S.save(fig, "FigureT3_uncertainty_stack", outdir=OUTDIR)
 

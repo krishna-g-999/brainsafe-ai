@@ -446,8 +446,9 @@ figure_slide(
       f"Panel B. {fmt(F['cal'][3], 4)}, nearly three times the mean, on the one model whose "
       f"output multiplies every disease score rather than being reported alone.", CRIMSON),
      ("The stack is thinnest where it is used most",
-      f"Panel D. The {F['bcal'][0]} binder endpoints carry Platt scaling at a mean of "
-      f"{fmt(F['bcal'][1], 4)} and no conformal statement at all.", AMBER)])
+      f"Panel D. None of the {F['n_dep']} deployed binder endpoints carries a conformal "
+      f"statement. The {F['bcal'][0]} with a measured calibration error average "
+      f"{fmt(F['bcal'][1], 4)}; the other {F['n_dep'] - F['bcal'][0]} carry none.", AMBER)])
 
 # ============================================================== 12. thresholds
 s = D.light()
@@ -795,9 +796,10 @@ lims = [
      f"{fmt(F['recall']['cross_source'][0], 4)} across a database boundary. A silence there is "
      f"close to uninformative."),
     ("Uncertainty coverage",
-     f"The full stack reaches {F['n_core']} core classifiers. The {F['bcal'][0]} binder endpoints "
-     f"carry Platt scaling at a calibration error of {fmt(F['bcal'][1], 4)}, about five times the "
-     f"core figure, and no conformal statement at all."),
+     f"The full stack reaches {F['n_core']} core classifiers. None of the {F['n_dep']} deployed "
+     f"binder endpoints has a conformal statement; the {F['bcal'][0]} with a measured calibration "
+     f"error average {fmt(F['bcal'][1], 4)}, about five times the core figure, and "
+     f"{F['n_dep'] - F['bcal'][0]} carry no calibration measurement at all."),
     ("Natural products",
      f"Median fraction sp3 of the library is {fmt(F['sp3'][0], 4)} and only {F['sp3'][1]:.2f} per "
      f"cent of it is sp3-rich and largely non-aromatic. Three endpoints could be scored externally, "

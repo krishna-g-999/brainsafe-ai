@@ -161,16 +161,25 @@ With two to five actives per endpoint, those three intervals are far too wide to
 They are equally far from supporting a claim of natural-product competence, and the honest statement
 is that the system is untested on this chemistry rather than that it fails on it.
 
-## 10.5 Uncertainty is complete for eight estimators and largely absent for thirty-eight
+## 10.5 Uncertainty is complete for eight estimators and largely absent for forty-seven
 
 The uncertainty stack described in Chapter 4, isotonic calibration on out-of-fold predictions plus
 Mondrian conformal prediction plus an applicability band, is complete for the **eight** core
-classifiers and not for the target panel.
+classifiers and not for the target panel. Counted per layer rather than asserted, since the layers
+do not stop at the same place:
 
-| | Isotonic + conformal + domain | Platt only |
-|---|---:|---:|
-| Core classifiers | 8 | – |
-| Binder endpoints | – | 38 |
+| Layer | 8 core classifiers | 47 deployed binder endpoints | 11 ADME and auxiliary |
+|---|---:|---:|---:|
+| Isotonic calibration | 8 of 8 | none | none |
+| Conformal set | 8 of 8 | none | none |
+| Applicability band | 8 of 8 | 39 of 47 | 1 of 11 |
+| Per-endpoint calibration error | 8 of 8 | 38 of 47 | none |
+
+Two counts in that table deserve stating rather than leaving to be read off. **Nine of the 47
+deployed binder endpoints carry no measured calibration error at all**: CGRP, GABA-A, GBA1, GluN2B,
+KEAP1, Nav1.5, Nav1.8, SIRT1 and α3β4 nAChR. **Eight carry no per-endpoint applicability
+reference**, so a query against them falls back to the global domain call. Neither absence is
+reported anywhere in the interface.
 
 The core figures are good and the headline is honest about the mean but not about the spread.
 Expected calibration error falls from a mean of 0.0801 raw to **0.0147** after isotonic calibration,
@@ -181,12 +190,12 @@ That has not been stated anywhere in the project, and it matters more than the r
 because the barrier probability is not merely reported: it multiplies every disease score. A
 mis-calibrated gate propagates into every condition at once.
 
-For the 38 Platt-scaled binder endpoints the expected calibration error is
+Across the 38 Platt-scaled binder endpoints that carry one, the expected calibration error is
 **mean 0.0762, median 0.0675, range 0.0300 to 0.1780**
 (`results/tables/integrity_calibration_per_target.csv`), about five times the core figure. The
 binder endpoints also have **no conformal coverage statement of any kind**. So the uncertainty
 machinery is most complete for the eight endpoints a user is least likely to query and thinnest for
-the 38 they are most likely to.
+the 47 they are most likely to.
 
 ## 10.6 What the specificity figure is, and what it is not
 
