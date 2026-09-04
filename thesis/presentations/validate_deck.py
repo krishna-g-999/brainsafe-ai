@@ -191,7 +191,7 @@ def validate(path: Path) -> list[str]:
 
 
 def main() -> int:
-    names = sys.argv[1:] or sorted(p.name for p in HERE.glob("chapter*_defence.pptx"))
+    names = sys.argv[1:] or sorted(p.name for p in HERE.glob("*.pptx"))
     bad = 0
     for name in names:
         path = HERE / name

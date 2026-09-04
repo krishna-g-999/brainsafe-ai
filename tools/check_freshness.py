@@ -94,6 +94,25 @@ GRAPH: list[tuple[str, list[str], str]] = [
      ["models_rf/BBB.joblib", "data/processed/cv_predictions/BBB_scaffold_oof.csv"],
      "python inversion/inv_barrier_necessity.py"),
 
+    # ---- thesis figures ------------------------------------------------------------------------
+    # Four figures explaining the model itself, drawn in the manuscript house style so the thesis
+    # and the paper are one visual system. T1 and T2 score real compounds through app at build time,
+    # so they depend on the served models; T3 and T4 read tables.
+    ("thesis/figures/FigureT1_scoring_pipeline.png",
+     ["models_rf/binder_modes.json", "models_rf/BBB.joblib", "app.py"],
+     "python src/brainsafe/figures/thesis_T1_scoring_pipeline.py"),
+    ("thesis/figures/FigureT2_enrichment_and_gate.png",
+     ["models_rf/binder_modes.json", "models_rf/endpoint_context.json", "app.py"],
+     "python src/brainsafe/figures/thesis_T2_enrichment_and_gate.py"),
+    ("thesis/figures/FigureT3_uncertainty_stack.png",
+     ["results/tables/calibration.csv", "results/tables/rf_conformal.csv",
+      "results/tables/integrity_calibration_per_target.csv"],
+     "python src/brainsafe/figures/thesis_T3_uncertainty_stack.py"),
+    ("thesis/figures/FigureT4_falsification.png",
+     ["inversion/results/VERDICTS.csv", "results/tables/permutation_null.csv",
+      "inversion/results/H10_barrier_necessity.csv"],
+     "python src/brainsafe/figures/thesis_T4_falsification.py"),
+
     # ---- calibration sits on the core models --------------------------------------------------
     ("results/tables/calibration.csv", ["models_rf/BBB.joblib"],
      "python src/brainsafe/models/calibrate.py"),
