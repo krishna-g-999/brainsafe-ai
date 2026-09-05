@@ -444,9 +444,131 @@ def _ledger_size() -> int:
 claim("10", "items raised across Chapters 1 to 9", "thesis/chapter0*.md", _ledger_size, "{:d}")
 
 
+
+# ---- The viva pack ---------------------------------------------------------------------------
+# It is a study document rather than a chapter, but it is the one document that will be recited
+# aloud under questioning, so a number that has drifted in it is worse than a number that has
+# drifted anywhere else.
+
+_CVC = [r for r in rows(TAB / "rf_cv_summary.csv") if r["task"] == "classification"]
+
+
+def _cv(split, fn):
+    return round(fn([float(r["roc_auc_mean"]) for r in _CVC if r["split"] == split]), 4)
+
+
+for _sp in ("random", "scaffold"):
+    claim("viva", f"core AUROC {_sp}, mean", "rf_cv_summary.csv",
+          (lambda sp: lambda: _cv(sp, st.mean))(_sp))
+    claim("viva", f"core AUROC {_sp}, lowest", "rf_cv_summary.csv",
+          (lambda sp: lambda: _cv(sp, min))(_sp))
+    claim("viva", f"core AUROC {_sp}, highest", "rf_cv_summary.csv",
+          (lambda sp: lambda: _cv(sp, max))(_sp))
+    claim("viva", f"permuted-label null, {_sp}", "permutation_null.csv",
+          (lambda sp: lambda: round(st.mean(col(TAB / "permutation_null.csv",
+                                                "permuted_roc_auc_mean",
+                                                lambda r: r["split"] == sp)), 4))(_sp))
+
+claim("viva", "worst null deviation from chance", "permutation_null.csv",
+      lambda: round(max(abs(v - 0.5) for v in col(TAB / "permutation_null.csv",
+                                                  "permuted_roc_auc_mean")), 4))
+
+claim("viva", "panel sensitivity mean", "binder_modes.json",
+      lambda: round(st.mean(_dep_sens()), 4))
+claim("viva", "panel sensitivity median", "binder_modes.json",
+      lambda: round(st.median(_dep_sens()), 3), "{:.3f}")
+claim("viva", "panel sensitivity lowest", "binder_modes.json",
+      lambda: round(min(_dep_sens()), 3), "{:.3f}")
+claim("viva", "panel sensitivity highest", "binder_modes.json",
+      lambda: round(max(_dep_sens()), 3), "{:.3f}")
+
+claim("viva", "core ECE raw mean", "calibration.csv",
+      lambda: round(st.mean(col(TAB / "calibration.csv", "ece_raw")), 4))
+claim("viva", "core ECE calibrated mean", "calibration.csv",
+      lambda: round(st.mean(col(TAB / "calibration.csv", "ece_calibrated")), 4))
+claim("viva", "core ECE best", "calibration.csv",
+      lambda: min(col(TAB / "calibration.csv", "ece_calibrated")))
+claim("viva", "core ECE worst, the barrier model", "calibration.csv",
+      lambda: max(col(TAB / "calibration.csv", "ece_calibrated")))
+claim("viva", "binder ECE mean", "integrity_calibration_per_target.csv",
+      lambda: round(st.mean(col(TAB / "integrity_calibration_per_target.csv", "ece")), 4))
+claim("viva", "binder ECE median", "integrity_calibration_per_target.csv",
+      lambda: round(st.median(col(TAB / "integrity_calibration_per_target.csv", "ece")), 4))
+
+claim("viva", "conformal coverage, lowest", "rf_conformal.csv",
+      lambda: min(col(TAB / "rf_conformal.csv", "empirical_coverage")), "{:.3f}")
+claim("viva", "conformal coverage, highest", "rf_conformal.csv",
+      lambda: max(col(TAB / "rf_conformal.csv", "empirical_coverage")), "{:.3f}")
+claim("viva", "conformal set size, smallest", "rf_conformal.csv",
+      lambda: min(col(TAB / "rf_conformal.csv", "avg_set_size")), "{:.3f}")
+claim("viva", "conformal set size, largest", "rf_conformal.csv",
+      lambda: max(col(TAB / "rf_conformal.csv", "avg_set_size")), "{:.3f}")
+
+claim("viva", "specificity on the non-CNS library", "noncns_specificity_summary.csv",
+      lambda: float(cell(TAB / "noncns_specificity_summary.csv", "estimate",
+                         lambda r: r["metric"].startswith("Specificity"))), "{:.3f}")
+claim("viva", "specificity interval, low", "noncns_specificity_summary.csv",
+      lambda: float(cell(TAB / "noncns_specificity_summary.csv", "ci95_low",
+                         lambda r: r["metric"].startswith("Specificity"))))
+claim("viva", "specificity interval, high", "noncns_specificity_summary.csv",
+      lambda: float(cell(TAB / "noncns_specificity_summary.csv", "ci95_high",
+                         lambda r: r["metric"].startswith("Specificity"))))
+
+for _i, _lab in enumerate(["all 306", "the 241 novel in feature space", "the 65 memorised"]):
+    claim("viva", f"external barrier AUROC, {_lab}", "external_bbb_validation.csv",
+          (lambda i: lambda: float(rows(TAB / "external_bbb_validation.csv")[i]["auroc"]))(_i))
+
+_BANDS = ["below 0.40 (different chemotype)", "0.40 to 0.55 (related series)",
+          "0.55 to 0.70 (same series)", "0.70 and above (close analogue)"]
+for _sp in ("time", "random", "cross_source"):
+    for _b in _BANDS:
+        claim("viva", f"recall, {_sp}, {_b[:22]}", "external_novelty_strata.csv",
+              (lambda sp, b: lambda: float(
+                  cell(TAB / "external_novelty_strata.csv", "recall_at_threshold",
+                       lambda r: r["split"] == sp and r["novelty_band"] == b)))(_sp, _b))
+
+claim("viva", "H10 deployed forest, external", "H10_barrier_necessity.csv",
+      lambda: float(cell(INV / "H10_barrier_necessity.csv", "auroc",
+                         lambda r: r["population"] == "external approved"
+                         and r["method"].startswith("deployed"))))
+claim("viva", "H10 descriptor forest, external", "H10_barrier_necessity.csv",
+      lambda: float(cell(INV / "H10_barrier_necessity.csv", "auroc",
+                         lambda r: r["population"] == "external approved"
+                         and r["method"] == "descriptor forest, 12 features")))
+claim("viva", "H10 external interval, upper bound", "H10_barrier_necessity.csv",
+      lambda: float(cell(INV / "H10_barrier_necessity.csv", "delta_ci95_high",
+                         lambda r: r["population"] == "external approved"
+                         and r["method"] == "descriptor forest, 12 features")))
+
+claim("viva", "deployed endpoints", "binder_modes.json", lambda: len(_deployed()), "{:d}")
+claim("viva", "endpoints failing the reliability gate", "binder_modes.json",
+      lambda: sum(1 for v in json.loads((ROOT / "models_rf" / "binder_modes.json")
+                                        .read_text(encoding="utf-8")).values()
+                  if v.get("deployed") and v.get("reliable_call") is False), "{:d}")
+claim("viva", "conditions in the graph", "GRAPH_FINGERPRINT.json",
+      lambda: json.loads((INV / "GRAPH_FINGERPRINT.json")
+                         .read_text(encoding="utf-8"))["n_conditions"], "{:d}")
+claim("viva", "targets in the graph", "GRAPH_FINGERPRINT.json",
+      lambda: json.loads((INV / "GRAPH_FINGERPRINT.json")
+                         .read_text(encoding="utf-8"))["n_targets"], "{:d}")
+claim("viva", "distinct SMILES in the endpoint tables", "library_sp3_coverage.csv",
+      lambda: int(float(cell(TAB / "library_sp3_coverage.csv", "value",
+                             lambda r: r["metric"].startswith("distinct SMILES")))), "{:,}")
+
+claim("viva", "hypotheses refuted", "VERDICTS.csv",
+      lambda: sum(1 for r in rows(INV / "VERDICTS.csv")
+                  if r["verdict"].startswith("REFUTED")), "{:d}")
+
+
+def _dep_sens():
+    reg = json.loads((ROOT / "models_rf" / "binder_modes.json").read_text(encoding="utf-8"))
+    return [v["sensitivity_at_threshold"] for v in reg.values() if v.get("deployed")]
+
+
 CHAPTER_FILES = {
     "09": THESIS / "chapter09_falsification.md",
     "10": THESIS / "chapter10_limitations.md",
+    "viva": THESIS / "viva_preparation.md",
 }
 
 

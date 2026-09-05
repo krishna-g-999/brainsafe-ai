@@ -84,6 +84,14 @@ def main(argv=None) -> None:
     for c in chs:
         convert(c, OUT / f"{c.stem}.docx", args.keep_notes)
 
+    # The viva pack is not a chapter and is deliberately not folded into the combined thesis: it is
+    # a study document whose audience is the candidate, so its provenance note and its outstanding
+    # items are the parts most worth keeping rather than the parts to strip.
+    if not args.chapter:
+        viva = THESIS / "viva_preparation.md"
+        if viva.exists():
+            convert(viva, OUT / "viva_preparation.docx", keep_notes=True)
+
     # the combined document, only when building everything
     if not args.chapter:
         merged = "\n\n\\newpage\n\n".join(
