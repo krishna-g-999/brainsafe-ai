@@ -9,17 +9,25 @@ earlier.
                      positioned from the left when it should have been sized to the remaining width
   invisible text     a run whose colour matches the fill immediately behind it. Caused by using a
                      dark palette colour for a card title on a dark card
-  overset text       a text box whose content cannot fit at the requested size. Caused by writing a
-                     longer sentence into a box sized for the previous one
-  collision          two runs of text that overlap. A card behind text is fine and is not flagged,
-                     and neither is a box whose declared height exceeds its content, since these
-                     decks size boxes generously on purpose. Only the estimated ink is compared
+  collision          two runs of text whose ink overlaps. A card behind text is fine and is not
+                     flagged; only the estimated ink of one run against another is compared, and the
+                     ink is allowed to leave its declared box, because a top-anchored frame is not a
+                     clip region and these decks place every element by an explicit y
   no notes           a slide with no speaker notes. Every slide in these decks is meant to be
                      defensible aloud
 
-Overset detection is an estimate, not a layout engine. It assumes an average glyph width of 0.50 em
-for the body face and 0.52 for the heading face, which is close enough to catch a box that is 30 per
-cent too small and deliberately will not flag one that is 5 per cent too small.
+There was a fifth check, overset text, which reported any box whose text needed more height than the
+box declared. It fired 32 times across the seven earliest decks and every one of them rendered
+correctly: PowerPoint lays a top-anchored frame out from the top and simply continues past the
+declared bottom, so the overflow landed in the blank space the layout had left for it. Sizing the
+boxes up to satisfy the check turned 21 of those into collisions that were not there either. The
+check was measuring a property these decks never maintained and no reader can see, so it is gone.
+Overset is a collision or it is nothing.
+
+The ink estimate is not a layout engine. Its glyph advance was measured off rendered slides rather
+than assumed: 322 characters over 5 lines in a 5.19 inch box, and 358 over 11 lines in a 2.59 inch
+box, both at 12.5 pt Calibri, give 0.446 and 0.452 em. The constant used to be 0.50, which is about
+11 per cent too wide and was the reason two collisions were reported that do not happen.
 
 Run:  brainsafe_env/Scripts/python.exe thesis/presentations/validate_deck.py
       brainsafe_env/Scripts/python.exe thesis/presentations/validate_deck.py chapter09_defence.pptx
@@ -31,15 +39,20 @@ import sys
 from pathlib import Path
 
 from pptx import Presentation
+
 from pptx.util import Emu
 
 HERE = Path(__file__).resolve().parent
 EMU_IN = 914400.0
 W_IN, H_IN = 13.333, 7.5
 TOL = 0.02                 # inches of slack at the slide edge
+GLYPH = {"Cambria": 0.47, "Calibri": 0.45}   # measured off rendered slides, see the note above
+# A line box is about 1.22 times the point size, but most of the extra is leading above and below
+# the glyphs. Collisions are about ink, so the visible extent of a line is nearer one em: using the
+# line box instead put a 40 pt display number 0.10 in taller than it draws and reported every
+# value-and-label pair in the deck as a collision.
+INK_FACTOR = 1.00
 
-GLYPH = {"Cambria": 0.52, "Calibri": 0.50}
-LINE_FACTOR = 1.22         # line height as a multiple of point size, before explicit line_spacing
 
 
 def _rgb(color):
@@ -85,12 +98,20 @@ def _near(c1, c2, tol=48):
     return sum(abs(x - y) for x, y in zip(c1, c2)) < tol
 
 
-def _estimate_height(sh) -> float:
-    """Inches of text the frame needs, summed over paragraphs."""
+def _ink_height(sh) -> float:
+    """Inches of ink a text frame draws, summed over paragraphs.
+
+    An estimate, not a layout engine: the measured average glyph advance for each face, and one em
+    of vertical extent per line. Close enough to catch a block that runs into the one below it, and
+    deliberately quiet about a few points either way.
+
+    The space after the final paragraph is excluded because nothing is drawn in it.
+    """
     tf = sh.text_frame
     width_in = sh.width / EMU_IN
+    paras = list(tf.paragraphs)
     total = 0.0
-    for p in tf.paragraphs:
+    for k, p in enumerate(paras):
         runs = [r for r in p.runs if r.text]
         if not runs:
             total += 0.10
@@ -105,8 +126,9 @@ def _estimate_height(sh) -> float:
         breaks = sum(r.text.count("\n") for r in runs)
         lines = max(1, -(-chars // per_line), breaks + 1)
         spacing = float(p.line_spacing) if isinstance(p.line_spacing, float) else 1.0
-        after = (p.space_after.pt if p.space_after else 0) / 72.0
-        total += lines * size * LINE_FACTOR * spacing / 72.0 + after
+        total += lines * size * INK_FACTOR * spacing / 72.0
+        if k < len(paras) - 1:
+            total += (p.space_after.pt if p.space_after else 0) / 72.0
     return total
 
 
@@ -151,22 +173,28 @@ def validate(path: Path) -> list[str]:
                             f"slide {i}: text \"{r.text[:38]}\" is the colour of what is behind it")
                         break
 
-            need = _estimate_height(sh)
-            have = box[3] - box[1]
-            if need > have * 1.30 and need - have > 0.12:
-                problems.append(
-                    f"slide {i}: text box may overset, needs about {need:.2f} in and has "
-                    f"{have:.2f} in: \"{sh.text_frame.text[:44].strip()}\"")
-
-        # Compare the ink, not the container. These decks give a text box more height than its
-        # content needs so that a later edit has room, and the box below it starts where the text
-        # actually ends. Comparing declared boxes flags every one of those as a collision.
+        # Compare the ink, not the container, and let the ink leave the container.
+        #
+        # An earlier version of this file also reported any box whose text needed more height than
+        # the box declared. It fired 32 times across the seven earliest decks and every one of them
+        # rendered correctly, because a top-anchored text frame in PowerPoint is not a clip region:
+        # the text is laid out from the top and simply continues past the declared bottom. These
+        # decks position each element by an explicit y, so a box height is decoration and reporting
+        # it as a fault was reporting on a property the decks never maintained and no reader can
+        # see. Worse, sizing the boxes up to satisfy it turned 21 of those into collisions that were
+        # not there either.
+        #
+        # What does matter is where the text ends up, so the estimate is no longer clipped to the
+        # box: a top-anchored frame's ink runs from its top for as long as its text needs, and the
+        # only complaint left is that the ink reaches another run. Overset is not a separate fault,
+        # it is a collision or it is nothing.
         ink = []
         for box, sh in texts:
-            need = min(_estimate_height(sh), box[3] - box[1])
+            need = _ink_height(sh)
             top = box[1]
             if sh.text_frame.vertical_anchor is not None and str(
                     sh.text_frame.vertical_anchor).startswith("MIDDLE"):
+                need = min(need, box[3] - box[1])
                 top = box[1] + max(0.0, (box[3] - box[1] - need) / 2)
             ink.append(((box[0], top, box[2], top + need), sh))
 

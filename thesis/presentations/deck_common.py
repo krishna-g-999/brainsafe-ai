@@ -180,7 +180,11 @@ class Deck:
         if len(value) > 5:
             vsize = vsize * (5.0 / len(value)) ** 0.55
         self.text(s, x, y, w, 0.66, value, size=vsize, bold=True, font=HEAD, color=color)
-        self.text(s, x, y + 0.70, w, 0.72, label, size=12, color=MUTED, line=1.15)
+        # The gap has to clear the value it sits under. A fixed 0.70 in is right for the default
+        # 40 pt and too tight above it, which printed a caption against the descender of a 52 pt
+        # figure in the Chapter 1 deck. The floor keeps every smaller statistic exactly where it was.
+        self.text(s, x, y + max(0.70, vsize / 72.0 * 1.15), w, 0.72, label,
+                  size=12, color=MUTED, line=1.15)
 
     def equation(self, s, x, y, w, parts, size=27, color=DEEP):
         """parts: list of (text, is_subscript), rendered as true subscripts."""

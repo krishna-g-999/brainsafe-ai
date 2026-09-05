@@ -333,7 +333,12 @@ def stat(s, x, y, w, value, label, color=TEAL, vsize=40):
     if len(value) > 5:
         vsize = vsize * (5.0 / len(value)) ** 0.55
     text(s, x, y, w, 0.66, value, size=vsize, bold=True, font=HEAD, color=color)
-    text(s, x, y + 0.70, w, 0.72, label, size=12, color=MUTED, line=1.15)
+    # The label sat at a fixed 0.70 in below the value, which is clearance for the default 40 pt and
+    # none at all for the 52 pt figure on the specificity slide: the caption printed against the
+    # descender of the number. The offset follows the size it has to clear, with the old value as a
+    # floor so every smaller statistic is unmoved.
+    text(s, x, y + max(0.70, vsize / 72.0 * 1.15), w, 0.72, label,
+         size=12, color=MUTED, line=1.15)
 
 
 # ----------------------------------------------------------------------------- slides
