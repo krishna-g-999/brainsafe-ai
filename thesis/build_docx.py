@@ -88,7 +88,7 @@ def main(argv=None) -> None:
     # a study document whose audience is the candidate, so its provenance note and its outstanding
     # items are the parts most worth keeping rather than the parts to strip.
     if not args.chapter:
-        for aside in ("viva_preparation.md", "code_walkthrough.md"):
+        for aside in ("viva_preparation.md", "code_walkthrough.md", "criteria_justification.md"):
             src = THESIS / aside
             if src.exists():
                 convert(src, OUT / f"{src.stem}.docx", keep_notes=True)

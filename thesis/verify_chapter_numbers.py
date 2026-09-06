@@ -626,11 +626,82 @@ def _node_dim() -> int:
 claim("code", "graph node feature dimension", "gnn/graph_features.py", _node_dim, "{:d}")
 
 
+
+# ---- The criteria justification --------------------------------------------------------------
+# This document argues that a choice was justified by measurement rather than by preference, so the
+# measurements it leans on are pinned. The feature-block ablation matters most: it is the evidence
+# that the twelve descriptors add almost nothing, which is a claim against the project's own
+# interest and would be embarrassing to state from a stale number.
+
+def _ablation():
+    from collections import defaultdict
+    by = defaultdict(dict)
+    for r in rows(TAB / "feature_block_ablation.csv"):
+        by[(r["endpoint"], r["metric"])][r["block"]] = float(r["mean"])
+    return [v for v in by.values() if len(v) == 3]
+
+
+claim("criteria", "ablation endpoints", "feature_block_ablation.csv",
+      lambda: len(_ablation()), "{:d}")
+claim("criteria", "combined minus fingerprint-only, mean", "feature_block_ablation.csv",
+      lambda: round(st.mean(v["combined"] - v["fingerprint_only"] for v in _ablation()), 4))
+claim("criteria", "combined minus fingerprint-only, best", "feature_block_ablation.csv",
+      lambda: round(max(v["combined"] - v["fingerprint_only"] for v in _ablation()), 4))
+claim("criteria", "combined minus descriptors-only, mean", "feature_block_ablation.csv",
+      lambda: round(st.mean(v["combined"] - v["descriptors_only"] for v in _ablation()), 4))
+claim("criteria", "combined minus descriptors-only, worst endpoint", "feature_block_ablation.csv",
+      lambda: round(max(v["combined"] - v["descriptors_only"] for v in _ablation()), 4))
+claim("criteria", "endpoints where combined beats fingerprint alone",
+      "feature_block_ablation.csv",
+      lambda: sum(1 for v in _ablation() if v["combined"] > v["fingerprint_only"]), "{:d}")
+
+claim("criteria", "core AUROC, random split", "rf_cv_summary.csv",
+      lambda: round(st.mean(col(TAB / "rf_cv_summary.csv", "roc_auc_mean",
+                                lambda r: r["task"] == "classification"
+                                and r["split"] == "random")), 4))
+claim("criteria", "core AUROC, scaffold split", "rf_cv_summary.csv",
+      lambda: round(st.mean(col(TAB / "rf_cv_summary.csv", "roc_auc_mean",
+                                lambda r: r["task"] == "classification"
+                                and r["split"] == "scaffold")), 4))
+
+for _alt, _sub, _field, _lab, _fmt in [
+        ("HistGradientBoosting", "all 13", "wilcoxon_p", "forest vs HGB, p", "{:.5f}"),
+        ("XGBoost", "all 13", "wilcoxon_p", "forest vs XGBoost, p", "{:.5f}"),
+        ("kNN read-across", "8 classification", "median_delta",
+         "forest vs read-across, median delta", "{:.4f}"),
+        ("LogisticRegression", "8 classification", "median_delta",
+         "forest vs logistic regression, median delta", "{:.4f}")]:
+    claim("criteria", _lab, "model_family_significance.csv",
+          (lambda a, sub, f: lambda: float(
+              cell(TAB / "model_family_significance.csv", f,
+                   lambda r: r["split"] == "scaffold" and r["alternative"] == a
+                   and r["subset"].startswith(sub))))(_alt, _sub, _field), _fmt)
+
+claim("criteria", "GSK-3B AUROC before the bulk inactives", "inactives_audit.csv",
+      lambda: float(cell(TAB / "inactives_audit.csv", "auroc_before",
+                         lambda r: r["endpoint"] == "GSK3B")))
+claim("criteria", "GSK-3B AUROC after the bulk inactives", "inactives_audit.csv",
+      lambda: float(cell(TAB / "inactives_audit.csv", "auroc_after",
+                         lambda r: r["endpoint"] == "GSK3B")))
+claim("criteria", "bulk inactives added to GSK-3B", "inactives_audit.csv",
+      lambda: int(cell(TAB / "inactives_audit.csv", "added_inactives",
+                       lambda r: r["endpoint"] == "GSK3B")), "{:,}")
+claim("criteria", "median similarity of those inactives to the actives", "inactives_audit.csv",
+      lambda: float(cell(TAB / "inactives_audit.csv", "median_sim_to_active",
+                         lambda r: r["endpoint"] == "GSK3B")), "{:.3f}")
+
+claim("criteria", "core ECE before calibration", "calibration.csv",
+      lambda: round(st.mean(col(TAB / "calibration.csv", "ece_raw")), 4))
+claim("criteria", "core ECE after calibration", "calibration.csv",
+      lambda: round(st.mean(col(TAB / "calibration.csv", "ece_calibrated")), 4))
+
+
 CHAPTER_FILES = {
     "09": THESIS / "chapter09_falsification.md",
     "10": THESIS / "chapter10_limitations.md",
     "viva": THESIS / "viva_preparation.md",
     "code": THESIS / "code_walkthrough.md",
+    "criteria": THESIS / "criteria_justification.md",
 }
 
 
