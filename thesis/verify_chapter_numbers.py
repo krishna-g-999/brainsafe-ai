@@ -565,10 +565,72 @@ def _dep_sens():
     return [v["sensitivity_at_threshold"] for v in reg.values() if v.get("deployed")]
 
 
+
+# ---- The code walkthrough --------------------------------------------------------------------
+# Two of these are the evidence that TECHNICAL_REPORT.md's stage-1 diagram states the wrong active
+# cut, so they are pinned rather than quoted: if a future rebuild ever did move the tables to a cut
+# of 7, the walkthrough would be wrong and should fail rather than mislead.
+
+def _endpoint_rows(pred) -> int:
+    import glob
+    import pandas as pd
+    total = 0
+    for f in sorted(glob.glob(str(ROOT / "data" / "endpoints" / "*.csv"))):
+        d = pd.read_csv(f)
+        if "pchembl" not in d.columns or "label" not in d.columns:
+            continue
+        total += int(pred(d, pd.to_numeric(d["pchembl"], errors="coerce")).sum())
+    return total
+
+
+claim("code", "endpoint tables on disk", "data/endpoints",
+      lambda: len(list((ROOT / "data" / "endpoints").glob("*.csv"))), "{:d}")
+claim("code", "active rows between the two cuts, 6.0 to 7.0", "data/endpoints/*.csv",
+      lambda: _endpoint_rows(lambda d, p: (d.label == 1) & (p >= 6.0) & (p < 7.0)), "{:,}")
+claim("code", "rows at the censored inactive bound, pChEMBL 5.0", "data/endpoints/*.csv",
+      lambda: _endpoint_rows(lambda d, p: (d.label == 0) & (p == 5.0)), "{:,}")
+
+
+def _const(path: str, name: str) -> str:
+    """The literal a module assigns to a name, so a setting quoted here cannot drift from the code."""
+    import re
+    text = (ROOT / path).read_text(encoding="utf-8")
+    m = re.search(rf"^{re.escape(name)}\s*=\s*([^\n#]+)", text, flags=re.M)
+    if not m:
+        raise KeyError(f"{name} not assigned in {path}")
+    return m.group(1).strip()
+
+
+claim("code", "reliability gate, minimum sensitivity", "panel.py",
+      lambda: float(_const("src/brainsafe/panel.py", "MIN_SENSITIVITY")), "{:.2f}")
+claim("code", "reliability gate, minimum AUROC", "panel.py",
+      lambda: float(_const("src/brainsafe/panel.py", "MIN_AUROC")), "{:.2f}")
+claim("code", "threshold requirement A, measured-inactive FPR",
+      "final_thresholds.py",
+      lambda: float(_const("src/brainsafe/models/final_thresholds.py", "TARGET_FPR")), "{:.2f}")
+claim("code", "threshold requirement B, background FPR", "final_thresholds.py",
+      lambda: float(_const("src/brainsafe/models/final_thresholds.py", "BACKGROUND_FPR")), "{:.2f}")
+claim("code", "screening false-positive rate", "screening_thresholds.py",
+      lambda: float(_const("src/brainsafe/models/screening_thresholds.py", "SCREENING_FPR")),
+      "{:.2f}")
+claim("code", "binder active-scaffold hold-out share", "train_binders_hybrid.py",
+      lambda: float(_const("src/brainsafe/models/train_binders_hybrid.py", "ACTIVE_HOLDOUT")),
+      "{:.2f}")
+def _node_dim() -> int:
+    import sys as _sys
+    _sys.path.insert(0, str(ROOT / "src" / "brainsafe" / "gnn"))
+    from graph_features import NODE_DIM
+    return int(NODE_DIM)
+
+
+claim("code", "graph node feature dimension", "gnn/graph_features.py", _node_dim, "{:d}")
+
+
 CHAPTER_FILES = {
     "09": THESIS / "chapter09_falsification.md",
     "10": THESIS / "chapter10_limitations.md",
     "viva": THESIS / "viva_preparation.md",
+    "code": THESIS / "code_walkthrough.md",
 }
 
 

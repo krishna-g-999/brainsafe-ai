@@ -88,9 +88,10 @@ def main(argv=None) -> None:
     # a study document whose audience is the candidate, so its provenance note and its outstanding
     # items are the parts most worth keeping rather than the parts to strip.
     if not args.chapter:
-        viva = THESIS / "viva_preparation.md"
-        if viva.exists():
-            convert(viva, OUT / "viva_preparation.docx", keep_notes=True)
+        for aside in ("viva_preparation.md", "code_walkthrough.md"):
+            src = THESIS / aside
+            if src.exists():
+                convert(src, OUT / f"{src.stem}.docx", keep_notes=True)
 
     # the combined document, only when building everything
     if not args.chapter:
