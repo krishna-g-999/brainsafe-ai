@@ -15,9 +15,20 @@ Read it with the source open. Every heading is a real file.
 
 ---
 
-# 0. Before anything else: a discrepancy to correct
+# 0. Before anything else: a discrepancy, now corrected
 
-`docs/TECHNICAL_REPORT.md:373` draws the labelling rule as
+This section is kept in full although the defect is fixed, because the reasoning is the answer to a
+question a reader of the earlier report will ask, and because a circulated document cannot be
+unsent. If your copy of the technical report predates 6 September 2026, its section 3.1.1 shows the
+version described below.
+
+The diagram now appears as two, one per stage, and states 6.0 for the table builder and 7.0 for the
+binder panel with the decoy rule beside the stage that owns it.
+`tests/test_panel_app_consistency.py::TestPipelineDiagramMatchesThePipeline` fails if either cut,
+the decoy rule or the reliability gate drifts from the code again, and it checks the 64,419 figure
+against the tables rather than trusting the sentence.
+
+**What it used to say.** `docs/TECHNICAL_REPORT.md:373` drew the labelling rule as
 
 > pChEMBL >= 7 : active, pChEMBL <= 5 : inactive, in between : discarded
 
@@ -472,7 +483,7 @@ calibration sets the binder endpoints have.
 
 **"Why does the binder panel use pChEMBL ≥ 7 when the tables are built at ≥ 6?"** Because its
 negatives are presumed decoys rather than measured inactives, so it selects only high-confidence
-actives. And note that the technical report's diagram states the ≥ 7 cut at the wrong stage; section 0.
+actives. The technical report's diagram used to state the ≥ 7 cut at the wrong stage; section 0.
 
 **"Is `class_weight='balanced'` applied consistently across the comparison?"** No, and concede it.
 Random forest and logistic regression use `class_weight="balanced"`, XGBoost uses `scale_pos_weight`,
@@ -485,9 +496,11 @@ so. It bounds the question rather than settling it.
 
 ## Outstanding items for this document
 
-1. **`docs/TECHNICAL_REPORT.md:373` states the wrong active cut** and attributes the binder panel's
-   decoy rule to the table-building stage. The diagram should be split into the two stages it is
-   conflating. This is the one item here that changes a document a reader may already hold.
+1. ~~`docs/TECHNICAL_REPORT.md:373` states the wrong active cut~~ **Closed.** The diagram is split
+   into its two stages, each labelled with the file that implements it and the cut that file applies,
+   and the reliability gate it stated as 0.60 now reads the deployed 0.50. Five tests in
+   `TestPipelineDiagramMatchesThePipeline` pin it. Anyone holding a copy of the report from before
+   6 September 2026 has the conflated version; section 0 records what it said.
 2. The comparison in section 7 leaves HistGradientBoosting unweighted while three of the other four
    families are class-balanced. Either weight it or state the asymmetry in the manuscript's
    model-comparison paragraph.

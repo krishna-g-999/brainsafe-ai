@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Document** | Technical report on the BrainSafe AI prediction panel |
-| **Generated** | 2026-09-02, automatically, from the deployed panel |
+| **Generated** | 2026-09-06, automatically, from the deployed panel |
 | **Commit** | `120f2c7` |
 | **Status** | Research preview, pending peer review |
 | **Repository** | https://github.com/krishna-g-999/brainsafe-ai |
@@ -364,40 +364,53 @@ The pipeline is one chain, shown in two halves because it is fifteen steps long.
 turns raw deposited measurements into a labelled training table; the second turns that table into a
 deployed endpoint, or withholds it.
 
-**Stage 1: from deposited measurements to a labelled table.**
+The two stages apply **different activity cuts to the same data, on purpose**, and an earlier edition
+of this diagram obscured that by showing one cut for both. Stage 1 admits a compound to the table at
+pChEMBL 6.0, which is the conventional 1 micromolar line and the point below which a measurement
+stops constraining much. Stage 2 asks a stricter question of that table: a binder classifier is
+trained on the compounds at 7.0 and above, because the panel exists to identify engagement worth
+acting on rather than any detectable affinity. Reading the stricter cut back onto Stage 1 would imply
+a training table roughly forty per cent smaller than the one that exists: 64,419 of the 171,167
+active rows lie between the two cuts.
+
+**Stage 1: from deposited measurements to a labelled table.** `src/brainsafe/data/rebuild_endpoints.py`
 
 ```mermaid
 flowchart TD
     A[ChEMBL / BindingDB / B3DB / TDC<br/>raw measurements for ONE target] --> B[Keep potency types only:<br/>IC50, Ki, Kd, EC50]
-    B --> C{Exact value or<br/>censored bound?}
-    C -->|exact| D[pChEMBL >= 7 : active<br/>pChEMBL <= 5 : inactive<br/>in between : discarded]
-    C -->|bound| E{Does the whole interval<br/>fall one side of the cut?}
-    E -->|yes| D
-    E -->|no| F[Discarded as undecidable]
-    D --> G[Deduplicate on the InChIKey<br/>of the desalted parent]
-    G --> H{Enough measured<br/>inactives for this target?}
-    H -->|yes| I[Negatives = measured inactives]
-    H -->|no| J[Negatives = measured inactives<br/>plus property-matched decoys,<br/>Tanimoto below 0.35 to any active]
-    I --> K[Labelled training table]
+    B --> C[Standardise each structure: desalt, neutralise,<br/>key on the InChIKey of the parent]
+    C --> D{Exact value or<br/>censored bound?}
+    D -->|exact| E[Pool per compound across sources<br/>by MEDIAN potency]
+    E --> F[pChEMBL >= 6.0 : active<br/>pChEMBL < 5.0 : inactive<br/>5.0 to 6.0 : discarded as ambiguous]
+    D -->|bound| G[Pool per compound by MIN:<br/>a bound is an upper limit, so the<br/>weakest one is what can be defended]
+    G --> H{Does this compound also have<br/>an exact measurement?}
+    H -->|yes| I[Bound discarded:<br/>an exact value always wins]
+    H -->|no| J[Labelled inactive directly, NOT via the<br/>rule above. '>10000 nM' means the true value<br/>lies below pX 5.0, but arrives at the rule as<br/>exactly 5.0 and would be lost as grey zone]
+    F --> K[Labelled training table]
     J --> K
 ```
 
-**Stage 2: from the table to a deployed endpoint, or not.**
+**Stage 2: from the table to a deployed endpoint, or not.** `train_binders_hybrid.py`, then the
+four-step threshold sequence.
 
 ```mermaid
 flowchart TD
-    K[Labelled training table] --> L[Featurise: 1,036 columns]
-    L --> M[Collapse feature-identical rows]
-    M --> N[Withhold a fifth of the active scaffold groups,<br/>and half the measured inactives]
-    N --> O[Fit random forest, 300 trees]
-    O --> P[Calibrate on out-of-fold predictions]
-    P --> Q[Set the threshold on the withheld inactives]
-    Q --> R[Measure the false-positive rate on a<br/>DISJOINT background pool]
-    R --> S{Fires on trivial metabolites,<br/>or FPR above 5 per cent?}
-    S -->|yes| T[Withdrawn, with the reason<br/>and its evidence recorded]
-    S -->|no| U{Sensitivity at that<br/>threshold above 0.60?}
-    U -->|no| V[Deployed, flagged as<br/>lower sensitivity]
-    U -->|yes| W[Deployed]
+    K[Labelled training table] --> L[Re-select actives at pChEMBL >= 7.0,<br/>a stricter cut than the table's own 6.0]
+    L --> M{Enough measured<br/>inactives for this target?}
+    M -->|yes| N[Negatives = measured inactives]
+    M -->|no| O[Topped up with property-matched decoys<br/>to 3x the actives, each below<br/>Tanimoto 0.35 to every active]
+    N --> P[Featurise: 1,036 columns]
+    O --> P
+    P --> Q[Collapse feature-identical rows]
+    Q --> R[Withhold a fifth of the active scaffold groups,<br/>and half the measured inactives]
+    R --> S[Fit random forest, 300 trees]
+    S --> T[Calibrate on out-of-fold predictions]
+    T --> U[Threshold = the STRICTER of two:<br/>10 per cent FPR on the withheld measured inactives,<br/>5 per cent on a DISJOINT background pool]
+    U --> V{Fires on trivial metabolites,<br/>or background FPR above 5 per cent?}
+    V -->|yes| W[Withdrawn, with the reason<br/>and its evidence recorded]
+    V -->|no| X{Held-out sensitivity >= 0.50 AND<br/>AUROC vs measured inactives >= 0.75?}
+    X -->|no| Y[Deployed below the reliability gate:<br/>a negative call is marked low-powered]
+    X -->|yes| Z[Deployed]
 ```
 
 Every endpoint goes through this independently. Nothing crosses between them except the

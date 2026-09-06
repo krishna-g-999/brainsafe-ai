@@ -276,6 +276,76 @@ class TestReportedTablesAgreeWithRegistry(unittest.TestCase):
                          "the shipped table differs from the one the project maintains")
 
 
+class TestPipelineDiagramMatchesThePipeline(unittest.TestCase):
+    """The 3.1.1 diagram described a pipeline nobody built.
+
+    It showed one activity cut for both stages, pChEMBL >= 7, where the table builder admits at 6.0
+    and only the binder trainer asks for 7.0, and it placed the binder trainer's Tanimoto-0.35 decoy
+    rule inside the table-building stage, which contains no decoy logic at all. It also stated the
+    reliability gate as 0.60, the floor used by the training stages, where the deployed gate is the
+    0.50 written last. A reader applying the diagram would have expected a training table about forty
+    per cent smaller than the one that exists.
+
+    A diagram is prose, so no numeric check reached it. These tests do.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.gen = (ROOT / "src" / "brainsafe" / "analysis"
+                   / "build_technical_report.py").read_text(encoding="utf-8")
+        cls.s1 = cls.gen.split("Stage 1:")[1].split("Stage 2:")[0]
+        # Stage 2 runs from its heading to the end of its mermaid fence, not to the next section:
+        # everything after that fence is unrelated prose that would swamp a negative assertion.
+        after = cls.gen.split("Stage 2:")[1]
+        cls.s2 = after[:after.index("```", after.index("```mermaid") + 10)]
+
+    def test_stage_one_states_the_table_cut(self):
+        self.assertIn("pChEMBL >= 6.0 : active", self.s1)
+        self.assertNotIn("pChEMBL >= 7", self.s1,
+                         "stage 1 shows the binder trainer's cut, not the table builder's")
+
+    def test_stage_one_has_no_decoy_logic(self):
+        """rebuild_endpoints.py contains no Tanimoto, decoy or 0.35 anywhere."""
+        src = (ROOT / "src" / "brainsafe" / "data"
+               / "rebuild_endpoints.py").read_text(encoding="utf-8").lower()
+        for token in ("tanimoto", "decoy", "0.35"):
+            self.assertNotIn(token, src, f"rebuild_endpoints.py now mentions {token}")
+            self.assertNotIn(token, self.s1.lower(),
+                             f"stage 1 shows {token}, which belongs to the binder trainer")
+
+    def test_stage_two_states_the_binder_cut_and_decoy_rule(self):
+        active_p = self._const("src/brainsafe/models/train_binders_hybrid.py", "ACTIVE_P")
+        self.assertIn(f"pChEMBL >= {active_p}", self.s2)
+        self.assertIn("Tanimoto 0.35", self.s2)
+
+    def test_diagram_gate_is_the_deployed_gate(self):
+        self.assertIn(f"sensitivity >= {panel.MIN_SENSITIVITY:.2f}", self.s2)
+        self.assertIn(f"AUROC vs measured inactives >= {panel.MIN_AUROC:.2f}", self.s2)
+        self.assertNotIn("0.60", self.s2, "the diagram states a gate the panel does not use")
+
+    def test_the_band_between_the_cuts_is_reported_correctly(self):
+        """The figure that proves the two cuts differ must match the tables."""
+        import glob
+        import pandas as pd
+        n = 0
+        for f in glob.glob(str(ROOT / "data" / "endpoints" / "*.csv")):
+            d = pd.read_csv(f, usecols=lambda c: c in ("pchembl", "label"), low_memory=False)
+            if "pchembl" not in d or "label" not in d:
+                continue
+            p = pd.to_numeric(d["pchembl"], errors="coerce")
+            n += int(((pd.to_numeric(d["label"], errors="coerce") == 1) & (p >= 6.0) & (p < 7.0)).sum())
+        self.assertIn(f"{n:,}", self.gen,
+                      "the stated count of actives between the two cuts is not what the tables hold")
+
+    @staticmethod
+    def _const(path: str, name: str) -> str:
+        import re
+        text = (ROOT / path).read_text(encoding="utf-8")
+        m = re.search(rf"^{re.escape(name)}[^=\n]*=\s*([^\n#]+)", text, flags=re.M)
+        assert m, f"{name} not assigned in {path}"
+        return m.group(1).split(",")[0].strip()
+
+
 class TestOrphanTargetDegradesToSilence(unittest.TestCase):
     """The guard must return zero rather than raise, whatever the graph says."""
 
