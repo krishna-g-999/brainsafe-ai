@@ -47,7 +47,20 @@ def load() -> dict[str, dict[str, dict[str, float]]]:
     return out
 
 
-def compare(scores: dict[str, dict[str, float]], endpoints: list[str], alt: str) -> dict:
+def min_attainable_p(n: int) -> float:
+    """The smallest two-sided p the signed-rank test can return at this many pairs.
+
+    It is attained when every difference has the same sign, which puts all the rank mass in one tail.
+    Below n = 6 that floor sits above 0.05, so the test cannot reject at its own stated level however
+    large or however unanimous the effect. At n = 5 the floor is 0.0625.
+    """
+    if n < 1:
+        return 1.0
+    return float(wilcoxon(list(range(1, n + 1))).pvalue)
+
+
+def compare(scores: dict[str, dict[str, float]], endpoints: list[str], alt: str,
+            alpha: float = 0.05) -> dict:
     ref = [scores[e][REFERENCE] for e in endpoints]
     other = [scores[e][alt] for e in endpoints]
     delta = [a - b for a, b in zip(ref, other)]
@@ -56,6 +69,24 @@ def compare(scores: dict[str, dict[str, float]], endpoints: list[str], alt: str)
         p = 1.0
     else:
         p = float(wilcoxon(ref, other).pvalue)
+
+    # Whether the test COULD have rejected, reported beside whether it did.
+    #
+    # The five regression endpoints cannot be tested at 0.05: the floor is 0.0625, and seven of the
+    # eight regression rows sat exactly on it, flagged "not distinguishable". Two of those were
+    # unanimous, XGBoost above the forest on 5 of 5 and the forest above logistic regression on 5 of
+    # 5. Reporting a unanimous result as a null is a statement about the sample size, not about the
+    # models, and a reader has no way to tell the two apart from a p-value alone. The distinction is
+    # therefore made in the file rather than left to the reader.
+    floor = min_attainable_p(len(endpoints))
+    underpowered = floor > alpha
+    if underpowered:
+        verdict = "underpowered: no result at this n can reach alpha"
+    elif p < alpha:
+        verdict = "distinguishable"
+    else:
+        verdict = "not distinguishable"
+
     return {
         "alternative": alt,
         "n_endpoints": len(endpoints),
@@ -65,7 +96,10 @@ def compare(scores: dict[str, dict[str, float]], endpoints: list[str], alt: str)
         "min_delta": round(min(delta), 4),
         "max_delta": round(max(delta), 4),
         "wilcoxon_p": round(p, 5),
-        "distinguishable_at_0.05": p < 0.05,
+        "min_attainable_p": round(floor, 5),
+        "underpowered_at_0.05": underpowered,
+        "verdict": verdict,
+        "distinguishable_at_0.05": (p < alpha) and not underpowered,
     }
 
 
@@ -92,13 +126,18 @@ def main() -> None:
 
     print(f"wrote {OUT.relative_to(ROOT).as_posix()}  ({len(rows)} comparisons)")
     print()
-    print("scaffold split, all 13 endpoints:")
-    for r in rows:
-        if r["split"] == "scaffold" and r["subset"].startswith("all 13"):
-            verdict = "distinguishable" if r["distinguishable_at_0.05"] else "NOT distinguishable"
-            print(f"  forest vs {r['alternative']:<22} higher on {r['forest_higher_on']:>2}/"
-                  f"{r['n_endpoints']}  median {r['median_delta']:+.4f}  "
-                  f"p={r['wilcoxon_p']:.4f}  {verdict}")
+    for label in ("all 13", "8 classification", "5 regression"):
+        print(f"scaffold split, {label} endpoints:")
+        for r in rows:
+            if r["split"] == "scaffold" and r["subset"].startswith(label):
+                print(f"  forest vs {r['alternative']:<22} higher on {r['forest_higher_on']:>2}/"
+                      f"{r['n_endpoints']}  median {r['median_delta']:+.4f}  "
+                      f"p={r['wilcoxon_p']:.4f}  (floor {r['min_attainable_p']:.4f})  "
+                      f"{r['verdict']}")
+        print()
+    n_under = sum(1 for r in rows if r["underpowered_at_0.05"])
+    print(f"{n_under} of {len(rows)} comparisons cannot reach alpha=0.05 at their sample size; "
+          f"their p-values say nothing about the models.")
 
 
 if __name__ == "__main__":
