@@ -90,6 +90,13 @@ GRAPH: list[tuple[str, list[str], str]] = [
     ("results/tables/library_sp3_coverage.csv", ["data/endpoints/*.csv"],
      "python src/brainsafe/evaluation/library_sp3_coverage.py"),
 
+    # The folded fingerprint's collision rate. featurize.py and docs/METHODS.md both asserted the
+    # encoding was collision-free by construction, which is the reverse of what folding does, and
+    # neither had a measurement behind it. It depends on the endpoint tables because the rate grows
+    # with the size and diversity of the library actually being encoded.
+    ("results/tables/fingerprint_collisions.csv", ["data/endpoints/*.csv"],
+     "python src/brainsafe/evaluation/fingerprint_collisions.py"),
+
     ("inversion/results/H10_barrier_necessity.csv",
      ["models_rf/BBB.joblib", "data/processed/cv_predictions/BBB_scaffold_oof.csv"],
      "python inversion/inv_barrier_necessity.py"),

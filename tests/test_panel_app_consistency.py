@@ -346,6 +346,54 @@ class TestPipelineDiagramMatchesThePipeline(unittest.TestCase):
         return m.group(1).split(",")[0].strip()
 
 
+class TestFingerprintIsNotDescribedAsCollisionFree(unittest.TestCase):
+    """Folding is a modulo, so the encoding cannot be collision-free, and it is not.
+
+    featurize.py and docs/METHODS.md both asserted the opposite: that bit k always denotes the same
+    substructure. The measurement says every one of the 1,024 bits carries more than one atomic
+    environment. The claim survived because it was prose in a docstring, which no numeric check
+    reads, and because the thesis discusses collisions as a limitation elsewhere, so the two halves
+    of the project were never compared.
+    """
+
+    FILES = ["src/brainsafe/features/featurize.py", "docs/METHODS.md",
+             "submission_package/04_TECHNICAL_REPORT/methods.md"]
+
+    def test_no_document_claims_the_encoding_is_collision_free(self):
+        for rel in self.FILES:
+            text = (ROOT / rel).read_text(encoding="utf-8").lower()
+            for phrase in ("collision-free by construction", "collision-free-by-construction"):
+                # The corrected text may quote the old claim to say it was wrong; only an assertion
+                # that the encoding *is* collision-free should fail.
+                for hit in range(text.count(phrase)):
+                    start = text.find(phrase, 0 if hit == 0 else start + 1)
+                    window = text[max(0, start - 90):start]
+                    self.assertTrue(
+                        any(m in window for m in ("not ", "previously", "earlier edition", "reverse")),
+                        f"{rel} asserts the fingerprint encoding is collision-free")
+
+    def test_the_measurement_contradicts_the_old_claim(self):
+        import pandas as pd
+        d = pd.read_csv(ROOT / "results" / "tables" / "fingerprint_collisions.csv").set_index("measure")
+        bits = int(d.loc["fingerprint bits", "value"])
+        colliding = int(d.loc["bits carrying more than one environment", "value"])
+        occupied = int(d.loc["bits occupied", "value"])
+        self.assertEqual(colliding, occupied,
+                         "some occupied bit is unambiguous; the docstring's wording may be revisitable")
+        self.assertGreater(int(d.loc["distinct atomic environments", "value"]), bits,
+                           "more bits than environments would make collisions avoidable")
+
+    def test_featurize_quotes_the_artefact(self):
+        import pandas as pd
+        d = pd.read_csv(ROOT / "results" / "tables" / "fingerprint_collisions.csv").set_index("measure")
+        text = (ROOT / "src" / "brainsafe" / "features" / "featurize.py").read_text(encoding="utf-8")
+        for key in ("distinct atomic environments", "environments per occupied bit, median",
+                    "environments per occupied bit, max"):
+            v = int(d.loc[key, "value"])
+            self.assertIn(f"{v:,}" if v >= 1000 else str(v), text,
+                          f"featurize.py does not state the measured {key}")
+
+
 class TestOrphanTargetDegradesToSilence(unittest.TestCase):
     """The guard must return zero rather than raise, whatever the graph says."""
 
