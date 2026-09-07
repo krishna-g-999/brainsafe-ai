@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Document** | Technical report on the BrainSafe AI prediction panel |
-| **Generated** | 2026-09-06, automatically, from the deployed panel |
+| **Generated** | 2026-09-07, automatically, from the deployed panel |
 | **Commit** | `120f2c7` |
 | **Status** | Research preview, pending peer review |
 | **Repository** | https://github.com/krishna-g-999/brainsafe-ai |
@@ -461,19 +461,19 @@ A calibrated probability still says nothing about how confident the model is *fo
 statement: at a 0.90 target, the prediction set contains the truth about 90 per cent of the time,
 and it is measured rather than assumed.
 
-Empirical coverage runs **0.889 to
-0.921** against the 0.90 target.
+Empirical coverage runs **0.876 to
+0.933** against the 0.90 target.
 
-| endpoint | n_test | target_coverage | empirical_coverage | avg_set_size |
-|---|---|---|---|---|
-| BBB | 1561 | 0.9 | 0.904 | 1.013 |
-| AChE | 1064 | 0.9 | 0.921 | 1.019 |
-| BChE | 678 | 0.9 | 0.917 | 1.009 |
-| BACE1 | 1793 | 0.9 | 0.906 | 1.007 |
-| GSK3B | 1128 | 0.9 | 0.908 | 1.03 |
-| MAO_A | 758 | 0.9 | 0.889 | 1.012 |
-| MAO_B | 962 | 0.9 | 0.899 | 1.025 |
-| hERG | 2056 | 0.9 | 0.904 | 1.079 |
+| endpoint | split | n_total | n_test | target_coverage | empirical_coverage | avg_set_size | frac_ambiguous | frac_empty | frac_singleton |
+|---|---|---|---|---|---|---|---|---|---|
+| BBB | random | 3901 | 781 | 0.9 | 0.896 | 1.215 | 0.215 | 0.0 | 0.785 |
+| AChE | random | 5125 | 1025 | 0.9 | 0.933 | 1.045 | 0.045 | 0.0 | 0.955 |
+| BChE | random | 3278 | 656 | 0.9 | 0.905 | 1.017 | 0.017 | 0.0 | 0.983 |
+| BACE1 | random | 8207 | 1642 | 0.9 | 0.887 | 0.956 | 0.0 | 0.044 | 0.956 |
+| GSK3B | random | 5439 | 1088 | 0.9 | 0.876 | 0.991 | 0.0 | 0.009 | 0.991 |
+| MAO_A | random | 3585 | 717 | 0.9 | 0.888 | 1.006 | 0.006 | 0.0 | 0.994 |
+| MAO_B | random | 4534 | 907 | 0.9 | 0.914 | 1.052 | 0.052 | 0.0 | 0.948 |
+| hERG | random | 9933 | 1987 | 0.9 | 0.903 | 1.094 | 0.094 | 0.0 | 0.906 |
 
 
 ### 3.5 Applicability domain
@@ -906,17 +906,17 @@ The hardest realistic test: train on compounds published before a cut-off year, 
 published after it. This reproduces the actual use case, predicting chemistry that did not exist
 when the model was fitted.
 
-AUROC **0.720 to 0.910** across 7 endpoints.
+AUROC **0.713 to 0.913** across 7 endpoints.
 
 | endpoint | task | cutoff_year | n_train | n_test | metric | score |
 |---|---|---|---|---|---|---|
-| AChE | classification | 2020 | 4141 | 1028 | auroc | 0.761 |
-| BChE | classification | 2021 | 2696 | 617 | auroc | 0.801 |
-| BACE1 | classification | 2017 | 6901 | 1673 | auroc | 0.91 |
-| GSK3B | classification | 2021 | 4205 | 546 | auroc | 0.764 |
-| MAO_A | classification | 2020 | 2859 | 819 | auroc | 0.727 |
-| MAO_B | classification | 2020 | 3719 | 923 | auroc | 0.843 |
-| hERG | classification | 2020 | 8158 | 2059 | auroc | 0.72 |
+| AChE | classification | 2020 | 4006 | 1007 | auroc | 0.751 |
+| BChE | classification | 2021 | 2624 | 609 | auroc | 0.804 |
+| BACE1 | classification | 2017 | 6266 | 1578 | auroc | 0.913 |
+| GSK3B | classification | 2021 | 4075 | 521 | auroc | 0.748 |
+| MAO_A | classification | 2020 | 2706 | 792 | auroc | 0.713 |
+| MAO_B | classification | 2020 | 3525 | 893 | auroc | 0.845 |
+| hERG | classification | 2020 | 7888 | 1986 | auroc | 0.721 |
 
 
 ### 6.3 Prospective scaffold hold-out

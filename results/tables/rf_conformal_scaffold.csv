@@ -1,0 +1,9 @@
+endpoint,split,n_total,n_test,target_coverage,empirical_coverage,avg_set_size,frac_ambiguous,frac_empty,frac_singleton
+BBB,scaffold,3901,781,0.9,0.889,1.27,0.2702,0.0,0.7298
+AChE,scaffold,5125,1025,0.9,0.921,1.19,0.1902,0.0,0.8098
+BChE,scaffold,3278,656,0.9,0.877,1.043,0.0427,0.0,0.9573
+BACE1,scaffold,8207,1642,0.9,0.924,0.995,0.0,0.0049,0.9951
+GSK3B,scaffold,5439,1088,0.9,0.866,1.095,0.0947,0.0,0.9053
+MAO_A,scaffold,3585,717,0.9,0.944,1.266,0.2664,0.0,0.7336
+MAO_B,scaffold,4534,907,0.9,0.886,1.152,0.1521,0.0,0.8479
+hERG,scaffold,9933,1987,0.9,0.902,1.155,0.1545,0.0,0.8455

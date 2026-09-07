@@ -321,12 +321,29 @@ class.
 
 **Why set size is reported beside coverage.** Coverage alone is gameable: always returning every
 label gives perfect coverage and no information. Average set size near 1 means the interval commits
-to a single label. Here, at a target of 0.90, empirical coverage runs **0.889 to 0.921** with set
-sizes from 1.007 to 1.079.
+to a single label. Here, at a target of 0.90, empirical coverage runs **0.876 to 0.933** with set
+sizes from 0.956 to 1.215.
 
-**Volunteer this:** two endpoints undershoot, MAO-A at 0.889 and MAO-B at 0.899. Both are marginal,
-and the guarantee is asymptotic in the calibration-set size, but the honest phrasing is "coverage
-holds at six of eight and is marginally short at two", not "coverage holds".
+**Volunteer this, and volunteer it first.** These figures replaced an earlier set because the
+conformal analysis had not deduplicated on the feature vector, which the training code does. The
+featuriser is stereo-blind, so stereoisomers and salt forms are byte-identical to the model, and the
+earlier split scored it partly on memorised rows: BBB was reported on a fifth of 7,807 raw rows where
+the model is fitted on the 3,901 that survive deduplication, a figure Chapter 3 states. Correcting it
+made the guarantee look worse, not better. Coverage is now at or above target on **four of eight**,
+not six, and the lowest is GSK-3β at 0.876. Say this before you are asked: the duplicates that were
+removed were the easiest possible test rows.
+
+**Know the set-size algebra, because it is a trap.** On two classes the mean is
+1 + P(ambiguous) - P(empty), so an excess over 1.0 is ambiguity **minus** emptiness. An earlier draft
+read it as "ambiguous or empty", which has the sign wrong on one term. BACE1's mean of **0.956** is
+below one, which is only possible when sets are empty: it returns nothing at all for 4.4 per cent of
+compounds. An empty set is the predictor declining to name a class at 90 per cent confidence, which
+is the behaviour the method exists to produce, not a bug.
+
+**The number worth quoting is BBB's.** It is ambiguous on 21.5 per cent of compounds on a random
+split and **27.0 per cent under a scaffold split** (`rf_conformal_scaffold.csv`), the regime the
+server actually runs in. The barrier model multiplies every disease score, so that ambiguity
+propagates into all sixteen conditions.
 
 **And the bigger gap:** conformal covers the 8 core classifiers only. None of the 47 deployed binder
 endpoints has a conformal statement of any kind.
@@ -418,7 +435,7 @@ compounds.
 | Background FPR, deployed | mean 0.0234 | maximum 0.0500 | `binder_modes.json` |
 | Core ECE after isotonic | 0.0147 | 0.0049 (BACE1) to 0.0412 (BBB) | `calibration.csv` |
 | Binder ECE, the 38 measured | 0.0762 | median 0.0675, 0.0300 to 0.1780 | `integrity_calibration_per_target.csv` |
-| Conformal coverage, target 0.90 | 0.889 to 0.921 | set size 1.007 to 1.079 | `rf_conformal.csv` |
+| Conformal coverage, target 0.90 | 0.876 to 0.933 | set size 0.956 to 1.215, deduplicated | `rf_conformal.csv` |
 | Specificity, non-CNS library | **0.925** | 0.907 to 0.9397, an upper bound | `noncns_specificity_summary.csv` |
 | External barrier AUROC | **0.7934** on 241 unseen drugs | 0.7645 on 306, 0.7102 on the 65 memorised | `external_bbb_validation.csv` |
 | Panel size | 47 deployed of 52 | 6 fail the reliability gate | `binder_modes.json` |

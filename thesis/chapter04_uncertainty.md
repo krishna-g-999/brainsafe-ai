@@ -155,36 +155,70 @@ cannot.
 
 ## 4.6 What coverage the panel actually achieves
 
-Measured on 10,000 held-out compounds across the eight core classifiers
+Measured on 8,803 held-out compounds across the eight core classifiers
 (`results/tables/rf_conformal.csv`):
 
-| Endpoint | Test compounds | Target | Empirical coverage | Mean set size |
-|---|---:|---:|---:|---:|
-| BBB | 1,561 | 0.90 | 0.904 | 1.013 |
-| AChE | 1,064 | 0.90 | **0.921** | 1.019 |
-| BChE | 678 | 0.90 | 0.917 | 1.009 |
-| BACE1 | 1,793 | 0.90 | 0.906 | 1.007 |
-| GSK-3β | 1,128 | 0.90 | 0.908 | 1.030 |
-| MAO-A | 758 | 0.90 | **0.889** | 1.012 |
-| MAO-B | 962 | 0.90 | 0.899 | 1.025 |
-| hERG | 2,056 | 0.90 | 0.904 | 1.079 |
+| Endpoint | Test compounds | Target | Empirical coverage | Mean set size | Ambiguous | Empty |
+|---|---:|---:|---:|---:|---:|---:|
+| BBB | 781 | 0.90 | 0.896 | **1.215** | 21.5% | 0% |
+| AChE | 1,025 | 0.90 | **0.933** | 1.045 | 4.5% | 0% |
+| BChE | 656 | 0.90 | 0.905 | 1.017 | 1.7% | 0% |
+| BACE1 | 1,642 | 0.90 | 0.887 | **0.956** | 0% | **4.4%** |
+| GSK-3β | 1,088 | 0.90 | **0.876** | 0.991 | 0% | 0.9% |
+| MAO-A | 717 | 0.90 | 0.888 | 1.006 | 0.6% | 0% |
+| MAO-B | 907 | 0.90 | 0.914 | 1.052 | 5.2% | 0% |
+| hERG | 1,987 | 0.90 | 0.903 | 1.094 | 9.4% | 0% |
 
-Empirical coverage runs **0.889 to 0.921** against a 0.90 target. **Six of the eight sit at or above
-target.** The two that fall short are the monoamine oxidases: MAO-B at 0.899, one thousandth below,
-and MAO-A at 0.889, eleven thousandths below on 758 test compounds. Neither shortfall is larger than
-the sampling error at those set sizes, and the direction is worth noting rather than explaining away,
-because MAO-A and MAO-B are also the two endpoints Chapter 8 records as degrading most under a
-scaffold split. Conformal coverage is a guarantee under exchangeability, and these are the endpoints
-whose chemistry is least scaffold-diverse.
+**These figures replace an earlier edition of this table, and the correction is larger than a
+rounding.** The analysis that produced the first version split the raw endpoint tables, where the
+training code deduplicates on the feature vector first. Because the featuriser is stereo-blind,
+stereoisomers and salt forms fold to byte-identical vectors, so the earlier split placed copies of one
+compound on both sides and scored the model partly on rows it had memorised. The scale is visible in
+the test-compound column: BBB was reported on 1,561 test compounds, a fifth of the 7,807 raw rows,
+where the model is fitted on the 3,901 that survive deduplication, the figure Chapter 3 states.
+Both numbers were in this thesis and nothing compared them.
 
-The uncertainty statement is nonetheless honest in the aggregate: when the server says the truth is in
-the set nine times in ten, it is, to within about one part in a hundred.
+Empirical coverage runs **0.876 to 0.933** against a 0.90 target, and **four of the eight sit at or
+above it**, not six as the duplicated table suggested. Deduplication made the guarantee look worse
+because the duplicates it removed were the easiest possible test rows. The lowest is GSK-3β at 0.876
+and the highest AChE at 0.933; the spread is wider in both directions than before. The aggregate
+statement survives, but it should now be made with a wider tolerance: when the server says the truth
+is in the set nine times in ten, it is, to within about two or three parts in a hundred rather than
+one.
 
-The **mean set size runs 1.007 to 1.079** on a two-class problem, where 1.0 would mean every
-prediction is a confident single label and 2.0 that none is. Between 0.7 and 7.9 per cent of
-compounds therefore receive an ambiguous or empty set, hERG being the most equivocal at 1.079. Small
-average set sizes are what make the guarantee useful rather than vacuous: a predictor that always
-returned both classes would achieve perfect coverage and say nothing.
+The **mean set size runs 0.956 to 1.215**, and the smallest figure is the one to look at, because a
+mean below 1.0 is impossible if every prediction set is non-empty. On a two-class problem the mean is
+
+    1 + P(ambiguous) - P(empty)
+
+so the excess over 1.0 is the ambiguous fraction **minus** the empty fraction, and the two move it in
+opposite directions. An earlier edition of this section read that excess as the proportion receiving
+"an ambiguous or empty set", which has the sign wrong on one of the two terms and is only valid when
+no set is empty. Sets are empty: BACE1 returns nothing at all for **4.4 per cent** of compounds and
+GSK-3β for 0.9 per cent, which is why BACE1's mean of 0.956 sits below one. The two counts are now
+recorded separately in the artefact rather than left to be inferred from the mean with the wrong sign.
+
+Read correctly, the ambiguity is concentrated rather than uniform. Six of the eight endpoints are
+ambiguous on under six per cent of compounds, and **BBB is ambiguous on 21.5 per cent** while
+returning no empty sets at all. That the barrier model is the least decisive of the eight matters more
+than the number alone, because it multiplies every disease score, so its ambiguity propagates into all
+sixteen conditions. Chapter 10 returns to this: it is the same component that H10 finds hardest to
+justify against a descriptor rule, and the worst calibrated of the eight.
+
+An empty set is not a failure of the method. It is the conformal predictor declining to name either
+class at 90 per cent confidence, which is the behaviour the guarantee is built to produce and is
+strictly more useful than a coin-flip probability. It does mean that "coverage" and "informativeness"
+must be read together: a predictor that always returned both classes would achieve perfect coverage
+and say nothing, and one that always returned the empty set would say nothing and cover nothing.
+
+**Under a scaffold split, the same measurement is markedly less decisive**
+(`results/tables/rf_conformal_scaffold.csv`). Withholding whole Bemis-Murcko classes rather than
+random rows, coverage runs 0.866 to 0.944 and mean set size 0.995 to 1.270, with BBB ambiguous on
+**27.0 per cent** of compounds against 21.5 on the random split, and AChE and MAO-A rising from 4.5
+and 0.6 per cent to 19.0 and 26.6. This is the regime the server operates in, and the honest reading
+is that roughly a quarter of barrier calls on unfamiliar chemistry are undecidable at 90 per cent
+confidence. The random-split figures are reported first because they are the conventional estimate and
+the one comparable with the published literature, not because they are the more relevant.
 
 Two limitations travel with these figures. They cover the **same eight core classifiers** as section
 4.3, so the binder panel has no measured coverage statement at all. And the guarantee holds **under
