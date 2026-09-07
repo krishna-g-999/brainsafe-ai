@@ -50,7 +50,14 @@ def classifiers(pos_weight):
         "XGBoost": XGBClassifier(n_estimators=400, max_depth=6, learning_rate=0.05, subsample=0.8,
                                  colsample_bytree=0.8, tree_method="hist", eval_metric="logloss",
                                  scale_pos_weight=pos_weight, n_jobs=-1, random_state=SEED),
+        # class_weight="balanced" added so the comparison is like-for-like. This was the only
+        # ensemble competing unweighted: the forest carries class_weight="balanced", XGBoost carries
+        # scale_pos_weight, and logistic regression is both scaled and balanced. On endpoints whose
+        # actives outnumber inactives four to one that is not a neutral difference, and a family
+        # comparison whose conclusion is "the forest is not distinguishable from the boosters" cannot
+        # rest on one booster having been handicapped.
         "HistGradientBoosting": HistGradientBoostingClassifier(max_iter=400, learning_rate=0.06,
+                                                               class_weight="balanced",
                                                                random_state=SEED),
         # Jaccard distance on the binary fingerprint block is 1 - Tanimoto, so this is a
         # read-across over the five nearest measured analogues and nothing more.

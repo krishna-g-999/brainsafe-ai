@@ -297,8 +297,9 @@ scaffold split it beats the read-across on 8 of 8, median +0.0381, p = 0.00781, 
 regression on 8 of 8, median +0.0818.
 
 *Against the other ensembles it is not distinguishable.* Over all 13 endpoints it beats histogram
-gradient boosting on 8, median +0.0031, **p = 0.89258**, and XGBoost on 8, median +0.0033,
-**p = 0.73535**. On the five regression endpoints it loses to XGBoost on 5 of 5.
+gradient boosting on 8, median +0.0026, **p = 0.89258**, and XGBoost on 8, median +0.0033,
+**p = 0.73535**. On the five regression endpoints it loses to XGBoost on 5 of 5, which the test
+cannot certify: at five pairs the signed-rank floor is 0.0625, so no result there can reach 0.05.
 
 *So why the forest.* Not accuracy. It is kept for its calibration behaviour, its out-of-bag
 structure, and because an untuned forest is a more honest default than a tuned booster. **A candidate
@@ -324,10 +325,17 @@ and the difference attributed to the correction rather than to noise.
 Several endpoints are heavily imbalanced and without reweighting a tree gains more impurity reduction
 from the majority class.
 
-**Concede the inconsistency before it is found.** In the family comparison, random forest and logistic
-regression use `class_weight="balanced"`, XGBoost uses `scale_pos_weight`, and histogram gradient
-boosting has neither and runs unweighted. Those are not equivalent, and the comparison is to that
-extent not like-for-like.
+**An inconsistency that was here and has been fixed.** Histogram gradient boosting was the only
+ensemble competing unweighted, while the forest and logistic regression use
+`class_weight="balanced"` and XGBoost uses `scale_pos_weight`. On endpoints whose actives outnumber
+inactives four to one that is not a neutral difference, and a conclusion of "the forest is not
+distinguishable from the boosters" could not rest on one booster having been handicapped.
+
+It now carries `class_weight="balanced"` and the comparison was refitted. The correction is real and
+its effect is not: only the histogram-boosting rows moved, by between -0.0013 and +0.0023, and every
+verdict is unchanged. The forest is still not distinguishable from either booster over all 13
+endpoints. That is a better position than before, because the conclusion now survives a comparison
+that is genuinely like-for-like rather than one that flattered it.
 
 ## 5.4 Hybrid negatives: measured inactives **and** decoys — **[MEASURED]**
 
@@ -504,5 +512,6 @@ accuracy.
 2. **The decoy ratio and similarity ceiling have never been varied.** A sweep of either would either
    justify the current values or improve them, and section 5.5 currently defends both by argument
    alone.
-3. **Histogram gradient boosting runs unweighted in the family comparison** while three of the other
-   four are class-balanced. Either weight it or state the asymmetry wherever the comparison is quoted.
+3. ~~Histogram gradient boosting runs unweighted in the family comparison~~ **Closed.** It now uses
+   `class_weight="balanced"` and the comparison was refitted; only its own rows moved, by at most
+   0.0023, and no verdict changed. Section 5.3 records both the correction and its size.

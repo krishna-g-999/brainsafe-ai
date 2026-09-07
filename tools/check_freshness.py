@@ -90,6 +90,17 @@ GRAPH: list[tuple[str, list[str], str]] = [
     ("results/tables/library_sp3_coverage.csv", ["data/endpoints/*.csv"],
      "python src/brainsafe/evaluation/library_sp3_coverage.py"),
 
+    # The family comparison and the paired test on it. Neither was declared: model_comparison.csv
+    # appeared only as an INPUT to the technical report and the significance table was absent
+    # altogether, so the table derived from the comparison had no edge recording that it was derived
+    # from it. That is the condition that let the technical report go stale, and it applied here to a
+    # table whose conclusion, "the forest is not distinguishable from the boosters", is quoted in the
+    # thesis, the viva pack and two decks.
+    ("results/tables/model_comparison.csv", ["data/endpoints/*.csv"],
+     "python src/brainsafe/evaluation/model_comparison.py"),
+    ("results/tables/model_family_significance.csv", ["results/tables/model_comparison.csv"],
+     "python src/brainsafe/evaluation/model_family_significance.py"),
+
     # The folded fingerprint's collision rate. featurize.py and docs/METHODS.md both asserted the
     # encoding was collision-free by construction, which is the reverse of what folding does, and
     # neither had a measurement behind it. It depends on the endpoint tables because the rate grows
