@@ -1,0 +1,11 @@
+measure,value,note
+distinct structures in the endpoint tables,170619,
+structures sampled,20000,seed 0
+structures parsed,20000,an unparseable structure is skipped
+fingerprint bits,1024,Morgan radius 2
+distinct atomic environments,52882,counted on the unfolded fingerprint
+bits occupied,1024,of 1024
+bits carrying more than one environment,1024,the collision count: a bit here is ambiguous
+"environments per occupied bit, median",52,
+"environments per occupied bit, max",73,
+"environments per occupied bit, min",33,

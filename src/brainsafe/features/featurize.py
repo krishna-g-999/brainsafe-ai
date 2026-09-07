@@ -4,8 +4,24 @@ Every model input is numeric. A SMILES string is not fed to the model directly; 
 into two blocks of numbers:
 
   1. A 1024-bit ECFP-4 fingerprint (Morgan, radius 2). Each bit is 0/1 and records the presence of
-     a particular local atomic environment. This is a collision-free-by-construction numeric
-     encoding of substructure: bit k always means the same environment for every compound.
+     at least one local atomic environment whose hash falls in that bit.
+
+     Bit k does NOT mean one environment. Folding is a modulo: RDKit hashes each environment to a
+     large integer and the fingerprint stores hash % 1024, so environments congruent modulo 1024
+     collide and become indistinguishable to the estimator. On 20,000 structures sampled from this
+     project's own endpoint tables, 52,882 distinct atomic environments map onto the 1,024 bits, and
+     every one of the 1,024 carries more than one: a median of 52 environments per bit and a maximum
+     of 73 (results/tables/fingerprint_collisions.csv, from evaluation/fingerprint_collisions.py).
+
+     This docstring previously called the encoding "collision-free-by-construction" and said bit k
+     always means the same environment for every compound. That was the reverse of the truth, and it
+     contradicted the thesis, which discusses hash collisions as a limitation. The practical
+     consequence is for interpretation: a bit ranked important by a fitted tree names a set of
+     environments, not a substructure, so SHAP attribution to a single bit cannot be read as
+     attribution to a single chemical motif.
+
+     Raising MORGAN_BITS would reduce the collision rate at the cost of a wider, sparser matrix. It
+     has never been swept in this project; no hyper-parameter has.
   2. Twelve interpretable physicochemical descriptors (molecular weight, logP, polar surface area,
      H-bond donors/acceptors, rotatable bonds, aromatic rings, sp3 fraction, ring count, heavy-atom
      count, formal charge, drug-likeness QED).

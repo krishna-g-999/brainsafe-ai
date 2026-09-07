@@ -35,9 +35,14 @@ grey zone is dropped so the two classes are unambiguous.
 Each compound is encoded as 1,036 numeric features: a 1024-bit ECFP-4 Morgan fingerprint (radius 2)
 and twelve interpretable physicochemical descriptors (molecular weight, cLogP, TPSA, H-bond
 donors/acceptors, rotatable bonds, aromatic rings, sp3 fraction, ring count, heavy-atom count, formal
-charge, QED). The fingerprint encoding is collision-free by construction (bit k always denotes the
-same substructure). Categorical metadata is encoded reversibly and separately and never enters the
-feature matrix (`src/brainsafe/features/{featurize,encodings}.py`).
+charge, QED). The fingerprint is folded, so it is **not** collision-free: bit k stores
+`hash(environment) % 1024` and therefore denotes a set of substructures rather than one. On 20,000
+structures from the endpoint tables, 52,882 distinct atomic environments map onto the 1,024 bits and
+every bit carries more than one, a median of 52 and a maximum of 73
+(`results/tables/fingerprint_collisions.csv`). An earlier edition of this file stated the opposite.
+The consequence is interpretive: an important bit names a set of environments, not a motif.
+Categorical metadata is encoded reversibly and separately and never enters the feature matrix
+(`src/brainsafe/features/{featurize,encodings}.py`).
 
 ## Models
 
