@@ -75,33 +75,42 @@ holds, the barrier model should be replaced by a rule a reader can apply by hand
 
 `inversion/inv_barrier_necessity.py` scores every comparator on two populations: the same
 Bemis-Murcko folds the deployed cross-validation used, read from the stored out-of-fold predictions
-so the assignment is identical rather than merely similar, and the 241 FDA-curated approved drugs
+so the assignment is identical rather than merely similar, and the 227 FDA-curated approved drugs
 that are absent from B3DB and also distinguishable from training chemistry in feature space.
 
-| | Scaffold hold-out, n = 3,901 | External approved, n = 241 |
+| | Scaffold hold-out, n = 3,901 | External approved, n = 227 |
 |---|---:|---:|
-| **Deployed forest, 1,036 features** | **0.8779** | **0.7934** |
-| Random forest, 12 descriptors only | 0.8441 | 0.7701 |
-| Logistic regression, 12 descriptors | 0.8105 | 0.7420 |
-| TPSA alone, no fitting of any kind | 0.7687 | 0.7440 |
-| Hydrogen-bond donors alone | 0.7272 | 0.7174 |
-| QED alone | 0.7138 | 0.6332 |
-| CNS heuristic: TPSA ≤ 90 and MW ≤ 400 | 0.6751 | 0.6369 |
-| Molecular weight alone | 0.6643 | 0.5992 |
-| cLogP alone | 0.6122 | 0.6058 |
+| **Deployed forest, 1,036 features** | **0.8779** | **0.7666** |
+| Random forest, 12 descriptors only | 0.8441 | 0.7431 |
+| Logistic regression, 12 descriptors | 0.8105 | 0.7400 |
+| TPSA alone, no fitting of any kind | 0.7687 | 0.7304 |
+| Hydrogen-bond donors alone | 0.7272 | 0.7130 |
+| QED alone | 0.7138 | 0.6357 |
+| CNS heuristic: TPSA ≤ 90 and MW ≤ 400 | 0.6751 | 0.6247 |
+| Molecular weight alone | 0.6643 | 0.5712 |
+| cLogP alone | 0.6122 | 0.5804 |
 
-Read as point estimates the fingerprint wins on both populations, by 0.0338 and 0.0233. **Read with
+The external column is lower throughout than an earlier edition of this table reported, which gave
+the deployed forest 0.7934 on 241 compounds. The novelty flag defining that set was computed before
+the featuriser began neutralising charges, so fourteen of the 241 were by then feature-identical to a
+training row. Removing them lowers every comparator on that population, which is the point: they were
+inflating all of them, not only the deployed model.
+
+Read as point estimates the fingerprint wins on both populations, by 0.0338 and 0.0235. **Read with
 its interval, the answer changes on the population that matters.** Every comparator carries a paired
 bootstrap of 2,000 resamples over compounds, so both models are always judged on the same draw:
 
 | Comparison | Margin | 95% interval | Bootstrap p |
 |---|---:|---|---:|
 | Descriptor forest, scaffold hold-out | 0.0338 | −0.0409 to −0.0263 | < 0.001 |
-| Descriptor forest, **external approved** | 0.0233 | **−0.0553 to +0.0106** | **0.083** |
+| Descriptor forest, **external approved** | 0.0235 | **−0.0580 to +0.0154** | **0.107** |
 
 **The verdict is WEAKENED, not SUPPORTED.** On the training distribution the fingerprint demonstrably
-earns its place. On 241 approved drugs the model has never seen, its advantage over twelve
-descriptors is not established: the interval crosses zero.
+earns its place. On 227 approved drugs the model has never seen, its advantage over twelve
+descriptors is not established: the interval crosses zero. Correcting the novelty flag left the
+margin almost unchanged, 0.0233 to 0.0235, because both models lost the same memorised compounds,
+and moved the bootstrap p from 0.083 to 0.107. The conclusion is not merely unaltered by the
+correction; it is slightly further from significance than when it was first drawn.
 
 The verdict rule is stated that way deliberately. Chapter 9 criticised H4 for deciding SUPPORTED on a
 point-estimate comparison whose interval contains its own comparator, and a hypothesis written in
@@ -114,8 +123,8 @@ Two consequences, and neither is that the barrier model should be removed.
 **What the project is entitled to claim shrinks.** The fingerprint helps on chemistry resembling
 training data and its contribution to unseen approved drugs is not demonstrated. Any wording implying
 that the barrier model substantially outperforms physicochemical prediction should be qualified. What
-it does clearly beat, on both populations and by a wide margin, is the published heuristic: 0.7934
-against 0.6369 externally.
+it does clearly beat, on both populations and by a wide margin, is the published heuristic: 0.7666
+against 0.6247 externally.
 
 **The result converges with section 10.2 and with the calibration finding below.** The barrier model
 is the component whose advantage vanishes soonest as chemistry becomes unfamiliar, and it is also the

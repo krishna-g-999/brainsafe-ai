@@ -953,8 +953,8 @@ by InChIKey, scored by the deployed model.
 | set | n | n_permeable | auroc | sensitivity | specificity |
 |---|---|---|---|---|---|
 | FDA-curated, not in B3DB by InChIKey | 306 | 203 | 0.7645 | 0.7734 | 0.6505 |
-| FDA-curated, also distinguishable from training in feature space | 241 | 171 | 0.7934 | 0.7661 | 0.6571 |
-| of which: feature-identical to a training compound | 65 | 32 | 0.7102 | 0.8125 | 0.6364 |
+| FDA-curated, also distinguishable from training in feature space | 227 | 165 | 0.7666 | 0.7636 | 0.6129 |
+| of which: feature-identical to a training compound | 79 | 38 | 0.749 | 0.8158 | 0.7073 |
 
 The row that supports an external claim is the second: compounds absent by InChIKey *and*
 distinguishable from training in feature space. The third row is the memorisation the first contains.
@@ -1264,7 +1264,7 @@ The refutations are the most useful output this project has produced, and they c
 | H7 some panel targets are non-discriminative and explain the silent antiepileptics | REFUTED | none of 37 targets ranks below AUROC 0.70; the cause is the operating point, with median deployed sensitivity 0.79 and 6 targets under 0.50 |
 | H8 engaged targets are independent observations | REFUTED | 37 targets fire across approved drugs but span only 16 independent directions; 5 homologous pairs correlate above 0.5 |
 | H9 the disease layer discriminates between compounds, not just between base rates | SUPPORTED | mean per-indication AUROC 0.616 against 0.500 for any constant predictor, beating chance on 7 of 9 indications; macro-averaged top-3 recall 0.358 against 0.333 |
-| H10 the barrier model earns its place over a descriptor rule | WEAKENED | on unseen approved drugs the deployed forest scores 0.7934 against 0.7701 for a forest on the twelve descriptors alone, a margin of -0.0233 whose bootstrap interval reaches +0.0106 |
+| H10 the barrier model earns its place over a descriptor rule | WEAKENED | on unseen approved drugs the deployed forest scores 0.7666 against 0.7431 for a forest on the twelve descriptors alone, a margin of -0.0235 whose bootstrap interval reaches +0.0154 |
 
 **What each refutation cost, and what was done about it.**
 
@@ -1654,15 +1654,15 @@ follows:
 
 | measure | median_unseen_drugs | median_non_drug_like | mann_whitney_p | separates | threshold_at_10pct_drug_loss | non_drug_like_caught |
 |---|---|---|---|---|---|---|
-| max | 0.5909 | 0.4606 | 0.00717 | True | 0.3462 | 0.375 |
-| mean_top5 | 0.5224 | 0.3781 | 0.00746 | True | 0.3179 | 0.375 |
-| kth_5 | 0.4444 | 0.3287 | 0.0171 | False | 0.2921 | 0.5 |
-| density_0.4 | 8.0 | 1.5 | 0.0536 | False | 0.0 | 0.375 |
+| max | 0.5658 | 0.4606 | 0.00923 | True | 0.3456 | 0.375 |
+| mean_top5 | 0.5149 | 0.3781 | 0.00928 | True | 0.3178 | 0.375 |
+| kth_5 | 0.439 | 0.3287 | 0.0204 | False | 0.2916 | 0.5 |
+| density_0.4 | 8.0 | 1.5 | 0.0652 | False | 0.0 | 0.375 |
 
 The deployed measure separates: median 0.46
-for distant chemistry against 0.59
+for distant chemistry against 0.57
 for unseen drugs, one-sided Mann-Whitney
-p = 0.00717. 2 of the four candidates
+p = 0.00923. 2 of the four candidates
 separate, and no alternative beats the deployed one.
 
 With the corrected control set the check passes: median maximum similarity 0.47 for genuinely

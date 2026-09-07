@@ -89,7 +89,7 @@ def main(argv=None) -> None:
     # items are the parts most worth keeping rather than the parts to strip.
     if not args.chapter:
         for aside in ("viva_preparation.md", "code_walkthrough.md", "criteria_justification.md",
-                      "external_audit_report.md", "script_compendium.md"):
+                      "external_audit_report.md", "script_compendium.md", "ml_foundations.md"):
             src = THESIS / aside
             if src.exists():
                 convert(src, OUT / f"{src.stem}.docx", keep_notes=True)

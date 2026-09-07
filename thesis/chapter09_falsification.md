@@ -442,7 +442,7 @@ coverage was set by intuition.
 **Nothing in it tests the barrier model.** H1, H2, H3, H6 and H9 test the disease layer; H5 tests
 read-across; H7 and H8 test the target panel; H4 tests system-level specificity. The BBB classifier,
 which gates every disease score and is the component the whole architecture is named for, has no
-hypothesis. Its evidence is the external set in Chapter 8, AUROC 0.7934 on 241 unseen drugs, which is
+hypothesis. Its evidence is the external set in Chapter 8, AUROC 0.7666 on 227 unseen drugs, which is
 a validation and not a falsification. The obvious missing test is a null asking whether the barrier
 model's contribution to the gated score could be replaced by a molecular-weight or cLogP rule without
 loss. That test does not exist and should.

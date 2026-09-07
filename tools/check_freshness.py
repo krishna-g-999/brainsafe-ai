@@ -90,6 +90,18 @@ GRAPH: list[tuple[str, list[str], str]] = [
     ("results/tables/library_sp3_coverage.csv", ["data/endpoints/*.csv"],
      "python src/brainsafe/evaluation/library_sp3_coverage.py"),
 
+    # The external approved-drug set and its novelty flags. It was declared only as an INPUT, never
+    # as an output, and it went stale in the way that omission allows. novel_to_model is computed by
+    # featurising every external compound and asking whether its vector already exists in the BBB
+    # training table, so it is a function of the featuriser, not of the data. When parent_mol began
+    # neutralising, fourteen compounds became feature-identical to a training row and the stored flag
+    # did not notice. The external AUROC was reported as 0.7934 on 241 compounds where the honest
+    # figure on the 227 genuinely novel is 0.7666, which is level with the 0.7645 obtained without
+    # any novelty filtering at all. The dependency on featurize.py is the one that matters here.
+    ("data/external/processed/external_bbb_test.csv",
+     ["src/brainsafe/features/featurize.py", "data/endpoints/BBB.csv"],
+     "python src/brainsafe/data/integrate_external.py"),
+
     # The family comparison and the paired test on it. Neither was declared: model_comparison.csv
     # appeared only as an INPUT to the technical report and the significance table was absent
     # altogether, so the table derived from the comparison had no edge recording that it was derived
@@ -109,7 +121,8 @@ GRAPH: list[tuple[str, list[str], str]] = [
      "python src/brainsafe/evaluation/fingerprint_collisions.py"),
 
     ("inversion/results/H10_barrier_necessity.csv",
-     ["models_rf/BBB.joblib", "data/processed/cv_predictions/BBB_scaffold_oof.csv"],
+     ["models_rf/BBB.joblib", "data/processed/cv_predictions/BBB_scaffold_oof.csv",
+      "data/external/processed/external_bbb_test.csv"],
      "python inversion/inv_barrier_necessity.py"),
 
     # ---- thesis figures ------------------------------------------------------------------------
@@ -160,7 +173,11 @@ GRAPH: list[tuple[str, list[str], str]] = [
      THRESHOLD_SEQUENCE),
 
     # ---- the evaluation layer, all of it downstream of the models ------------------------------
-    ("results/tables/external_bbb_validation.csv", ["models_rf/BBB.joblib"],
+    # Declares the external set as well as the model. Both this table and H10 below filter on
+    # novel_to_model, and neither said so, which is why a stale flag reached the headline external
+    # figure without anything going red.
+    ("results/tables/external_bbb_validation.csv",
+     ["models_rf/BBB.joblib", "data/external/processed/external_bbb_test.csv"],
      "python src/brainsafe/evaluation/external_validation.py"),
     ("results/tables/rf_conformal.csv", ["models_rf/BBB.joblib"],
      "python src/brainsafe/evaluation/rf_conformal_temporal.py"),

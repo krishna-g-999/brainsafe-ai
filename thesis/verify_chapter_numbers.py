@@ -514,7 +514,7 @@ claim("viva", "specificity interval, high", "noncns_specificity_summary.csv",
       lambda: float(cell(TAB / "noncns_specificity_summary.csv", "ci95_high",
                          lambda r: r["metric"].startswith("Specificity"))))
 
-for _i, _lab in enumerate(["all 306", "the 241 novel in feature space", "the 65 memorised"]):
+for _i, _lab in enumerate(["all 306", "the 227 novel in feature space", "the 79 memorised"]):
     claim("viva", f"external barrier AUROC, {_lab}", "external_bbb_validation.csv",
           (lambda i: lambda: float(rows(TAB / "external_bbb_validation.csv")[i]["auroc"]))(_i))
 
@@ -696,12 +696,66 @@ claim("criteria", "core ECE after calibration", "calibration.csv",
       lambda: round(st.mean(col(TAB / "calibration.csv", "ece_calibrated")), 4))
 
 
+# ---- The ML foundations document --------------------------------------------------------------
+# It teaches the mathematics from first principles, so its numbers are the ones a reader will take
+# away as definitions rather than as results. The sample sizes and class balances matter most: they
+# are quoted in a table a reader will treat as the specification of the dataset, and a drifted count
+# there would be repeated in every later description of the work.
+
+def _oof_balance(ep):
+    r = rows(ROOT / "data" / "processed" / "cv_predictions" / f"{ep}_random_oof.csv")
+    ys = [float(x["y_true"]) for x in r]
+    return len(ys), int(sum(ys))
+
+
+for _ep in ("BBB", "hERG", "MAO_A", "BACE1"):
+    claim("mlmath", f"{_ep} rows after deduplication", f"{_ep}_random_oof.csv",
+          (lambda e: lambda: _oof_balance(e)[0])(_ep), "{:,}")
+    claim("mlmath", f"{_ep} positives", f"{_ep}_random_oof.csv",
+          (lambda e: lambda: _oof_balance(e)[1])(_ep), "{:,}")
+
+claim("mlmath", "feature vector width", "featurize.py", lambda: 1024 + 12, "{:,}")
+
+claim("mlmath", "collision: distinct environments", "fingerprint_collisions.csv",
+      lambda: int(float(cell(TAB / "fingerprint_collisions.csv", "value",
+                             lambda r: r["measure"] == "distinct atomic environments"))), "{:,}")
+claim("mlmath", "collision: environments per bit, median", "fingerprint_collisions.csv",
+      lambda: int(float(cell(TAB / "fingerprint_collisions.csv", "value",
+                             lambda r: r["measure"].startswith(
+                                 "environments per occupied bit, median")))), "{:d}")
+claim("mlmath", "collision: environments per bit, max", "fingerprint_collisions.csv",
+      lambda: int(float(cell(TAB / "fingerprint_collisions.csv", "value",
+                             lambda r: r["measure"].startswith(
+                                 "environments per occupied bit, max")))), "{:d}")
+
+claim("mlmath", "ablation: descriptors add", "feature_block_ablation.csv",
+      lambda: round(st.mean(v["combined"] - v["fingerprint_only"] for v in _ablation()), 4))
+claim("mlmath", "ablation: fingerprint adds", "feature_block_ablation.csv",
+      lambda: round(st.mean(v["combined"] - v["descriptors_only"] for v in _ablation()), 4))
+
+claim("mlmath", "core ECE before calibration", "calibration.csv",
+      lambda: round(st.mean(col(TAB / "calibration.csv", "ece_raw")), 4))
+claim("mlmath", "core ECE after calibration", "calibration.csv",
+      lambda: round(st.mean(col(TAB / "calibration.csv", "ece_calibrated")), 4))
+
+claim("mlmath", "BBB conformal set size", "rf_conformal.csv",
+      lambda: float(cell(TAB / "rf_conformal.csv", "avg_set_size",
+                         lambda r: r["endpoint"] == "BBB")), "{:.3f}")
+claim("mlmath", "BACE1 empty-set fraction", "rf_conformal.csv",
+      lambda: round(100 * float(cell(TAB / "rf_conformal.csv", "frac_empty",
+                                     lambda r: r["endpoint"] == "BACE1")), 1), "{:.1f}")
+
+claim("mlmath", "distinct structures in the library", "library_sp3_coverage.csv",
+      lambda: int(float(cell(TAB / "library_sp3_coverage.csv", "value",
+                             lambda r: r["metric"].startswith("distinct SMILES")))), "{:,}")
+
 CHAPTER_FILES = {
     "09": THESIS / "chapter09_falsification.md",
     "10": THESIS / "chapter10_limitations.md",
     "viva": THESIS / "viva_preparation.md",
     "code": THESIS / "code_walkthrough.md",
     "criteria": THESIS / "criteria_justification.md",
+    "mlmath": THESIS / "ml_foundations.md",
 }
 
 

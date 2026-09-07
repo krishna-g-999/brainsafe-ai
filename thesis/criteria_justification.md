@@ -438,15 +438,28 @@ class-frequency information for a label-free model to exploit the grouping. They
 
 ## 8.3 External validation only for the barrier model — **[FORCED]**
 
-There is one genuine external set: FDA-curated approved drugs absent from B3DB, AUROC **0.7934** on
-the 241 also novel in feature space. For the target panel no such set exists, and the reason is
+There is one genuine external set: FDA-curated approved drugs absent from B3DB, AUROC **0.7666** on
+the 227 also novel in feature space. For the target panel no such set exists, and the reason is
 structural rather than lazy: for most of those proteins the public record *is* the training set.
 Claiming an external validation for the panel would require inventing one.
 
-*Why the 241 and not the 306.* Excluding overlap by InChIKey is not enough, because the InChIKey
-separates stereoisomers and salts and the featuriser does not. The 65 compounds that are
-feature-identical to a training compound score **0.7102**; they are memorisation, and the difference
-between 0.7645 and 0.7934 is the size of it.
+*Why the 227 and not the 306.* Excluding overlap by InChIKey is not enough, because the InChIKey
+separates stereoisomers, salts and protonation states and the featuriser does not. The 79 compounds
+that are feature-identical to a training compound are memorisation and are removed.
+
+*And the honest conclusion, which is not the one this section previously drew.* An earlier edition
+reported 0.7934 on 241 compounds and read the gap from 0.7645 as the size of the memorisation effect,
+implying that filtering for novelty had revealed a better model. It had not. The flag defining that
+set was computed before the featuriser began neutralising charges, so fourteen compounds it called
+novel were feature-identical to a training row by the time the model was fitted, and they scored like
+it: 92.9 per cent accuracy against 72.2 on the rest. With the flag recomputed, the strictly novel
+figure is **0.7666 against 0.7645 for the unfiltered 306**, a difference of 0.0021.
+
+So novelty filtering does not improve the external result; it leaves it where it was. That is the
+more defensible claim, because it is a claim about the model rather than about the filter, and it
+removes the objection that the external figure was selected by a criterion tuned after the fact. The
+0.7645 on all 306 and the 0.7666 on the 227 now say the same thing, which is what a genuine external
+result should look like.
 
 ## 8.4 The falsification suite — **[DECLARED]**, and it is the methodological core
 

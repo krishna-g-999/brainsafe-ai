@@ -437,7 +437,7 @@ compounds.
 | Binder ECE, the 38 measured | 0.0762 | median 0.0675, 0.0300 to 0.1780 | `integrity_calibration_per_target.csv` |
 | Conformal coverage, target 0.90 | 0.876 to 0.933 | set size 0.956 to 1.215, deduplicated | `rf_conformal.csv` |
 | Specificity, non-CNS library | **0.925** | 0.907 to 0.9397, an upper bound | `noncns_specificity_summary.csv` |
-| External barrier AUROC | **0.7934** on 241 unseen drugs | 0.7645 on 306, 0.7102 on the 65 memorised | `external_bbb_validation.csv` |
+| External barrier AUROC | **0.7666** on 227 unseen drugs | 0.7645 on all 306, so filtering changes nothing | `external_bbb_validation.csv` |
 | Panel size | 47 deployed of 52 | 6 fail the reliability gate | `binder_modes.json` |
 | Graph | 16 conditions, 51 targets | | `GRAPH_FINGERPRINT.json` |
 
@@ -477,13 +477,13 @@ for firing on glucose and urea.
 
 ## H10, the newest and the one most likely to be probed
 
-| | AUROC on 241 unseen approved drugs | Margin against the deployed forest |
+| | AUROC on 227 unseen approved drugs | Margin against the deployed forest |
 |---|---:|---|
-| Deployed forest, 1,036 features | **0.7934** | — |
-| Random forest, 12 descriptors only | 0.7701 | −0.0233, interval −0.0553 to **+0.0106**, p = 0.083 |
-| Logistic regression, 12 descriptors | 0.7420 | −0.0514, interval −0.0940 to −0.0101 |
-| TPSA alone, no fitting | 0.7440 | −0.0494, interval −0.0938 to −0.0047 |
-| CNS rule: TPSA ≤ 90 and MW ≤ 400 | 0.6369 | −0.1565, interval −0.2108 to −0.1004 |
+| Deployed forest, 1,036 features | **0.7666** | — |
+| Random forest, 12 descriptors only | 0.7431 | −0.0235, interval −0.0580 to **+0.0154**, p = 0.107 |
+| Logistic regression, 12 descriptors | 0.7400 | −0.0266, interval −0.0709 to +0.0160 |
+| TPSA alone, no fitting | 0.7304 | −0.0361, interval −0.0890 to +0.0108 |
+| CNS rule: TPSA ≤ 90 and MW ≤ 400 | 0.6247 | −0.1418, interval −0.2067 to −0.0836 |
 
 On the scaffold hold-out the fingerprint's advantage over twelve descriptors is 0.0338 with an
 interval that excludes zero. **On unseen approved drugs the interval crosses zero**, so the verdict is
@@ -510,8 +510,19 @@ interval falls one side of the activity cut, and is discarded when it spans both
 **How do you deduplicate?** By InChIKey of the desalted parent. Be ready to say why that is not
 sufficient for the external test: the InChIKey separates stereoisomers and salt forms, and the
 featuriser does not, so a compound can pass an InChIKey exclusion and still be one the model has
-memorised. That is why the external barrier result is reported twice, 0.7645 on all 306 and 0.7934 on
-the 241 that are also distinguishable in feature space.
+memorised. That is why the external barrier result is reported twice, 0.7645 on all 306 and 0.7666 on
+the 227 that are also distinguishable in feature space. Say that the two agree: filtering for novelty
+does not improve the figure, which is what a genuine external result should look like. If asked
+whether the filter was chosen to flatter the number, the answer is that it demonstrably does not.
+
+The 79 compounds the featuriser cannot tell apart from a training row are reported separately, at
+AUROC **0.7490**. Be ready for the follow-up, because the comparison is not one-directional: their
+AUROC is slightly lower than the novel set's, while their accuracy is higher, 0.7595 against 0.7225.
+The honest reading is that the model places them on the right side of the threshold more often, which
+is what memorisation buys, without ranking them better overall. Note also that this count was **65**
+until the audit: the flag was computed on the raw SMILES, before the featuriser began neutralising,
+so it described a representation the deployed model no longer uses. Fourteen compounds moved from
+"novel" to "memorised" when it was recomputed correctly.
 
 ## On the models
 
@@ -530,8 +541,8 @@ barrier model is the weakest link, and it sits at the gate. Say this before the 
 ## On validation
 
 **What is your external validation?** One genuine external set: FDA-curated approved drugs absent
-from the barrier model's training database, AUROC 0.7934 on the 241 that are also novel in feature
-space. For the target panel no external set of this kind exists, and the reason is structural: for
+from the barrier model's training database, AUROC 0.7666 on the 227 that are also novel in feature
+space, against 0.7645 on all 306. For the target panel no external set of this kind exists, and the reason is structural: for
 most of those proteins the public record *is* the training set.
 
 **Your prospective simulation shows decay. Is the model getting worse over time?** No, and this is the
@@ -580,8 +591,8 @@ measured.
 Concede it immediately and completely: two enantiomers give byte-identical vectors and identical
 predictions, and for targets where activity is enantiospecific this is a real limitation, not a
 simplification. Then give the consequence the thesis actually measured: it is why the external
-barrier set is reported twice, and the 65 compounds that are feature-identical to a training compound
-score 0.7102 against 0.7934 for the genuinely novel ones. The system is a triage tool over
+barrier set is reported twice, and the 79 compounds that are feature-identical to a training compound
+are excluded from the strict figure of 0.7666. The system is a triage tool over
 mechanisms, not a stereochemical potency predictor.
 
 **2. "Your headline AUROC of 0.9252 is a mean over eight models. Is that not cherry-picking?"**

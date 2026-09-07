@@ -43,8 +43,15 @@ the deployed model (`results/tables/external_bbb_validation.csv`).
 | Set | n | Permeable | AUROC | Sensitivity | Specificity |
 |---|---:|---:|---:|---:|---:|
 | Not in B3DB by InChIKey | 306 | 203 | 0.7645 | 0.7734 | 0.6505 |
-| Also distinguishable from training in feature space | 241 | 171 | **0.7934** | 0.7661 | 0.6571 |
-| Of which feature-identical to a training compound | 65 | 32 | 0.7102 | 0.8125 | 0.6364 |
+| Also distinguishable from training in feature space | 227 | 165 | **0.7666** | 0.7636 | 0.6129 |
+| Of which feature-identical to a training compound | 79 | 38 | 0.7490 | 0.8158 | 0.7073 |
+
+An earlier edition of this table reported the second row as 241 compounds at 0.7934 and the third as
+65 at 0.7102. The novelty flag it used had been computed before the featuriser began neutralising
+charges, so fourteen compounds it called novel were by then feature-identical to a training row, and
+the model treated them accordingly: 92.9 per cent accuracy on those fourteen against 72.2 on the rest.
+The flag was a function of the featuriser and nothing declared that dependency, so it did not move
+when the featuriser did.
 
 **The second row is the one that supports an external claim.** Excluding overlap by InChIKey is not
 enough to call a compound unseen: the InChIKey separates stereoisomers, salts and protonation states,
