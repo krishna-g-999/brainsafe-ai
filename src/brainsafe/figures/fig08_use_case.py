@@ -104,22 +104,33 @@ def main() -> None:
     S.strip(ax, x=True, y=False)
 
     # ---- right: exposure is what separates them ----------------------------------------------
-    # Compounds cluster tightly in both corners, so labels are stepped apart within a cluster and
-    # the high-exposure group is labelled to the left to stay inside the axes.
+    # The four CNS drugs sit apart from one another and are labelled individually, stepped apart
+    # within that cluster. The four peripheral compounds sit within a Tanimoto-scale sliver of the
+    # origin, close enough in both axes that no per-point label placement avoids collision without
+    # either running off the axes or overlapping a tick; four separate leader lines there would also
+    # overstate how much this panel has to say about which peripheral compound is which; the point
+    # is that all four are gated out together. They are named once, next to the cluster.
+    cns_rows = [r for r in rows if r["cns"]]
+    other_rows = [r for r in rows if not r["cns"]]
+
     placed = []
-    for r in sorted(rows, key=lambda q: (-q["score"], -q["bbb"])):
-        bx.plot(r["bbb"], r["score"], "o", ms=6 if r["cns"] else 5,
-                mfc=S.TARGET if r["cns"] else S.FAINT, mec="white", mew=0.7, zorder=3)
+    for r in sorted(cns_rows, key=lambda q: (-q["score"], -q["bbb"])):
+        bx.plot(r["bbb"], r["score"], "o", ms=6, mfc=S.TARGET, mec="white", mew=0.7, zorder=3)
         dy = 0.0
         while any(abs(r["bbb"] - px) < 0.18 and abs(r["score"] + dy / 200 - py) < 0.045
                   for px, py in placed):
-            dy -= 9.0
-        right = r["bbb"] < 0.6
+            dy -= 11.0
         bx.annotate(r["compound"], (r["bbb"], r["score"]), textcoords="offset points",
-                    xytext=(7 if right else -7, dy - 1.5), fontsize=6.5,
-                    ha="left" if right else "right",
-                    color=S.INK if r["cns"] else S.MUTED)
+                    xytext=(-7, dy - 1.5), fontsize=6.5, ha="right", color=S.INK)
         placed.append((r["bbb"], r["score"] + dy / 200))
+
+    for r in other_rows:
+        bx.plot(r["bbb"], r["score"], "o", ms=5, mfc=S.FAINT, mec="white", mew=0.7, zorder=3)
+    cx = sum(r["bbb"] for r in other_rows) / len(other_rows)
+    cy = max(r["score"] for r in other_rows)
+    bx.annotate(", ".join(r["compound"] for r in other_rows), (cx, cy),
+                textcoords="offset points", xytext=(0, 11), fontsize=6.5, ha="center",
+                color=S.MUTED, wrap=True)
     bx.axhline(REPORT_THRESHOLD, color=S.WARN, lw=0.9, ls=(0, (3, 2)))
     bx.set_xlabel("predicted barrier penetration")
     bx.set_ylabel("top disease score", linespacing=1.6)

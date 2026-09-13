@@ -145,10 +145,15 @@ def panel_d(ax, inv) -> None:
         text = str(r["check"])
         ax.text(0.085, y, text if len(text) <= 74 else text[:72] + "...", fontsize=6.5,
                 color=S.INK if ok else S.WARN, va="center")
-    ax.text(0.0, 0.055, "The failing check is reported at the size of the others and is not tuned "
-                        "until it passes.\nIt is a finding about the domain flag, and the "
-                        "Discussion treats it as one.",
-            fontsize=6.5, color=S.MUTED, va="top", linespacing=1.7)
+    if n_pass < len(d):
+        note = ("The failing check is reported at the same size as the others and is not tuned "
+                "until it passes.\nIt is a finding about the domain flag, and the Discussion "
+                "treats it as one.")
+    else:
+        note = ("Every check is drawn at the same size whatever its verdict, so a check that later "
+                "fails would be exactly this visible.\nThe domain-flag check above failed once, on "
+                "a control set later found to include compounds inside its own reference library.")
+    ax.text(0.0, 0.055, note, fontsize=6.5, color=S.MUTED, va="top", linespacing=1.7)
 
 
 def main() -> None:

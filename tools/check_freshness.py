@@ -90,6 +90,26 @@ GRAPH: list[tuple[str, list[str], str]] = [
     ("results/tables/library_sp3_coverage.csv", ["data/endpoints/*.csv"],
      "python src/brainsafe/evaluation/library_sp3_coverage.py"),
 
+    # Whether the panel's two different "how many compounds" figures, 170,619 distinct SMILES and
+    # 169,341 unique compounds keyed by the InChIKey of the desalted parent, are both real. Neither
+    # the thesis nor the manuscript had re-derived the InChIKey figure; three separate outstanding-
+    # items entries said so. It reproduces to the digit against the manuscript's stated value.
+    ("results/tables/unique_compound_count.csv", ["data/endpoints/*.csv"],
+     "python src/brainsafe/evaluation/unique_compound_count.py"),
+
+    # SHAP attribution for the barrier model and hERG, quoted in the manuscript's Attribution
+    # paragraph. No script computed these values and no table held them; the technical report has no
+    # SHAP section at all. Depends on the served model, not only the table, because TreeExplainer
+    # reads the fitted forest.
+    ("results/tables/shap_attribution.csv", ["models_rf/BBB.joblib", "models_rf/hERG.joblib"],
+     "python src/brainsafe/evaluation/shap_attribution.py"),
+
+    # The full estimator inventory behind Figure 2 (panel atlas) and the manuscript's own summary
+    # counts. It read from no declared input, so a retrained panel could leave it silently behind;
+    # this is the same gap already closed for model_comparison.csv and background_specificity.csv.
+    ("results/tables/MODEL_INVENTORY.csv", ["models_rf/binder_modes.json", "models_rf/*.joblib"],
+     "python src/brainsafe/analysis/build_model_inventory.py"),
+
     # The external approved-drug set and its novelty flags. It was declared only as an INPUT, never
     # as an output, and it went stale in the way that omission allows. novel_to_model is computed by
     # featurising every external compound and asking whether its vector already exists in the BBB
@@ -370,7 +390,9 @@ GRAPH: list[tuple[str, list[str], str]] = [
      ["models_rf/binder_modes.json", "models_rf/endpoint_context.json"],
      "python src/brainsafe/figures/fig08_use_case.py"),
     ("manuscript/figures/Figure9_model_atlas.png",
-     ["models_rf/binder_modes.json", "results/tables/rf_cv_summary.csv"],
+     ["models_rf/binder_modes.json", "results/tables/rf_cv_summary.csv",
+      "results/tables/MODEL_INVENTORY.csv"],
+     "python src/brainsafe/analysis/build_model_inventory.py && "
      "python src/brainsafe/figures/fig09_model_atlas.py"),
     ("manuscript/figures/Figure10_endpoint_selection.png", ["models_rf/binder_modes.json"],
      "python src/brainsafe/figures/fig10_endpoint_selection.py"),
