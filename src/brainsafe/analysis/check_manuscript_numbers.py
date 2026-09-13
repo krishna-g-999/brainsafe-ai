@@ -26,6 +26,11 @@ TAB = ROOT / "results" / "tables"
 DOCS = [
     ROOT / "manuscript" / "NAR_WebServer_BrainSafe_built.md",
     ROOT / "manuscript" / "NAR_WebServer_BrainSafe_draft.md",
+    # The condensed, NAR-length draft states the same headline numbers in its own words. It was not
+    # in this list for two full audit passes over the full draft, and drifted from every correction
+    # made to the numbers it duplicates: this is what closes that gap for good rather than once.
+    ROOT / "manuscript" / "NAR_condensed_draft.md",
+    ROOT / "manuscript" / "NAR_condensed_built.md",
     ROOT / "README.md",
     ROOT / "docs" / "BS_MODEL_CARD.md",
     ROOT / "docs" / "RF_CV_RESULTS.md",

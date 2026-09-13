@@ -3,8 +3,10 @@
 Public bioactivity databases record what bound. A compound tested and found inactive is often stored
 only as a censored bound, "IC50 > 10 uM", and the standard query that filters on a pChEMBL value
 discards exactly those rows. The panel was therefore trained on a positive class drawn from
-measurement and a negative class drawn largely from property-matched decoys, and 37 of 60 endpoints
-sat above 90 per cent active. That is a property of the query, not of the chemistry.
+measurement and a negative class drawn largely from property-matched decoys, and 35 of the 60
+endpoints then in the panel sat above 90 per cent active (panel B computes this figure directly from
+expansion_inactives.csv rather than restating it, so it cannot go stale the way this sentence did).
+That is a property of the query, not of the chemistry.
 
 This figure shows the correction. Panel A: a bound settles the label whenever the whole interval
 falls on one side of the cut, so ">10 uM" is a measured non-binder and only bounds that straddle the

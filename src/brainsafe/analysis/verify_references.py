@@ -6,7 +6,15 @@ Interleukin-1 signalling. Bibliographies carry the same risk, so each entry here
 a search phrase and is accepted only if a live query returns a record whose title actually matches
 the intended work. Anything unmatched is reported as unresolved rather than guessed.
 
-Output: manuscript/references_verified.json and manuscript/references.md
+SUPERSEDED by verify_references_strict.py, which matches on exact requested title with a similarity
+floor rather than on a keyword appearing anywhere in the returned title; this version once returned a
+2026 epidemiology article for a random-forest citation and an unrelated statistics-package validation
+for scikit-learn, both keyword matches with no title relevance. It also overwrites
+references_verified.json unconditionally, which the strict version no longer does after a fresh,
+non-deterministic search once replaced a correct match with a worse one. Do not run this for the
+manuscript's citations; kept for its own history, not as a tool to invoke.
+
+Output (when run): manuscript/references_verified.json and manuscript/references.md
 """
 from __future__ import annotations
 
