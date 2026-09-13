@@ -201,7 +201,12 @@ GRAPH: list[tuple[str, list[str], str]] = [
      "python src/brainsafe/evaluation/external_validation.py"),
     ("results/tables/rf_conformal.csv", ["models_rf/BBB.joblib"],
      "python src/brainsafe/evaluation/rf_conformal_temporal.py"),
-    ("results/tables/inversion_validation.csv", ["models_rf/BBB.joblib"],
+    # Two of its six checks read the external BBB set directly (the "ranks permeable drugs" and
+    # "domain flag separates" checks both draw their comparator from novel_to_model), the same
+    # dependency external_validation.py already declares two entries above. Missing here until this
+    # pass, which is the same class of gap Finding A closed for the manuscript's own external figure.
+    ("results/tables/inversion_validation.csv",
+     ["models_rf/BBB.joblib", "data/external/processed/external_bbb_test.csv"],
      "python src/brainsafe/evaluation/validate_inversion.py"),
     ("results/tables/integrity_audit.csv", ["models_rf/BBB.joblib"],
      "python src/brainsafe/evaluation/integrity_audit.py"),
@@ -412,8 +417,20 @@ GRAPH: list[tuple[str, list[str], str]] = [
      "python src/brainsafe/analysis/manuscript_tables.py"),
     ("manuscript/NAR_WebServer_BrainSafe_built.md",
      ["manuscript/NAR_WebServer_BrainSafe_draft.md", "manuscript/tables_generated.md",
-      "manuscript/references_verified.json", "manuscript/figures/Figure6_validation.png"],
+      "manuscript/references_verified.json", "manuscript/references_links.json",
+      "manuscript/figures/Figure6_validation.png"],
      "python src/brainsafe/analysis/build_manuscript.py"),
+
+    # references.md used to be a hand-maintained second copy of the bibliography, numbered by year
+    # rather than by citation order, so it silently disagreed with every number actually printed in
+    # the manuscript. cite.py now writes it as a byproduct of the same resolution the built manuscript
+    # uses, from the same three inputs, so the two cannot diverge again; this entry is what makes a
+    # forgotten rebuild after any of the three changes into a freshness failure instead of a stale
+    # file nobody notices.
+    ("manuscript/references.md",
+     ["manuscript/NAR_WebServer_BrainSafe_draft.md", "manuscript/references_verified.json",
+      "manuscript/references_links.json"],
+     "python src/brainsafe/analysis/cite.py"),
 ]
 
 # Checked by content rather than by timestamp, because it carries checksums of what it describes.

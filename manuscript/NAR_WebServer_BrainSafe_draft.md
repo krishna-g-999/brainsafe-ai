@@ -66,8 +66,10 @@ curated graph into disease-level scores, gated by predicted exposure, so the out
 rather than a bare score.
 
 The design also commits to reporting where the server does not work. Five endpoints were trained,
-tested and withdrawn; one adversarial check fails and is reported as failing; and the server stays
-silent rather than guessing on chemistry it cannot place.
+tested and withdrawn; every adversarial check is written so that it could fail and is reported
+whichever way it falls, and one of the six passes only after a flawed control set was corrected
+rather than its criterion loosened; and the server stays silent rather than guessing on chemistry it
+cannot place.
 
 ---
 

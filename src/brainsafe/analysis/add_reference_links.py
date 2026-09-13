@@ -1,9 +1,8 @@
-"""Attach PubMed and PubMed Central links to every reference, as NAR requires.
+"""Resolve PubMed and PubMed Central identifiers for every verified reference, as NAR requires.
 
 NAR's instructions are explicit: "The references section must include active electronic DOI and
 PubMed Central links for each cited paper (where available). Please include a PubMed abstract link
-if the PMC link is not available." Our references carry DOIs for all 32 entries and PubMed links for
-none, so the requirement is not met.
+if the PMC link is not available."
 
 The identifiers are not typed in. Each DOI is resolved through the NCBI ID Converter, which maps
 between DOI, PMID and PMCID, and whatever it returns is recorded verbatim alongside the DOI that
@@ -12,16 +11,23 @@ reference list that quietly invents a PMID is worse than one that is incomplete.
 
 Software citations have no PubMed record by construction and are expected to resolve to nothing.
 
-Output: manuscript/references_links.json, and an updated manuscript/references.md
+This script owns exactly one file: manuscript/references_links.json, keyed by DOI. It used to also
+rewrite manuscript/references.md directly, appending links to whatever numbered list it found there.
+That made two scripts write the same file in two different citation orders (this one preserved
+whatever order references.md already had; cite.py numbers by order of first appearance in the
+manuscript), and the two silently disagreed. cite.py now generates references.md from this file, so
+that is the only writer of it. The DOI list here is read from references_verified.json rather than
+from references.md itself, for the same reason: the verified set is the source cite.py resolves
+against, so resolving links against it rather than against a rendering of it cannot drift from what
+the manuscript actually cites.
 
 Run:  python src/brainsafe/analysis/add_reference_links.py
+      then: python src/brainsafe/analysis/cite.py     (regenerates references.md with the new links)
 """
 from __future__ import annotations
 
 import json
 import os
-import re
-import sys
 import time
 from pathlib import Path
 
@@ -29,6 +35,8 @@ import requests
 
 ROOT = Path(__file__).resolve().parents[3]
 MS = ROOT / "manuscript"
+VERIFIED = MS / "references_verified.json"
+LINKS = MS / "references_links.json"
 # NCBI moved the converter to pmc.ncbi.nlm.nih.gov; the old www path no longer answers.
 CONVERTER = "https://pmc.ncbi.nlm.nih.gov/tools/idconv/api/v1/articles/"
 
@@ -56,15 +64,10 @@ def resolve(dois: list[str], verify=True) -> dict:
 
 
 def main() -> None:
-    src = MS / "references.md"
-    text = src.read_text(encoding="utf-8")
-    entries = re.findall(r"^(\d+)\. (.+)$", text, re.M)
-    dois = []
-    for _n, body in entries:
-        m = re.search(r"doi:(\S+)", body, re.I)
-        if m:
-            dois.append(m.group(1).rstrip(". ").lower())
-    print(f"{len(entries)} numbered entries, {len(dois)} carrying a DOI")
+    papers = json.loads(VERIFIED.read_text(encoding="utf-8")).get("papers", {})
+    existing = json.loads(LINKS.read_text(encoding="utf-8")) if LINKS.exists() else {}
+    dois = sorted({rec["doi"].lower() for rec in papers.values() if rec.get("doi")})
+    print(f"{len(papers)} verified papers, {len(dois)} distinct DOIs")
 
     # NCBI is not TLS-intercepted on this network: it presents a genuine GoDaddy certificate. The
     # local CA bundle assembled for intercepted hosts must NOT be used here, because it carries a
@@ -98,39 +101,19 @@ def main() -> None:
         time.sleep(0.4)
     print(f"resolved by PubMed search: {found} of the remaining {len(rest)}")
 
-    lines, added, missing = [], 0, []
-    for line in text.splitlines():
-        m = re.match(r"^(\d+)\. (.+)$", line)
-        if not m:
-            lines.append(line)
-            continue
-        n, body = m.groups()
-        if "pubmed.ncbi" in body or "pmc.ncbi" in body:      # already linked; leave alone
-            lines.append(line)
-            continue
-        d = re.search(r"doi:(\S+)", body, re.I)
-        rec = got.get(d.group(1).rstrip(". ").lower()) if d else None
-        if rec and (rec.get("pmcid") or rec.get("pmid")):
-            bits = []
-            if rec.get("pmcid"):
-                bits.append(f"https://pmc.ncbi.nlm.nih.gov/articles/{rec['pmcid']}/")
-            if rec.get("pmid"):
-                bits.append(f"https://pubmed.ncbi.nlm.nih.gov/{rec['pmid']}/")
-            lines.append(f"{n}. {body.rstrip()} {' '.join(bits)}")
-            added += 1
-        else:
-            lines.append(line)
-            missing.append(f"{n}. {body[:70]}")
+    # A DOI the live queries did not return anything for this run keeps whatever the file already
+    # held, so a transient NCBI outage cannot erase a link resolved on an earlier run.
+    merged = {**existing, **got}
+    missing = [d for d in dois if not (merged.get(d, {}).get("pmcid") or merged.get(d, {}).get("pmid"))]
 
-    src.write_text("\n".join(lines) + "\n", encoding="utf-8")
-    (MS / "references_links.json").write_text(json.dumps(got, indent=2), encoding="utf-8")
-
-    print(f"\nlinks added to {added} entries")
+    LINKS.write_text(json.dumps(merged, indent=2), encoding="utf-8")
+    print(f"\nlinked: {len(dois) - len(missing)} of {len(dois)} DOIs")
     if missing:
-        print(f"{len(missing)} entries have no PubMed record and keep their DOI alone:")
-        for x in missing:
-            print("   ", x.encode("ascii", "replace").decode())
-    print(f"\nwrote {src.relative_to(ROOT)} and references_links.json")
+        print(f"{len(missing)} DOIs have no PubMed record and keep their DOI alone: "
+              f"{', '.join(missing)}")
+    print(f"\nwrote {LINKS.relative_to(ROOT)}")
+    print("run src/brainsafe/analysis/cite.py next to carry these into references.md "
+          "and the built manuscript")
 
 
 if __name__ == "__main__":
