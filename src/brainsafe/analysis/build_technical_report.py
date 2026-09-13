@@ -23,6 +23,7 @@ import datetime as dt
 import glob
 import json
 import os
+import re
 import sys
 from pathlib import Path
 
@@ -1335,13 +1336,34 @@ panel does not reconcile.
 
 """)
 
-    A("""
+    # The panel-wide raw-duplicate count behind the Leakage paragraph below. It used to be a bare
+    # "544" in this prose with no script or table behind it, found when the manuscript was audited
+    # against the same claim; validate_inversion.py's own dedup check already measures the real
+    # figure and writes it in prose form to inversion_validation.csv, so it is parsed from there
+    # rather than hardcoded a second time.
+    _dedup_detail = ""
+    if inversion is not None and len(inversion):
+        _row = inversion[inversion.check.str.startswith("No duplicate", na=False)]
+        if len(_row):
+            _dedup_detail = str(_row.iloc[0]["detail"])
+    _m = re.search(r"([\d,]+) exist in the tables before deduplication \(worst (\w+) at ([\d,]+)\)",
+                   _dedup_detail)
+    raw_dup_total = int(_m.group(1).replace(",", "")) if _m else None
+    raw_dup_worst_ep = _m.group(2) if _m else None
+    raw_dup_worst_n = int(_m.group(3).replace(",", "")) if _m else None
+
+    A(f"""
 ### 6.9 Leakage and null models
 
 **Leakage.** Folds were rebuilt and the index sets interrogated directly. On the deduplicated matrix
 the pipeline fits, no InChIKey, no feature vector and no scaffold appears on both sides of any fold.
-On the raw table the feature-vector overlap reaches 544, which is precisely what deduplication
-removes.
+On the raw endpoint tables, before deduplication, {f"{raw_dup_total:,}" if raw_dup_total else "an unmeasured number of"}
+feature-vector-identical rows exist across the panel{f", worst at {raw_dup_worst_ep} ({raw_dup_worst_n:,})" if raw_dup_worst_ep else ""},
+which is precisely what deduplication removes; none of them reaches a fitted model
+(`results/tables/inversion_validation.csv`).
+""")
+
+    A("""
 
 **Null models.** With labels permuted, the same pipeline on the same folds returns mean AUROC 0.4959
 random and 0.5026 scaffold over the eight core classifiers, every one of the sixteen values within

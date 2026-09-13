@@ -1,8 +1,8 @@
-# Model inventory, 2026-08-19
+# Model inventory, 2026-09-13
 
-Commit `120f2c7`. One row per deployed estimator, taken from the estimators and their metadata on disk. Four receptors carry both a potency regression and a binder classifier, so the model count exceeds the endpoint count.
+Commit `966c9a1`. One row per deployed estimator, taken from the estimators and their metadata on disk. Four receptors carry both a potency regression and a binder classifier, so the model count exceeds the endpoint count.
 
-**75 estimators, 70 deployed.** Fitted between 2026-08-04 10:01 and 2026-08-19 17:54.
+**75 estimators, 70 deployed.** Fitted between 2026-08-04 10:01 and 2026-08-20 15:56.
 
 | family | estimators | deployed |
 |---|---|---|
@@ -15,20 +15,20 @@ Commit `120f2c7`. One row per deployed estimator, taken from the estimators and 
 
 | model | predicts | task | n train | metric | random | scaffold | calibration | deployed | fitted |
 |---|---|---|---|---|---|---|---|---|---|
-| A2A | potency, pChEMBL | regression | 6743 | R2 | 0.7231 | 0.6205 | none | yes | 2026-08-19 13:56 |
-| AChE | probability of activity | classification | 5125 | AUROC | 0.9659 | 0.9212 | isotonic, out-of-fold | yes | 2026-08-19 13:48 |
-| antioxidant_DPPH | potency, pChEMBL | regression | 2782 | R2 | 0.6589 | 0.4153 | none | yes | 2026-08-19 14:01 |
-| BACE1 | probability of activity | classification | 8207 | AUROC | 0.9764 | 0.9648 | isotonic, out-of-fold | yes | 2026-08-19 13:49 |
-| BBB | probability of activity | classification | 3901 | AUROC | 0.899 | 0.8777 | isotonic, out-of-fold | yes | 2026-08-19 13:47 |
-| BChE | probability of activity | classification | 3278 | AUROC | 0.9724 | 0.9451 | isotonic, out-of-fold | yes | 2026-08-19 13:48 |
-| D2 | potency, pChEMBL | regression | 7905 | R2 | 0.6403 | 0.5311 | none | yes | 2026-08-19 13:54 |
-| GSK3B | probability of activity | classification | 5439 | AUROC | 0.9649 | 0.9425 | isotonic, out-of-fold | yes | 2026-08-19 13:49 |
-| hERG | probability of activity | classification | 9933 | AUROC | 0.9565 | 0.927 | isotonic, out-of-fold | yes | 2026-08-19 13:51 |
-| HT2A | potency, pChEMBL | regression | 6075 | R2 | 0.6996 | 0.556 | none | yes | 2026-08-19 13:58 |
-| MAO_A | probability of activity | classification | 3585 | AUROC | 0.9619 | 0.9059 | isotonic, out-of-fold | yes | 2026-08-19 13:49 |
-| MAO_B | probability of activity | classification | 4534 | AUROC | 0.963 | 0.917 | isotonic, out-of-fold | yes | 2026-08-19 13:50 |
+| A2A | potency, pChEMBL | regression | 6743 | R2 | 0.7231 | 0.6205 | none | yes | 2026-08-20 15:55 |
+| AChE | probability of activity | classification | 5125 | AUROC | 0.9659 | 0.9212 | isotonic, out-of-fold | yes | 2026-08-20 15:55 |
+| antioxidant_DPPH | potency, pChEMBL | regression | 2782 | R2 | 0.6589 | 0.4153 | none | yes | 2026-08-20 15:55 |
+| BACE1 | probability of activity | classification | 8207 | AUROC | 0.9764 | 0.9648 | isotonic, out-of-fold | yes | 2026-08-20 15:55 |
+| BBB | probability of activity | classification | 3901 | AUROC | 0.899 | 0.8777 | isotonic, out-of-fold | yes | 2026-08-20 15:55 |
+| BChE | probability of activity | classification | 3278 | AUROC | 0.9724 | 0.9451 | isotonic, out-of-fold | yes | 2026-08-20 15:55 |
+| D2 | potency, pChEMBL | regression | 7905 | R2 | 0.6403 | 0.5311 | none | yes | 2026-08-20 15:55 |
+| GSK3B | probability of activity | classification | 5439 | AUROC | 0.9649 | 0.9425 | isotonic, out-of-fold | yes | 2026-08-20 15:55 |
+| hERG | probability of activity | classification | 9933 | AUROC | 0.9565 | 0.927 | isotonic, out-of-fold | yes | 2026-08-20 15:55 |
+| HT2A | potency, pChEMBL | regression | 6075 | R2 | 0.6996 | 0.556 | none | yes | 2026-08-20 15:56 |
+| MAO_A | probability of activity | classification | 3585 | AUROC | 0.9619 | 0.9059 | isotonic, out-of-fold | yes | 2026-08-20 15:56 |
+| MAO_B | probability of activity | classification | 4534 | AUROC | 0.963 | 0.917 | isotonic, out-of-fold | yes | 2026-08-20 15:56 |
 | pka_basic | pKa | regression | 6384 | R2 |  |  | none | yes | 2026-08-04 10:01 |
-| SERT | potency, pChEMBL | regression | 4479 | R2 | 0.6897 | 0.4612 | none | yes | 2026-08-19 14:00 |
+| SERT | potency, pChEMBL | regression | 4479 | R2 | 0.6897 | 0.4612 | none | yes | 2026-08-20 15:56 |
 | A1_binder | probability this compound binds this target | classification | 7352 | AUROC vs measured non-binders |  | 0.914 | sigmoid, prefit | yes | 2026-08-19 14:22 |
 | A2A_binder | probability this compound binds this target | classification | 15636 | AUROC vs measured non-binders |  | 0.949 | sigmoid, prefit | yes | 2026-08-19 14:31 |
 | CB1_binder | probability this compound binds this target | classification | 10198 | AUROC vs measured non-binders |  | 0.949 | sigmoid, prefit | yes | 2026-08-19 14:19 |
@@ -81,12 +81,12 @@ Commit `120f2c7`. One row per deployed estimator, taken from the estimators and 
 | a7nAChR_binder | probability this compound binds this target | classification | 1285 | AUROC vs measured non-binders |  | 0.763 | sigmoid, prefit | yes | 2026-08-19 14:22 |
 | mGluR5_binder | probability this compound binds this target | classification | 4511 | AUROC vs measured non-binders |  | 0.893 | sigmoid, prefit | yes | 2026-08-19 14:26 |
 | mTOR_binder | probability this compound binds this target | classification | 11510 | AUROC vs measured non-binders |  | 0.983 | sigmoid, prefit | yes | 2026-08-19 14:29 |
-| adme_caco2_permeability | measured value | regression | 897 | R2 | 0.7359 | 0.5818 | none | yes | 2026-08-19 14:38 |
-| adme_clearance_hepatocyte | measured value | regression | 1020 | R2 | 0.2302 | 0.2062 | none | yes | 2026-08-19 14:39 |
-| adme_kpuu | measured value | regression | 566 | R2 | 0.4056 | 0.3523 | none | yes | 2026-08-19 14:39 |
-| adme_lipophilicity | measured value | regression | 4200 | R2 | 0.6389 | 0.5659 | none | yes | 2026-08-19 14:37 |
-| adme_logbb | measured value | regression | 1058 | R2 | 0.5836 | 0.4131 | none | yes | 2026-08-19 14:39 |
-| adme_pgp_inhibition | probability | classification | 1212 | AUROC | 0.9549 | 0.9346 | none | yes | 2026-08-19 14:33 |
-| adme_pgp_substrate | probability | classification | 1371 | AUROC | 0.8561 | 0.807 | none | yes | 2026-08-19 14:34 |
-| adme_plasma_protein_binding | measured value | regression | 1797 | R2 | 0.4336 | 0.3645 | none | yes | 2026-08-19 14:38 |
-| adme_solubility | measured value | regression | 9573 | R2 | 0.8008 | 0.7263 | none | yes | 2026-08-19 14:36 |
+| adme_caco2_permeability | measured value | regression | 897 | R2 | 0.7359 | 0.5818 | none | yes | 2026-08-20 15:55 |
+| adme_clearance_hepatocyte | measured value | regression | 1020 | R2 | 0.2302 | 0.2062 | none | yes | 2026-08-20 15:55 |
+| adme_kpuu | measured value | regression | 566 | R2 | 0.4056 | 0.3523 | none | yes | 2026-08-20 15:55 |
+| adme_lipophilicity | measured value | regression | 4200 | R2 | 0.6389 | 0.5659 | none | yes | 2026-08-20 15:55 |
+| adme_logbb | measured value | regression | 1058 | R2 | 0.5836 | 0.4131 | none | yes | 2026-08-20 15:55 |
+| adme_pgp_inhibition | probability | classification | 1212 | AUROC | 0.9549 | 0.9346 | none | yes | 2026-08-20 15:55 |
+| adme_pgp_substrate | probability | classification | 1371 | AUROC | 0.8561 | 0.807 | none | yes | 2026-08-20 15:55 |
+| adme_plasma_protein_binding | measured value | regression | 1797 | R2 | 0.4336 | 0.3645 | none | yes | 2026-08-20 15:55 |
+| adme_solubility | measured value | regression | 9573 | R2 | 0.8008 | 0.7263 | none | yes | 2026-08-20 15:55 |

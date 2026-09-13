@@ -1,10 +1,11 @@
 # BrainSafe AI: a calibrated, exposure-gated web server for multi-endpoint prediction of small-molecule action in the human brain
 
-**Authors:** [TO BE SUPPLIED]
+**Authors:** Krishnasalini Gunanathan¹, Raghunatha Sarma¹, Sai Shyam¹, Ramya E. M.¹,
+Venketesh Sivaramakrishnan¹
 
-**Affiliation:** SAI-Net initiative, Sri Sathya Sai Institute of Higher Learning (SSSIHL), Prasanthi Nilayam, India.
+**Affiliation:** ¹Sri Sathya Sai Institute of Higher Learning (SSSIHL), Puttaparthi, Andhra Pradesh 515134, India.
 
-**Correspondence:** [TO BE SUPPLIED]
+**Correspondence:** Prof. Venketesh Sivaramakrishnan, svenketesh@sssihl.edu.in
 
 **Manuscript type:** NAR Web Server Issue.
 
@@ -27,8 +28,8 @@ scaffold-grouped 10-fold cross-validation: mean AUROC 0.958 and 0.925 respective
 measured-label classifiers, with expected calibration error falling from 0.0801 to 0.0147 after
 isotonic calibration. Every prediction carries a calibrated probability, a conformal interval and an
 applicability-domain distance to the nearest measured analogue, and the server reports silence rather
-than a guess for compounds outside its competence: on non-CNS chemistry its specificity is 0.949
-(95% CI 0.934 to 0.961). The binder panel, validated against compounds measured and found inactive at
+than a guess for compounds outside its competence: on non-CNS chemistry its specificity is 0.925
+(95% CI 0.907 to 0.940). The binder panel, validated against compounds measured and found inactive at
 the same target rather than against decoys, reaches a mean AUROC of 0.917 and recovers the
 pharmacologically correct driving target for reference drugs. Disease-level scores are presented as a
 route from a mechanism to the conditions it touches, not as an indication prediction, because 27 of
@@ -157,12 +158,14 @@ Five model families were compared under identical 5-fold cross-validation on bot
 scikit-learn [@sklearn], on the deduplicated matrix the deployed pipeline fits. Two are baselines a
 reader is entitled to demand: a five-nearest-neighbour read-across on Tanimoto similarity, which is
 what a medicinal chemist does by eye, and L2-regularised logistic regression. Three are ensembles: a
-random forest [@random_forest], XGBoost [@xgboost] and histogram gradient boosting. On the scaffold
-split the random forest leads classification at 0.9212 mean AUROC, ahead of XGBoost (0.9156),
-histogram gradient boosting (0.9149), the read-across (0.8829) and logistic regression (0.8352), and
-it exceeds the read-across on all thirteen endpoints, by margins running from 0.0095 at D2 to 0.1099
-on the antioxidant assay. It is best on seven of the eight classification endpoints, losing AChE to
-histogram gradient boosting at 0.9148 against 0.9241. It does not lead regression at all: histogram
+random forest [@random_forest], XGBoost [@xgboost] and histogram gradient boosting, each
+class-weighted for the classification endpoints so that no family is compared unweighted against
+weighted competitors. On the scaffold split the random forest leads classification at 0.9212 mean
+AUROC, ahead of XGBoost (0.9156), histogram gradient boosting (0.9153), the read-across (0.8829) and
+logistic regression (0.8352), and it exceeds the read-across on all thirteen endpoints, by margins
+running from 0.0095 at D2 to 0.1099 on the antioxidant assay. It is best on seven of the eight
+classification endpoints, losing AChE to histogram gradient boosting at 0.9148 against 0.9247. It
+does not lead regression at all: histogram
 gradient boosting and XGBoost reach mean scaffold R² of 0.5424 and 0.5413 against 0.5190, and the
 forest is best on none of the five. A random forest is nonetheless deployed everywhere, because it
 leads where the principal claims are made, calibrates stably, supplies the vote distribution the
@@ -184,14 +187,14 @@ with one command.
 Classifiers are isotonically calibrated [@calibration] on out-of-fold predictions, so no compound
 contributes to the calibrator that scores it; mean expected calibration error falls from 0.0801 to
 0.0147. The reported value is specific to how the calibrator is nested, and the nesting is therefore
-stated: isotonic regression is fitted by five-fold `cross_val_predict` over the pooled out-of-fold
-prediction vector. Fitting it instead on the other nine folds' out-of-fold predictions, an equally
-defensible nesting, gives 0.0063 on the same data. Both are honest estimates of different
-estimators, and the difference is larger than any of the calibration gains it might be used to
-compare, so the protocol is reported rather than the number alone. Each prediction additionally
-carries a Mondrian conformal interval, which converts the
-applicability domain from a caveat into a coverage statement [@conformal]: empirical coverage is
-0.889 to 0.921 against a 0.90 target. The applicability domain itself is the maximum ECFP-4 Tanimoto
+stated rather than left implicit: isotonic regression is fitted by five-fold `cross_val_predict` over
+the pooled out-of-fold prediction vector, and a different, equally defensible nesting is a different
+estimator with its own honest error, so the protocol is reported alongside the number rather than the
+number alone. Each prediction additionally carries a Mondrian conformal interval, computed on the
+same deduplicated matrix the classifiers are trained on, which converts the applicability domain from
+a caveat into a coverage statement [@conformal]: empirical coverage over the eight core classifiers is
+0.876 to 0.933 against a 0.90 target, with mean set size from 0.956 to 1.215 on a two-class problem
+where 1.0 is a confident single label. The applicability domain itself is the maximum ECFP-4 Tanimoto
 similarity of the query to that endpoint's own measured chemistry [@ad_qsar], reported with the
 nearest measured analogue and its structure.
 
@@ -210,9 +213,11 @@ restates the target instead of measuring it. The 158,890-compound background lib
 partitioned into three disjoint pools by a stable hash of the canonical structure, so a compound's
 pool is a property of the molecule and never depends on run order: 95,515 compounds supply decoys,
 31,694 set thresholds, and 31,681 measure the false-positive rate. Measured on the pool it was not
-set on, the background false-positive rate has a median of 0.0259 across the 43 deployed endpoints
-that carry one, and reaches 0.0621, exceeding its 0.05 target for four endpoints, which under the
-previous procedure was arithmetically impossible. That the number can now disagree with its target is the evidence that it is a measurement.
+set on, the background false-positive rate has a median of 0.0253 across all 47 deployed endpoints
+and a maximum of exactly 0.05, the target itself, reached by four endpoints; under the previous
+procedure, where the same pool set the threshold and measured the rate, the two could not disagree by
+construction, so a genuinely disjoint measurement landing at rather than below its target is the
+expected behaviour of a real constraint rather than evidence against it.
 
 ### Disease layer and implementation
 
@@ -270,8 +275,7 @@ for firing on trivial metabolites at every usable threshold, and three added to 
 natural-product coverage, reported in the limitations. Withdrawal is re-derived whenever the panel
 is refitted rather than carried forward, because it is a claim about a particular fit: when the
 panel was retrained, Cav3.2 stopped failing and was reinstated while GluA2 began failing and was
-withdrawn. Measured on that disjoint pool the background
-false-positive rate has a median of 0.0259.
+withdrawn.
 
 The eight measured-label classifiers reach a mean AUROC of 0.958 under the random split and 0.925
 under the scaffold split. BACE1 is most robust to chemotype change, losing 0.012 between
@@ -282,26 +286,27 @@ The mechanism call is correct where it can be checked against pharmacology that 
 For donepezil, haloperidol, morphine and fluoxetine the server names acetylcholinesterase, D2, the
 mu-opioid receptor and the serotonin transporter respectively as the driving target (Figure 4A).
 Attribution supports the same conclusion from a different direction: SHAP values computed with
-TreeExplainer [@shap_trees], which is exact for a random forest rather than an approximation, recover
-known physicochemistry that was never supplied to the models. For the barrier model, larger TPSA,
-molecular weight and hydrogen-bond donor count all push away from penetration (Spearman correlation
-between feature value and SHAP value of -0.93, -0.95 and -0.90) while drug-likeness pushes towards it
-(+0.93); for hERG, lipophilicity pushes towards blockade (+0.95).
-
-An independent reproduction re-ran the entire cross-validation from the endpoint tables and scored it
-with separately written metric code. All 26 core values reproduced exactly, with a maximum deviation
-of 4.7 x 10⁻⁵, attributable to rounding in the stored summary.
+TreeExplainer [@shap_trees] on the deployed forests, which is exact for a random forest rather than an
+approximation, recover known physicochemistry that was never supplied to the models. Over 800 sampled
+training compounds, larger TPSA, molecular weight and hydrogen-bond donor count all push the barrier
+model away from penetration (Spearman correlation between feature value and SHAP value of -0.93,
+-0.94 and -0.94) while drug-likeness pushes towards it (+0.93); for hERG, lipophilicity pushes towards
+blockade (+0.95).
 
 ### The validations that a cross-validated score cannot replace
 
 **Leakage.** Folds were rebuilt and the index sets interrogated directly. On the deduplicated matrix
 the pipeline fits, no InChIKey, no feature vector and no scaffold appears on both sides of any fold.
-On the raw table the feature-vector overlap reaches 544, which is precisely what deduplication
-removes.
+On the raw endpoint tables, before deduplication, 15,104 feature-vector-identical rows exist across
+the panel, worst at BBB (3,773), which is precisely what deduplication removes; none of them reaches
+a fitted model.
 
 **Null models.** With labels permuted, the same pipeline on the same folds returns a mean AUROC of
-0.4938 (random) and 0.4921 (scaffold), with a worst single endpoint of 0.5174. Whole scaffold classes
-do not carry enough class-frequency information for a label-free model to beat chance, so the
+0.496 (random) and 0.503 (scaffold) over the eight core classifiers, every one of the sixteen values
+within 0.02 of chance and a smallest margin over its own null 19-fold larger than the largest such
+departure. Scaffold grouping alone confers nothing: paired by endpoint the scaffold null exceeds the
+random null by a mean of 0.007 (Wilcoxon p = 0.25) and is negative in three of eight. Whole scaffold
+classes do not carry enough class-frequency information for a label-free model to beat chance, so the
 scaffold figures are not inflated by that route.
 
 **Prospective sensitivity.** Whole scaffold classes were withheld before training. Pooled recall on
@@ -310,10 +315,12 @@ decision threshold did not collapse (Figure 3B). Targets are excluded only for a
 threshold, never for a poor recall.
 
 **External validation.** The barrier model was tested on FDA-curated approved drugs absent from B3DB
-by InChIKey: AUROC 0.764 on all 306, and 0.793 on the 241 that are also distinguishable from the
+by InChIKey: AUROC 0.764 on all 306, and 0.767 on the 227 that are also distinguishable from the
 training set in feature space, which is the subset that supports an external claim (Figure 3C). The
-65 excluded by that second criterion are feature-identical to a training compound and score 0.710,
-which is the size of the memorisation the first figure contains.
+79 excluded by that second criterion are feature-identical to a training compound and score 0.749.
+The two headline figures, 0.764 and 0.767, are close rather than one exceeding the other: excluding
+memorised compounds neither inflates nor depresses the external estimate, which is the outcome an
+honest exclusion criterion should produce.
 
 For the target panel no external set of comparable size exists, because for most of these targets the
 public measured chemistry *is* the training set. Two kinds of independence were therefore constructed
@@ -347,9 +354,9 @@ chemistry that expectation is poor in absolute terms, near 0.16, and the finding
 number is predictable rather than that it is better than it appeared.
 
 **Specificity.** One thousand compounds carrying no recorded activity at any modelled target were
-scored through the deployed pipeline. 949 returned no actionable disease signal, a specificity of
-0.949 (95% CI 0.934 to 0.961). Of the 51 false positives, 28 fired on a single condition rather than
-producing a diffuse profile, and the median score among them was 0.448, only modestly above the
+scored through the deployed pipeline. 925 returned no actionable disease signal, a specificity of
+0.925 (95% CI 0.907 to 0.940). Of the 75 false positives, 49 fired on a single condition rather than
+producing a diffuse profile, and the median score among them was 0.437, only modestly above the
 actionable threshold. These compounds are presumed inactive because nothing is recorded, not proven
 inactive, so this is a lower bound.
 
@@ -358,14 +365,14 @@ exact reproducibility of a retrained endpoint. The domain-flag check initially f
 after its control set was corrected: 28 of the original controls are measured compounds inside the
 flag's own reference library, where calling them in domain is the truthful answer rather than a
 failure. The passing criterion was not moved. Against chemistry genuinely absent from the reference
-the flag separates at median maximum similarity 0.47 against 0.59 for unseen drugs (n = 25,
-p = 1.1e-03), which is a weak signal and is described as one.
+the flag separates at median maximum similarity 0.47 against 0.57 for unseen drugs (n = 25,
+p = 1.8e-03), which is a weak signal and is described as one.
 
 **Attribution.** SHAP attributions computed with TreeExplainer [@shap_trees], which is exact for a
 random forest rather than an approximation, over the deployed classifiers recover known
 physicochemistry rather than artefacts. For the barrier model, larger TPSA, molecular weight and
 hydrogen-bond donor count all push away from penetration (Spearman correlation between feature value
-and SHAP value of -0.93, -0.95 and -0.90) while drug-likeness pushes towards it (+0.93); for hERG,
+and SHAP value of -0.93, -0.94 and -0.94) while drug-likeness pushes towards it (+0.93); for hERG,
 lipophilicity pushes towards blockade (+0.95). These directions were not supplied to the models.
 
 ### Comparison with existing approaches
@@ -406,7 +413,7 @@ call.
 
 The disease layer maps engaged targets onto conditions. It carries real information about its own
 map: asked to recover the disease its target graph implies, it reaches top-3 accuracy 0.790 against a
-permutation null of 0.154. It does not, however, predict clinical indication, and the evidence for
+permutation null of 0.163. It does not, however, predict clinical indication, and the evidence for
 that limit is worth stating precisely because it is easy to overstate the layer in either direction.
 
 Validated against ChEMBL phase-4 indications on the 162 approved drugs whose structures appear
@@ -430,10 +437,10 @@ Top-k accuracy is, however, the metric on which a constant answer is strongest, 
 recording what the layer does on two metrics a constant answer cannot pass. Per-indication AUROC asks
 whether the drugs that treat a condition score above the drugs that do not, and any constant
 predictor scores 0.500 by construction; over the nine indications carrying at least five of these
-drugs the layer averages 0.603 and beats chance on seven. Macro-averaged top-3 recall, which averages
-per indication rather than pooling and so cannot be carried by naming the common conditions, is 0.385
+drugs the layer averages 0.616 and beats chance on seven. Macro-averaged top-3 recall, which averages
+per indication rather than pooling and so cannot be carried by naming the common conditions, is 0.358
 against 0.333. The spread is wide and is the substance of the result: depression and anxiety reach
-0.794 and psychosis 0.765, while epilepsy at 0.490 and sleep at 0.499 sit at or just below chance. The layer therefore does respond to
+0.798 and psychosis 0.765, while epilepsy at 0.490 and sleep at 0.499 sit at or just below chance. The layer therefore does respond to
 the compound, decisively for some conditions and not at all for others, which is why it is offered as
 a route from mechanism to condition and not as an indication prediction.
 
@@ -479,8 +486,8 @@ could fail.
 
 Five limitations bound its use. The applicability-domain flag is a weak signal rather than a
 decisive one: against chemistry genuinely absent from the reference library it scores a median
-maximum similarity, in the adversarial check, of 0.47 against 0.59 for unseen approved drugs (n = 25, one-sided Mann-Whitney
-p = 1.1e-03), but at a threshold that rejects a tenth of genuine drugs it catches only a fifth of
+maximum similarity, in the adversarial check, of 0.47 against 0.57 for unseen approved drugs (n = 25, one-sided Mann-Whitney
+p = 1.8e-03), but at a threshold that rejects a tenth of genuine drugs it catches only a fifth of
 distant chemistry. The conformal interval and the nearest-analogue distance remain the stronger
 statements of confidence and the interface presents them as such. What the flag does predict well is
 sensitivity: the distance it measures is the variable that recall tracks, so it is best read as a
@@ -520,21 +527,25 @@ mechanism; NFKB1 (263), joining NLRP3 and RIPK1 on an existing neuroinflammation
 (140), the glucocorticoid receptor, the richest of the candidates in the sp3 chemistry the library
 lacks. All three were trained and cross-validated by the same procedure as every other endpoint, and
 all three were then withdrawn on the same criterion every endpoint faces. The distinction matters,
-because they are not simply noise. Under scaffold-grouped cross-validation they carry some signal:
-AUROC 0.719, 0.711 and 0.596 for NRF2, NFKB1 and NR3C1. But the fold-to-fold standard deviations are
-0.157, 0.151 and 0.152, so that signal is not stable, and it does not survive the step that makes an
-endpoint deployable. Against their own held-out measured inactives they reach AUROC 0.539, 0.392 and
-0.479, and at a threshold constrained to control the false-positive rate on the disjoint background
-pool they recover almost no actives at all: sensitivity 0.250, 0.048 and 0.000. An endpoint that
-cannot be given a threshold that finds actives without firing on everything else is not usable,
-whatever its cross-validated AUROC. The cause is visible in what the
-labels are made of. A binder classifier is fitted to reproduce a direct binding constant, and
-for two of these three there is essentially none: of the labelled records, Ki or Kd accounts for
-0.0 per cent at NRF2, 0.3 per cent at NFKB1 and 14.8 per cent at NR3C1, the remainder being
-almost entirely `Potency`, a pooled functional readout that mixes assay formats and does not
-define a binding class a ligand fingerprint can separate. NR3C1, the one with real binding data,
-is also the one with too few compounds to fit. The gap is therefore not one that adding targets
-closes. It requires measured binding affinity on sp3-rich scaffolds, which is what does not
+because they are not simply noise. Under scaffold-grouped cross-validation they carry some signal,
+AUROC 0.725, 0.710 and 0.579 for NRF2, NFKB1 and NR3C1, but the fold-to-fold standard deviations are
+0.134, 0.151 and 0.153, so that signal is not stable, and the three fail the deployment gate in three
+different ways rather than one. NRF2 discriminates its own held-out measured inactives well (AUROC
+0.789, sensitivity 0.545) but its false-positive rate on random background chemistry is 0.057, just
+above the 5 per cent every deployed endpoint is held to, a near miss rather than a wide failure. NFKB1
+fails outright, calling five trivial metabolites (glucose, urea, acetate, glycine, lactate) binders at
+its calibrated threshold while recovering no measured active at all (sensitivity 0.000). NR3C1 passes
+the specificity test, firing on no trivial molecule, and fails on discrimination instead: AUROC 0.410
+against its own held-out measured inactives is below chance. An endpoint that cannot be given a
+threshold that finds actives without firing on unrelated chemistry is not usable, whatever its
+cross-validated AUROC. The cause is visible in what the labels are made of. A binder classifier is
+fitted to reproduce a direct binding constant, and for two of these three there is essentially none:
+of the labelled records, Ki or Kd accounts for 0.0 per cent at NRF2, 0.3 per cent at NFKB1 and 14.8
+per cent at NR3C1, the remainder being almost entirely `Potency`, a pooled functional readout that
+mixes assay formats and does not define a binding class a ligand fingerprint can separate. NR3C1, the
+one with real binding data, is also the one with too few compounds to fit, 140 after deduplication.
+The gap is therefore not one that adding targets closes. It requires measured binding affinity on
+sp3-rich scaffolds, which is what does not
 exist.
 
 The fifth is the disease layer, and it is a limit of the question rather than of the fitting. Clinical
@@ -554,8 +565,8 @@ per number.
 
 ## Data availability
 
-All code, the curated knowledge graph, per-fold validation artefacts, the independent reproduction
-and the scripts that regenerate every table and figure are at
+All code, the curated knowledge graph, per-fold validation artefacts, the falsification suite and
+the scripts that regenerate every table and figure are at
 https://github.com/krishna-g-999/brainsafe-ai under the MIT licence. Trained estimators and the raw
 API responses are deposited separately, each with a committed manifest recording the SHA-256 of the
 archive and of every file inside it, so a download is verified rather than trusted.
@@ -598,11 +609,11 @@ and by the performance claimed for it, coloured by model family. Marker shape ca
 AUROC and R² both run to 1.0 and are not the same quantity, since 0.5 is chance for one and a
 respectable fit for the other, so they are distinguished rather than averaged. The five estimators
 withdrawn after specificity testing are drawn in outline, because a panel showing only what survived
-is a selection rather than an inventory. Training sets span two orders of magnitude, from 68 to 15,723 rows;
-binder training sets include property-matched decoys while the others are measured compounds only,
-which the axis states. (**B**) The same population by family, with the
-family median marked. The spread is the point: the binder classifiers have a median of 0.935 while
-the exposure and ADME regressions have a median R² of 0.575, and a single panel average would
+is a selection rather than an inventory. Training sets span two orders of magnitude, from 37 to
+15,831 rows; binder training sets include property-matched decoys while the others are measured
+compounds only, which the axis states. (**B**) The same population by family, with the
+family median marked. The spread is the point: the binder classifiers have a median of 0.945 while
+the exposure and ADME family, which mixes AUROC and R² endpoints, has a median of 0.574, and a single panel average would
 describe neither. The complete inventory, with training-set composition, validation scheme,
 calibration and fitting date for every estimator, is Supplementary Table S1.
 
@@ -615,8 +626,10 @@ withheld before training, with 95 per cent Wilson intervals [@wilson_ci] and mar
 to the number of withheld actives, so an interval that is wide because the evidence is thin looks
 thin. (**C**) Specificity on chemistry the server should stay quiet about, and external
 discrimination on approved drugs absent from the training source. (**D**) The adversarial suite, in
-which each check was written so that it could fail. All six pass, one of them only after its controls were corrected; each is shown at the same
-size as the rest, is the applicability-domain flag, reported rather than retuned.
+which each check was written so that it could fail. All six pass, one of them, the
+applicability-domain flag, only after its controls were corrected rather than its criterion retuned;
+every check is drawn at the same size whatever its verdict, so a future failure would be exactly this
+visible.
 
 ![Figure 4](figures/Figure8_use_case.png)
 

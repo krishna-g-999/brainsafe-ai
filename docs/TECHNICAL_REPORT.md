@@ -3,8 +3,8 @@
 | | |
 |---|---|
 | **Document** | Technical report on the BrainSafe AI prediction panel |
-| **Generated** | 2026-09-07, automatically, from the deployed panel |
-| **Commit** | `120f2c7` |
+| **Generated** | 2026-09-13, automatically, from the deployed panel |
+| **Commit** | `966c9a1` |
 | **Status** | Research preview, pending peer review |
 | **Repository** | https://github.com/krishna-g-999/brainsafe-ai |
 | **Regenerate** | `python src/brainsafe/analysis/build_technical_report.py` |
@@ -1230,8 +1230,8 @@ Each written so that it could fail. **6 of 6 pass.**
 | No duplicate compound survives into training | PASS | 0 duplicate rows reach a model; 15,104 exist in the tables before deduplication (worst BBB at 3,773), which is correct chemistry, since stereoisomers are distinct compounds the stereo-blind featuriser cannot separate |
 | Reproducible retrain (MAO_A scaffold AUROC) | PASS | retrained 0.906 vs reported 0.906 |
 | Predictions are not constant (BBB over 200 drugs) | PASS | probability std 0.293, range 0.01-0.99 |
-| BBB ranks permeable drugs above non-permeable ones (external, unseen) | PASS | n=241 (171 permeable), AUROC 0.793, Mann-Whitney p=4.43e-13 |
-| The domain flag separates non-drug-like chemistry from unseen drugs | PASS | median max-similarity: unseen drugs 0.59 vs non-drug-like 0.47 (n=25), Mann-Whitney p=1.11e-03; only 20% of non-drug-like structures fall below the AD_THRESHOLD of 0.3. Controls are restricted to chemistry genuinely absent from the reference: 28 of the original controls are measured compounds in the library, where in-domain is correct |
+| BBB ranks permeable drugs above non-permeable ones (external, unseen) | PASS | n=227 (165 permeable), AUROC 0.767, Mann-Whitney p=3.12e-10 |
+| The domain flag separates non-drug-like chemistry from unseen drugs | PASS | median max-similarity: unseen drugs 0.57 vs non-drug-like 0.47 (n=25), Mann-Whitney p=1.82e-03; only 20% of non-drug-like structures fall below the AD_THRESHOLD of 0.3. Controls are restricted to chemistry genuinely absent from the reference: 28 of the original controls are measured compounds in the library, where in-domain is correct |
 
 All six pass, but one of them passes only after its controls were corrected, and the distinction
 matters. The domain-flag check previously failed because 28 of its controls were measured compounds
@@ -1320,8 +1320,12 @@ panel does not reconcile.
 
 **Leakage.** Folds were rebuilt and the index sets interrogated directly. On the deduplicated matrix
 the pipeline fits, no InChIKey, no feature vector and no scaffold appears on both sides of any fold.
-On the raw table the feature-vector overlap reaches 544, which is precisely what deduplication
-removes.
+On the raw endpoint tables, before deduplication, 15,104
+feature-vector-identical rows exist across the panel, worst at BBB (3,773),
+which is precisely what deduplication removes; none of them reaches a fitted model
+(`results/tables/inversion_validation.csv`).
+
+
 
 **Null models.** With labels permuted, the same pipeline on the same folds returns mean AUROC 0.4959
 random and 0.5026 scaffold over the eight core classifiers, every one of the sixteen values within

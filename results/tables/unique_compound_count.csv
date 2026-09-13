@@ -1,0 +1,5 @@
+measure,value,note
+distinct SMILES strings across the endpoint tables,170619,"raw text, no standardisation"
+of which parent_mol() could not parse,2,excluded from the InChIKey count below
+"distinct InChIKeys of the desalted, neutralised parent",169341,the population the training-data paragraph describes; this is the compound count
+SMILES strings collapsed by this standardisation,1276,"salts, tautomers and charge states of a compound already counted"
