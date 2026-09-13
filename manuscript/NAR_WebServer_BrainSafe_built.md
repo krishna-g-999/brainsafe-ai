@@ -9,6 +9,23 @@ Venketesh Sivaramakrishnan¹
 
 **Manuscript type:** NAR Web Server Issue.
 
+**Graphical abstract:** submitted as a separate file, `manuscript/figures/GraphicalAbstract.png`
+(and `.pdf`).
+
+**Key Points**
+
+- BrainSafe AI profiles small-molecule mechanism in the human brain from structure alone, gating
+  every target score by predicted exposure so potency at a target a compound cannot reach
+  contributes nothing to the output.
+- Every one of its 74 cross-validated estimators is validated under both random and
+  scaffold-grouped splits and carries a calibrated probability, the core classifiers additionally
+  reporting a conformal interval, and the server reports silence rather than a guess for chemistry
+  outside its measured competence.
+- Its negative class is recovered from compounds measured and found inactive rather than simulated
+  with decoys, and every validation, including six adversarial checks written so that each could
+  fail, is reported whichever way it falls, which led to withdrawing two endpoints that could not
+  separate a real ligand from an unrelated metabolite.
+
 ---
 
 ## Abstract
@@ -567,15 +584,28 @@ per number.
 
 ## Data availability
 
+BrainSafe AI is freely available without registration or login at
+https://huggingface.co/spaces/Krishnag999/brainsafe-ai, served over HTTPS. No account is created, no
+submitted structure is written to disk, logged or retained beyond the lifetime of its request, and
+none is used to train or update any model; the one exception is a compound entered by name, which is
+resolved to a structure through a single call to PubChem. Curated example compounds are provided so
+the server can be tried without preparing any input, and the interface's About page documents every
+endpoint, every validation figure and the licence terms in place of a separate tutorial.
+
 All code, the curated knowledge graph, per-fold validation artefacts, the falsification suite and
 the scripts that regenerate every table and figure are at
-https://github.com/krishna-g-999/brainsafe-ai under the MIT licence. Trained estimators and the raw
-API responses are deposited separately, each with a committed manifest recording the SHA-256 of the
-archive and of every file inside it, so a download is verified rather than trusted.
+https://github.com/krishna-g-999/brainsafe-ai under the MIT licence. Underlying data retain the
+licences of their own sources (ChEMBL, CC BY-SA 3.0; BindingDB; B3DB; Therapeutics Data Commons;
+MoleculeNet), and the KEGG, Reactome and IUPHAR/BPS pathway annotations are subject to their own
+terms, KEGG in particular restricting commercial redistribution; a user redistributing this server's
+output is responsible for observing them. Trained estimators and the raw API responses are deposited
+separately, each with a committed manifest recording the SHA-256 of the archive and of every file
+inside it, so a download is verified rather than trusted.
 
-**[TO BE SUPPLIED BEFORE SUBMISSION]** the public server URL (required in the abstract by NAR), the
-deposit DOI, the author list, the corresponding address, and the funding statement. Every other value
-in this manuscript is computed from an artefact in the repository.
+**[TO BE SUPPLIED BEFORE SUBMISSION]** the archive deposit's own DOI and the funding statement. Every
+other value in this manuscript, including the author list, the corresponding address and the server
+and repository URLs above, is stated as it currently stands in the repository and the deployed
+server rather than left as a placeholder.
 
 ## Funding
 
@@ -592,12 +622,14 @@ None declared.
 ![Figure 1](figures/Figure1_architecture.png)
 
 **Figure 1.** How a query is answered. (**A**) A submitted structure is standardised and represented
-as one fixed 1,036-column vector, scored by four model families: nine exposure and ADME endpoints,
-twelve target potency and activity endpoints, the 52-endpoint binder panel of which 47 are deployed,
-and two auxiliary regressions. Every target score is admitted only in proportion to the predicted probability that the
-compound reaches the brain, and surviving scores are ranked by enrichment over each endpoint's base
-rate rather than by raw probability. Every reported value carries a calibrated probability, a
-conformal interval and an applicability-domain distance. (**B**) The counts in (**A**) are trained
+as one fixed 1,036-column vector, scored by four model families, as MODEL_INVENTORY.csv defines
+them: the 52-endpoint binder panel of which 47 are deployed, twelve target potency and activity
+endpoints, the ten-endpoint exposure and ADME layer including the barrier model itself, and the
+single hERG safety classifier. Every target score is admitted only in proportion to the predicted
+probability that the compound reaches the brain, and surviving scores are ranked by enrichment over
+each endpoint's base rate rather than by raw probability. Every reported value carries a calibrated
+probability and an applicability-domain distance, and the eight core classifiers additionally report
+a conformal interval. (**B**) The counts in (**A**) are trained
 estimators, 75 in total, of which 70 are deployed. Each was preceded by twenty fits that never serve
 a prediction and exist only to measure how the twenty-first behaves on withheld compounds, 1,480
 across the panel.

@@ -394,6 +394,13 @@ GRAPH: list[tuple[str, list[str], str]] = [
     ("manuscript/figures/Figure8_use_case.png",
      ["models_rf/binder_modes.json", "models_rf/endpoint_context.json"],
      "python src/brainsafe/figures/fig08_use_case.py"),
+    # The separate file NAR's Web Server Issue requires as a submission item. It quotes the panel
+    # size and scores a live donepezil query through the same entry point Figure 4 uses, so it goes
+    # stale the same way that figure does; replaces figures/graphical_abstract.png, which quoted
+    # 64,474 training records against the 228,200 the tables have held since this session began.
+    ("manuscript/figures/GraphicalAbstract.png",
+     ["models_rf/binder_modes.json", "models_rf/endpoint_context.json"],
+     "python src/brainsafe/figures/fig_graphical_abstract.py"),
     ("manuscript/figures/Figure9_model_atlas.png",
      ["models_rf/binder_modes.json", "results/tables/rf_cv_summary.csv",
       "results/tables/MODEL_INVENTORY.csv"],
@@ -420,6 +427,15 @@ GRAPH: list[tuple[str, list[str], str]] = [
       "manuscript/references_verified.json", "manuscript/references_links.json",
       "manuscript/figures/Figure6_validation.png"],
      "python src/brainsafe/analysis/build_manuscript.py"),
+
+    # The condensed, NAR-length draft states the same headline numbers in its own words, so it can
+    # go stale independently of the full draft, and did: it went two full audit passes over the full
+    # draft without a corresponding pass over this one. Declaring it here is what makes that a build
+    # failure instead of a second document quietly disagreeing with the first.
+    ("manuscript/NAR_condensed_built.md",
+     ["manuscript/NAR_condensed_draft.md", "manuscript/references_verified.json",
+      "manuscript/references_links.json"],
+     "python src/brainsafe/analysis/build_manuscript_condensed.py"),
 
     # references.md used to be a hand-maintained second copy of the bibliography, numbered by year
     # rather than by citation order, so it silently disagreed with every number actually printed in

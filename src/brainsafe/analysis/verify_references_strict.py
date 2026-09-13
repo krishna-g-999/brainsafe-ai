@@ -10,7 +10,24 @@ record only when the returned title matches the requested one with a normalised 
 least ACCEPT. Anything below that is reported unresolved and is not cited. Software without a
 citable paper is recorded as a software entry rather than being attached to an unrelated article.
 
-Output: manuscript/references_verified.json, manuscript/references.md
+A live search is not deterministic run to run: a near-duplicate title (a book chapter that paraphrases
+a journal article's title, most often) can occasionally rank above the intended work on one run and
+below it on the next, both scoring above ACCEPT. An early version of this script overwrote
+references_verified.json unconditionally on every run, and once did exactly that: it replaced a
+correct 2017 journal match, with a PMID, for "Monoamine Oxidase B Inhibitors in Parkinson's Disease"
+with an unrelated 2003 book chapter of similar title, no PMID, and a mojibake-corrupted title, scoring
+0.981 against the correct match's 1.0. Nothing caught it until a manuscript rebuild put the garbled
+title in a reference list. Existing entries are now kept unless a fresh search returns a strictly
+higher match score, so a later run can improve a record but cannot silently replace a better match
+with a merely-acceptable one.
+
+This script no longer writes manuscript/references.md. cite.py owns that file, generating it from
+this one in the manuscript's own citation order (order of first appearance); this script writing it
+too, in year order, is the reason references.md once disagreed with every number the manuscript
+actually printed, and this run would revert that fix on every use if it still did.
+
+Output: manuscript/references_verified.json only. Run cite.py afterwards to carry any change into
+manuscript/references.md and the built manuscript.
 """
 from __future__ import annotations
 
@@ -212,16 +229,42 @@ def try_epmc(title):
 
 
 def main():
-    verified, unresolved = {}, []
+    out_path = OUT / "references_verified.json"
+    existing = json.loads(out_path.read_text(encoding="utf-8")) if out_path.exists() else {}
+    existing_papers = existing.get("papers", {})
+
+    verified, unresolved, kept, improved = {}, [], [], []
     for key, title in TITLES.items():
         cands = [c for c in (try_crossref(title), try_epmc(title)) if c]
         if key in DOIS:
             cands = [c for c in (try_doi(*DOIS[key]),) if c] or cands
         best = max(cands, key=lambda c: c[0]) if cands else None
+        prior = existing_papers.get(key)
+        prior_score = prior.get("match_score", 0) if prior else -1
+
         if best and best[0] >= ACCEPT:
-            rec = best[1]; rec["match_score"] = round(best[0], 3); rec["requested_title"] = title
-            verified[key] = rec
-            print(_safe(f"OK   {key:16} {best[0]:.2f}  {rec['year']}  {rec['title'][:58]}"), flush=True)
+            if prior and prior_score >= best[0]:
+                # A fresh search is not guaranteed to reproduce or improve on an already-accepted
+                # match; keep the better (or equal) one already on record rather than replace it
+                # with a merely-acceptable result that happened to rank highest this run.
+                verified[key] = prior
+                kept.append(key)
+                print(_safe(f"OK   {key:16} kept existing {prior_score:.3f} "
+                            f"(fresh search: {best[0]:.2f})"), flush=True)
+            else:
+                rec = best[1]; rec["match_score"] = round(best[0], 3); rec["requested_title"] = title
+                verified[key] = rec
+                if prior:
+                    improved.append(key)
+                print(_safe(f"OK   {key:16} {best[0]:.2f}  {rec['year']}  {rec['title'][:58]}"),
+                      flush=True)
+        elif prior:
+            # Nothing above threshold this run; do not discard a record that was previously
+            # verified, since a transient API issue should not un-cite a work.
+            verified[key] = prior
+            kept.append(key)
+            print(_safe(f"OK   {key:16} kept existing {prior_score:.3f} "
+                        f"(no acceptable match this run)"), flush=True)
         else:
             unresolved.append(key)
             got = best[1]["title"][:52] if best else "no result"
@@ -230,31 +273,15 @@ def main():
 
     payload = {"papers": verified, "software": SOFTWARE, "unresolved": unresolved,
                "accept_threshold": ACCEPT}
-    (OUT / "references_verified.json").write_text(json.dumps(payload, indent=2))
+    out_path.write_text(json.dumps(payload, indent=2))
 
-    lines = ["# References", "",
-             f"Each entry was resolved by exact-title query against CrossRef or Europe PMC and "
-             f"accepted only above a normalised title-similarity of {ACCEPT}. The requested title, "
-             f"the matched title and the similarity score are recorded in "
-             f"`references_verified.json`, so every entry can be re-checked mechanically. "
-             f"None is written from memory.", ""]
-    for i, (k, v) in enumerate(sorted(verified.items(), key=lambda kv: (kv[1]["year"] or "0")), 1):
-        bits = [x for x in [v["authors"].rstrip(". ") if v["authors"] else "",
-                            v["title"], v["journal"], v["year"]] if x]
-        ref = ". ".join(bits)
-        if v.get("doi"):
-            ref += f". doi:{v['doi']}"
-        elif v.get("pmid"):
-            ref += f". PMID:{v['pmid']}"
-        lines.append(f"{i}. {ref}")
-    lines += ["", "## Software", ""]
-    for k, v in SOFTWARE.items():
-        lines.append(f"- {v['text']}. {v['url']}")
-    if unresolved:
-        lines += ["", f"Requested but not resolved above the similarity threshold, and therefore "
-                      f"not cited: {', '.join(unresolved)}."]
-    (OUT / "references.md").write_text("\n".join(lines), encoding="utf-8")
     print(f"\nverified {len(verified)}/{len(TITLES)}; unresolved: {unresolved}")
+    if kept:
+        print(f"kept the existing match rather than a fresh one for: {', '.join(kept)}")
+    if improved:
+        print(f"replaced with a strictly better match for: {', '.join(improved)}")
+    print("\nrun src/brainsafe/analysis/cite.py next to carry any change into "
+          "manuscript/references.md and the built manuscript")
 
 
 if __name__ == "__main__":

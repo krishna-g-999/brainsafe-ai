@@ -34,10 +34,10 @@ modelled unbound brain-to-plasma ratio, and two cardiac safety liabilities. Ever
 admitted only in proportion to predicted brain exposure, so potency at a target a compound cannot
 reach contributes nothing, and engaged targets are traced through a curated pathway graph to the
 conditions those mechanisms touch. The server is built on 75 estimators, 70 deployed, trained on
-228,200 measured compound-endpoint records from ChEMBL [@chembl], BindingDB [@bindingdb] and B3DB
-[@b3db]. Under scaffold-grouped 10-fold cross-validation the measured-label classifiers reach a mean
+228,200 measured compound-endpoint records from ChEMBL (1), BindingDB (2) and B3DB
+(3). Under scaffold-grouped 10-fold cross-validation the measured-label classifiers reach a mean
 AUROC of 0.925 (0.958 under a random split), and expected calibration error falls from 0.0801 to
-0.0147 after isotonic calibration [@calibration]. The binder panel is validated against compounds
+0.0147 after isotonic calibration (4). The binder panel is validated against compounds
 tested at the same target and found inactive rather than against decoys, reaching a mean AUROC of
 0.917. Every prediction carries a calibrated probability, a conformal interval, and an
 applicability-domain distance to the nearest measured analogue, and the server reports silence
@@ -68,7 +68,7 @@ every result rather than left to be discovered.
 **Training data.** Labels are measured experimental values only, never qualitative annotation.
 Potency data are ChEMBL pChEMBL values augmented with BindingDB affinities pooled at compound level;
 blood-brain barrier labels come from B3DB augmented with FDA-curated approved drugs; the nine ADME
-endpoints use measured sets from Therapeutics Data Commons [@tdc], MoleculeNet [@moleculenet], B3DB
+endpoints use measured sets from Therapeutics Data Commons (5), MoleculeNet (6), B3DB
 and ChEMBL. The panel
 holds 228,200 measured compound-endpoint records over 169,341 unique compounds keyed by the InChIKey
 of the desalted parent. Each endpoint is trained on its own measured set alone; across the deployed
@@ -84,7 +84,7 @@ one side of the activity cut, and is discarded as undecidable when it spans both
 returned experimentally tested non-binders to 57 endpoints.
 
 **Representation.** Each compound is a 1,036-column vector: a 1,024-bit folded ECFP-4 fingerprint
-[@ecfp] and twelve physicochemical descriptors. Structures are reduced to the largest organic fragment and
+(7) and twelve physicochemical descriptors. Structures are reduced to the largest organic fragment and
 neutralised. Neutralisation is part of the representation rather than a detail of it, because a drug
 and its salt must give the same answer: removing a counter-ion without it leaves the parent carrying
 the salt's charge, and haloperidol hydrochloride then scored a barrier probability of 0.613 against
@@ -95,26 +95,26 @@ per cent carry a stereocentre, but where one skeleton appears as several stereoi
 the same endpoint the labels agree in 94.6 per cent of 8,013 cases, so the share of the panel where
 chirality could change a class call is 0.19 per cent.
 
-**Models.** A random forest [@random_forest] is fitted per endpoint. That choice was made on a
-like-for-like comparison over thirteen core endpoints against XGBoost [@xgboost], histogram gradient
+**Models.** A random forest (8) is fitted per endpoint. That choice was made on a
+like-for-like comparison over thirteen core endpoints against XGBoost (9), histogram gradient
 boosting, L2 logistic regression and a nearest-neighbour read-across, and against a graph neural
 network on four of them, which the forest won on all four. Under the scaffold split the forest is
 best on seven of eight classification endpoints, losing AChE to histogram gradient boosting, and on
 none of the five regressions, where boosting scores higher. It was deployed for its stability under
-hyperparameters, for not extrapolating beyond the training range, and because TreeSHAP [@shap_trees]
-is exact for it rather than approximate. Classifiers are isotonically calibrated [@calibration] on
+hyperparameters, for not extrapolating beyond the training range, and because TreeSHAP (10)
+is exact for it rather than approximate. Classifiers are isotonically calibrated (4) on
 out-of-fold predictions, so no compound contributes to the calibrator that scores it. Binder models
-use Platt scaling [@platt], the withheld set for one target often being too small to fit a step
+use Platt scaling (11), the withheld set for one target often being too small to fit a step
 function.
 
 **Thresholds.** The background library is partitioned into three disjoint pools by a stable hash of
-the structure: one supplies property-matched decoys [@dude], one sets thresholds, one measures the
+the structure: one supplies property-matched decoys (12), one sets thresholds, one measures the
 false-positive rate. Choosing a threshold as a quantile of a sample and then measuring the rate on
 that same sample restates the target rather than testing it.
 
 **Exposure gating and the disease layer.** A target score is admitted in proportion to predicted
-barrier penetration. Engaged targets are traced through a curated graph anchored to KEGG [@kegg],
-Reactome [@reactome] and IUPHAR [@iuphar] to the conditions they touch. The graph's edge weights were
+barrier penetration. Engaged targets are traced through a curated graph anchored to KEGG (13),
+Reactome (14) and IUPHAR (15) to the conditions they touch. The graph's edge weights were
 ablated and carry no predictive information beyond the topology (curated 0.7901, uniform 0.7897,
 permuted 0.7874), so they are reported as structure rather than as tuned parameters.
 
@@ -124,7 +124,7 @@ permuted 0.7874), so they are reported as structure rather than as tuned paramet
 10-fold cross-validation the measured-label classifiers reach a mean AUROC of 0.958 (0.899 to
 0.976); under a scaffold-grouped split that withholds entire structural classes, 0.925 (0.878 to
 0.965). Expected calibration error falls from 0.0801 to 0.0147 after isotonic calibration, and
-conformal prediction [@conformal] on the eight core classifiers, on the deduplicated matrix the
+conformal prediction (16) on the eight core classifiers, on the deduplicated matrix the
 classifiers are trained on, achieves empirical coverage of 0.876 to 0.933 against a 0.90 target,
 with mean set size from 0.956 to 1.215 on a two-class problem where 1.0 is a confident single label
 (Figure 3A).
@@ -244,7 +244,27 @@ SUPPLIED BEFORE SUBMISSION]** the archive deposit's own DOI.
 
 None declared.
 
-<!-- REFERENCES -->
+## References
+
+Every entry was resolved by a live query against CrossRef or Europe PMC and accepted only on a title match, or, where the identity is known and the registered title is a short form, by resolving the DOI and confirming the title and first author. The requested title, the matched title and the score are recorded in `manuscript/references_verified.json`, so the list can be re-checked mechanically. None is written from memory. A PubMed Central or PubMed abstract link is given where NCBI indexes the work (`manuscript/references_links.json`); neither exists for a work outside PubMed's coverage, which is expected for some conference proceedings and for the software citations.
+
+1. Zdrazil B, Felix E, Hunter F et al. The ChEMBL Database in 2023: a drug discovery platform spanning multiple bioactivity data types and time periods. Nucleic Acids Research. 2024. doi:10.1093/nar/gkad1004. https://pmc.ncbi.nlm.nih.gov/articles/PMC10767899/ https://pubmed.ncbi.nlm.nih.gov/37933841/
+2. Gilson M, Liu T, Baitaluk M et al. BindingDB in 2015: A public database for medicinal chemistry, computational chemistry and systems pharmacology. Nucleic Acids Research. 2016. doi:10.1093/nar/gkv1072. https://pmc.ncbi.nlm.nih.gov/articles/PMC4702793/ https://pubmed.ncbi.nlm.nih.gov/26481362/
+3. Meng F, Xi Y, Huang J et al. A curated diverse molecular database of blood-brain barrier permeability with chemical descriptors. Scientific Data. 2021. doi:10.1038/s41597-021-01069-5. https://pmc.ncbi.nlm.nih.gov/articles/PMC8556334/ https://pubmed.ncbi.nlm.nih.gov/34716354/
+4. Niculescu-Mizil A, Caruana R. Predicting good probabilities with supervised learning. Proceedings of the 22nd international conference on Machine learning  - ICML '05. 2005. doi:10.1145/1102351.1102430.
+5. Huang K, Fu T, Gao W, Zhao Y, Roohani Y, Leskovec J, Coley CW, Xiao C, Sun J, Zitnik M. Artificial intelligence foundation for therapeutic science. Nature chemical biology. 2022. doi:10.1038/s41589-022-01131-2. https://pmc.ncbi.nlm.nih.gov/articles/PMC9529840/ https://pubmed.ncbi.nlm.nih.gov/36131149/
+6. Wu Z, Ramsundar B, Feinberg E et al. MoleculeNet: a benchmark for molecular machine learning. Chemical Science. 2018. doi:10.1039/c7sc02664a. https://pmc.ncbi.nlm.nih.gov/articles/PMC5868307/ https://pubmed.ncbi.nlm.nih.gov/29629118/
+7. Rogers D, Hahn M. Extended-Connectivity Fingerprints. Journal of Chemical Information and Modeling. 2010. doi:10.1021/ci100050t. https://pubmed.ncbi.nlm.nih.gov/20426451/
+8. Breiman L. Random Forests. Machine Learning. 2001. doi:10.1023/a:1010933404324.
+9. Chen T, Guestrin C. XGBoost: A Scalable Tree Boosting System. Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining. 2016. doi:10.1145/2939672.2939785.
+10. Lundberg S, Erion G, Chen H et al. From local explanations to global understanding with explainable AI for trees. Nature Machine Intelligence. 2020. doi:10.1038/s42256-019-0138-9. https://pmc.ncbi.nlm.nih.gov/articles/PMC7326367/ https://pubmed.ncbi.nlm.nih.gov/32607472/
+11. Lin H, Lin C, Weng R. A note on Platt’s probabilistic outputs for support vector machines. Machine Learning. 2007. doi:10.1007/s10994-007-5018-6.
+12. Mysinger M, Carchia M, Irwin J et al. Directory of Useful Decoys, Enhanced (DUD-E): Better Ligands and Decoys for Better Benchmarking. Journal of Medicinal Chemistry. 2012. doi:10.1021/jm300687e. https://pmc.ncbi.nlm.nih.gov/articles/PMC3405771/ https://pubmed.ncbi.nlm.nih.gov/22716043/
+13. Kanehisa M, Goto S. KEGG: kyoto encyclopedia of genes and genomes. Nucleic acids research. 2000. doi:10.1093/nar/28.1.27. https://pmc.ncbi.nlm.nih.gov/articles/PMC102409/ https://pubmed.ncbi.nlm.nih.gov/10592173/
+14. Milacic M, Beavers D, Conley P, Gong C, Gillespie M, Griss J, Haw R, Jassal B, Matthews L, May B, Petryszak R, Ragueneau E, Rothfels K, Sevilla C, Shamovsky V, Stephan R, Tiwari K, Varusai T, Weiser J, Wright A, Wu G, Stein L, Hermjakob H, D'Eustachio P. The Reactome Pathway Knowledgebase 2024. Nucleic acids research. 2024. doi:10.1093/nar/gkad1025. https://pmc.ncbi.nlm.nih.gov/articles/PMC10767911/ https://pubmed.ncbi.nlm.nih.gov/37941124/
+15. Harding SD, Armstrong JF, Faccenda E, Southan C, Alexander SPH, Davenport AP, Spedding M, Davies JA. The IUPHAR/BPS Guide to PHARMACOLOGY in 2024. Nucleic acids research. 2024. doi:10.1093/nar/gkad944. https://pmc.ncbi.nlm.nih.gov/articles/PMC10767925/ https://pubmed.ncbi.nlm.nih.gov/37897341/
+16. Norinder U, Carlsson L, Boyer S et al. Introducing Conformal Prediction in Predictive Modeling. A Transparent and Flexible Alternative to Applicability Domain Determination. Journal of Chemical Information and Modeling. 2014. doi:10.1021/ci5001168. https://pubmed.ncbi.nlm.nih.gov/24797111/
+17. Wilson E. Probable Inference, the Law of Succession, and Statistical Inference. Journal of the American Statistical Association. 1927. doi:10.1080/01621459.1927.10502953.
 
 
 
@@ -287,7 +307,7 @@ calibration and fitting date for every estimator, is Supplementary Table S1.
 **Figure 3.** Four validations that a cross-validated score cannot replace. (**A**) Expected
 calibration error before and after isotonic regression fitted on out-of-fold predictions, so no
 compound contributes to the calibrator that scores it. (**B**) Recall on whole scaffold classes
-withheld before training, with 95 per cent Wilson intervals [@wilson_ci] and marker area proportional
+withheld before training, with 95 per cent Wilson intervals (17) and marker area proportional
 to the number of withheld actives, so an interval that is wide because the evidence is thin looks
 thin. (**C**) Specificity on chemistry the server should stay quiet about, and external
 discrimination on approved drugs absent from the training source. (**D**) The adversarial suite, in
