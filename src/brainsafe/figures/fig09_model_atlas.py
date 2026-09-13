@@ -8,10 +8,12 @@ and can find any individual target rather than taking an average on trust.
 Three things are encoded, and no more, because a figure that encodes five variables communicates
 none:
 
-  horizontal   the size of the training set, on a log axis, because it spans 68 to 15,723 rows and
-               a linear axis would collapse nine tenths of the panel. Binder training sets include
-               property-matched decoys and the others do not, so the axis says so rather than
-               implying that every row is a measurement
+  horizontal   the size of the training set, on a log axis, because it spans two orders of magnitude
+               (37 to 15,831 rows as this docstring was last checked against the panel; read the axis
+               of the actual figure, which is regenerated from MODEL_INVENTORY.csv on every build, for
+               the current span) and a linear axis would collapse nine tenths of the panel. Binder
+               training sets include property-matched decoys and the others do not, so the axis says
+               so rather than implying that every row is a measurement
   vertical     the performance actually claimed for that estimator, on the split that is claimed
   colour       the model family, using the same four colours as every other figure in the set
 
