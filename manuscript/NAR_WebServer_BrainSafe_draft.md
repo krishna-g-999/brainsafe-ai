@@ -513,17 +513,18 @@ sensitivity: the distance it measures is the variable that recall tracks, so it 
 statement about how likely the panel is to miss a real activity rather than about whether an answer
 can be trusted.
 
-The second is the size of that effect. On chemistry more than a Tanimoto of 0.40 from anything the
-panel has measured, recall at the deployed operating point is near 0.16, and no analysis here
-improves it; what the prospective work establishes is that the figure is predictable, not that it is
-better than it looked. A negative result on a novel scaffold is close to uninformative, which is why
-the server now reports the expected recall beside it.
+A related limitation is the size of that effect. On chemistry more than a Tanimoto of 0.40 from
+anything the panel has measured, recall at the deployed operating point is near 0.16, and no analysis
+here improves it; what the prospective work establishes is that the figure is predictable, not that
+it is better than it looked. A negative result on a novel scaffold is close to uninformative, which is
+why the server now reports the expected recall beside it.
 
-The third is that the specificity estimate rests on compounds presumed inactive because nothing is
-recorded about them, drawn from within the reference library, so it does not bound behaviour on
-genuinely distant chemistry.
+The specificity estimate also has a boundary worth stating plainly: it rests on compounds presumed
+inactive because nothing is recorded about them, drawn from within the reference library, so it does
+not bound behaviour on genuinely distant chemistry.
 
-The fourth is natural-product chemistry, and it is stated here because a reader will reasonably ask.
+Natural-product chemistry is a fourth limit, and it is stated here because a reader will reasonably
+ask.
 The training library has a median fraction-sp3 of 0.34 and only 9.2 per cent of it is both
 sp3-rich and free of aromatic rings, so terpenoid and steroidal natural products are largely outside it: a
 withanolide submitted to the server returns a maximum Tanimoto of 0.31 and no engagement call, with
@@ -567,7 +568,7 @@ The gap is therefore not one that adding targets closes. It requires measured bi
 sp3-rich scaffolds, which is what does not
 exist.
 
-The fifth is the disease layer, and it is a limit of the question rather than of the fitting. Clinical
+The last limitation is the disease layer, and it is a limit of the question rather than of the fitting. Clinical
 indication is not a function of structure: 27 of the 51 targets in the pathway graph drive more than
 one condition,
 and what selects among them is dose, regimen, exposure and trial history. The layer does not beat a

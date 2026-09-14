@@ -1,14 +1,29 @@
 cff-version: 1.2.0
 message: "If you use BrainSafe AI, please cite this software and the associated manuscript."
-title: "BrainSafe AI: an evidence-grounded, calibrated, BBB-gated multi-endpoint predictor of small-molecule effects on the human brain"
+title: "BrainSafe AI: a calibrated, exposure-gated web server for multi-endpoint prediction of small-molecule action in the human brain"
 authors:
-  - family-names: "[To be completed]"
-    affiliation: "Sri Sathya Sai Institute of Higher Learning, India"
+  - given-names: "Krishnasalini"
+    family-names: "Gunanathan"
+    affiliation: "Sri Sathya Sai Institute of Higher Learning (SSSIHL), India"
+  - given-names: "Raghunatha"
+    family-names: "Sarma"
+    affiliation: "Sri Sathya Sai Institute of Higher Learning (SSSIHL), India"
+  - given-names: "Sai"
+    family-names: "Shyam"
+    affiliation: "Sri Sathya Sai Institute of Higher Learning (SSSIHL), India"
+  - given-names: "Ramya"
+    family-names: "E. M."
+    affiliation: "Sri Sathya Sai Institute of Higher Learning (SSSIHL), India"
+  - given-names: "Venketesh"
+    family-names: "Sivaramakrishnan"
+    affiliation: "Sri Sathya Sai Institute of Higher Learning (SSSIHL), India"
+    email: "svenketesh@sssihl.edu.in"
 version: 1.0.0
 date-released: 2026-07-19
 license: MIT
 repository-code: "https://github.com/krishna-g-999/brainsafe-ai"
-keywords: [QSAR, blood-brain barrier, conformal prediction, cheminformatics, CNS, ChEMBL]
+url: "https://huggingface.co/spaces/Krishnag999/brainsafe-ai"
+keywords: [QSAR, blood-brain barrier, conformal prediction, cheminformatics, CNS, ChEMBL, exposure gating]
 references:
   - type: database
     title: "ChEMBL version 37"

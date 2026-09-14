@@ -52,13 +52,19 @@ FAINT = "#98A4AE"
 HAIR = "#DFE4E8"         # grid and separator lines
 PAPER = "#FFFFFF"
 
-EXPOSURE = "#1B6CA8"     # blue
-TARGET = "#127C71"       # teal
-BINDER = "#7A4FA3"       # violet
-SAFETY = "#C0392B"       # red
-WITHHELD = "#D98C00"     # amber
-WARN = "#C0392B"
-GOOD = "#127C71"
+# Okabe & Ito's colour-universal-design palette (2008), the standard reference set for figures that
+# must stay distinguishable under the common forms of colour vision deficiency: protanopia and
+# deuteranopia (red-green, ~8% of men) and, less severely, tritanopia (blue-yellow). It was adopted
+# here after the previous set paired a teal "GOOD" against a red "WARN" as the panel's one good/bad
+# signal, which is exactly the confusion protanopic and deuteranopic vision cannot resolve. Every hue
+# below is one of the eight Okabe-Ito colours; none was picked to merely resemble one.
+EXPOSURE = "#0072B2"     # blue
+TARGET = "#009E73"       # bluish green
+BINDER = "#CC79A7"       # reddish purple
+SAFETY = "#D55E00"       # vermillion
+WITHHELD = "#E69F00"     # orange
+WARN = "#D55E00"
+GOOD = "#009E73"
 
 FAMILY = {"exposure": EXPOSURE, "target": TARGET, "binder": BINDER,
           "safety": SAFETY, "auxiliary": MUTED}

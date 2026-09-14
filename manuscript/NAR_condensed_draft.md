@@ -212,14 +212,14 @@ non-drug-like chemistry: in the adversarial check it scores genuinely absent che
 maximum similarity of 0.47 against 0.57 for unseen approved drugs (n = 25, one-sided Mann-Whitney
 p = 1.8e-03), but at a threshold rejecting a tenth of genuine drugs it catches only a fifth of
 distant chemistry. What it
-does predict well is sensitivity, the distance it measures being the variable recall tracks. Second,
-recall on chemistry beyond Tanimoto 0.40 is near 0.16, so a negative result on a novel scaffold is
-close to uninformative, and the server reports the expected recall beside it. Third, the specificity
-estimate rests on compounds presumed rather than proven inactive. Fourth, terpenoid and steroidal
-natural products are largely outside the training library, whose median fraction-sp3 is 0.34, and
-such compounds are flagged as outside the domain. Fifth, the disease layer does not predict
-indication: 27 of the 51 targets in the pathway graph drive more than one condition, and what selects
-among them, dose, regimen and patient population, is not present in a structure.
+does predict well is sensitivity, the distance it measures being the variable recall tracks. Recall
+on chemistry beyond Tanimoto 0.40 is also near 0.16, so a negative result on a novel scaffold is close
+to uninformative, and the server reports the expected recall beside it. The specificity estimate
+rests on compounds presumed rather than proven inactive. Terpenoid and steroidal natural products,
+in turn, are largely outside the training library, whose median fraction-sp3 is 0.34, and such
+compounds are flagged as outside the domain. Last, the disease layer does not predict indication:
+27 of the 51 targets in the pathway graph drive more than one condition, and what selects among them,
+dose, regimen and patient population, is not present in a structure.
 
 The server does not distinguish an agonist from an antagonist. The training label is a potency value
 measuring affinity, which an agonist and an antagonist at the same receptor can share, and ChEMBL's

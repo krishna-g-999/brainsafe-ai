@@ -318,7 +318,11 @@ def main():
         unknown = [t for ts in app.TARGET_FAMILIES.values() for t in ts
                    if t not in app.TARGET_KIND]
         assert not unknown, f"family members that are not scorable targets: {unknown}"
-        assert set(app.FAMILY_COFIRE) == set(app.TARGET_FAMILIES), \
+        # family_cofire() reads its numbers from H8_family_correlation.csv rather than a constant
+        # declared alongside TARGET_FAMILIES, precisely so they cannot drift from that artefact the
+        # way a hand-written badge once did; this still requires every family to appear in its
+        # output, with or without a supported pair, or a badge would silently render for nothing.
+        assert set(app.family_cofire()) == set(app.TARGET_FAMILIES), \
             "every family must carry a measured co-firing statement"
         j = app.result_json(PROBES["haloperidol"], "Haloperidol", r)
         assert "mechanism_independence" in j, "export omits the independence correction"
@@ -348,14 +352,27 @@ def main():
         assert not wrong, f"declared not modelled but deployed: {wrong}"
         assert app.COVERAGE_NO and app.COVERAGE_NO_MECHANISMS, "coverage claims are empty"
 
-        # every quoted sensitivity must equal the deployed value
+        # every quoted figure must equal the deployed value, and must actually miss the floor it
+        # names. coverage_low() explains a failure by whichever gate the endpoint missed, sensitivity
+        # or AUROC or both, not by sensitivity alone, so the check follows the same branching rather
+        # than assuming the one failure mode LOW_SENSITIVITY_CUT once assumed.
         for label, why in app.coverage_low():
             ep = next((e for e in modes if app.MECH_LABEL.get(e, e) == label), None)
             assert ep, f"low-sensitivity entry {label} matches no endpoint"
             s = modes[ep].get("sensitivity_at_threshold")
-            assert s is not None and f"{s:.2f}" in why, \
-                f"{label} quotes a sensitivity that is not the deployed value {s}"
-            assert s < app.LOW_SENSITIVITY_CUT, f"{label} is listed as low but measures {s}"
+            a = modes[ep].get("auroc_vs_measured_inactives")
+            if "sensitivity" in why:
+                assert s is not None and f"{s:.2f}" in why, \
+                    f"{label} quotes a sensitivity that is not the deployed value {s}"
+                assert s < app._panel.MIN_SENSITIVITY, \
+                    f"{label} is listed as low on sensitivity but measures {s}"
+            if "AUROC" in why:
+                assert a is not None and f"{a:.2f}" in why, \
+                    f"{label} quotes an AUROC that is not the deployed value {a}"
+                assert a < app._panel.MIN_AUROC, \
+                    f"{label} is listed as low on AUROC but measures {a}"
+            assert "sensitivity" in why or "AUROC" in why, \
+                f"{label} names neither gate it could have missed: {why!r}"
         return (f"{len(live)} deployed endpoints all listed, {len(withdrawn)} withdrawn none "
                 f"advertised, {len(app.coverage_low())} low-sensitivity entries all matching "
                 f"deployed values")
