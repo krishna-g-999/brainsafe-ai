@@ -1,61 +1,86 @@
 # BrainSafe AI
 
 **Repository:** https://github.com/krishna-g-999/brainsafe-ai
+**Server:** https://huggingface.co/spaces/Krishnag999/brainsafe-ai
 
-**An evidence-grounded, calibrated, blood–brain-barrier-gated multi-endpoint predictor of
-small-molecule effects on the human brain.**
+**A calibrated, exposure-gated web server for multi-endpoint prediction of small-molecule action
+in the human brain.**
 
-BrainSafe AI predicts, from chemical structure alone, a compound's profile of brain-relevant
-effects: blood–brain-barrier (BBB) penetration; engagement of disease-relevant CNS targets
-(AChE, BChE, BACE1, GSK-3β, MAO-A, MAO-B; receptor potencies for D2, A2A, 5-HT2A, SERT);
-an hERG cardiotoxicity safety flag; a measured-data antioxidant model; and a deterministic
-druggability/CNS-MPO layer. Every machine-learning endpoint is trained on **measured public
-bioactivity data** (ChEMBL_37 and B3DB, 64,474 measured records). Predictions are
-probability-calibrated, carry conformal prediction sets, are grounded in nearest measured
-analogues, and are integrated into BBB-gated per-disease scores.
+BrainSafe AI predicts, from chemical structure alone, whether a compound reaches the brain and what
+it is likely to do once there. It couples the two questions that most CNS drug-discovery tools answer
+separately: a target score is admitted only in proportion to the compound's predicted brain exposure,
+so potency at a target the compound cannot reach contributes nothing to the output. A submitted
+structure returns engagement across **54 molecular targets** spanning the principal neurodegenerative,
+psychiatric, neuroinflammatory, analgesic and sleep-related mechanisms, predicted blood-brain barrier
+penetration, two cardiac safety liabilities (hERG, Nav1.5), and a nine-endpoint ADME and exposure
+layer including a directly modelled unbound brain-to-plasma ratio (Kp,uu). Engaged targets are traced
+through a curated pathway graph to the conditions they touch.
+
+Every endpoint is trained on **measured** experimental values only, never on qualitative annotation.
+The panel holds **228,200 measured compound-endpoint records** over **170,619 distinct structures**
+from ChEMBL, BindingDB and B3DB.
 
 > **Research use, pending peer review.** This tool predicts molecular target engagement and
 > physicochemical properties, not clinical efficacy, and has not undergone wet-lab or clinical
 > validation. It is not for medical, diagnostic, or treatment decisions.
 
 ## Model and validation (honest, multi-regime)
-Deployed model: a **random forest** per endpoint (chosen after comparison with XGBoost, gradient
-boosting and a graph neural network), features are a 1024-bit ECFP-4 fingerprint plus 12 descriptors.
-Target panel (13 endpoints) plus a 9-endpoint ADME/exposure layer; 61,317 unique measured compounds.
 
-| Regime | Classifier AUROC |
+Deployed model: a **random forest** per endpoint, chosen after a like-for-like comparison against
+XGBoost, histogram gradient boosting, logistic regression, a nearest-neighbour read-across, and a
+graph neural network on a subset of endpoints. Features are a 1,024-bit ECFP-4 fingerprint plus 12
+physicochemical descriptors. **75 estimators are trained, 70 deployed**: a 12-endpoint target-potency
+layer, a 52-endpoint binder panel (47 deployed), a 10-endpoint exposure and ADME layer including the
+barrier model, and the hERG safety classifier.
+
+| Regime | Measured-label classifier AUROC |
 |---|---|
-| Random 10-fold | 0.95–0.97 (mean 0.96) |
-| Scaffold 10-fold (GroupKFold) | 0.87–0.96 (mean 0.92) |
-| Temporal (future compounds) | 0.61–0.91 |
-| External (306 FDA drugs, BBB) | 0.774 |
+| Random 10-fold | 0.899–0.976 (mean 0.958) |
+| Scaffold-grouped 10-fold (GroupKFold) | 0.878–0.965 (mean 0.925) |
+| Temporal (compounds published after a frozen cutoff) | 0.713–0.913 |
+| External (306 FDA-approved drugs absent from B3DB) | 0.764, or 0.767 on the 227 also distinguishable from training in feature space |
 
-Isotonic-calibrated probabilities (mean ECE 0.072→0.012); conformal coverage 0.89–0.92 (target 0.90);
-applicability-domain flag on every prediction. **Validated by inversion (six adversarial checks, all
-pass): [`docs/VALIDATION.md`](docs/VALIDATION.md).** Methods and results:
-[`docs/METHODS.md`](docs/METHODS.md), [`docs/RF_CV_RESULTS.md`](docs/RF_CV_RESULTS.md),
-[`docs/ADME_RESULTS.md`](docs/ADME_RESULTS.md).
+Binder classifiers, validated against compounds measured and found inactive at the same target
+rather than against decoys: mean AUROC **0.917** across the 47 deployed (range 0.719–0.985).
+
+Isotonic-calibrated probabilities (mean expected calibration error **0.0801 → 0.0147**); conformal
+prediction on the eight core classifiers achieves empirical coverage **0.876–0.933** against a 0.90
+target; an applicability-domain distance to the nearest measured analogue on every prediction. On
+1,000 compounds with no recorded activity at any modelled target, specificity is **0.925** (95% CI
+0.907–0.940). Six adversarial checks, each written so that it could fail, all pass; a falsification
+analysis withdrew two endpoints that could not separate a real ligand from a trivial metabolite. Full
+detail: [`manuscript/NAR_WebServer_BrainSafe_built.md`](manuscript/NAR_WebServer_BrainSafe_built.md),
+[`docs/TECHNICAL_REPORT.md`](docs/TECHNICAL_REPORT.md).
 
 ## Repository structure
-Standard research layout (`data/`, `src/brainsafe/{data,features,models,evaluation,viz,gnn,adme}`,
-`results/`, `docs/`, `manuscript/`). See `REPOSITORY_MAP.md` for the generated tree, `SCRIPT_INDEX.csv`
-for every script in pipeline order, and `ARCHIVE_MANIFEST.csv` for what was set aside and why.
 
-Key entry points: **`app.py`** (interactive application over the current models),
-`src/brainsafe/models/train_rf.py` (training), `src/brainsafe/evaluation/` (validation, comparison,
-conformal/temporal, inversion checks), `src/brainsafe/adme/` (ADME/exposure + K_p,uu),
-`src/brainsafe/viz/make_figures.py` (figures), `src/brainsafe/build_manuscript_docx.py` (manuscript).
+Standard research layout (`data/`, `src/brainsafe/{data,features,models,evaluation,figures,gnn,adme}`,
+`results/`, `docs/`, `manuscript/`, `thesis/`, `inversion/`). `tools/check_freshness.py` declares
+every derived artefact and its inputs, and a pre-commit hook refuses a commit that leaves one stale.
+
+Key entry points: **`app.py`** (the interactive server), `src/brainsafe/models/train_rf.py`
+(core-panel training), `src/brainsafe/models/train_binders_hybrid.py` (binder-panel training),
+`src/brainsafe/evaluation/` (validation, comparison, conformal/temporal, adversarial checks),
+`src/brainsafe/adme/` (ADME and exposure, including Kp,uu), `src/brainsafe/figures/` (every
+manuscript figure, regenerated from the current models on every run), `inversion/` (the ten-hypothesis
+falsification suite).
 
 ## Reproducibility
+
 Trained-model binaries and large structure libraries are **not** stored in git; they are regenerated
-by the released scripts. Full recipe in [`docs/VALIDATION.md`](docs/VALIDATION.md) §5; in brief:
+by the released scripts, or restored from the checksummed archive named in
+[`manuscript/NAR_WebServer_BrainSafe_built.md`](manuscript/NAR_WebServer_BrainSafe_built.md)'s Data
+Availability section. In brief:
+
 ```bash
 python src/brainsafe/data/rebuild_endpoints.py          # pool ChEMBL + BindingDB
-python src/brainsafe/models/train_rf.py                 # RF + 10-fold (all endpoints)
+python src/brainsafe/models/train_rf.py                 # core panel, RF + 10-fold
+python src/brainsafe/models/train_binders_hybrid.py      # binder panel
 python src/brainsafe/models/calibrate.py                # isotonic calibration
 python src/brainsafe/evaluation/rf_conformal_temporal.py
 python src/brainsafe/adme/fetch_adme.py && python src/brainsafe/adme/train_adme.py
 python src/brainsafe/evaluation/validate_inversion.py   # adversarial checks
+python tools/check_freshness.py                         # confirm nothing is stale
 streamlit run app.py                                    # interactive tool
 ```
 
@@ -67,11 +92,16 @@ Three ways in, all from the same models:
 |---|---|
 | **Compound Search** | one compound, full report: exposure, mechanism network, target engagement profile, disease relevance, ADME, read-across, CNS MPO and applicability domain |
 | **Batch Screening** | up to 300 compounds pasted or uploaded as CSV, TSV or plain text, returned as one ranked row each with a CSV download |
-| **Export** | every result downloadable as a tidy CSV, a self-contained HTML report, a structured JSON object, or the network as vector SVG |
+| **Export** | every result downloadable as a tidy CSV, a self-contained HTML report, a structured JSON object, or the mechanism network as vector SVG |
 
 The HTML report inlines its own figures, structure image and styling, so it opens offline in any
 browser and prints to PDF without a network connection. The JSON carries thresholds, the screening
 mode and the caveats, so a stored answer stays interpretable away from the interface.
+
+No registration or login is required. No submitted structure is written to disk, logged, or retained
+beyond the lifetime of its request, and none is used to train or update any model; the one exception
+is a compound entered by name, which is resolved to a structure through a single call to PubChem.
+Curated example compounds are provided so the server can be tried without preparing any input.
 
 ## Running it
 
@@ -98,24 +128,32 @@ Before deploying, verify the environment and the application in one step:
 python src/brainsafe/evaluation/app_health.py
 ```
 
-It checks that every declared dependency resolves and matches its pin, that all 63 model artefacts
-load, that the knowledge graph is internally consistent, that chemically unrelated compounds produce
-distinct and directionally correct profiles, that every export format is well formed and
-self-contained, and that no red hue has entered the palette. It exits non-zero on any failure, so it
-can gate a release.
+It checks that every declared dependency resolves and matches its pin, that the registered model
+artefacts load, that the knowledge graph is internally consistent, that chemically unrelated
+compounds produce distinct and directionally correct profiles, that every export format is well
+formed and self-contained, and that no red hue has entered the palette. It exits non-zero on any
+failure, so it can gate a release.
 
 ## Environment
+
 Python 3.13, RDKit 2026.03.2, scikit-learn 1.8.0, NumPy 2.4.6, pandas 3.0.3, SciPy 1.17.1,
 matplotlib 3.10.9, Plotly 6.7.0. See `requirements.txt`. Random seed 42 throughout.
 
 ## Data sources
-ChEMBL 37 and BindingDB (target activity), B3DB (BBB; Meng et al.,
-2021), and ChEMBL DPPH radical-scavenging assays. Structures for user-entered compounds are
-resolved via PubChem.
+
+ChEMBL 37 and BindingDB (target activity), B3DB (BBB; Meng et al., 2021), Therapeutics Data Commons
+and MoleculeNet (ADME endpoints), and ChEMBL DPPH radical-scavenging assays (antioxidant). Structures
+for user-entered compounds are resolved via PubChem.
 
 ## Citation
-Manuscript in preparation (Sri Sathya Sai Institute of Higher Learning). See
-`manuscript/NAR_WebServer_BrainSafe_built.md`.
+
+See [`CITATION.cff`](CITATION.cff) for how to cite the software, and
+[`manuscript/NAR_WebServer_BrainSafe_built.md`](manuscript/NAR_WebServer_BrainSafe_built.md) for the
+manuscript (submitted to *Nucleic Acids Research*, Web Server Issue; a condensed, submission-length
+draft is at
+[`manuscript/NAR_condensed_built.md`](manuscript/NAR_condensed_built.md)).
 
 ## License
-See `LICENSE`.
+
+See [`LICENSE`](LICENSE). Underlying data retain the licences of their own sources; see the
+manuscript's Data Availability section for detail.
