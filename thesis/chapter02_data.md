@@ -196,10 +196,10 @@ only from the point of view of a stereo-blind representation, which is precisely
 happens at the featurisation boundary and not in the source tables.
 
 Three checks confirm the boundary holds. On the deduplicated matrix the pipeline actually fits, no
-InChIKey, no feature vector and no scaffold appears on both sides of any fold. On the raw table the
-feature-vector overlap reaches 544. And across the panel, 52 targets were checked for scaffold
-overlap between training and test and **none shares a scaffold**
-(`results/tables/integrity_audit.csv`).
+InChIKey, no feature vector and no scaffold appears on both sides of any fold. On the raw tables the
+feature-vector overlap is the 15,104 rows already counted above, which is precisely what
+deduplication removes. And across the panel, 52 targets were checked for scaffold overlap between
+training and test and **none shares a scaffold** (`results/tables/integrity_audit.csv`).
 
 ## 2.8 The panel endpoint by endpoint
 
@@ -300,10 +300,12 @@ model cannot close.
 1. The manuscript now states the alternative median as 3,587. The exact value is **3,587.5**, the
    median of an even-numbered set of integers. It should read 3,587.5, or 3,588 if a whole number is
    wanted, but not 3,587, which is a truncation.
-2. The figure of 169,341 unique compounds, keyed by InChIKey of the desalted parent, is quoted in the
-   manuscript and the evidence map. Counting distinct SMILES across the endpoint tables gives
-   170,619, which is consistent with the two being different quantities but does not verify the
-   InChIKey figure. It is not used in this chapter and should be re-derived before it is used.
+2. ~~The figure of 169,341 unique compounds, keyed by InChIKey of the desalted parent, is quoted in
+   the manuscript and the evidence map and has not been re-derived.~~ **Done.**
+   `src/brainsafe/evaluation/unique_compound_count.py` computes it directly: 170,619 distinct
+   SMILES across the endpoint tables, 2 unparseable, 169,341 distinct InChIKeys of the desalted,
+   neutralised parent (`results/tables/unique_compound_count.csv`). The two counts were never in
+   conflict; they are different quantities, and both are now on record.
 3. A third figure for deployed sensitivity now exists. The panel registry gives a mean of 0.898 over
    47 endpoints, `inversion/results/H7_target_discrimination.csv` a median of 0.792 over 37, and
    `results/tables/integrity_audit.csv` a mean of 0.846 over its own set. All three are the deployed

@@ -210,13 +210,16 @@ atenolol at their calibrated thresholds. NRF2, NFKB1 and NR3C1 were added specif
 natural-product coverage and all three failed, NFKB1 reaching an AUROC of 0.459 against its own
 held-out measured inactives.
 
-**Four of nine falsification hypotheses were refuted** and are reported as refuted
+**Four of ten falsification hypotheses were refuted and two more weakened** and are reported as such
 (`inversion/results/VERDICTS.csv`). The curated pathway-graph edge weights carry no measurable
 information beyond the graph's topology, scoring 0.7901 curated against 0.7897 uniform and 0.7874
 randomly permuted. Exposure gating cannot discriminate between conditions. Silence at a target
-reflects the operating point rather than a non-discriminative model. And engaged targets are not
+reflects the operating point rather than a non-discriminative model. Engaged targets are not
 independent observations: 37 targets fire across approved drugs but span only 16 independent
-directions.
+directions. And the barrier model's advantage over a fitted rule on twelve descriptors, clear on the
+training distribution, is not established on approved drugs the model has never seen, a tenth
+hypothesis written after the suite itself noted that no test examined the one component every
+disease score is gated by.
 
 **Specificity is a lower bound.** On 1,000 compounds with no recorded activity at any modelled
 target, 925 returned no actionable disease signal, a specificity of 0.925 with a 95 per cent interval
@@ -275,8 +278,9 @@ Chapter 10 covers the limitations and the work that follows from them.
 
 1. `[REF NEEDED]` A citable CNS attrition series for section 1.1.
 2. `[REF NEEDED]` Verified citations for the named comparison servers in section 1.3.
-3. The count of unique compounds underlying the 228,200 records is quoted elsewhere in the project as
-   169,341, keyed by the InChIKey of the desalted parent. Counting distinct SMILES strings across the
-   endpoint tables in this session gives 170,619, which is consistent with the two being different
-   quantities but does not verify the InChIKey figure. It has not been used in this chapter and
-   should be re-derived from the tables before it is used anywhere.
+3. ~~The count of unique compounds underlying the 228,200 records is quoted elsewhere in the project
+   as 169,341, keyed by the InChIKey of the desalted parent, and had not been re-derived.~~ **Done.**
+   `src/brainsafe/evaluation/unique_compound_count.py` computes it directly from the endpoint tables:
+   170,619 distinct SMILES, of which 2 do not parse, collapse to 169,341 distinct InChIKeys of the
+   desalted, neutralised parent (`results/tables/unique_compound_count.csv`). The figure reproduces
+   to the digit and closes this item as well as the equivalent one raised in Chapters 2 and 10.

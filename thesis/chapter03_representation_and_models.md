@@ -168,14 +168,18 @@ Under the scaffold-grouped split, the family means are:
 |---|---:|---:|
 | Random forest | **0.9212** | 0.5190 |
 | XGBoost | 0.9156 | 0.5413 |
-| Histogram gradient boosting | 0.9149 | **0.5424** |
+| Histogram gradient boosting | 0.9153 | **0.5424** |
 | kNN read-across | 0.8829 | 0.4745 |
 | L2 logistic regression | 0.8352 | 0.1397 |
 
-The result splits cleanly by task, and saying so is the only honest way to report it.
+The result splits cleanly by task, and saying so is the only honest way to report it. The
+histogram-gradient-boosting figure is stated here with `class_weight="balanced"` set, matching the
+forest's own weighting and XGBoost's `scale_pos_weight`; an earlier run of this comparison left it
+unweighted, the only family competing without one, which read 0.9149 and is corrected in the current
+artefact.
 
 **On classification the forest leads**, best on 7 of the 8 endpoints. It loses AChE to histogram
-gradient boosting, 0.9148 against 0.9241.
+gradient boosting, 0.9148 against 0.9247.
 
 **On regression the forest leads nothing.** It is best on **0 of the 5**. Histogram gradient boosting
 wins three and XGBoost two. The gap in the family mean is 0.023 R².
@@ -201,12 +205,12 @@ applying a Wilcoxon signed-rank test to the per-endpoint means under the scaffol
 
 | Comparison | Forest higher on | Median Δ | Mean Δ | p | Verdict |
 |---|---:|---:|---:|---:|---|
-| vs kNN read-across, all 13 | 13 of 13 | +0.0382 | +0.0407 | 0.0002 | distinguishable |
-| vs L2 logistic regression, all 13 | 13 of 13 | +0.1030 | +0.1988 | 0.0002 | distinguishable |
+| vs kNN read-across, all 13 | 13 of 13 | +0.0382 | +0.0407 | 0.00024 | distinguishable |
+| vs L2 logistic regression, all 13 | 13 of 13 | +0.1030 | +0.1988 | 0.00024 | distinguishable |
 | vs XGBoost, all 13 | 8 of 13 | +0.0033 | **-0.0051** | 0.735 | **not distinguishable** |
-| vs histogram gradient boosting, all 13 | 8 of 13 | +0.0031 | **-0.0051** | 0.893 | **not distinguishable** |
+| vs histogram gradient boosting, all 13 | 8 of 13 | +0.0026 | **-0.0054** | 0.893 | **not distinguishable** |
 | vs XGBoost, 8 classification only | 8 of 8 | +0.0048 | +0.0056 | 0.0078 | distinguishable |
-| vs histogram gradient boosting, 8 classification only | 7 of 8 | +0.0045 | +0.0063 | 0.078 | not distinguishable |
+| vs histogram gradient boosting, 8 classification only | 7 of 8 | +0.0049 | +0.0059 | 0.078 | not distinguishable |
 
 Both columns are given because against the boosting methods they disagree in sign, and the
 disagreement is the result. The forest sits marginally above them on 8 of the 13 endpoints, which is
@@ -315,12 +319,13 @@ in which no endpoint's threshold, negative class or withdrawal is independently 
 
 ## Outstanding items for this chapter
 
-1. **The haloperidol figures in the manuscript describe a fixed defect.** `NAR_condensed_draft.md`
-   and the full manuscript quote 0.613 against 0.993 without saying these were measured on a previous
-   engine. The technical report does say it. The manuscript should, and should add that the current
-   pipeline returns identical vectors and identical probabilities for both forms. Note also that even
-   the free-base figure has moved with the retrain: the deployed barrier model now returns 0.9888,
-   not 0.993.
+1. ~~The haloperidol figures in the manuscript describe a fixed defect without saying so.~~
+   **Resolved for the full manuscript**, which now reads "on the models this server *previously
+   deployed* it returned a barrier probability of 0.613 against 0.993", correctly scoping the figures
+   to the superseded engine. `NAR_condensed_draft.md` states the same pair more tersely, "haloperidol
+   hydrochloride *then* scored" the salt figure "against 0.993 for the free base", which carries the
+   same past-tense qualification in fewer words; neither document claims 0.993 is the free base's
+   current score, which now stands at 0.9888 after the retrain this chapter records.
 2. **The learning-curve conclusion in `docs/TECHNICAL_REPORT.md` section 7.3 is not supported by its
    own table** and should be replaced by the split reading in section 3.9 above.
 3. **The descriptor claim in section 7.2 of the technical report is ambiguous** between two

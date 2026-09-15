@@ -275,9 +275,11 @@ that is correct behaviour, but nothing asserts it.
 ## Outstanding items for this chapter
 
 1. ~~The published binder sensitivity is measured on a set that is mostly training compounds.~~
-   **Done, 2026-08-30.** The registry now stores the held-out figure on all 47 endpoints and the
-   reconciliation reports a gap of +0.000. The manuscript, `EVIDENCE_MAP.md` and the technical report
-   still need the same correction propagated to their prose.
+   **Done, 2026-08-30, and propagated.** The registry now stores the held-out figure on all 47
+   endpoints and the reconciliation reports a gap of +0.000. Both the manuscript and
+   `docs/TECHNICAL_REPORT.md` now state the corrected mean of 0.764 directly and name 0.898 as the
+   superseded published figure; `EVIDENCE_MAP.md` was not found at the top level of the repository
+   during this pass and could not be checked.
 2. ~~`calibrate_background_specificity.py` should score held-out actives.~~ **Done at the source**,
    so the overwrite cannot recur.
 3. Nav1.5, SIRT1 and TAAR1 define "active" differently in the two scripts. One definition should win.

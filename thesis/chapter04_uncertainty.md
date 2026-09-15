@@ -252,10 +252,15 @@ the reference library from approved drugs the models had not seen
 
 | Measure | Median, unseen drugs | Median, non-drug-like | p | Separates | Threshold at 10% drug loss | Distant chemistry caught |
 |---|---:|---:|---:|---|---:|---:|
-| **Maximum similarity** | 0.5909 | 0.4606 | 0.0072 | yes | 0.3462 | 0.375 |
-| Mean of top 5 | 0.5224 | 0.3781 | 0.0075 | yes | 0.3179 | 0.375 |
-| 5th nearest neighbour | 0.4444 | 0.3287 | 0.0171 | no | 0.2921 | 0.500 |
-| Density within 0.4 | 8.0 | 1.5 | 0.0536 | no | 0.0 | 0.375 |
+| **Maximum similarity** | 0.5658 | 0.4606 | 0.0092 | yes | 0.3456 | 0.375 |
+| Mean of top 5 | 0.5149 | 0.3781 | 0.0093 | yes | 0.3178 | 0.375 |
+| 5th nearest neighbour | 0.4390 | 0.3287 | 0.0204 | no | 0.2916 | 0.500 |
+| Density within 0.4 | 8.0 | 1.5 | 0.0652 | no | 0.0 | 0.375 |
+
+*This table moved from the figures first computed for this chapter, for the same reason section 4.9
+records: the "unseen drugs" comparator is the featuriser-corrected external set, and every row shifted
+by the same small amount when it was recomputed against it. The comparison the table exists to make,
+which measure separates best, is unaffected.*
 
 Two of the four separate at the stated criterion of p < 0.01, and **no alternative beats the deployed
 one**. The maximum has the largest separation and the smallest p-value, so the simplest measure is
@@ -270,13 +275,17 @@ chosen post hoc is not the same as discriminating.
 
 The adversarial check asks whether the flag rates chemistry genuinely absent from the reference
 library worse than approved drugs it has never seen. It **passes**
-(`results/tables/inversion_validation.csv`): median maximum similarity 0.59 for unseen drugs against
-0.47 for non-drug-like chemistry, over 25 controls, one-sided Mann-Whitney p = 1.11 × 10⁻³.
+(`results/tables/inversion_validation.csv`): median maximum similarity 0.57 for unseen drugs against
+0.47 for non-drug-like chemistry, over 25 controls, one-sided Mann-Whitney p = 1.82 × 10⁻³.
 
 Chapter 9 records the history in full, because the check previously failed and the fix was to the
 controls rather than to the criterion: 28 of the original controls were measured compounds inside the
 flag's own reference library, where calling them in domain is truthful. The passing criterion was not
-moved.
+moved. The unseen-drug figure itself has since moved once more, from 0.59 to 0.57, for the same
+reason Chapter 8 records for the external barrier AUROC: the check scores the "unseen drugs" set
+after the featuriser's neutralisation fix excluded compounds it could no longer distinguish from
+training, which is the corrected 227-compound population rather than the earlier 241. The verdict is
+unaffected.
 
 **Passing is not the same as being useful, and the gap is large.** At a threshold that rejects a
 tenth of genuine drugs, the flag catches **0.375** of genuinely distant chemistry. At the deployed

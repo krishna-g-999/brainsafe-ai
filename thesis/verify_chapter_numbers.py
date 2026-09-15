@@ -749,7 +749,178 @@ claim("mlmath", "distinct structures in the library", "library_sp3_coverage.csv"
       lambda: int(float(cell(TAB / "library_sp3_coverage.csv", "value",
                              lambda r: r["metric"].startswith("distinct SMILES")))), "{:,}")
 
+# ---- Chapters 1 to 8, added when the thesis was audited chapter by chapter for consistency and ----
+# ---- tone. Chapters 9, 10 and the aside documents already had this discipline; 1 to 8 did not,  ----
+# ---- and every stale number this pass found was in one of them.                                 ----
+
+def _binder_modes():
+    return json.loads((ROOT / "models_rf" / "binder_modes.json").read_text(encoding="utf-8"))
+
+
+def _deployed_binders():
+    return {k: v for k, v in _binder_modes().items() if v.get("deployed")}
+
+
+def _model_inventory():
+    return rows(TAB / "MODEL_INVENTORY.csv")
+
+
+claim("01", "estimators trained", "MODEL_INVENTORY.csv",
+      lambda: len(_model_inventory()), "{:d}")
+claim("01", "estimators deployed", "MODEL_INVENTORY.csv",
+      lambda: sum(1 for r in _model_inventory() if r["deployed"] == "True"), "{:d}")
+claim("01", "records over 63 tables", "data/endpoints/*.csv",
+      lambda: sum(len(rows(p)) for p in (ROOT / "data" / "endpoints").glob("*.csv")), "{:,}")
+claim("01", "endpoint tables", "data/endpoints/*.csv",
+      lambda: len(list((ROOT / "data" / "endpoints").glob("*.csv"))), "{:d}")
+claim("01", "hypotheses refuted of ten", "VERDICTS.csv",
+      lambda: sum(1 for r in rows(INV / "VERDICTS.csv")
+                  if r["verdict"].startswith("REFUTED")), "{:d}")
+claim("01", "total hypotheses", "VERDICTS.csv", lambda: len(rows(INV / "VERDICTS.csv")), "{:d}")
+claim("01", "specificity on non-CNS chemistry", "noncns_specificity_summary.csv",
+      lambda: float(cell(TAB / "noncns_specificity_summary.csv", "estimate",
+                         lambda r: r["metric"].startswith("Specificity"))), "{:.3f}")
+claim("01", "unique compounds keyed by InChIKey", "unique_compound_count.csv",
+      lambda: int(float(cell(TAB / "unique_compound_count.csv", "value",
+                             lambda r: "InChIKey" in r["measure"]))), "{:,}")
+
+claim("02", "compound-endpoint records", "data/endpoints/*.csv",
+      lambda: sum(len(rows(p)) for p in (ROOT / "data" / "endpoints").glob("*.csv")), "{:,}")
+claim("02", "censored-bound recovery, added rows", "endpoint source column",
+      lambda: sum(1 for p in (ROOT / "data" / "endpoints").glob("*.csv") for r in rows(p)
+                  if "ChEMBL_inactive" in (r.get("source") or "")), "{:,}")
+claim("02", "censored-bound recovery, endpoints touched", "endpoint source column",
+      lambda: sum(1 for p in (ROOT / "data" / "endpoints").glob("*.csv")
+                  if any("ChEMBL_inactive" in (r.get("source") or "") for r in rows(p))), "{:d}")
+claim("02", "duplicate rows before deduplication", "inversion_validation.csv",
+      lambda: int(re.search(r"([\d,]+) exist in the tables before deduplication",
+                            cell(TAB / "inversion_validation.csv", "detail",
+                                 lambda r: "duplicate" in r["check"].lower())).group(1)
+                 .replace(",", "")), "{:,}")
+
+claim("03", "feature vector columns", "featurize.py", lambda: 1024 + 12, "{:,}")
+claim("03", "HistGradientBoosting scaffold mean, 8 classifiers", "model_comparison.csv",
+      lambda: round(st.mean(col(TAB / "model_comparison.csv", "mean",
+                                lambda r: r["model"] == "HistGradientBoosting"
+                                and r["split"] == "scaffold"
+                                and r["endpoint"] in ("BBB", "AChE", "BChE", "BACE1", "GSK3B",
+                                                      "MAO_A", "MAO_B", "hERG"))), 4))
+claim("03", "HistGradientBoosting scaffold AChE", "model_comparison.csv",
+      lambda: float(cell(TAB / "model_comparison.csv", "mean",
+                         lambda r: r["model"] == "HistGradientBoosting"
+                         and r["split"] == "scaffold" and r["endpoint"] == "AChE")), "{:.4f}")
+
+claim("04", "core ECE raw mean", "calibration.csv",
+      lambda: round(st.mean(col(TAB / "calibration.csv", "ece_raw")), 4))
+claim("04", "core ECE calibrated mean", "calibration.csv",
+      lambda: round(st.mean(col(TAB / "calibration.csv", "ece_calibrated")), 4))
+claim("04", "conformal coverage min", "rf_conformal.csv",
+      lambda: min(col(TAB / "rf_conformal.csv", "empirical_coverage")), "{:.3f}")
+claim("04", "conformal coverage max", "rf_conformal.csv",
+      lambda: max(col(TAB / "rf_conformal.csv", "empirical_coverage")), "{:.3f}")
+claim("04", "domain flag, unseen-drug median similarity", "inversion_validation.csv",
+      lambda: float(cell(TAB / "inversion_validation.csv", "detail",
+                         lambda r: "domain flag separates" in r["check"])
+                    .split("unseen drugs ")[1].split(" vs")[0]), "{:.2f}")
+# The chapter writes this test's p-value as "1.82 x 10^-3", which the checker's plain string match
+# cannot see as the same number as 1.82e-03; the similarity claim above already pins the test this
+# p-value belongs to, so it is not separately pinned here rather than reformatting either side to
+# satisfy a string comparison.
+
+def _background_pools():
+    sys.path.insert(0, str(ROOT / "src" / "brainsafe"))
+    from models import pools  # noqa: E402
+    return pools.background_pools()
+
+
+claim("05", "background library size", "models_rf/ad_reference.pkl",
+      lambda: sum(len(v) for v in _background_pools().values()), "{:,}")
+claim("05", "background decoy pool", "models_rf/ad_reference.pkl",
+      lambda: len(_background_pools()["decoy"]), "{:,}")
+claim("05", "background threshold pool", "models_rf/ad_reference.pkl",
+      lambda: len(_background_pools()["threshold"]), "{:,}")
+claim("05", "background evaluation pool", "models_rf/ad_reference.pkl",
+      lambda: len(_background_pools()["evaluation"]), "{:,}")
+claim("05", "binder sensitivity mean, held out", "binder_modes.json",
+      lambda: round(st.mean(v["sensitivity_at_threshold"] for v in _deployed_binders().values()), 4))
+claim("05", "binder sensitivity median, held out", "binder_modes.json",
+      lambda: round(st.median(v["sensitivity_at_threshold"] for v in _deployed_binders().values()), 4))
+
+claim("06", "binder panel size, deployed", "binder_modes.json",
+      lambda: len(_deployed_binders()), "{:d}")
+claim("06", "binder panel size, trained", "binder_modes.json", lambda: len(_binder_modes()), "{:d}")
+claim("06", "binder AUROC mean vs measured inactives", "binder_modes.json",
+      lambda: round(st.mean(v["auroc_vs_measured_inactives"]
+                            for v in _deployed_binders().values()
+                            if v.get("auroc_vs_measured_inactives") is not None), 4))
+claim("06", "binder AUROC minimum", "binder_modes.json",
+      lambda: round(min(v["auroc_vs_measured_inactives"] for v in _deployed_binders().values()
+                        if v.get("auroc_vs_measured_inactives") is not None), 3), "{:.3f}")
+claim("06", "binder AUROC maximum", "binder_modes.json",
+      lambda: round(max(v["auroc_vs_measured_inactives"] for v in _deployed_binders().values()
+                        if v.get("auroc_vs_measured_inactives") is not None), 3), "{:.3f}")
+claim("06", "endpoints firing under half their actives", "binder_modes.json",
+      lambda: sum(1 for v in _deployed_binders().values()
+                 if v.get("sensitivity_at_threshold") is not None
+                 and v["sensitivity_at_threshold"] < 0.50), "{:d}")
+
+claim("07", "graph targets", "GRAPH_FINGERPRINT.json",
+      lambda: json.loads((INV / "GRAPH_FINGERPRINT.json").read_text())["n_targets"], "{:d}")
+claim("07", "graph conditions", "GRAPH_FINGERPRINT.json",
+      lambda: json.loads((INV / "GRAPH_FINGERPRINT.json").read_text())["n_conditions"], "{:d}")
+claim("07", "H2 curated weights", "H2_weight_ablation.csv",
+      lambda: float(cell(INV / "H2_weight_ablation.csv", "top3_accuracy",
+                         lambda r: r["weights"] == "curated")))
+claim("07", "H9 mean per-indication AUROC", "H9_disease_discrimination_summary.csv",
+      lambda: float(cell(INV / "H9_disease_discrimination_summary.csv", "model",
+                         lambda r: r["metric"].startswith("mean per-indication"))), "{:.4f}")
+claim("07", "H9 macro-averaged top-3 recall", "H9_disease_discrimination_summary.csv",
+      lambda: float(cell(INV / "H9_disease_discrimination_summary.csv", "model",
+                         lambda r: r["metric"].startswith("macro-averaged"))), "{:.4f}")
+claim("07", "H8 targets firing across approved drugs", "H8_panel_independence.csv",
+      lambda: int(float(cell(INV / "H8_panel_independence.csv", "value",
+                             lambda r: r["metric"].startswith("targets that ever fire")))), "{:d}")
+claim("07", "BBB base rate, corrected", "endpoint_context.json",
+      lambda: round(json.loads((ROOT / "models_rf" / "endpoint_context.json").read_text())
+                    ["classifiers"]["BBB"]["base_rate"], 4))
+claim("07", "AChE base rate, corrected", "endpoint_context.json",
+      lambda: round(json.loads((ROOT / "models_rf" / "endpoint_context.json").read_text())
+                    ["classifiers"]["AChE"]["base_rate"], 4))
+
+claim("08", "core classifier AUROC, random mean", "rf_cv_summary.csv",
+      lambda: round(st.mean(col(TAB / "rf_cv_summary.csv", "roc_auc_mean",
+                                lambda r: r["task"] == "classification"
+                                and r["split"] == "random")), 3), "{:.3f}")
+claim("08", "core classifier AUROC, scaffold mean", "rf_cv_summary.csv",
+      lambda: round(st.mean(col(TAB / "rf_cv_summary.csv", "roc_auc_mean",
+                                lambda r: r["task"] == "classification"
+                                and r["split"] == "scaffold")), 3), "{:.3f}")
+claim("08", "external BBB AUROC, distinguishable in feature space", "external_bbb_validation.csv",
+      lambda: float(cell(TAB / "external_bbb_validation.csv", "auroc",
+                         lambda r: r["set"].startswith("FDA-curated, also"))))
+claim("08", "external BBB n, distinguishable in feature space", "external_bbb_validation.csv",
+      lambda: int(cell(TAB / "external_bbb_validation.csv", "n",
+                       lambda r: r["set"].startswith("FDA-curated, also"))), "{:d}")
+claim("08", "prospective, time-split AUROC vs measured inactives", "external_prospective.csv",
+      lambda: round(st.mean(col(TAB / "external_prospective.csv", "time_auroc_vs_measured_inactives",
+                                lambda r: r["status"] == "ok")), 4))
+claim("08", "prospective, random-control AUROC vs measured inactives", "external_prospective.csv",
+      lambda: round(st.mean(col(TAB / "external_prospective.csv",
+                                "random_auroc_vs_measured_inactives",
+                                lambda r: r["status"] == "ok")), 4))
+claim("08", "specificity on non-CNS chemistry", "noncns_specificity_summary.csv",
+      lambda: float(cell(TAB / "noncns_specificity_summary.csv", "estimate",
+                         lambda r: r["metric"].startswith("Specificity"))), "{:.3f}")
+
 CHAPTER_FILES = {
+    "01": THESIS / "chapter01_introduction.md",
+    "02": THESIS / "chapter02_data.md",
+    "03": THESIS / "chapter03_representation_and_models.md",
+    "04": THESIS / "chapter04_uncertainty.md",
+    "05": THESIS / "chapter05_thresholds.md",
+    "06": THESIS / "chapter06_binder_panel.md",
+    "07": THESIS / "chapter07_gating_and_pathway_graph.md",
+    "08": THESIS / "chapter08_validation.md",
     "09": THESIS / "chapter09_falsification.md",
     "10": THESIS / "chapter10_limitations.md",
     "viva": THESIS / "viva_preparation.md",

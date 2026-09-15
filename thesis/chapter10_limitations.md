@@ -219,8 +219,8 @@ Two further qualifications, both established elsewhere in this thesis:
   bound behaviour on genuinely distant chemistry. H4 addresses that and, as Chapter 9 shows, does so
   on 61 compounds carrying one false positive, which is not enough to separate the strata.
 - The applicability flag itself is a weak instrument. Against chemistry genuinely absent from the
-  reference it separates at a median maximum similarity of 0.59 for unseen drugs against 0.47 for
-  non-drug-like controls (n = 25, Mann-Whitney p = 1.11 × 10⁻³), but only **20 per cent** of
+  reference it separates at a median maximum similarity of 0.57 for unseen drugs against 0.47 for
+  non-drug-like controls (n = 25, Mann-Whitney p = 1.82 × 10⁻³), but only **20 per cent** of
   non-drug-like structures fall below the deployed threshold of 0.30
   (`results/tables/inversion_validation.csv`). The conformal interval and the nearest-analogue
   distance are the stronger statements and the interface presents them as such.
@@ -268,7 +268,7 @@ section 10.8:
 
 ## 10.8 The ledger
 
-41 items were raised across Chapters 1 to 9. Ten are now closed. They are listed as closed rather
+41 items were raised across Chapters 1 to 9. Eleven are now closed. They are listed as closed rather
 than removed, because a thesis that silently drops its own outstanding items is doing the thing this
 chapter is about.
 
@@ -295,7 +295,14 @@ section 10.7 describes.
 | `background_specificity.csv` holds pre-correction output | 9 | Refreshed by updating only its two reported columns from the registry. **No threshold and no background false-positive rate moved on any of the 47 endpoints**, and the shipped copy in the submission package was updated with it. Two tests pin both |
 | The technical report's cross-provenance section is stale | 8 | The 0.868 was not hard-coded; the report computes it and had never been rebuilt, because `TECHNICAL_REPORT.md` was the one generated document outside the freshness graph. It is now declared against all 23 of its inputs and rebuilt at 0.716 |
 
-The third of those deserves a sentence, because Chapter 9 posed it as a dilemma and the resolution is
+**Closed during a later audit.** One more was closed while this thesis was checked chapter by
+chapter for consistency with the manuscript audit that had, by then, already answered it elsewhere.
+
+| Item | Raised | Closed by |
+|---|---|---|
+| The unique-compound count of 169,341, keyed by InChIKey of the desalted parent, had never been re-derived | 1, 2, 10 | `src/brainsafe/evaluation/unique_compound_count.py` computes it directly from the endpoint tables and reproduces it to the digit: 170,619 distinct SMILES, 2 unparseable, 169,341 distinct InChIKeys of the desalted, neutralised parent (`results/tables/unique_compound_count.csv`) |
+
+The third of those closed after writing deserves a sentence, because Chapter 9 posed it as a dilemma and the resolution is
 narrower than either horn. Four of that file's six columns were already correct; only the two
 reported ones were stale, so refreshing those two from the registry avoids re-running the sequence
 that would rewrite every operating threshold to correct a reported one. And the version a reviewer
@@ -317,9 +324,8 @@ housekeeping.
    repairs above were all found by reading rather than by a check. (9)
 5. Two citation gaps remain in Chapter 1: a CNS attrition series, and verified citations for the
    named comparison servers. (1)
-6. The unique-compound count of 169,341 keyed by InChIKey is quoted in the manuscript and the
-   evidence map and has not been re-derived. Counting distinct SMILES gives 170,619, which is
-   consistent with the two being different quantities but verifies nothing. (1, 2)
+6. ~~The unique-compound count of 169,341 had never been re-derived.~~ **Done, see section 10.8.**
+   (1, 2)
 7. Per-endpoint AUROC and sensitivity carry no intervals anywhere, and the two extremes of the
    reported 0.719 to 0.985 range rest on 37 and 23 compounds. Wilson or bootstrap intervals are
    cheap and would settle how much of that spread is real. (4, 6)

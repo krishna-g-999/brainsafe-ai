@@ -53,9 +53,9 @@ The reporting rule is stated in the plan as well: a refuted hypothesis is the mo
 available, and is to be reported as prominently as a confirmation. Section 9.4 is the test of whether
 that was honoured, and it largely was.
 
-## 9.3 The nine hypotheses
+## 9.3 The ten hypotheses
 
-Four hypotheses were refuted, four supported and one weakened
+Four hypotheses were refuted, four supported and two weakened
 (`inversion/results/VERDICTS.csv`). The graph under test is fingerprinted, at SHA-256 `25cae8c8...`
 over 16 conditions and 51 targets (`inversion/results/GRAPH_FINGERPRINT.json`), so a verdict cannot
 silently come to describe a different graph.
@@ -71,8 +71,18 @@ silently come to describe a different graph.
 | H7 | Some panel targets are non-discriminative | **REFUTED** | 5.9 |
 | H8 | Engaged targets are independent observations | **REFUTED** | 7.4, 7.8 |
 | H9 | The disease layer discriminates between compounds | SUPPORTED | 7.7 |
+| H10 | The barrier model earns its place over a descriptor rule | WEAKENED | **10.3** |
 
-Seven of the nine are argued in full elsewhere in this thesis and are not re-derived here. This
+> **On H10.** This chapter was written with nine hypotheses, and section 9.9 below named the missing
+> tenth explicitly: no test in the suite examined the barrier model, which gates every disease score
+> and names the architecture. That gap was closed afterwards, in Chapter 10 rather than here, because
+> the null it required, that a fitted rule over the twelve descriptors alone ranks compounds as well
+> as the deployed forest, could not be argued without the barrier-necessity comparison Chapter 10
+> already builds. The table above and every count in this chapter now include it; section 9.9's
+> original wording is kept, struck through rather than deleted, because a thesis that quietly
+> backfills its own stated gap is doing the thing Chapter 10 is about.
+
+Eight of the ten are argued in full elsewhere in this thesis and are not re-derived here. This
 chapter takes the four questions the individual hypotheses cannot answer: what the refutations cost,
 what the suite found that nothing else did, whether its two untreated hypotheses are as strong as
 their verdicts read, and what the suite does not cover.
@@ -139,7 +149,7 @@ has already been passed is behaving correctly.
 
 ## 9.5 The result the suite bought: H7 found a defect nobody was looking for
 
-The strongest argument for the whole exercise is not any of the nine verdicts. It is that H7, asking
+The strongest argument for the whole exercise is not any of the ten verdicts. It is that H7, asking
 an unrelated question, measured the quantity Chapter 5 would later find had been published wrongly
 for months.
 
@@ -428,24 +438,37 @@ figures that are.
 
 ## 9.9 What a falsification suite cannot do
 
-Three limits, stated because the suite is the strongest evidence in this thesis and overreading it
-would be easy.
+Three limits were named when this chapter was first written, because the suite is the strongest
+evidence in this thesis and overreading it would be easy. One of the three, that nothing in it tested
+the barrier model, is resolved below rather than removed, since a suite closing a gap it named is
+part of the record this chapter keeps.
 
-**It tests what its author thought to doubt.** All nine hypotheses were written by the person who
+**It tests what its author thought to doubt.** All ten hypotheses were written by the person who
 built the system. The suite is an excellent instrument against self-deception about things one has
 noticed and no instrument at all against things one has not. Its own history illustrates the point:
-H8 and H9 do not appear in `PLAN.md`, which stops at H7, and H9 was written only after H6 returned a
-result its author judged unfairly scored. Three of the nine hypotheses exist because earlier ones
-produced surprises, which is the right way for a suite to grow and also an admission that its initial
-coverage was set by intuition.
+H8, H9 and H10 do not appear in `PLAN.md`, which stops at H7; H9 was written only after H6 returned a
+result its author judged unfairly scored; and H10, as the next paragraph records, was written only
+after this section first went to press naming its own absence. Four of the ten hypotheses exist
+because earlier ones produced surprises or, in H10's case, because a gap this thesis stated plainly
+was then filled rather than left standing, which is the right way for a suite to grow and also an
+admission that its initial coverage was set by intuition.
 
-**Nothing in it tests the barrier model.** H1, H2, H3, H6 and H9 test the disease layer; H5 tests
-read-across; H7 and H8 test the target panel; H4 tests system-level specificity. The BBB classifier,
-which gates every disease score and is the component the whole architecture is named for, has no
-hypothesis. Its evidence is the external set in Chapter 8, AUROC 0.7666 on 227 unseen drugs, which is
-a validation and not a falsification. The obvious missing test is a null asking whether the barrier
-model's contribution to the gated score could be replaced by a molecular-weight or cLogP rule without
-loss. That test does not exist and should.
+~~**Nothing in it tests the barrier model.**~~ **Resolved by H10, argued in Chapter 10 section
+10.3.** H1, H2, H3, H6 and H9 test the disease layer; H5 tests read-across; H7 and H8 test the
+target panel; H4 tests system-level specificity; H10 tests the barrier classifier itself, which
+gates every disease score and is the component the whole architecture is named for. Until H10 the
+only evidence for it was the external set in Chapter 8, AUROC 0.7666 on 227 unseen drugs, which is a
+validation and not a falsification. The null H10 poses is exactly the one this section originally
+called for and marked missing: whether the barrier model's contribution to the ranking could be
+replaced by a fitted rule over the twelve descriptors already in the feature vector without loss.
+It could not be dismissed. Read on the scaffold hold-out the fingerprint wins outright; read on 227
+approved drugs the model has never seen, its bootstrap interval crosses zero against the
+descriptor-only forest, so the verdict is WEAKENED rather than the SUPPORTED a point estimate alone
+would have given it. Chapter 10 section 10.3 has the full comparison; one qualification carries back
+here. H10 tests the barrier model's contribution to the *ranking* it produces, not its role as a
+multiplicative *gate*: whether replacing the probability with a descriptor rule would change which
+compounds clear the 0.30 reporting threshold is a further, more directly user-relevant question that
+remains open.
 
 **A verdict is a summary of one measurement, not a property of the system.** H4 is SUPPORTED on 61
 compounds; H5 is SUPPORTED against a null with a ceiling near 0.09; H9 is SUPPORTED on a mean
@@ -456,9 +479,11 @@ suite that reads the column rather than the tables will overstate what it found.
 ## 9.10 What this chapter establishes
 
 - **The suite is the most valuable evidence in this thesis, and it is valuable in proportion to what
-  it refuted.** Four of nine central claims did not survive. Two changed how the system is described,
-  one changed the interface, and one contributed to withdrawing four endpoints that were firing on
-  glucose, urea and lactate.
+  it refuted or weakened.** Four of ten central claims did not survive and two more were downgraded.
+  Two of the refutations changed how the system is described, one changed the interface, and one
+  contributed to withdrawing four endpoints that were firing on glucose, urea and lactate; H10, added
+  after this section first went to press, downgraded a comparison this thesis would otherwise have
+  reported as a clean win for the deployed fingerprint.
 - **Its best result was incidental.** H7's sensitivity column recorded the correct panel figure three
   weeks before anything compared it with the published one, and it agreed with the eventual audit to
   within 0.031 by an entirely unrelated construction.

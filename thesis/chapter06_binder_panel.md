@@ -199,10 +199,11 @@ Putting the corrected figures together, the deployed binder panel:
 1. **Per-endpoint AUROC against measured inactives carries no interval.** The reported range, 0.719
    to 0.985, has its two extremes computed on 37 and 23 compounds. Wilson or bootstrap intervals
    would settle how much of that spread is real, and are cheap.
-2. **The sensitivity correction has been applied to the registry but not to the prose.** The
-   manuscript, the evidence map and the technical report still quote 0.8983 with the qualifier "on
-   actives withheld by scaffold". The registry, the reconciliation artefact and the submission
-   package now all read 0.7638.
+2. ~~The sensitivity correction has been applied to the registry but not to the prose.~~
+   **Done for the manuscript and the technical report**, both of which now state 0.764 and name
+   0.898 as the superseded published figure. `EVIDENCE_MAP.md` was not found at the top level of the
+   repository during this pass and could not be checked; if it survives elsewhere it should be
+   checked against the same correction.
 3. **TAAR1 should be reviewed for withdrawal or for a warning flag.** It is the least trustworthy
    deployed endpoint on four independent measures, and nothing in the interface says so beyond the
    generic reliability flag.
