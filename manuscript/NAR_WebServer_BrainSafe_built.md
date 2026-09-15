@@ -58,16 +58,17 @@ https://github.com/krishna-g-999/brainsafe-ai.
 
 ## Introduction
 
-Central nervous system drug discovery fails in a characteristic way. A compound can be potent at its
-intended target and never reach the brain, or reach it and carry an unacceptable liability, or engage
-targets nobody tested and acquire a clinical profile nobody predicted. Pharmacokinetics and the
-barrier itself, rather than target affinity, account for a large share of central attrition
-(4), and the quantity that governs central action is not total brain concentration but
-the unbound brain-to-plasma ratio (5).
+Central nervous system drug discovery fails more often, and later, than discovery for most other
+therapeutic areas (4). A compound can be potent at its intended target and never
+reach the brain, or reach it and carry an unacceptable liability, or engage targets nobody tested and
+acquire a clinical profile nobody predicted. Pharmacokinetics and the barrier itself, rather than
+target affinity, account for a large share of central attrition (5), and the quantity
+that governs central action is not total brain concentration but the unbound brain-to-plasma ratio
+(6).
 
 Answering "will this molecule act on the brain, through what, and is it safe" therefore requires
 exposure, target engagement and liability to be answered together. Existing public resources address
-these separately. Property-based schemes such as CNS MPO (6) score the exposure axis well but
+these separately. Property-based schemes such as CNS MPO (7) score the exposure axis well but
 name no mechanism. Single-endpoint QSAR models name one mechanism but say nothing about whether the
 compound arrives. Large language models are fluent and will produce measured-looking identifiers that
 do not exist. None of these returns a calibrated probability with a statement of when it should not
@@ -98,24 +99,24 @@ The panel is organised around the four questions a CNS candidate must satisfy in
 *Exposure* is modelled first, because a molecule that reaches no free concentration in brain tissue
 cannot act centrally however potent it is. *Target engagement* covers the cholinergic axis, where
 acetylcholinesterase inhibition remains the mainstay symptomatic treatment in Alzheimer's disease
-(7), and the amyloid and tau axes (8); monoamine oxidase B (9) and LRRK2
-(10) for Parkinson's disease; the monoaminergic, opioid, cannabinoid, histaminergic and
+(8), and the amyloid and tau axes (9); monoamine oxidase B (10) and LRRK2
+(11) for Parkinson's disease; the monoaminergic, opioid, cannabinoid, histaminergic and
 adenosine systems underlying depression, psychosis, addiction, chronic pain and sleep regulation, the
-last including the orexin receptors (11); and three axes implicated across several
+last including the orexin receptors (12); and three axes implicated across several
 neurodegenerative conditions rather than tied to one, NLRP3-driven neuroinflammation
-(12), KEAP1-NRF2 antioxidant signalling (13), and histone deacetylase activity,
-whose genetic removal modifies pathology in Huntington's disease models (14). Glutamatergic
+(13), KEAP1-NRF2 antioxidant signalling (14), and histone deacetylase activity,
+whose genetic removal modifies pathology in Huntington's disease models (15). Glutamatergic
 targets are included on the same basis, riluzole being the long-standing approved agent acting on
-that axis (15). *Safety* is represented by hERG blockade, a leading cause of late-stage
-cardiovascular attrition through QT prolongation (16). *Developability* is covered by the
+that axis (16). *Safety* is represented by hERG blockade, a leading cause of late-stage
+cardiovascular attrition through QT prolongation (17). *Developability* is covered by the
 ADME layer.
 
 ### Training data and the recovery of the negative class
 
 Protein-target activity is pooled at compound level from ChEMBL (1) pChEMBL values and
 BindingDB (2); blood-brain barrier labels come from B3DB (3) augmented with FDA-curated
-approved drugs; the nine ADME endpoints use measured sets from Therapeutics Data Commons (17),
-MoleculeNet (18), B3DB and ChEMBL. The panel holds 228,200 measured compound-endpoint
+approved drugs; the nine ADME endpoints use measured sets from Therapeutics Data Commons (18),
+MoleculeNet (19), B3DB and ChEMBL. The panel holds 228,200 measured compound-endpoint
 records over 169,341 unique compounds keyed by the InChIKey of the desalted parent. No value is
 imputed and no annotation overrides a measurement. Each endpoint is trained on its own measured set
 alone; across the deployed panel those sets span from 387 compounds (KEAP1) to 10,276 (hERG),
@@ -140,7 +141,7 @@ class and never enters a regression.
 ### Representation and model selection
 
 Each compound is reduced to its largest organic fragment, neutralised, sanitised, and represented
-by a fixed 1,036-column vector: a 1,024-bit folded ECFP-4 fingerprint (19) and twelve physicochemical
+by a fixed 1,036-column vector: a 1,024-bit folded ECFP-4 fingerprint (20) and twelve physicochemical
 descriptors (molecular weight, cLogP, TPSA, hydrogen-bond donors and acceptors, rotatable bonds,
 aromatic rings, fraction sp3, ring count, heavy atoms, formal charge, QED). Folding means a set bit
 reports that some substructure environment hashing to that index is present, not which one, and
@@ -174,10 +175,10 @@ representation under this rule and 1,155 charged ones are correctly left alone, 
 panel was refitted afterwards so that training and inference share one representation.
 
 Five model families were compared under identical 5-fold cross-validation on both split regimes using
-scikit-learn (20), on the deduplicated matrix the deployed pipeline fits. Two are baselines a
+scikit-learn (21), on the deduplicated matrix the deployed pipeline fits. Two are baselines a
 reader is entitled to demand: a five-nearest-neighbour read-across on Tanimoto similarity, which is
 what a medicinal chemist does by eye, and L2-regularised logistic regression. Three are ensembles: a
-random forest (21), XGBoost (22) and histogram gradient boosting, each
+random forest (22), XGBoost (23) and histogram gradient boosting, each
 class-weighted for the classification endpoints so that no family is compared unweighted against
 weighted competitors. On the scaffold split the random forest leads classification at 0.9212 mean
 AUROC, ahead of XGBoost (0.9156), histogram gradient boosting (0.9153), the read-across (0.8829) and
@@ -189,13 +190,13 @@ gradient boosting and XGBoost reach mean scaffold R² of 0.5424 and 0.5413 again
 forest is best on none of the five. A random forest is nonetheless deployed everywhere, because it
 leads where the principal claims are made, calibrates stably, supplies the vote distribution the
 conformal layer consumes, does not extrapolate beyond the training range, and is exactly rather than
-approximately explainable by TreeSHAP (23). The cost of that uniformity is 0.023 mean R² on
+approximately explainable by TreeSHAP (24). The cost of that uniformity is 0.023 mean R² on
 the potency regressions and is stated rather than left for a reader to find.
 
 ### Cross-validation, calibration and uncertainty
 
 Every endpoint is cross-validated ten-fold in two regimes: a random split, and a split grouped on
-Bemis-Murcko scaffolds (24) that withholds entire structural classes. The two answer
+Bemis-Murcko scaffolds (25) that withholds entire structural classes. The two answer
 different questions, and the distance between them is the honest statement of how far a model
 travels. Across 74 cross-validated estimators, spanning 70 distinct endpoints because four
 receptors carry both a potency regression and a binder classifier, this is 1,480 fitted models
@@ -203,7 +204,7 @@ standing behind the deployed panel. A complete inventory of every estimator, wit
 validation scheme, calibration and fitting date, is given in Supplementary Table S1 and regenerates
 with one command.
 
-Classifiers are isotonically calibrated (25) on out-of-fold predictions, so no compound
+Classifiers are isotonically calibrated (26) on out-of-fold predictions, so no compound
 contributes to the calibrator that scores it; mean expected calibration error falls from 0.0801 to
 0.0147. The reported value is specific to how the calibrator is nested, and the nesting is therefore
 stated rather than left implicit: isotonic regression is fitted by five-fold `cross_val_predict` over
@@ -211,10 +212,10 @@ the pooled out-of-fold prediction vector, and a different, equally defensible ne
 estimator with its own honest error, so the protocol is reported alongside the number rather than the
 number alone. Each prediction additionally carries a Mondrian conformal interval, computed on the
 same deduplicated matrix the classifiers are trained on, which converts the applicability domain from
-a caveat into a coverage statement (26): empirical coverage over the eight core classifiers is
+a caveat into a coverage statement (27): empirical coverage over the eight core classifiers is
 0.876 to 0.933 against a 0.90 target, with mean set size from 0.956 to 1.215 on a two-class problem
 where 1.0 is a confident single label. The applicability domain itself is the maximum ECFP-4 Tanimoto
-similarity of the query to that endpoint's own measured chemistry (27), reported with the
+similarity of the query to that endpoint's own measured chemistry (28), reported with the
 nearest measured analogue and its structure.
 
 ### Binder classifiers, and thresholds measured where they were not set
@@ -222,8 +223,8 @@ nearest measured analogue and its structure.
 Receptor, transporter and kinase targets are reported in ChEMBL almost entirely as actives, so a
 naive potency regressor learns the training median. Each is therefore modelled as a binder
 classifier: positives are measured binders, negatives are measured non-binders where they exist plus
-property-matched decoys (28) with Tanimoto below 0.35 to any positive. Binder classifiers use
-sigmoid calibration (29), because the withheld set for one endpoint is often too small to fit a
+property-matched decoys (29) with Tanimoto below 0.35 to any positive. Binder classifiers use
+sigmoid calibration (30), because the withheld set for one endpoint is often too small to fit a
 step function without overfitting it.
 
 Decoys create a specific failure. If a decision threshold is chosen as a quantile of a sample and the
@@ -243,13 +244,13 @@ expected behaviour of a real constraint rather than evidence against it.
 Because several training sets are active-heavy, a raw calibrated probability is not evidence of
 engagement unless it exceeds the endpoint base rate; targets are therefore scored by enrichment over
 that base rate. A curated, versioned graph maps each target through a pathway to the diseases it
-informs, anchored to KEGG synapse and disease maps (30), the Reactome KEAP1-NFE2L2 oxidative
-stress response (31) and IUPHAR/BPS Guide to Pharmacology associations (32). A
+informs, anchored to KEGG synapse and disease maps (31), the Reactome KEAP1-NFE2L2 oxidative
+stress response (32) and IUPHAR/BPS Guide to Pharmacology associations (33). A
 disease score is the strongest engaged target for that disease scaled by predicted barrier
 penetration; taking the strongest rather than an average prevents unrelated mechanisms from diluting
 a real signal.
 
-The server is a single-page application built with Streamlit (33) and RDKit (34),
+The server is a single-page application built with Streamlit (34) and RDKit (35),
 accepting a SMILES string or a compound name resolved through PubChem. Models are loaded once and
 cached; a complete profile across all 70 deployed estimators, including both applicability-domain
 calculations against the 158,890-compound reference library, returns in a few seconds on one CPU
@@ -305,7 +306,7 @@ The mechanism call is correct where it can be checked against pharmacology that 
 For donepezil, haloperidol, morphine and fluoxetine the server names acetylcholinesterase, D2, the
 mu-opioid receptor and the serotonin transporter respectively as the driving target (Figure 4A).
 Attribution supports the same conclusion from a different direction: SHAP values computed with
-TreeExplainer (23) on the deployed forests, which is exact for a random forest rather than an
+TreeExplainer (24) on the deployed forests, which is exact for a random forest rather than an
 approximation, recover known physicochemistry that was never supplied to the models. Over 800 sampled
 training compounds, larger TPSA, molecular weight and hydrogen-bond donor count all push the barrier
 model away from penetration (Spearman correlation between feature value and SHAP value of -0.93,
@@ -387,7 +388,7 @@ failure. The passing criterion was not moved. Against chemistry genuinely absent
 the flag separates at median maximum similarity 0.47 against 0.57 for unseen drugs (n = 25,
 p = 1.8e-03), which is a weak signal and is described as one.
 
-**Attribution.** SHAP attributions computed with TreeExplainer (23), which is exact for a
+**Attribution.** SHAP attributions computed with TreeExplainer (24), which is exact for a
 random forest rather than an approximation, over the deployed classifiers recover known
 physicochemistry rather than artefacts. For the barrier model, larger TPSA, molecular weight and
 hydrogen-bond donor count all push away from penetration (Spearman correlation between feature value
@@ -400,13 +401,16 @@ Against the read-across baseline that represents what a chemist does by eye, the
 forest is better on all thirteen endpoints where the two were compared, on the scaffold split. The
 margin is quoted per metric rather than pooled, because eight of those endpoints are scored by
 AUROC and five by R-squared: the mean gain is 0.038 AUROC over the eight classifiers and 0.045
-R-squared over the five potency regressions. Against property-based CNS scoring (6), which addresses exposure only, BrainSafe AI
+R-squared over the five potency regressions. Against property-based CNS scoring (7), which addresses exposure only, BrainSafe AI
 adds mechanism and liability but is not a replacement for expert medicinal-chemistry judgement on
-either axis. Against single-endpoint QSAR servers, the difference is the gating: a target score here
-is admitted only in proportion to predicted exposure, so a potent binder that does not reach the
-brain is reported as such rather than as a hit. We are not aware of another freely available server
-that returns exposure-gated, calibrated, mechanism-resolved profiles across this many CNS endpoints
-with an explicit applicability-domain statement on every value.
+either axis. Against ADMET and permeability servers such as SwissADME (36), ADMETlab 2.0
+(37), pkCSM (38) and admetSAR 2.0 (39), and against target-prediction servers
+such as SwissTargetPrediction (40), the difference is the gating: a target score
+here is admitted only in proportion to predicted exposure, so a potent binder that does not reach the
+brain is reported as such rather than as a hit, and no single one of these servers couples exposure,
+target engagement and disease relevance in one calibrated output. We are not aware of another freely
+available server that returns exposure-gated, calibrated, mechanism-resolved profiles across this
+many CNS endpoints with an explicit applicability-domain statement on every value.
 
 ### Use case: a mechanism profile, and knowing when to stay silent
 
@@ -657,7 +661,7 @@ calibration and fitting date for every estimator, is Supplementary Table S1.
 **Figure 3.** Four validations that a cross-validated score cannot replace. (**A**) Expected
 calibration error before and after isotonic regression fitted on out-of-fold predictions, so no
 compound contributes to the calibrator that scores it. (**B**) Recall on whole scaffold classes
-withheld before training, with 95 per cent Wilson intervals (35) and marker area proportional
+withheld before training, with 95 per cent Wilson intervals (41) and marker area proportional
 to the number of withheld actives, so an interval that is wide because the evidence is thin looks
 thin. (**C**) Specificity on chemistry the server should stay quiet about, and external
 discrimination on approved drugs absent from the training source. (**D**) The adversarial suite, in
@@ -716,35 +720,41 @@ Every entry was resolved by a live query against CrossRef or Europe PMC and acce
 1. Zdrazil B, Felix E, Hunter F et al. The ChEMBL Database in 2023: a drug discovery platform spanning multiple bioactivity data types and time periods. Nucleic Acids Research. 2024. doi:10.1093/nar/gkad1004. https://pmc.ncbi.nlm.nih.gov/articles/PMC10767899/ https://pubmed.ncbi.nlm.nih.gov/37933841/
 2. Gilson M, Liu T, Baitaluk M et al. BindingDB in 2015: A public database for medicinal chemistry, computational chemistry and systems pharmacology. Nucleic Acids Research. 2016. doi:10.1093/nar/gkv1072. https://pmc.ncbi.nlm.nih.gov/articles/PMC4702793/ https://pubmed.ncbi.nlm.nih.gov/26481362/
 3. Meng F, Xi Y, Huang J et al. A curated diverse molecular database of blood-brain barrier permeability with chemical descriptors. Scientific Data. 2021. doi:10.1038/s41597-021-01069-5. https://pmc.ncbi.nlm.nih.gov/articles/PMC8556334/ https://pubmed.ncbi.nlm.nih.gov/34716354/
-4. Alavijeh M, Chishty M, Qaiser M et al. Drug metabolism and pharmacokinetics, the blood-brain barrier, and central nervous system drug discovery. NeuroRX. 2005. doi:10.1602/neurorx.2.4.554. https://pmc.ncbi.nlm.nih.gov/articles/PMC1201315/ https://pubmed.ncbi.nlm.nih.gov/16489365/
-5. Loryan I, Reichel A, Feng B et al. Unbound Brain-to-Plasma Partition Coefficient, Kp,uu,brain—a Game Changing Parameter for CNS Drug Discovery and Development. Pharmaceutical Research. 2022. doi:10.1007/s11095-022-03246-6. https://pmc.ncbi.nlm.nih.gov/articles/PMC9246790/ https://pubmed.ncbi.nlm.nih.gov/35411506/
-6. Wager T, Hou X, Verhoest P et al. Moving beyond Rules: The Development of a Central Nervous System Multiparameter Optimization (CNS MPO) Approach To Enable Alignment of Druglike Properties. ACS Chemical Neuroscience. 2010. doi:10.1021/cn100008c. https://pmc.ncbi.nlm.nih.gov/articles/PMC3368654/ https://pubmed.ncbi.nlm.nih.gov/22778837/
-7. Saify Z, Sultana N. Role of Acetylcholinesterase Inhibitors and Alzheimer Disease. Drug Design and Discovery in Alzheimer's Disease. 2014. doi:10.1016/b978-0-12-803959-5.50007-6.
-8. Decourt B, Macias M, Sabbagh M et al. BACE1 Inhibitors: Attractive Therapeutics for Alzheimer’s Disease. Drug Design and Discovery in Alzheimer's Disease. 2014. doi:10.1016/b978-0-12-803959-5.50010-6.
-9. Dezsi L, Vecsei L. Monoamine Oxidase B Inhibitors in Parkinson's Disease. CNS & neurological disorders drug targets. 2017. doi:10.2174/1871527316666170124165222. https://pubmed.ncbi.nlm.nih.gov/28124620/
-10. West A. Achieving neuroprotection with LRRK2 kinase inhibitors in Parkinson disease. Experimental Neurology. 2017. doi:10.1016/j.expneurol.2017.07.019. https://pmc.ncbi.nlm.nih.gov/articles/PMC5693612/ https://pubmed.ncbi.nlm.nih.gov/28764903/
-11. Riemann D, Spiegelhalder K. Orexin receptor antagonists: a new treatment for insomnia?. The Lancet Neurology. 2014. doi:10.1016/s1474-4422(13)70311-9. https://pubmed.ncbi.nlm.nih.gov/24680373/
-12. Duan Y, Kelley N, He Y. Role of the NLRP3 inflammasome in neurodegenerative diseases and therapeutic implications. Neural Regeneration Research. 2020. doi:10.4103/1673-5374.272576. https://pmc.ncbi.nlm.nih.gov/articles/PMC7047811/ https://pubmed.ncbi.nlm.nih.gov/31960806/
-13. Yamazaki H, Tanji K, Wakabayashi K, Matsuura S, Itoh K. Role of the Keap1/Nrf2 pathway in neurodegenerative diseases. Pathology international. 2015. doi:10.1111/pin.12261. https://pubmed.ncbi.nlm.nih.gov/25707882/
-14. Kovalenko M, Erdin S, Andrew M et al. Histone deacetylase knockouts modify transcription, CAG instability and nuclear pathology in Huntington disease mice. eLife. 2020. doi:10.7554/elife.55911. https://pmc.ncbi.nlm.nih.gov/articles/PMC7581428/ https://pubmed.ncbi.nlm.nih.gov/32990597/
-15. RG M, JD M, M L et al. Riluzole for amyotrophic lateral sclerosis (ALS)/motor neuron disease (MND). Amyotrophic Lateral Sclerosis and Other Motor Neuron Disorders. 2003. doi:10.1080/14660820310002601.
-16. Ritter J. Cardiac safety, drug‐induced QT prolongation and torsade de pointes (TdP). British Journal of Clinical Pharmacology. 2012. doi:10.1111/j.1365-2125.2012.04193.x. https://pmc.ncbi.nlm.nih.gov/articles/PMC3370337/ https://pubmed.ncbi.nlm.nih.gov/22329611/
-17. Huang K, Fu T, Gao W, Zhao Y, Roohani Y, Leskovec J, Coley CW, Xiao C, Sun J, Zitnik M. Artificial intelligence foundation for therapeutic science. Nature chemical biology. 2022. doi:10.1038/s41589-022-01131-2. https://pmc.ncbi.nlm.nih.gov/articles/PMC9529840/ https://pubmed.ncbi.nlm.nih.gov/36131149/
-18. Wu Z, Ramsundar B, Feinberg E et al. MoleculeNet: a benchmark for molecular machine learning. Chemical Science. 2018. doi:10.1039/c7sc02664a. https://pmc.ncbi.nlm.nih.gov/articles/PMC5868307/ https://pubmed.ncbi.nlm.nih.gov/29629118/
-19. Rogers D, Hahn M. Extended-Connectivity Fingerprints. Journal of Chemical Information and Modeling. 2010. doi:10.1021/ci100050t. https://pubmed.ncbi.nlm.nih.gov/20426451/
-20. Pedregosa F, Varoquaux G, Gramfort A et al. Scikit-learn: Machine Learning in Python. Journal of Machine Learning Research. 2011;12:2825-2830. https://www.jmlr.org/papers/v12/pedregosa11a.html
-21. Breiman L. Random Forests. Machine Learning. 2001. doi:10.1023/a:1010933404324.
-22. Chen T, Guestrin C. XGBoost: A Scalable Tree Boosting System. Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining. 2016. doi:10.1145/2939672.2939785.
-23. Lundberg S, Erion G, Chen H et al. From local explanations to global understanding with explainable AI for trees. Nature Machine Intelligence. 2020. doi:10.1038/s42256-019-0138-9. https://pmc.ncbi.nlm.nih.gov/articles/PMC7326367/ https://pubmed.ncbi.nlm.nih.gov/32607472/
-24. Bemis G, Murcko M. The Properties of Known Drugs. 1. Molecular Frameworks. Journal of Medicinal Chemistry. 1996. doi:10.1021/jm9602928. https://pubmed.ncbi.nlm.nih.gov/8709122/
-25. Niculescu-Mizil A, Caruana R. Predicting good probabilities with supervised learning. Proceedings of the 22nd international conference on Machine learning  - ICML '05. 2005. doi:10.1145/1102351.1102430.
-26. Norinder U, Carlsson L, Boyer S et al. Introducing Conformal Prediction in Predictive Modeling. A Transparent and Flexible Alternative to Applicability Domain Determination. Journal of Chemical Information and Modeling. 2014. doi:10.1021/ci5001168. https://pubmed.ncbi.nlm.nih.gov/24797111/
-27. Jaworska J, Nikolova-Jeliazkova N, Aldenberg T. QSAR Applicability Domain Estimation by Projection of the Training Set in Descriptor Space: A Review. Alternatives to Laboratory Animals. 2005. doi:10.1177/026119290503300508. https://pubmed.ncbi.nlm.nih.gov/16268757/
-28. Mysinger M, Carchia M, Irwin J et al. Directory of Useful Decoys, Enhanced (DUD-E): Better Ligands and Decoys for Better Benchmarking. Journal of Medicinal Chemistry. 2012. doi:10.1021/jm300687e. https://pmc.ncbi.nlm.nih.gov/articles/PMC3405771/ https://pubmed.ncbi.nlm.nih.gov/22716043/
-29. Lin H, Lin C, Weng R. A note on Platt’s probabilistic outputs for support vector machines. Machine Learning. 2007. doi:10.1007/s10994-007-5018-6.
-30. Kanehisa M, Goto S. KEGG: kyoto encyclopedia of genes and genomes. Nucleic acids research. 2000. doi:10.1093/nar/28.1.27. https://pmc.ncbi.nlm.nih.gov/articles/PMC102409/ https://pubmed.ncbi.nlm.nih.gov/10592173/
-31. Milacic M, Beavers D, Conley P, Gong C, Gillespie M, Griss J, Haw R, Jassal B, Matthews L, May B, Petryszak R, Ragueneau E, Rothfels K, Sevilla C, Shamovsky V, Stephan R, Tiwari K, Varusai T, Weiser J, Wright A, Wu G, Stein L, Hermjakob H, D'Eustachio P. The Reactome Pathway Knowledgebase 2024. Nucleic acids research. 2024. doi:10.1093/nar/gkad1025. https://pmc.ncbi.nlm.nih.gov/articles/PMC10767911/ https://pubmed.ncbi.nlm.nih.gov/37941124/
-32. Harding SD, Armstrong JF, Faccenda E, Southan C, Alexander SPH, Davenport AP, Spedding M, Davies JA. The IUPHAR/BPS Guide to PHARMACOLOGY in 2024. Nucleic acids research. 2024. doi:10.1093/nar/gkad944. https://pmc.ncbi.nlm.nih.gov/articles/PMC10767925/ https://pubmed.ncbi.nlm.nih.gov/37897341/
-33. Streamlit: an open-source app framework. https://streamlit.io
-34. RDKit: Open-source cheminformatics. https://www.rdkit.org
-35. Wilson E. Probable Inference, the Law of Succession, and Statistical Inference. Journal of the American Statistical Association. 1927. doi:10.1080/01621459.1927.10502953.
+4. Pangalos M, Schechter L, Hurko O. Drug development for CNS disorders: strategies for balancing risk and reducing attrition. Nature Reviews Drug Discovery. 2007. doi:10.1038/nrd2094.
+5. Alavijeh M, Chishty M, Qaiser M et al. Drug metabolism and pharmacokinetics, the blood-brain barrier, and central nervous system drug discovery. NeuroRX. 2005. doi:10.1602/neurorx.2.4.554. https://pmc.ncbi.nlm.nih.gov/articles/PMC1201315/ https://pubmed.ncbi.nlm.nih.gov/16489365/
+6. Loryan I, Reichel A, Feng B et al. Unbound Brain-to-Plasma Partition Coefficient, Kp,uu,brain—a Game Changing Parameter for CNS Drug Discovery and Development. Pharmaceutical Research. 2022. doi:10.1007/s11095-022-03246-6. https://pmc.ncbi.nlm.nih.gov/articles/PMC9246790/ https://pubmed.ncbi.nlm.nih.gov/35411506/
+7. Wager T, Hou X, Verhoest P et al. Moving beyond Rules: The Development of a Central Nervous System Multiparameter Optimization (CNS MPO) Approach To Enable Alignment of Druglike Properties. ACS Chemical Neuroscience. 2010. doi:10.1021/cn100008c. https://pmc.ncbi.nlm.nih.gov/articles/PMC3368654/ https://pubmed.ncbi.nlm.nih.gov/22778837/
+8. Saify Z, Sultana N. Role of Acetylcholinesterase Inhibitors and Alzheimer Disease. Drug Design and Discovery in Alzheimer's Disease. 2014. doi:10.1016/b978-0-12-803959-5.50007-6.
+9. Decourt B, Macias M, Sabbagh M et al. BACE1 Inhibitors: Attractive Therapeutics for Alzheimer’s Disease. Drug Design and Discovery in Alzheimer's Disease. 2014. doi:10.1016/b978-0-12-803959-5.50010-6.
+10. Dezsi L, Vecsei L. Monoamine Oxidase B Inhibitors in Parkinson's Disease. CNS & neurological disorders drug targets. 2017. doi:10.2174/1871527316666170124165222. https://pubmed.ncbi.nlm.nih.gov/28124620/
+11. West A. Achieving neuroprotection with LRRK2 kinase inhibitors in Parkinson disease. Experimental Neurology. 2017. doi:10.1016/j.expneurol.2017.07.019. https://pmc.ncbi.nlm.nih.gov/articles/PMC5693612/ https://pubmed.ncbi.nlm.nih.gov/28764903/
+12. Riemann D, Spiegelhalder K. Orexin receptor antagonists: a new treatment for insomnia?. The Lancet Neurology. 2014. doi:10.1016/s1474-4422(13)70311-9. https://pubmed.ncbi.nlm.nih.gov/24680373/
+13. Duan Y, Kelley N, He Y. Role of the NLRP3 inflammasome in neurodegenerative diseases and therapeutic implications. Neural Regeneration Research. 2020. doi:10.4103/1673-5374.272576. https://pmc.ncbi.nlm.nih.gov/articles/PMC7047811/ https://pubmed.ncbi.nlm.nih.gov/31960806/
+14. Yamazaki H, Tanji K, Wakabayashi K, Matsuura S, Itoh K. Role of the Keap1/Nrf2 pathway in neurodegenerative diseases. Pathology international. 2015. doi:10.1111/pin.12261. https://pubmed.ncbi.nlm.nih.gov/25707882/
+15. Kovalenko M, Erdin S, Andrew M et al. Histone deacetylase knockouts modify transcription, CAG instability and nuclear pathology in Huntington disease mice. eLife. 2020. doi:10.7554/elife.55911. https://pmc.ncbi.nlm.nih.gov/articles/PMC7581428/ https://pubmed.ncbi.nlm.nih.gov/32990597/
+16. RG M, JD M, M L et al. Riluzole for amyotrophic lateral sclerosis (ALS)/motor neuron disease (MND). Amyotrophic Lateral Sclerosis and Other Motor Neuron Disorders. 2003. doi:10.1080/14660820310002601.
+17. Ritter J. Cardiac safety, drug‐induced QT prolongation and torsade de pointes (TdP). British Journal of Clinical Pharmacology. 2012. doi:10.1111/j.1365-2125.2012.04193.x. https://pmc.ncbi.nlm.nih.gov/articles/PMC3370337/ https://pubmed.ncbi.nlm.nih.gov/22329611/
+18. Huang K, Fu T, Gao W, Zhao Y, Roohani Y, Leskovec J, Coley CW, Xiao C, Sun J, Zitnik M. Artificial intelligence foundation for therapeutic science. Nature chemical biology. 2022. doi:10.1038/s41589-022-01131-2. https://pmc.ncbi.nlm.nih.gov/articles/PMC9529840/ https://pubmed.ncbi.nlm.nih.gov/36131149/
+19. Wu Z, Ramsundar B, Feinberg E et al. MoleculeNet: a benchmark for molecular machine learning. Chemical Science. 2018. doi:10.1039/c7sc02664a. https://pmc.ncbi.nlm.nih.gov/articles/PMC5868307/ https://pubmed.ncbi.nlm.nih.gov/29629118/
+20. Rogers D, Hahn M. Extended-Connectivity Fingerprints. Journal of Chemical Information and Modeling. 2010. doi:10.1021/ci100050t. https://pubmed.ncbi.nlm.nih.gov/20426451/
+21. Pedregosa F, Varoquaux G, Gramfort A et al. Scikit-learn: Machine Learning in Python. Journal of Machine Learning Research. 2011;12:2825-2830. https://www.jmlr.org/papers/v12/pedregosa11a.html
+22. Breiman L. Random Forests. Machine Learning. 2001. doi:10.1023/a:1010933404324.
+23. Chen T, Guestrin C. XGBoost: A Scalable Tree Boosting System. Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining. 2016. doi:10.1145/2939672.2939785.
+24. Lundberg S, Erion G, Chen H et al. From local explanations to global understanding with explainable AI for trees. Nature Machine Intelligence. 2020. doi:10.1038/s42256-019-0138-9. https://pmc.ncbi.nlm.nih.gov/articles/PMC7326367/ https://pubmed.ncbi.nlm.nih.gov/32607472/
+25. Bemis G, Murcko M. The Properties of Known Drugs. 1. Molecular Frameworks. Journal of Medicinal Chemistry. 1996. doi:10.1021/jm9602928. https://pubmed.ncbi.nlm.nih.gov/8709122/
+26. Niculescu-Mizil A, Caruana R. Predicting good probabilities with supervised learning. Proceedings of the 22nd international conference on Machine learning  - ICML '05. 2005. doi:10.1145/1102351.1102430.
+27. Norinder U, Carlsson L, Boyer S et al. Introducing Conformal Prediction in Predictive Modeling. A Transparent and Flexible Alternative to Applicability Domain Determination. Journal of Chemical Information and Modeling. 2014. doi:10.1021/ci5001168. https://pubmed.ncbi.nlm.nih.gov/24797111/
+28. Jaworska J, Nikolova-Jeliazkova N, Aldenberg T. QSAR Applicability Domain Estimation by Projection of the Training Set in Descriptor Space: A Review. Alternatives to Laboratory Animals. 2005. doi:10.1177/026119290503300508. https://pubmed.ncbi.nlm.nih.gov/16268757/
+29. Mysinger M, Carchia M, Irwin J et al. Directory of Useful Decoys, Enhanced (DUD-E): Better Ligands and Decoys for Better Benchmarking. Journal of Medicinal Chemistry. 2012. doi:10.1021/jm300687e. https://pmc.ncbi.nlm.nih.gov/articles/PMC3405771/ https://pubmed.ncbi.nlm.nih.gov/22716043/
+30. Lin H, Lin C, Weng R. A note on Platt’s probabilistic outputs for support vector machines. Machine Learning. 2007. doi:10.1007/s10994-007-5018-6.
+31. Kanehisa M, Goto S. KEGG: kyoto encyclopedia of genes and genomes. Nucleic acids research. 2000. doi:10.1093/nar/28.1.27. https://pmc.ncbi.nlm.nih.gov/articles/PMC102409/ https://pubmed.ncbi.nlm.nih.gov/10592173/
+32. Milacic M, Beavers D, Conley P, Gong C, Gillespie M, Griss J, Haw R, Jassal B, Matthews L, May B, Petryszak R, Ragueneau E, Rothfels K, Sevilla C, Shamovsky V, Stephan R, Tiwari K, Varusai T, Weiser J, Wright A, Wu G, Stein L, Hermjakob H, D'Eustachio P. The Reactome Pathway Knowledgebase 2024. Nucleic acids research. 2024. doi:10.1093/nar/gkad1025. https://pmc.ncbi.nlm.nih.gov/articles/PMC10767911/ https://pubmed.ncbi.nlm.nih.gov/37941124/
+33. Harding SD, Armstrong JF, Faccenda E, Southan C, Alexander SPH, Davenport AP, Spedding M, Davies JA. The IUPHAR/BPS Guide to PHARMACOLOGY in 2024. Nucleic acids research. 2024. doi:10.1093/nar/gkad944. https://pmc.ncbi.nlm.nih.gov/articles/PMC10767925/ https://pubmed.ncbi.nlm.nih.gov/37897341/
+34. Streamlit: an open-source app framework. https://streamlit.io
+35. RDKit: Open-source cheminformatics. https://www.rdkit.org
+36. Daina A, Michielin O, Zoete V. SwissADME: a free web tool to evaluate pharmacokinetics, drug-likeness and medicinal chemistry friendliness of small molecules. Scientific Reports. 2017. doi:10.1038/srep42717.
+37. Xiong G, Wu Z, Yi J et al. ADMETlab 2.0: an integrated online platform for accurate and comprehensive predictions of ADMET properties. Nucleic Acids Research. 2021. doi:10.1093/nar/gkab255.
+38. Pires DEV, Blundell TL, Ascher DB. pkCSM: Predicting Small-Molecule Pharmacokinetic and Toxicity Properties Using Graph-Based Signatures. Journal of Medicinal Chemistry. 2015. doi:10.1021/acs.jmedchem.5b00104.
+39. Yang H, Lou C, Sun L et al. admetSAR 2.0: web-service for prediction and optimization of chemical ADMET properties. Bioinformatics. 2019. doi:10.1093/bioinformatics/bty707.
+40. Daina A, Michielin O, Zoete V. SwissTargetPrediction: updated data and new features for efficient prediction of protein targets of small molecules. Nucleic Acids Research. 2019. doi:10.1093/nar/gkz382.
+41. Wilson E. Probable Inference, the Law of Succession, and Statistical Inference. Journal of the American Statistical Association. 1927. doi:10.1080/01621459.1927.10502953.

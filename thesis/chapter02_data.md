@@ -11,7 +11,7 @@
 
 The single decision that shapes everything in this chapter is that a label must be a measurement.
 
-This is not the obvious choice, and it is expensive. ChEMBL [30] carries curator-assigned activity
+This is not the obvious choice, and it is expensive. ChEMBL [1] carries curator-assigned activity
 comments alongside its numeric potency values, and using them would multiply the available training
 data several times over. The reason for refusing them is recorded in `docs/decisions_log.md` and it
 is a lesson learned rather than a principle asserted. An earlier prototype of this system did train
@@ -75,7 +75,7 @@ where the potency lives. A compound that was assayed and found **inactive** freq
 pChEMBL value at all. It is deposited as a censored bound: `standard_relation` of `>` with a
 concentration, meaning the assay ran to its highest tested concentration without reaching an effect.
 Filtering on pChEMBL discards exactly those rows. The result is a training set whose positives came
-from measurement and whose negatives have to be invented, usually as property-matched decoys [12].
+from measurement and whose negatives have to be invented, usually as property-matched decoys [29].
 
 The recovery rule is a piece of interval arithmetic, and its whole content is knowing when to refuse
 to answer. A censored bound defines an interval of possible true potencies. It settles a label if and
@@ -155,7 +155,7 @@ job it exists to do.
 
 ## 2.6 Pooling a second curator
 
-For eleven protein targets a second independent source, BindingDB [19], was pooled with ChEMBL at
+For eleven protein targets a second independent source, BindingDB [2], was pooled with ChEMBL at
 compound level. The reason was that the review asked for more data and ChEMBL had been verified as
 near-complete for these targets, so genuine growth required a different curator rather than a deeper
 query of the same one.
@@ -182,7 +182,7 @@ the hazard is more immediate than the limitation.
 If two rows are identical in feature space and land on opposite sides of a cross-validation fold, the
 model is tested on a compound it was trained on. The measured AUROC then includes a component of
 memorisation, and no amount of scaffold grouping removes it, because the scaffold split groups by
-Bemis-Murcko skeleton [2] and these rows share a skeleton by construction.
+Bemis-Murcko skeleton [25] and these rows share a skeleton by construction.
 
 Rows identical in the 1,036-column representation are therefore collapsed before any split is drawn,
 and a collapsed group whose labels disagree is dropped entirely rather than resolved by majority

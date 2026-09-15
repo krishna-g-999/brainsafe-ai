@@ -126,7 +126,7 @@ and this is the most actionable piece of future work in the chapter.
 
 ## 4.5 Conformal prediction: the construction
 
-A calibrated probability describes a population. **Inductive Mondrian conformal prediction** [14]
+A calibrated probability describes a population. **Inductive Mondrian conformal prediction** [27]
 describes a compound, and it does so with a guarantee that is measured on held-out data rather than
 assumed.
 

@@ -272,20 +272,19 @@ measured. The dates are real; the analysis is retrospective.
 **The cross-provenance arm rests on three endpoints**, because the number of compounds one database
 holds at pChEMBL 7 or above and the other lacks is small.
 
-~~And **the null models have no artefact.**~~ **Resolved, see Chapter 9 section 9.7.** At the time
-this chapter was written the technical report stated that with labels permuted the same pipeline
-returns a mean AUROC of 0.4938 random and 0.4921 scaffold, hard-coded in the report generator with no
-file in the repository holding them; a further claim that an independent re-run reproduced 26 core
-values to within 4.7 × 10⁻⁵ had no script or artefact behind it at all and is not repeated here. The
-label-permutation null is the single strongest piece of evidence that the cross-validation is not
-inflated by leakage, and it is now computed by `src/brainsafe/evaluation/permutation_null.py` from
-the same featuriser, deduplication and fold objects as the deployed pipeline, over the eight core
-classifiers, and written to `results/tables/permutation_null.csv`: mean AUROC 0.4959 random and
-0.5026 scaffold, every one of sixteen values within 0.020 of chance. Both figures corroborate rather
-than exactly reproduce the numbers this chapter's own artefacts predate, sitting 0.0021 and 0.0105
-away, which is the size of the sampling noise a single permutation per endpoint carries. Chapter 9
-section 9.7 has the full derivation; this thesis quotes the artefact's figures, not the technical
-report's.
+**The label-permutation null now has an artefact behind it.** The technical report had previously
+stated that with labels permuted the same pipeline returns a mean AUROC of 0.4938 random and 0.4921
+scaffold, a figure hard-coded in the report generator with no file in the repository holding it; a
+further claim that an independent re-run reproduced 26 core values to within 4.7 × 10⁻⁵ had no script
+or artefact behind it at all and is not repeated here. The label-permutation null is the single
+strongest piece of evidence that the cross-validation is not inflated by leakage, and it is computed
+by `src/brainsafe/evaluation/permutation_null.py` from the same featuriser, deduplication and fold
+objects as the deployed pipeline, over the eight core classifiers, and written to
+`results/tables/permutation_null.csv`: mean AUROC 0.4959 random and 0.5026 scaffold, every one of
+sixteen values within 0.020 of chance. The two sets of figures corroborate rather than exactly
+reproduce one another, sitting 0.0021 and 0.0105 apart, which is the size of the sampling noise a
+single permutation per endpoint carries. Chapter 9 section 9.7 gives the full derivation; this thesis
+quotes the artefact's figures throughout, not the technical report's.
 
 ---
 

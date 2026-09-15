@@ -58,12 +58,13 @@ https://github.com/krishna-g-999/brainsafe-ai.
 
 ## Introduction
 
-Central nervous system drug discovery fails in a characteristic way. A compound can be potent at its
-intended target and never reach the brain, or reach it and carry an unacceptable liability, or engage
-targets nobody tested and acquire a clinical profile nobody predicted. Pharmacokinetics and the
-barrier itself, rather than target affinity, account for a large share of central attrition
-[@cns_attrition], and the quantity that governs central action is not total brain concentration but
-the unbound brain-to-plasma ratio [@kpuu].
+Central nervous system drug discovery fails more often, and later, than discovery for most other
+therapeutic areas [@cns_attrition_rates]. A compound can be potent at its intended target and never
+reach the brain, or reach it and carry an unacceptable liability, or engage targets nobody tested and
+acquire a clinical profile nobody predicted. Pharmacokinetics and the barrier itself, rather than
+target affinity, account for a large share of central attrition [@cns_attrition], and the quantity
+that governs central action is not total brain concentration but the unbound brain-to-plasma ratio
+[@kpuu].
 
 Answering "will this molecule act on the brain, through what, and is it safe" therefore requires
 exposure, target engagement and liability to be answered together. Existing public resources address
@@ -402,11 +403,14 @@ margin is quoted per metric rather than pooled, because eight of those endpoints
 AUROC and five by R-squared: the mean gain is 0.038 AUROC over the eight classifiers and 0.045
 R-squared over the five potency regressions. Against property-based CNS scoring [@cns_mpo], which addresses exposure only, BrainSafe AI
 adds mechanism and liability but is not a replacement for expert medicinal-chemistry judgement on
-either axis. Against single-endpoint QSAR servers, the difference is the gating: a target score here
-is admitted only in proportion to predicted exposure, so a potent binder that does not reach the
-brain is reported as such rather than as a hit. We are not aware of another freely available server
-that returns exposure-gated, calibrated, mechanism-resolved profiles across this many CNS endpoints
-with an explicit applicability-domain statement on every value.
+either axis. Against ADMET and permeability servers such as SwissADME [@swissadme], ADMETlab 2.0
+[@admetlab2], pkCSM [@pkcsm] and admetSAR 2.0 [@admetsar2], and against target-prediction servers
+such as SwissTargetPrediction [@swisstargetprediction], the difference is the gating: a target score
+here is admitted only in proportion to predicted exposure, so a potent binder that does not reach the
+brain is reported as such rather than as a hit, and no single one of these servers couples exposure,
+target engagement and disease relevance in one calibrated output. We are not aware of another freely
+available server that returns exposure-gated, calibrated, mechanism-resolved profiles across this
+many CNS endpoints with an explicit applicability-domain statement on every value.
 
 ### Use case: a mechanism profile, and knowing when to stay silent
 

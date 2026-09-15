@@ -38,8 +38,8 @@ was explicitly trained to score those compounds as negative and is then congratu
 ## 5.3 One partition, three roles
 
 The background library of **158,890 compounds** is therefore partitioned once, into three pools that
-no compound can belong to twice. Recomputing the assignment from
-`src/brainsafe/models/pools.py` during this session gives:
+no compound can belong to twice. Recomputing the assignment directly from
+`src/brainsafe/models/pools.py` gives:
 
 | Pool | Compounds | Share | Target share | Purpose |
 |---|---:|---:|---:|---|
@@ -196,15 +196,13 @@ the model was fitted with.
 
 ## 5.9 What the honest figure is, and what it changes
 
-> **Resolved.** The defect described in section 5.8 was corrected in the repository on 2026-08-30
-> (commit `ab88039`). `models_rf/binder_modes.json` now stores the held-out figure on all 47 deployed
-> endpoints, `sensitivity_reconciliation.csv` reports a gap of +0.000 across the panel, and the
-> submission package has been rebuilt so that both copies of the registry agree. The source was fixed
-> so the overwrite cannot recur. The commit record notes that the same correction had been made once
-> before, reaching a mean of 0.7513 when the reviewer package was assembled, and was silently undone
-> the next time the calibration stage ran, which is the reason the repair was made at the source
-> rather than by patching the artefact. Section 5.8 is retained as the record of how the defect was
-> found; the figures below are now the published ones.
+The defect described in section 5.8 has been corrected at the source: `models_rf/binder_modes.json`
+now stores the held-out figure on all 47 deployed endpoints, and `sensitivity_reconciliation.csv`
+reports a gap of exactly zero across the panel. The fix was made in the script that computes the
+figure rather than by patching the stored value, because the same correction had been applied once
+before by hand, reaching a mean of 0.7513, and was then silently undone the next time the calibration
+stage ran. Section 5.8 is retained as the record of how the defect was found; the figures below are
+the current, published ones.
 
 Measured on held-out actives only, across the 47 deployed binder endpoints:
 

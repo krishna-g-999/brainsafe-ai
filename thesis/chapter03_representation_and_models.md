@@ -11,7 +11,7 @@
 A compound enters this system once and leaves as a fixed vector of **1,036 columns**, verified
 directly from `src/brainsafe/features/featurize.py`:
 
-- **1,024 bits** of a folded ECFP-4 fingerprint [10], Morgan radius 2. Bit *j* is set when some atom
+- **1,024 bits** of a folded ECFP-4 fingerprint [20], Morgan radius 2. Bit *j* is set when some atom
   environment of radius at most 2 hashes to *j* modulo 1,024. Folding is not injective, so a set bit
   says that *some* environment hashing there is present, not which one.
 - **12 descriptors**, in this order: molecular weight, cLogP, topological polar surface area,
@@ -127,7 +127,7 @@ everywhere, which is the weak justification for keeping all twelve.
 
 ## 3.5 The estimator
 
-A **random forest** [4] is fitted per endpoint, with hyperparameters read from the model metadata
+A **random forest** [22] is fitted per endpoint, with hyperparameters read from the model metadata
 rather than from the prose: **300 trees**, `min_samples_leaf` **2** for the core classifiers and 4 for
 the binder panel, `class_weight="balanced"`, `random_state=42`. Trees are grown on bootstrap
 resamples considering ⌊√1036⌋ = 32 features per split.
@@ -159,7 +159,7 @@ deployed endpoints, reaching 0.962 at P2X7. Without weighting, answering "active
 Five families were compared under identical five-fold cross-validation on both split regimes, over
 thirteen endpoints (`results/tables/model_comparison.csv`). Two are baselines a reader is entitled to
 demand: a five-nearest-neighbour Tanimoto read-across, which is what a medicinal chemist does by eye,
-and L2-regularised logistic regression. Three are ensembles: the random forest, XGBoost [20], and
+and L2-regularised logistic regression. Three are ensembles: the random forest, XGBoost [23], and
 histogram gradient boosting.
 
 Under the scaffold-grouped split, the family means are:

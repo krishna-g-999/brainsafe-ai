@@ -79,6 +79,18 @@ TITLES = {
     "wilson_ci": "Probable Inference, the Law of Succession, and Statistical Inference",
     "shap_trees": "From local explanations to global understanding with explainable AI for trees",
     "cns_attrition": "Drug metabolism and pharmacokinetics, the blood-brain barrier, and central nervous system drug discovery",
+    # The thesis introduction's opening claim, that CNS drug discovery fails more often and later
+    # than other therapeutic areas, needs a CNS-specific attrition analysis rather than cns_attrition
+    # above, which is about pharmacokinetic mechanism, not industry-wide success rates.
+    "cns_attrition_rates": "Drug development for CNS disorders: strategies for balancing risk and reducing attrition",
+    # The five servers named in the manuscript's comparison against existing approaches (Chapter 1
+    # of the thesis), each verified by exact title so the comparison is not made against a citation
+    # that was never checked.
+    "swissadme": "SwissADME: a free web tool to evaluate pharmacokinetics, drug-likeness and medicinal chemistry friendliness of small molecules",
+    "pkcsm": "pkCSM: Predicting Small-Molecule Pharmacokinetic and Toxicity Properties Using Graph-Based Signatures",
+    "admetsar2": "admetSAR 2.0: web-service for prediction and optimization of chemical ADMET properties",
+    "swisstargetprediction": "SwissTargetPrediction: updated data and new features for efficient prediction of protein targets of small molecules",
+    "admetlab2": "ADMETlab 2.0: an integrated online platform for accurate and comprehensive predictions of ADMET properties",
     "ache_ad": "Acetylcholinesterase inhibitors for Alzheimer's disease",
     "bace1_fail": "BACE1 inhibitors: attractive therapeutics for Alzheimer's disease",
     "mao_b_pd": "Monoamine oxidase B inhibitors in Parkinson's disease",

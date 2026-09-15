@@ -137,7 +137,7 @@
       "requested_title": "Moving beyond rules: the development of a central nervous system multiparameter optimization (CNS MPO) approach to enable alignment of druglike properties"
     },
     "kpuu": {
-      "title": "Unbound Brain-to-Plasma Partition Coefficient, Kp,uu,brain\u2014a Game Changing Parameter for CNS Drug Discovery and Development",
+      "title": "Unbound Brain-to-Plasma Partition Coefficient, Kp,uu,brain—a Game Changing Parameter for CNS Drug Discovery and Development",
       "authors": "Loryan I, Reichel A, Feng B et al.",
       "journal": "Pharmaceutical Research",
       "year": "2022",
@@ -168,7 +168,7 @@
       "requested_title": "Predicting good probabilities with supervised learning"
     },
     "platt": {
-      "title": "A note on Platt\u2019s probabilistic outputs for support vector machines",
+      "title": "A note on Platt’s probabilistic outputs for support vector machines",
       "authors": "Lin H, Lin C, Weng R",
       "journal": "Machine Learning",
       "year": "2007",
@@ -198,7 +198,7 @@
       "requested_title": "QSAR applicability domain estimation by projection of the training set in descriptor space: a review"
     },
     "herg_pred": {
-      "title": "Cardiac safety, drug\u2010induced QT prolongation and torsade de pointes (TdP)",
+      "title": "Cardiac safety, drug‐induced QT prolongation and torsade de pointes (TdP)",
       "authors": "Ritter J",
       "journal": "British Journal of Clinical Pharmacology",
       "year": "2012",
@@ -238,6 +238,66 @@
       "match_score": 1.0,
       "requested_title": "Drug metabolism and pharmacokinetics, the blood-brain barrier, and central nervous system drug discovery"
     },
+    "cns_attrition_rates": {
+      "title": "Drug development for CNS disorders: strategies for balancing risk and reducing attrition",
+      "authors": "Pangalos M, Schechter L, Hurko O",
+      "journal": "Nature Reviews Drug Discovery",
+      "year": "2007",
+      "doi": "10.1038/nrd2094",
+      "source": "CrossRef",
+      "match_score": 1.0,
+      "requested_title": "Drug development for CNS disorders: strategies for balancing risk and reducing attrition"
+    },
+    "swissadme": {
+      "title": "SwissADME: a free web tool to evaluate pharmacokinetics, drug-likeness and medicinal chemistry friendliness of small molecules",
+      "authors": "Daina A, Michielin O, Zoete V",
+      "journal": "Scientific Reports",
+      "year": "2017",
+      "doi": "10.1038/srep42717",
+      "source": "CrossRef",
+      "match_score": 1.0,
+      "requested_title": "SwissADME: a free web tool to evaluate pharmacokinetics, drug-likeness and medicinal chemistry friendliness of small molecules"
+    },
+    "pkcsm": {
+      "title": "pkCSM: Predicting Small-Molecule Pharmacokinetic and Toxicity Properties Using Graph-Based Signatures",
+      "authors": "Pires DEV, Blundell TL, Ascher DB",
+      "journal": "Journal of Medicinal Chemistry",
+      "year": "2015",
+      "doi": "10.1021/acs.jmedchem.5b00104",
+      "source": "CrossRef",
+      "match_score": 1.0,
+      "requested_title": "pkCSM: Predicting Small-Molecule Pharmacokinetic and Toxicity Properties Using Graph-Based Signatures"
+    },
+    "admetsar2": {
+      "title": "admetSAR 2.0: web-service for prediction and optimization of chemical ADMET properties",
+      "authors": "Yang H, Lou C, Sun L et al.",
+      "journal": "Bioinformatics",
+      "year": "2019",
+      "doi": "10.1093/bioinformatics/bty707",
+      "source": "CrossRef",
+      "match_score": 1.0,
+      "requested_title": "admetSAR 2.0: web-service for prediction and optimization of chemical ADMET properties"
+    },
+    "swisstargetprediction": {
+      "title": "SwissTargetPrediction: updated data and new features for efficient prediction of protein targets of small molecules",
+      "authors": "Daina A, Michielin O, Zoete V",
+      "journal": "Nucleic Acids Research",
+      "year": "2019",
+      "doi": "10.1093/nar/gkz382",
+      "source": "CrossRef",
+      "match_score": 1.0,
+      "requested_title": "SwissTargetPrediction: updated data and new features for efficient prediction of protein targets of small molecules"
+    },
+    "admetlab2": {
+      "title": "ADMETlab 2.0: an integrated online platform for accurate and comprehensive predictions of ADMET properties",
+      "authors": "Xiong G, Wu Z, Yi J et al.",
+      "journal": "Nucleic Acids Research",
+      "year": "2021",
+      "doi": "10.1093/nar/gkab255",
+      "source": "CrossRef",
+      "match_score": 1.0,
+      "requested_title": "ADMETlab 2.0: an integrated online platform for accurate and comprehensive predictions of ADMET properties"
+    },
     "ache_ad": {
       "title": "Role of Acetylcholinesterase Inhibitors and Alzheimer Disease",
       "authors": "Saify Z, Sultana N",
@@ -249,7 +309,7 @@
       "requested_title": "Acetylcholinesterase inhibitors for Alzheimer's disease"
     },
     "bace1_fail": {
-      "title": "BACE1 Inhibitors: Attractive Therapeutics for Alzheimer\u2019s Disease",
+      "title": "BACE1 Inhibitors: Attractive Therapeutics for Alzheimer’s Disease",
       "authors": "Decourt B, Macias M, Sabbagh M et al.",
       "journal": "Drug Design and Discovery in Alzheimer's Disease",
       "year": "2014",

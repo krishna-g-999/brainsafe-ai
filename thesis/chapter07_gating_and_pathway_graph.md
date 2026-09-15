@@ -77,8 +77,8 @@ $s_t$ is comparable across endpoints and only the probability is interpretable o
 
 ## 7.3 The pathway graph
 
-The graph is curated, versioned and anchored to KEGG [3], Reactome [31] and IUPHAR [32]. Read directly
-from `app.py` during this session it holds:
+The graph is curated, versioned and anchored to KEGG [31], Reactome [32] and IUPHAR [33]. Read directly
+from `app.py`, it holds:
 
 | | |
 |---|---:|
@@ -314,9 +314,8 @@ rose from 0.051 to 0.075, and H8's user-visible finding rate on random chemistry
 old figure was inflated by a false-negative bug.**
 
 `models_rf/endpoint_context.json` supplies the base rate each core classifier's engagement signal is
-computed against. It had been built on 2 August, three weeks before the neutralisation retrain, and
-every base rate except the barrier model's was too high. Commit `fd7aaa0` of 25 August corrected all
-eight:
+computed against. It had been built before the neutralisation retrain, and every base rate except
+the barrier model's was too high. All eight have since been corrected:
 
 | Endpoint | Stale base rate | Correct base rate | Change |
 |---|---:|---:|---:|

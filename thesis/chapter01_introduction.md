@@ -11,8 +11,7 @@
 ## 1.1 The problem this thesis addresses
 
 Drug discovery for the central nervous system fails more often, and later, than discovery for any
-other therapeutic area `[REF NEEDED: a citable attrition series, for example Kola and Landis, or a
-CNS-specific success-rate analysis]`. The failures are expensive precisely because they are late: a
+other therapeutic area [4]. The failures are expensive precisely because they are late: a
 compound that survives to a clinical readout has already consumed the medicinal chemistry, the
 toxicology and the manufacturing that a first-in-human study requires.
 
@@ -23,13 +22,13 @@ addressed apart.
 The first is **exposure**. A compound may be potent at a well-validated target and never reach it.
 The blood-brain barrier is not a passive membrane with a permeability constant but an active
 interface, with efflux transporters that return compounds to the circulation and tight junctions that
-exclude them in the first place [8]. A programme that optimises affinity without tracking exposure
+exclude them in the first place [5]. A programme that optimises affinity without tracking exposure
 can produce a compound that is excellent against isolated protein and inert in an animal.
 
 The second is **engagement**, understood broadly. A compound that does arrive may engage more than
 the target it was designed for. Sometimes that is fatal on the safety axis: blockade of the hERG
 potassium channel prolongs the QT interval and remains a leading cause of late cardiovascular
-attrition [13]. Sometimes it is fatal on the efficacy axis, when the mechanism reached is not the
+attrition [17]. Sometimes it is fatal on the efficacy axis, when the mechanism reached is not the
 mechanism that drives the disease. Either way the question is the same: given that the compound is
 present in brain tissue, what does it touch there?
 
@@ -82,7 +81,7 @@ way throughout.
 A third consequence follows from taking exposure seriously as a physiological quantity rather than a
 convenient binary. The variable that governs whether a free concentration is available at the target
 is the unbound brain-to-plasma partition coefficient, $K_{p,uu}$, not the total brain-to-plasma ratio
-[29]. Total ratio counts drug bound to tissue lipid, which cannot engage a receptor. This thesis
+[6]. Total ratio counts drug bound to tissue lipid, which cannot engage a receptor. This thesis
 therefore models $K_{p,uu}$ directly. The honest report of that model is that it is the weakest
 member of the exposure layer: under a scaffold-grouped split it reaches $R^2 = 0.3523$ with a
 fold-to-fold standard deviation of 0.1583 on 566 measured compounds, against $R^2 = 0.4131$ for
@@ -95,32 +94,29 @@ the wrong quantity well, but only if the weakness is reported, and Chapter 7 rep
 Publicly available prediction servers for this problem fall into three groups, and the boundary
 between them is the boundary this thesis is trying to cross.
 
-**Physicochemical and ADMET predictors** estimate barrier penetration, permeability, efflux liability
-and related properties from structure. They answer the exposure question, often well, and they say
-nothing about pharmacology. The best-known heuristic in this family, the CNS multiparameter
-optimisation score, is explicitly a desirability function over six physicochemical properties and was
-presented as a design aid rather than a model of activity [11]. Used as intended it is valuable. Used
-as a proxy for central activity it is a category error, since it contains no information about any
-target.
+**Physicochemical and ADMET predictors**, among them SwissADME [36], ADMETlab [37], pkCSM [38] and
+admetSAR [39], estimate barrier penetration, permeability, efflux liability and related properties
+from structure. They answer the exposure question, often well, and they say nothing about
+pharmacology. The best-known heuristic in this family, the CNS multiparameter optimisation score, is
+explicitly a desirability function over six physicochemical properties and was presented as a design
+aid rather than a model of activity [7]. Used as intended it is valuable. Used as a proxy for central
+activity it is a category error, since it contains no information about any target.
 
-**Target-prediction servers** rank probable protein targets for a submitted structure, typically by
-similarity to annotated ligands. They answer the engagement question, and they are agnostic about
-whether the compound reaches the tissue in which those targets sit. Similarity-based target
-prediction is a strong baseline and this thesis treats it as such rather than as a straw man: a
-five-nearest-neighbour Tanimoto read-across is one of the five model families benchmarked in Chapter
-3, and the falsification suite shows it recovering the correct target for 0.9726 of held-out
-compounds against 0.0587 for a frequency baseline when the target family is represented in the index
-(`inversion/results/H5_readacross_value.csv`). That is a genuine capability. What it does not
-include is exposure.
+**Target-prediction servers**, of which SwissTargetPrediction [40] is a widely used example, rank
+probable protein targets for a submitted structure, typically by similarity to annotated ligands. They
+answer the engagement question, and they are agnostic about whether the compound reaches the tissue in
+which those targets sit. Similarity-based target prediction is a strong baseline and this thesis
+treats it as such rather than as a straw man: a five-nearest-neighbour Tanimoto read-across is one of
+the five model families benchmarked in Chapter 3, and the falsification suite shows it recovering the
+correct target for 0.9726 of held-out compounds against 0.0587 for a frequency baseline when the
+target family is represented in the index (`inversion/results/H5_readacross_value.csv`). That is a
+genuine capability. What it does not include is exposure.
 
 **Single-endpoint barrier predictors** model blood-brain penetration alone, usually on one of the
-curated permeability datasets [27]. They are the exposure axis in isolation.
+curated permeability datasets [3]. They are the exposure axis in isolation.
 
-`[REF NEEDED: verified citations for the specific servers named in the comparison, namely SwissADME,
-ADMETlab, pkCSM, admetSAR and SwissTargetPrediction. None is currently in references.md, and the
-comparison table in docs/BS_BENCHMARK_ANALYSIS.md carries no citations. These must be resolved
-through the same CrossRef and Europe PMC pipeline that produced the existing thirty-two entries
-before this section can be submitted.]`
+None of these five servers couples exposure, target engagement and disease relevance in one
+calibrated output, which is the gap the next section names directly.
 
 Three capabilities are absent across all three groups, and together they define the contribution
 claimed here.
@@ -131,8 +127,8 @@ integration is left to the reader.
 
 The second is **calibrated, compound-specific uncertainty**. A ranked list without a probability is
 not actionable, and a probability that is not calibrated is not a probability. This thesis reports a
-calibrated probability, an empirically verified conformal coverage statement [14], and an
-applicability-domain distance [7] for every value it returns.
+calibrated probability, an empirically verified conformal coverage statement [27], and an
+applicability-domain distance [28] for every value it returns.
 
 The third, and the one that has proved most consequential in the work, is a **quantified statement of
 what silence means**. When a target-prediction tool returns nothing, the user does not know whether
@@ -156,8 +152,8 @@ covers **54 molecular targets**: the 47 deployed binders plus acetylcholinestera
 butyrylcholinesterase, BACE1, GSK-3β, MAO-A, MAO-B and hERG.
 
 Training data are measured experimental values only. Counting the endpoint tables directly gives
-**228,200 measured compound-endpoint records over 63 tables**, drawn from ChEMBL [30], BindingDB
-[19], B3DB [27], Therapeutics Data Commons [28] and MoleculeNet [23]. Each endpoint is fitted on its
+**228,200 measured compound-endpoint records over 63 tables**, drawn from ChEMBL [1], BindingDB
+[2], B3DB [3], Therapeutics Data Commons [18] and MoleculeNet [19]. Each endpoint is fitted on its
 own set alone; across the 55 deployed classification tables the median is 3,789 rows, from 387 for
 KEAP1 to 10,276 for hERG. No label comes from curator annotation, a decision whose origin is recorded
 in `docs/decisions_log.md`: an earlier prototype trained on curated annotation scores was shown by
@@ -168,7 +164,7 @@ Three methodological decisions distinguish the work, and each is the subject of 
 **The negative class is recovered from measurement rather than simulated.** A compound assayed and
 found inactive is frequently deposited only as a censored bound, and the conventional pChEMBL query
 discards exactly those rows, leaving a positive class drawn from measurement and a negative class
-drawn from property-matched decoys [12]. A censored bound settles a label whenever the whole interval
+drawn from property-matched decoys [29]. A censored bound settles a label whenever the whole interval
 it defines falls on one side of the activity cut, and is discarded as undecidable when it spans both.
 Recovering these yields **29,751 measured non-binders across 57 endpoints**, counted from
 `submission_package/06_TRAINING_DATA/endpoints/`. Chapter 2 develops this.
@@ -239,8 +235,8 @@ more than one of its 16 conditions, and what selects among them is dose, regimen
 population, none of which is present in a structure.
 
 The honest summary of the contribution is that it is one of integration, validation and uncertainty
-reporting rather than of algorithm. The estimator is a random forest [4] over an ECFP-4 fingerprint
-[10] and twelve descriptors. None of those components is new. What has not been assembled elsewhere,
+reporting rather than of algorithm. The estimator is a random forest [22] over an ECFP-4 fingerprint
+[20] and twelve descriptors. None of those components is new. What has not been assembled elsewhere,
 so far as this work has been able to establish, is the coupling of a measured-label CNS target panel
 to a predicted exposure term, with a calibrated probability, a verified coverage statement and a
 distance-conditioned recall attached to every value, and with the failures reported at the same size
@@ -276,8 +272,11 @@ Chapter 10 covers the limitations and the work that follows from them.
 
 ## Outstanding items for this chapter
 
-1. `[REF NEEDED]` A citable CNS attrition series for section 1.1.
-2. `[REF NEEDED]` Verified citations for the named comparison servers in section 1.3.
+1. ~~A citable CNS attrition series for section 1.1.~~ **Done.** Pangalos, Schechter and Hurko (2007),
+   resolved through the CrossRef pipeline and entered as reference [4].
+2. ~~Verified citations for the named comparison servers in section 1.3.~~ **Done.** SwissADME,
+   ADMETlab, pkCSM, admetSAR and SwissTargetPrediction are now references [36]-[40], each resolved
+   through the same CrossRef pipeline as the existing entries.
 3. ~~The count of unique compounds underlying the 228,200 records is quoted elsewhere in the project
    as 169,341, keyed by the InChIKey of the desalted parent, and had not been re-derived.~~ **Done.**
    `src/brainsafe/evaluation/unique_compound_count.py` computes it directly from the endpoint tables:

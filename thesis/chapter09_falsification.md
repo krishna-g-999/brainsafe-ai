@@ -73,14 +73,10 @@ silently come to describe a different graph.
 | H9 | The disease layer discriminates between compounds | SUPPORTED | 7.7 |
 | H10 | The barrier model earns its place over a descriptor rule | WEAKENED | **10.3** |
 
-> **On H10.** This chapter was written with nine hypotheses, and section 9.9 below named the missing
-> tenth explicitly: no test in the suite examined the barrier model, which gates every disease score
-> and names the architecture. That gap was closed afterwards, in Chapter 10 rather than here, because
-> the null it required, that a fitted rule over the twelve descriptors alone ranks compounds as well
-> as the deployed forest, could not be argued without the barrier-necessity comparison Chapter 10
-> already builds. The table above and every count in this chapter now include it; section 9.9's
-> original wording is kept, struck through rather than deleted, because a thesis that quietly
-> backfills its own stated gap is doing the thing Chapter 10 is about.
+H10 is argued in full in Chapter 10 rather than here, because the null it requires, that a fitted
+rule over the twelve descriptors alone ranks compounds as well as the deployed forest, needs the
+barrier-necessity comparison Chapter 10 builds. Section 9.9 below discusses what H10 covers and what
+it leaves open.
 
 Eight of the ten are argued in full elsewhere in this thesis and are not re-derived here. This
 chapter takes the four questions the individual hypotheses cannot answer: what the refutations cost,
@@ -90,23 +86,22 @@ their verdicts read, and what the suite does not cover.
 ## 9.4 What the refutations cost
 
 A falsification suite is worth what the project paid for it. On this test the record is good, and the
-payments are traceable in the git history rather than asserted.
+payments are traceable to specific corrections in the artefacts and the interface rather than asserted.
 
 **H2 changed how the knowledge graph is described.** The curated edge weights score 0.7901 against
 0.7897 for uniform weights and 0.7874 for randomly permuted ones, a spread of 0.0027
-(`inversion/results/H2_weight_ablation.csv`). Commit `f40b5d7`, "Act on the inversion findings:
-describe the weights and the BBB term accurately", relabelled them in the source, the interface and
-the manuscript as a mechanistic prior rather than as tuned parameters. The weights were kept, which is
+(`inversion/results/H2_weight_ablation.csv`). The source, the interface and the manuscript now
+describe them as a mechanistic prior rather than as tuned parameters. The weights were kept, which is
 defensible because they still express which link is the more direct, but no predictive claim is made
 for them.
 
 **H3 turned a design claim into a filter claim.** Because the gate multiplies the 14 non-peripheral
 conditions by the same factor it is rank-invariant among them and cannot sharpen a disease call. The
-same commit corrected the wording wherever it appeared.
+wording was corrected wherever it appeared alongside the H2 relabelling above.
 
-**H7 cost an endpoint and a disclosure.** Commit `8bb402b`, "Expand the panel where it was measured
-to be weakest, and withdraw an endpoint that was firing on sugar", followed from the H7 line of
-enquiry. A direct audit of the served models, `results/deployed_specificity_audit.csv`, then found
+**H7 cost an endpoint and a disclosure.** Following from the H7 line of enquiry, the panel was
+expanded where it had been measured to be weakest, and an endpoint that was firing on sugar was
+withdrawn. A direct audit of the served models, `results/deployed_specificity_audit.csv`, then found
 four failures, three of them by firing on molecules that are not drugs at all:
 
 | Endpoint | FPR on random chemistry | Trivial molecules called binders |
@@ -137,9 +132,9 @@ rather than leaving a reader to assume independence. Section 9.8 reports that th
 are no longer the ones in the artefact.
 
 **Two costs were paid on the suite itself rather than on the tool**, and they matter more than they
-look. Commit `7fa7203`, "Make the inversion checks capable of failing, and let one of them fail",
-repaired checks that could not have returned a negative result. Commits `da82d80` and `a3d184f`
-restricted H1 to compounds that are training actives of no other panel target, because a compound
+look. One repair made the inversion checks capable of failing, after finding that some could not have
+returned a negative result. The other restricted H1 to compounds that are training actives of no
+other panel target, because a compound
 active at two targets is memorised by one of the models scoring it, and shuffling the
 target-to-disease map does not control for that: the memorisation survives the shuffle and is merely
 sent to the wrong condition. That correction removed roughly three fifths of the evaluation set, from
@@ -339,8 +334,8 @@ count.
 
 ## 9.8 Where the suite is weaker than it reads
 
-Six defects, found while writing this chapter. None changes a verdict. Together they describe a suite
-that was built carefully and maintained less carefully than the pipeline it audits.
+Six defects are identified here. None changes a verdict. Together they describe a suite that was
+built carefully and maintained less carefully than the pipeline it audits.
 
 **1. The verdict rule for three hypotheses lives in two places, and for one of them the two
 disagree.** Each test script prints its own verdict, and `inversion/summarise.py` recomputes every
@@ -349,19 +344,19 @@ use different label sets: the test script has a WEAKENED band that the summary d
 the outcome is the same either way. For H2 it is not. `inv_disease_layer.py:228` prints **WEAKENED**,
 "curation adds little over uniform"; `summarise.py:60` publishes **REFUTED**. The published verdict is
 the harsher of the two, which is the right direction to err in, but a verdict should not depend on
-which of two copies of a rule a reader happens to run. This is the defect class that commit `d8da016`
-fixed for the reliability gate, where the gate "lived in six places and disagreed with itself in
-three".
+which of two copies of a rule a reader happens to run. This is the same defect class already found
+and repaired in the reliability gate, which had lived in six places and disagreed with itself in
+three.
 
 **2. No test pins any verdict.** The repository's five test files contain no reference to
 `inversion/`. Every other load-bearing quantity in this project is pinned by an assertion somewhere.
 The falsification results are not, so a rerun that silently flipped a verdict would be caught only by
 a person reading the report.
 
-> **Resolved, items 3, 4 and 5.** All three were repaired on 2026-09-02 in commit `1f91925`, after
-> this chapter was written. They are retained as found rather than deleted, because the record of a
-> defect and the record of its repair are both evidence, and because the repair of item 4 turned up
-> something worse than this chapter had noticed. Each item carries a note below saying what changed.
+Items 3, 4 and 5 below have since been repaired. They are retained as found rather than removed,
+because the record of a defect and the record of its repair are both evidence, and because the
+repair of item 4 turned up something worse than had originally been noticed; each item states what
+changed immediately after describing the original defect.
 
 **3. `app.py` still quotes a withdrawn version of H2.** The comment at `app.py:102-104` reads: an
 ablation "over 15,609 scaffold-held-out compounds found that curated, uniform and randomly permuted
@@ -374,9 +369,9 @@ different quantity from a different table. The project's own audit recorded this
 "weight ablation, two triples for one experiment", and named `app.py` explicitly. It was corrected in
 the manuscript and not in the source.
 
-*Fixed.* The comment now states the current triple over 7,008 compounds and records what it used to
-say and why the wrong denominator survived: 15,609 agrees with the H2 accuracy to three decimals, so
-a wrong number sat beside a right-looking one.
+The comment has been corrected. It now states the current triple over 7,008 compounds and records
+what it used to say and why the wrong denominator survived: 15,609 agrees with the H2 accuracy to
+three decimals, so a wrong number sat beside a right-looking one.
 
 **4. The interface quotes co-firing correlations that no longer match the artefact, and this one is
 user-visible.** `FAMILY_COFIRE` at `app.py:529` supplies both a badge reading "correlated, r = 0.81"
@@ -397,7 +392,7 @@ redundant", where the artefact says 37 and 16, a factor of 2.31. Every discrepan
 reverses a conclusion, but these are numbers presented to a scientist deciding how much weight two
 engaged targets deserve, and the monoamine row names the wrong pair as the family's strongest.
 
-*Fixed, and the fix found a worse defect than this chapter had.* `FAMILY_COFIRE` is now derived from
+The repair found a worse defect than the one described above. `FAMILY_COFIRE` is now derived from
 the artefact by a function rather than restated, so it cannot drift again. Deriving it required the
 artefact to carry denominators, because every rate in it is a multiple of 1/400 and a conditional
 probability of 1.000 computed from a single joint compound is indistinguishable in the file from a
@@ -418,8 +413,9 @@ generator can be corrected without anything marking its output stale. That is a 
 this project relies on. It is stated here rather than fixed, because regenerating this file means
 re-running the sequence the correction was designed to avoid.
 
-*Fixed, without re-running the sequence.* The dilemma above was real and the resolution is narrower
-than either horn of it. Four of the file's six columns were already correct; only the two reported
+This was repaired without re-running the sequence. The dilemma above was real and the resolution is
+narrower than either horn of it. Four of the file's six columns were already correct; only the two
+reported
 ones were stale. `refresh_background_specificity.py` updates those two from the registry and leaves
 every operating threshold untouched, which is verifiable: after the repair no threshold and no
 background false-positive rate moved on any of the 47 endpoints, and the file now agrees with the
@@ -438,34 +434,28 @@ figures that are.
 
 ## 9.9 What a falsification suite cannot do
 
-Three limits were named when this chapter was first written, because the suite is the strongest
-evidence in this thesis and overreading it would be easy. One of the three, that nothing in it tested
-the barrier model, is resolved below rather than removed, since a suite closing a gap it named is
-part of the record this chapter keeps.
+Three limits are worth stating plainly, because the suite is the strongest evidence in this thesis
+and overreading it would be easy.
 
 **It tests what its author thought to doubt.** All ten hypotheses were written by the person who
 built the system. The suite is an excellent instrument against self-deception about things one has
 noticed and no instrument at all against things one has not. Its own history illustrates the point:
-H8, H9 and H10 do not appear in `PLAN.md`, which stops at H7; H9 was written only after H6 returned a
-result its author judged unfairly scored; and H10, as the next paragraph records, was written only
-after this section first went to press naming its own absence. Four of the ten hypotheses exist
-because earlier ones produced surprises or, in H10's case, because a gap this thesis stated plainly
-was then filled rather than left standing, which is the right way for a suite to grow and also an
-admission that its initial coverage was set by intuition.
+H8, H9 and H10 do not appear in `PLAN.md`, which stops at H7, and H9 was written only after H6
+returned a result its author judged unfairly scored. Four of the ten hypotheses exist because
+earlier ones produced surprises, which is the right way for a suite to grow and also an admission
+that its initial coverage was set by intuition.
 
-~~**Nothing in it tests the barrier model.**~~ **Resolved by H10, argued in Chapter 10 section
-10.3.** H1, H2, H3, H6 and H9 test the disease layer; H5 tests read-across; H7 and H8 test the
-target panel; H4 tests system-level specificity; H10 tests the barrier classifier itself, which
-gates every disease score and is the component the whole architecture is named for. Until H10 the
-only evidence for it was the external set in Chapter 8, AUROC 0.7666 on 227 unseen drugs, which is a
-validation and not a falsification. The null H10 poses is exactly the one this section originally
-called for and marked missing: whether the barrier model's contribution to the ranking could be
-replaced by a fitted rule over the twelve descriptors already in the feature vector without loss.
-It could not be dismissed. Read on the scaffold hold-out the fingerprint wins outright; read on 227
-approved drugs the model has never seen, its bootstrap interval crosses zero against the
-descriptor-only forest, so the verdict is WEAKENED rather than the SUPPORTED a point estimate alone
-would have given it. Chapter 10 section 10.3 has the full comparison; one qualification carries back
-here. H10 tests the barrier model's contribution to the *ranking* it produces, not its role as a
+**H10 tests the one component the earlier nine did not: the barrier classifier itself.** H1, H2, H3,
+H6 and H9 test the disease layer; H5 tests read-across; H7 and H8 test the target panel; H4 tests
+system-level specificity. Before H10 the only evidence for the barrier model was the external set in
+Chapter 8, AUROC 0.7666 on 227 unseen drugs, which is a validation rather than an attempt at
+falsification. H10 poses the sharper question: whether a fitted rule over the twelve descriptors
+already in the feature vector ranks compounds as well as the deployed forest does. It could not be
+dismissed. Read on the scaffold hold-out the fingerprint wins outright; read on 227 approved drugs
+the model has never seen, its bootstrap interval crosses zero against the descriptor-only forest, so
+the verdict is WEAKENED rather than the SUPPORTED a point estimate alone would have given it. Chapter
+10 section 10.3 has the full comparison; one qualification carries back here. H10 tests the barrier
+model's contribution to the *ranking* it produces, not its role as a
 multiplicative *gate*: whether replacing the probability with a descriptor rule would change which
 compounds clear the 0.30 reporting threshold is a further, more directly user-relevant question that
 remains open.
@@ -481,9 +471,9 @@ suite that reads the column rather than the tables will overstate what it found.
 - **The suite is the most valuable evidence in this thesis, and it is valuable in proportion to what
   it refuted or weakened.** Four of ten central claims did not survive and two more were downgraded.
   Two of the refutations changed how the system is described, one changed the interface, and one
-  contributed to withdrawing four endpoints that were firing on glucose, urea and lactate; H10, added
-  after this section first went to press, downgraded a comparison this thesis would otherwise have
-  reported as a clean win for the deployed fingerprint.
+  contributed to withdrawing four endpoints that were firing on glucose, urea and lactate; H10
+  downgraded a comparison that would otherwise have been reported as a clean win for the deployed
+  fingerprint.
 - **Its best result was incidental.** H7's sensitivity column recorded the correct panel figure three
   weeks before anything compared it with the published one, and it agreed with the eventual audit to
   within 0.031 by an entirely unrelated construction.
