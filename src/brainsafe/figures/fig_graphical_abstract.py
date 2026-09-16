@@ -60,9 +60,11 @@ def main() -> None:
     ache = r["targets"]["AChE"]
     top = dz[0]
 
-    n_records = 228200
-    n_targets = 54
-    n_estimators, n_deployed = 75, 70
+    facts = app.panel_facts()
+    shape = app.panel_shape()
+    n_records = facts["n_records"]
+    n_targets = shape["targets"]
+    n_estimators, n_deployed = shape["trained"], shape["deployed"]
 
     fig = plt.figure(figsize=(7.2, 4.6))
     ax = fig.add_axes([0, 0, 1, 1])
