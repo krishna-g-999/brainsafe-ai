@@ -49,7 +49,7 @@ def load_links() -> dict:
     return {k.lower(): v for k, v in json.loads(LINKS.read_text(encoding="utf-8")).items()}
 
 
-def format_paper(rec: dict, links: dict | None = None) -> str:
+def format_paper(rec: dict, links: dict | None = None, compact: bool = False) -> str:
     # "et al." already ends in a full stop, so the separator must not add a second one
     authors = rec.get("authors", "").strip().rstrip(".")
     bits = [authors, rec.get("title", "").strip().rstrip(".")]
@@ -63,6 +63,10 @@ def format_paper(rec: dict, links: dict | None = None) -> str:
     if doi:
         out += f". doi:{doi}"
     out += "."
+    if compact:
+        # A length-constrained submission copy: the DOI already lets a reader or an editor verify
+        # the entry, and the PMC/PubMed lines roughly double the space every reference takes.
+        return out
     # PMC link if available; otherwise a PubMed abstract link if available; neither if the work is
     # not indexed there (expected for conference proceedings and some society journals).
     link = (links or {}).get((doi or "").rstrip(". ").lower())
@@ -113,22 +117,25 @@ def resolve(text: str) -> tuple[str, list[str], list[str], list[str]]:
     return TOKEN.sub(sub, text), order, unknown, uncited
 
 
-def reference_section(order: list[str], header: str = "## References") -> str:
+def reference_section(order: list[str], header: str = "## References", compact: bool = False) -> str:
     papers, software = load()
     links = load_links()
-    lines = [header, "",
-             "Every entry was resolved by a live query against CrossRef or Europe PMC and accepted "
-             "only on a title match, or, where the identity is known and the registered title is a "
-             "short form, by resolving the DOI and confirming the title and first author. The "
-             "requested title, the matched title and the score are recorded in "
-             "`manuscript/references_verified.json`, so the list can be re-checked mechanically. "
-             "None is written from memory. A PubMed Central or PubMed abstract link is given where "
-             "NCBI indexes the work (`manuscript/references_links.json`); neither exists for a "
-             "work outside PubMed's coverage, which is expected for some conference proceedings and "
-             "for the software citations.", ""]
+    if compact:
+        lines = [header, ""]
+    else:
+        lines = [header, "",
+                 "Every entry was resolved by a live query against CrossRef or Europe PMC and accepted "
+                 "only on a title match, or, where the identity is known and the registered title is a "
+                 "short form, by resolving the DOI and confirming the title and first author. The "
+                 "requested title, the matched title and the score are recorded in "
+                 "`manuscript/references_verified.json`, so the list can be re-checked mechanically. "
+                 "None is written from memory. A PubMed Central or PubMed abstract link is given where "
+                 "NCBI indexes the work (`manuscript/references_links.json`); neither exists for a "
+                 "work outside PubMed's coverage, which is expected for some conference proceedings and "
+                 "for the software citations.", ""]
     for i, key in enumerate(order, 1):
         if key in papers:
-            lines.append(f"{i}. {format_paper(papers[key], links)}")
+            lines.append(f"{i}. {format_paper(papers[key], links, compact=compact)}")
         else:
             lines.append(f"{i}. {format_software(software[key])}")
     return "\n".join(lines)
