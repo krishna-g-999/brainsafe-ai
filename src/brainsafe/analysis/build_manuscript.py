@@ -21,6 +21,7 @@ SRC = MS / "NAR_WebServer_BrainSafe_draft.md"
 TABLES = MS / "tables_generated.md"
 BUILT = MS / "NAR_WebServer_BrainSafe_built.md"
 DOCX = MS / "NAR_WebServer_BrainSafe.docx"
+REFERENCE_DOCX = ROOT / "docs" / "nar_manuscript_reference.docx"
 
 
 def main():
@@ -51,7 +52,8 @@ def main():
         print(f"verified but uncited ({len(uncited)}): {', '.join(sorted(uncited))}")
 
     pypandoc.convert_file(str(BUILT), "docx", outputfile=str(DOCX),
-                          extra_args=[f"--resource-path={MS}", "--toc", "--toc-depth=2"])
+                          extra_args=[f"--resource-path={MS}",
+                                      f"--reference-doc={REFERENCE_DOCX}"])
     print("wrote", BUILT.name, f"({len(text):,} chars)")
     print("wrote", DOCX.name, f"({DOCX.stat().st_size/1024:.0f} KB)")
     n_tables = text.count("\n| Endpoint |") + text.count("\n| Endpoint|")
