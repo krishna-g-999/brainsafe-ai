@@ -192,6 +192,21 @@ GRAPH: list[tuple[str, list[str], str]] = [
     ("results/tables/background_specificity.csv", ["models_rf/*_binder.joblib"],
      THRESHOLD_SEQUENCE),
 
+    # The background false-positive rate the manuscript actually claims: the CURRENTLY deployed
+    # threshold, scored on the evaluation pool, which is disjoint from both the decoy pool a binder
+    # trained against and the threshold pool that set any version of its cut. Three other fields in
+    # binder_modes.json answer a related but different question: background_fpr_at_threshold is
+    # circular (calibrate_background_specificity.py sets its threshold as a quantile of the same
+    # sample it then measures on), and background_fpr_held_out is genuinely disjoint but reflects the
+    # threshold train_binders_hybrid.py set before final_thresholds.py and
+    # calibrate_background_specificity.py were free to raise it further, so it is silent on whatever
+    # the server currently runs. This depends on the binder models for scoring and on
+    # binder_modes.json for the threshold actually deployed, not on the threshold sequence's own
+    # tables, precisely because those tables are what this artefact exists to check against.
+    ("results/tables/background_specificity_disjoint.csv",
+     ["models_rf/*_binder.joblib", "models_rf/binder_modes.json"],
+     "python src/brainsafe/evaluation/background_specificity_disjoint.py"),
+
     # ---- the evaluation layer, all of it downstream of the models ------------------------------
     # Declares the external set as well as the model. Both this table and H10 below filter on
     # novel_to_model, and neither said so, which is why a stale flag reached the headline external

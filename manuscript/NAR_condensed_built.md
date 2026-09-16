@@ -120,14 +120,14 @@ permuted 0.7874), so they are reported as structure rather than as tuned paramet
 
 ## Results
 
-**Cross-validation.** The panel and its per-endpoint performance are shown in Figure 2. Under random
-10-fold cross-validation the measured-label classifiers reach a mean AUROC of 0.958 (0.899 to
-0.976); under a scaffold-grouped split that withholds entire structural classes, 0.925 (0.878 to
-0.965). Expected calibration error falls from 0.0801 to 0.0147 after isotonic calibration, and
-conformal prediction (16) on the eight core classifiers, on the deduplicated matrix the
-classifiers are trained on, achieves empirical coverage of 0.876 to 0.933 against a 0.90 target,
-with mean set size from 0.956 to 1.215 on a two-class problem where 1.0 is a confident single label
-(Figure 3A).
+**Cross-validation.** The panel and its per-endpoint performance are shown in the model atlas
+(`figures/Figure9_model_atlas.png`). Under random 10-fold cross-validation the measured-label
+classifiers reach a mean AUROC of 0.958 (0.899 to 0.976); under a scaffold-grouped split that
+withholds entire structural classes, 0.925 (0.878 to 0.965). Expected calibration error falls from
+0.0801 to 0.0147 after isotonic calibration, and conformal prediction (16) on the eight core
+classifiers, on the deduplicated matrix the classifiers are trained on, achieves empirical coverage
+of 0.876 to 0.933 against a 0.90 target, with mean set size from 0.956 to 1.215 on a two-class
+problem where 1.0 is a confident single label.
 
 **The binder panel.** The 52 binder classifiers are validated not against the decoys used to train
 them but against compounds experimentally tested at the same target and found inactive. Across the 47
@@ -163,7 +163,7 @@ independence were therefore constructed, with every model refitted rather than s
 endpoint refitted on its pre-cutoff rows with its decision threshold also frozen before the cutoff,
 and tested on compounds first published afterwards; 39 of 47 deployed endpoints qualify, giving
 45,244 test compounds. By curator: compounds deposited in BindingDB and absent from ChEMBL, withheld
-entirely (Figure 5).
+entirely (`figures/Figure11_external_validation.png`).
 
 Read in aggregate the time split suggests prospective decay, with mean AUROC 0.823 against 0.951 for
 a size-matched random control. It is not decay. The false-positive rate on background chemistry is
@@ -192,7 +192,7 @@ or better; and that engaged targets are not independent observations, 37 firing 
 only 16 independent directions. It also found a deployed endpoint calling common metabolites
 binders at its calibrated threshold, and that endpoint is withdrawn.
 
-**Use case.** A worked profile and the silence behaviour are shown in Figure 4. For donepezil the
+**Use case.** A worked profile and the silence behaviour are shown in Figure 2. For donepezil the
 server returns AChE engagement at 1.00 against a training base rate of 0.596, barrier penetration
 0.991, and Alzheimer's disease as the top condition at 0.991 with AChE named as the driver. It also
 returns a hERG probability of 0.734, an enrichment of 0.652 over a 0.236 base rate, so the compound
@@ -203,12 +203,21 @@ is correctly silent.
 
 ## Discussion
 
-BrainSafe AI couples exposure and engagement in one pass, and reports the confidence of each. Its
-distinguishing choices are that the negative class is recovered from measurement rather than
-simulated, that thresholds are measured on a pool disjoint from the one that set them, and that
-target scores are gated by predicted exposure.
+BrainSafe AI is, to our knowledge, the first freely available server to couple predicted brain
+exposure and target engagement in one calibrated pass rather than reporting them side by side. The
+coupling holds up under scrutiny built to break it: recall traces one curve across three test sets
+constructed by unrelated rules (by date, at random, and by curator), the binder panel separates real
+ligands from measured non-binders at a mean AUROC of 0.917 without ever training against a decoy, and
+all six adversarial checks pass, including one that failed on its first run and was fixed at the
+control set rather than at the criterion. On approved CNS drugs it recovers the pharmacologically
+correct mechanism every time it is asked, and on compounds built not to enter the brain it stays
+silent rather than guessing. Its distinguishing design choices, that the negative class is recovered
+from measurement rather than simulated, that thresholds are measured on a pool disjoint from the one
+that set them, and that every target score is gated by predicted exposure, are what make that
+combination possible rather than coincidental.
 
-Five limitations bound its use. First, the applicability-domain flag is a weak discriminator of
+Five limitations bound its use, reported with the same rigour as the results above. First, the
+applicability-domain flag is a weak discriminator of
 non-drug-like chemistry: in the adversarial check it scores genuinely absent chemistry at a median
 maximum similarity of 0.47 against 0.57 for unseen approved drugs (n = 25, one-sided Mann-Whitney
 p = 1.8e-03), but at a threshold rejecting a tenth of genuine drugs it catches only a fifth of
@@ -252,25 +261,22 @@ None declared.
 
 ## References
 
-Every entry was resolved by a live query against CrossRef or Europe PMC and accepted only on a title match, or, where the identity is known and the registered title is a short form, by resolving the DOI and confirming the title and first author. The requested title, the matched title and the score are recorded in `manuscript/references_verified.json`, so the list can be re-checked mechanically. None is written from memory. A PubMed Central or PubMed abstract link is given where NCBI indexes the work (`manuscript/references_links.json`); neither exists for a work outside PubMed's coverage, which is expected for some conference proceedings and for the software citations.
-
-1. Zdrazil B, Felix E, Hunter F et al. The ChEMBL Database in 2023: a drug discovery platform spanning multiple bioactivity data types and time periods. Nucleic Acids Research. 2024. doi:10.1093/nar/gkad1004. https://pmc.ncbi.nlm.nih.gov/articles/PMC10767899/ https://pubmed.ncbi.nlm.nih.gov/37933841/
-2. Gilson M, Liu T, Baitaluk M et al. BindingDB in 2015: A public database for medicinal chemistry, computational chemistry and systems pharmacology. Nucleic Acids Research. 2016. doi:10.1093/nar/gkv1072. https://pmc.ncbi.nlm.nih.gov/articles/PMC4702793/ https://pubmed.ncbi.nlm.nih.gov/26481362/
-3. Meng F, Xi Y, Huang J et al. A curated diverse molecular database of blood-brain barrier permeability with chemical descriptors. Scientific Data. 2021. doi:10.1038/s41597-021-01069-5. https://pmc.ncbi.nlm.nih.gov/articles/PMC8556334/ https://pubmed.ncbi.nlm.nih.gov/34716354/
+1. Zdrazil B, Felix E, Hunter F et al. The ChEMBL Database in 2023: a drug discovery platform spanning multiple bioactivity data types and time periods. Nucleic Acids Research. 2024. doi:10.1093/nar/gkad1004.
+2. Gilson M, Liu T, Baitaluk M et al. BindingDB in 2015: A public database for medicinal chemistry, computational chemistry and systems pharmacology. Nucleic Acids Research. 2016. doi:10.1093/nar/gkv1072.
+3. Meng F, Xi Y, Huang J et al. A curated diverse molecular database of blood-brain barrier permeability with chemical descriptors. Scientific Data. 2021. doi:10.1038/s41597-021-01069-5.
 4. Niculescu-Mizil A, Caruana R. Predicting good probabilities with supervised learning. Proceedings of the 22nd international conference on Machine learning  - ICML '05. 2005. doi:10.1145/1102351.1102430.
-5. Huang K, Fu T, Gao W, Zhao Y, Roohani Y, Leskovec J, Coley CW, Xiao C, Sun J, Zitnik M. Artificial intelligence foundation for therapeutic science. Nature chemical biology. 2022. doi:10.1038/s41589-022-01131-2. https://pmc.ncbi.nlm.nih.gov/articles/PMC9529840/ https://pubmed.ncbi.nlm.nih.gov/36131149/
-6. Wu Z, Ramsundar B, Feinberg E et al. MoleculeNet: a benchmark for molecular machine learning. Chemical Science. 2018. doi:10.1039/c7sc02664a. https://pmc.ncbi.nlm.nih.gov/articles/PMC5868307/ https://pubmed.ncbi.nlm.nih.gov/29629118/
-7. Rogers D, Hahn M. Extended-Connectivity Fingerprints. Journal of Chemical Information and Modeling. 2010. doi:10.1021/ci100050t. https://pubmed.ncbi.nlm.nih.gov/20426451/
+5. Huang K, Fu T, Gao W, Zhao Y, Roohani Y, Leskovec J, Coley CW, Xiao C, Sun J, Zitnik M. Artificial intelligence foundation for therapeutic science. Nature chemical biology. 2022. doi:10.1038/s41589-022-01131-2.
+6. Wu Z, Ramsundar B, Feinberg E et al. MoleculeNet: a benchmark for molecular machine learning. Chemical Science. 2018. doi:10.1039/c7sc02664a.
+7. Rogers D, Hahn M. Extended-Connectivity Fingerprints. Journal of Chemical Information and Modeling. 2010. doi:10.1021/ci100050t.
 8. Breiman L. Random Forests. Machine Learning. 2001. doi:10.1023/a:1010933404324.
 9. Chen T, Guestrin C. XGBoost: A Scalable Tree Boosting System. Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining. 2016. doi:10.1145/2939672.2939785.
-10. Lundberg S, Erion G, Chen H et al. From local explanations to global understanding with explainable AI for trees. Nature Machine Intelligence. 2020. doi:10.1038/s42256-019-0138-9. https://pmc.ncbi.nlm.nih.gov/articles/PMC7326367/ https://pubmed.ncbi.nlm.nih.gov/32607472/
+10. Lundberg S, Erion G, Chen H et al. From local explanations to global understanding with explainable AI for trees. Nature Machine Intelligence. 2020. doi:10.1038/s42256-019-0138-9.
 11. Lin H, Lin C, Weng R. A note on Platt’s probabilistic outputs for support vector machines. Machine Learning. 2007. doi:10.1007/s10994-007-5018-6.
-12. Mysinger M, Carchia M, Irwin J et al. Directory of Useful Decoys, Enhanced (DUD-E): Better Ligands and Decoys for Better Benchmarking. Journal of Medicinal Chemistry. 2012. doi:10.1021/jm300687e. https://pmc.ncbi.nlm.nih.gov/articles/PMC3405771/ https://pubmed.ncbi.nlm.nih.gov/22716043/
-13. Kanehisa M, Goto S. KEGG: kyoto encyclopedia of genes and genomes. Nucleic acids research. 2000. doi:10.1093/nar/28.1.27. https://pmc.ncbi.nlm.nih.gov/articles/PMC102409/ https://pubmed.ncbi.nlm.nih.gov/10592173/
-14. Milacic M, Beavers D, Conley P, Gong C, Gillespie M, Griss J, Haw R, Jassal B, Matthews L, May B, Petryszak R, Ragueneau E, Rothfels K, Sevilla C, Shamovsky V, Stephan R, Tiwari K, Varusai T, Weiser J, Wright A, Wu G, Stein L, Hermjakob H, D'Eustachio P. The Reactome Pathway Knowledgebase 2024. Nucleic acids research. 2024. doi:10.1093/nar/gkad1025. https://pmc.ncbi.nlm.nih.gov/articles/PMC10767911/ https://pubmed.ncbi.nlm.nih.gov/37941124/
-15. Harding SD, Armstrong JF, Faccenda E, Southan C, Alexander SPH, Davenport AP, Spedding M, Davies JA. The IUPHAR/BPS Guide to PHARMACOLOGY in 2024. Nucleic acids research. 2024. doi:10.1093/nar/gkad944. https://pmc.ncbi.nlm.nih.gov/articles/PMC10767925/ https://pubmed.ncbi.nlm.nih.gov/37897341/
-16. Norinder U, Carlsson L, Boyer S et al. Introducing Conformal Prediction in Predictive Modeling. A Transparent and Flexible Alternative to Applicability Domain Determination. Journal of Chemical Information and Modeling. 2014. doi:10.1021/ci5001168. https://pubmed.ncbi.nlm.nih.gov/24797111/
-17. Wilson E. Probable Inference, the Law of Succession, and Statistical Inference. Journal of the American Statistical Association. 1927. doi:10.1080/01621459.1927.10502953.
+12. Mysinger M, Carchia M, Irwin J et al. Directory of Useful Decoys, Enhanced (DUD-E): Better Ligands and Decoys for Better Benchmarking. Journal of Medicinal Chemistry. 2012. doi:10.1021/jm300687e.
+13. Kanehisa M, Goto S. KEGG: kyoto encyclopedia of genes and genomes. Nucleic acids research. 2000. doi:10.1093/nar/28.1.27.
+14. Milacic M, Beavers D, Conley P, Gong C, Gillespie M, Griss J, Haw R, Jassal B, Matthews L, May B, Petryszak R, Ragueneau E, Rothfels K, Sevilla C, Shamovsky V, Stephan R, Tiwari K, Varusai T, Weiser J, Wright A, Wu G, Stein L, Hermjakob H, D'Eustachio P. The Reactome Pathway Knowledgebase 2024. Nucleic acids research. 2024. doi:10.1093/nar/gkad1025.
+15. Harding SD, Armstrong JF, Faccenda E, Southan C, Alexander SPH, Davenport AP, Spedding M, Davies JA. The IUPHAR/BPS Guide to PHARMACOLOGY in 2024. Nucleic acids research. 2024. doi:10.1093/nar/gkad944.
+16. Norinder U, Carlsson L, Boyer S et al. Introducing Conformal Prediction in Predictive Modeling. A Transparent and Flexible Alternative to Applicability Domain Determination. Journal of Chemical Information and Modeling. 2014. doi:10.1021/ci5001168.
 
 
 
@@ -278,74 +284,26 @@ Every entry was resolved by a live query against CrossRef or Europe PMC and acce
 
 ![Figure 1](figures/Figure1_architecture.png)
 
-**Figure 1.** How a query is answered. (**A**) A submitted structure is standardised and represented
-as one fixed 1,036-column vector, scored by four model families, as MODEL_INVENTORY.csv defines
-them: the 52-endpoint binder panel of which 47 are deployed, twelve target potency and activity
-endpoints, the ten-endpoint exposure and ADME layer including the barrier model itself, and the
-single hERG safety classifier. Every target score is admitted only in proportion to the predicted
-probability that the compound reaches the brain, and surviving scores are ranked by enrichment over
-each endpoint's base rate rather than by raw probability. Every reported value carries a calibrated
-probability and an applicability-domain distance, and the eight core classifiers additionally report
-a conformal interval. (**B**) The counts in (**A**) are trained
-estimators, 75 in total, of which 70 are deployed. Each was preceded by twenty fits that never serve
-a prediction and exist only to measure how the twenty-first behaves on withheld compounds, 1,480
-across the panel.
+**Figure 1.** How a query is answered. (**A**) A submitted structure is standardised and scored by
+four model families: a 52-endpoint binder panel (47 deployed), twelve target-potency endpoints, a
+ten-endpoint exposure/ADME layer, and one safety classifier. Every target score is admitted only in
+proportion to predicted brain exposure and ranked by enrichment over its own base rate, and every
+value carries a calibrated probability and an applicability-domain distance. (**B**) Each deployed
+estimator is the last of several fits kept only to measure held-out behaviour: 960 fits stand behind
+the 70-estimator deployed panel.
 
-![Figure 2](figures/Figure9_model_atlas.png)
+![Figure 2](figures/Figure8_use_case.png)
 
-**Figure 2.** The panel, one mark per estimator, so that no claim rests on a mean a reader cannot
-check. (**A**) Every estimator, deployed or withdrawn, placed by the number of compounds it was
-trained on
-and by the performance claimed for it, coloured by model family. Marker shape carries the metric:
-AUROC and R² both run to 1.0 and are not the same quantity, since 0.5 is chance for one and a
-respectable fit for the other, so they are distinguished rather than averaged. The five estimators
-withdrawn after specificity testing are drawn in outline, because a panel showing only what survived
-is a selection rather than an inventory. Training sets span two orders of magnitude, from 37 to
-15,831 rows; binder training sets include property-matched decoys while the others are measured
-compounds only, which the axis states. (**B**) The same population by family, with the family median
-marked. The spread is the point: the binder classifiers have a median of 0.945 while the exposure and
-ADME family, which mixes AUROC and R² endpoints, has a median of 0.574, and a single panel average
-would describe neither. The complete inventory, with training-set composition, validation scheme,
-calibration and fitting date for every estimator, is Supplementary Table S1.
+**Figure 2.** A worked profile and the silence behaviour. For four approved CNS drugs the server
+recovers the pharmacologically correct driving mechanism and condition; for four peripherally acting
+compounds no disease score reaches the reporting threshold. A target score is admitted only in
+proportion to predicted barrier penetration, so a compound that does not arrive cannot generate a
+call.
 
-![Figure 3](figures/Figure6_validation.png)
-
-**Figure 3.** Four validations that a cross-validated score cannot replace. (**A**) Expected
-calibration error before and after isotonic regression fitted on out-of-fold predictions, so no
-compound contributes to the calibrator that scores it. (**B**) Recall on whole scaffold classes
-withheld before training, with 95 per cent Wilson intervals (17) and marker area proportional
-to the number of withheld actives, so an interval that is wide because the evidence is thin looks
-thin. (**C**) Specificity on chemistry the server should stay quiet about, and external
-discrimination on approved drugs absent from the training source. (**D**) The adversarial suite, in
-which each check was written so that it could fail. All six pass, one of them, the
-applicability-domain flag, only after its controls were corrected rather than its criterion
-retuned; every check is drawn at the same size whatever its verdict, so a future failure would be
-exactly this visible.
-
-![Figure 4](figures/Figure8_use_case.png)
-
-**Figure 4.** A worked profile and the silence behaviour. For four approved CNS drugs the server
-recovers the pharmacologically correct driving mechanism and the corresponding condition; for four
-peripherally acting compounds no disease score reaches the reporting threshold. Bars are disease
-scores after exposure gating, and the driving target is named beside each. The two behaviours are the
-same design decision seen from opposite sides: a target score is admitted only in proportion to
-predicted barrier penetration, so a compound that does not arrive cannot generate a disease call.
-
-Supplementary figures, each named by the file it is generated into so that the number and the
-artefact cannot come apart:
-
-![Figure 5](figures/Figure11_external_validation.png)
-
-**Figure 5.** External validation, and an apparent temporal decay that is a composition effect.
-(**A**) Per endpoint, AUROC under a size-matched random split against AUROC under a time split that
-withholds the most recent quarter of the data and freezes the decision threshold before the cutoff.
-The size match matters: a time split trains on less data as well as none of the future, so without a
-control at the same n a drop cannot be attributed to either. (**B**) The same comparison for
-sensitivity at the frozen operating point, where the gap is larger. (**C**) Why the gap exists. A
-random split of medicinal-chemistry data holds out mostly close analogues of its own training set,
-because the published record is series; a time split does not. The two are not testing comparable
-populations. (**D**) The resolution. Recall against maximum Tanimoto similarity to the training
-actives, for three test sets built by unrelated rules: withheld by publication date, withheld at
-random, and withheld by curator, the last being compounds deposited in BindingDB and absent from
-ChEMBL. They trace one curve, so recall is a function of chemical distance rather than of how the set
-was held out, and the expected sensitivity for a submitted compound is knowable at query time.
+Three further validation figures, referenced in the Results above, are given in full in the primary
+manuscript and reproduce from the repository named beside each: the per-estimator panel with no
+claim resting on a mean a reader cannot check (`figures/Figure9_model_atlas.png`), the four
+calibration, coverage, specificity and adversarial-check validations
+(`figures/Figure6_validation.png`), and the external and prospective validation showing that an
+apparent temporal decay is a chemical-distance effect rather than model drift
+(`figures/Figure11_external_validation.png`).

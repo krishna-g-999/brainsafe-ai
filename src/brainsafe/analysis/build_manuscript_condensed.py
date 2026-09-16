@@ -44,7 +44,7 @@ def main():
                          + ", ".join(unknown))
     if "<!-- REFERENCES -->" not in text:
         raise SystemExit("marker <!-- REFERENCES --> not found in the condensed draft")
-    text = text.replace("<!-- REFERENCES -->", cite.reference_section(order))
+    text = text.replace("<!-- REFERENCES -->", cite.reference_section(order, compact=True))
     BUILT.write_text(text, encoding="utf-8")
     print(f"citations resolved: {len(order)}")
     if uncited:

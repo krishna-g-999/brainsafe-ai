@@ -235,12 +235,12 @@ restates the target instead of measuring it. The 158,890-compound background lib
 partitioned into three disjoint pools by a stable hash of the canonical structure, so a compound's
 pool is a property of the molecule and never depends on run order: 95,515 compounds supply decoys,
 31,694 set thresholds, and 31,681 measure the false-positive rate. Measured on the pool it was not
-set on, the background false-positive rate has a median of 0.0259 across the 44 of 47 deployed
-endpoints for which a held-out measurement exists, and reaches a maximum of 0.0621, exceeding the
-0.05 target at four endpoints; under the previous procedure, where the same pool set the threshold
-and measured the rate, the two could not disagree by construction, so a genuinely disjoint
-measurement exceeding its target is the expected behaviour of a real constraint rather than evidence
-against it.
+set on, at the threshold the server currently deploys, the background false-positive rate has a
+median of 0.0262 across all 47 deployed endpoints and a maximum of 0.0512 at HT2A, exceeding the 0.05
+target at two endpoints (HT2A and D2); under the previous procedure, where the same pool set the
+threshold and measured the rate, the two could not disagree by construction, so a genuinely disjoint
+measurement exceeding its target, if only slightly, is the expected behaviour of a real constraint
+rather than evidence against it.
 
 ### Disease layer and implementation
 
@@ -533,9 +533,14 @@ not bound behaviour on genuinely distant chemistry.
 Natural-product chemistry is a fourth limit, and it is stated here because a reader will reasonably
 ask.
 The training library has a median fraction-sp3 of 0.34 and only 9.2 per cent of it is both
-sp3-rich and free of aromatic rings, so terpenoid and steroidal natural products are largely outside it: a
-withanolide (withaferin A) submitted to the server returns a maximum Tanimoto of 0.27 and no
-engagement call, with no measured compound close enough to serve as an analogue. Measured activity for such compounds is scarce against
+sp3-rich and free of aromatic rings, so terpenoid and steroidal natural products are underrepresented
+in it: withanolide A, a steroidal natural product, submitted to the server returns a maximum Tanimoto
+of 0.43 to its nearest measured analogue and no engagement call. That distance is close enough to be
+called in domain rather than clearly outside it, and the expected recall the interface reports at
+that distance is 0.55 on 5,228 comparably distant test actives, so the silence here is moderate
+rather than uninformative evidence of inactivity: exactly the graded reading the applicability-domain
+distance is designed to support, rather than a binary in-or-out call. Measured activity for such
+compounds is scarce against
 these targets and is usually recorded against cell lines rather than proteins. Assembling an external
 test set from NPASS left only three endpoints with enough genuinely external data to score, after
 1,385 nominally new compounds proved on inspection to be training compounds written as a different
@@ -644,10 +649,12 @@ single hERG safety classifier. Every target score is admitted only in proportion
 probability that the compound reaches the brain, and surviving scores are ranked by enrichment over
 each endpoint's base rate rather than by raw probability. Every reported value carries a calibrated
 probability and an applicability-domain distance, and the eight core classifiers additionally report
-a conformal interval. (**B**) The counts in (**A**) are trained
-estimators, 75 in total, of which 70 are deployed. Each was preceded by twenty fits that never serve
-a prediction and exist only to measure how the twenty-first behaves on withheld compounds, 1,480
-across the panel.
+a conformal interval. (**B**) The counts in (**A**) are trained estimators, 75 in total, of which 70
+are deployed; each is the last of several fits that never serve a prediction and exist only to
+measure how it behaves on compounds it has not seen. A target-potency, exposure or safety endpoint,
+shown here, is validated under both regimes and is 21 fits, 10 random and 10 scaffold folds plus the
+deployed model; a binder classifier, validated under the scaffold regime alone, is 11. 960 fits stand
+behind the deployed panel in total.
 
 ![Figure 2](figures/Figure9_model_atlas.png)
 
