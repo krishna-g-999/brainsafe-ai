@@ -24,6 +24,7 @@ ROOT = Path(__file__).resolve().parents[3]
 MS = ROOT / "manuscript"
 BUILT = MS / "NAR_WebServer_BrainSafe_built.md"
 DOCX = MS / "NAR_WebServer_BrainSafe_with_figure.docx"
+REFERENCE_DOCX = ROOT / "docs" / "nar_manuscript_reference.docx"
 MARKER = "**Graphical abstract:** submitted as a separate file, `manuscript/figures/GraphicalAbstract.png`\n(and `.pdf`)."
 
 
@@ -44,7 +45,8 @@ def main() -> None:
     tmp.write_text(text, encoding="utf-8")
     try:
         pypandoc.convert_file(str(tmp), "docx", outputfile=str(DOCX),
-                              extra_args=[f"--resource-path={MS}", "--toc", "--toc-depth=2"])
+                              extra_args=[f"--resource-path={MS}",
+                                          f"--reference-doc={REFERENCE_DOCX}"])
     finally:
         tmp.unlink(missing_ok=True)
     print("wrote", DOCX.name, f"({DOCX.stat().st_size/1024:.0f} KB)")

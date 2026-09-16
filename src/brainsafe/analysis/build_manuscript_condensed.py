@@ -32,6 +32,7 @@ MS = ROOT / "manuscript"
 SRC = MS / "NAR_condensed_draft.md"
 BUILT = MS / "NAR_condensed_built.md"
 DOCX = MS / "NAR_WebServer_BrainSafe_condensed.docx"
+REFERENCE_DOCX = ROOT / "docs" / "nar_manuscript_reference.docx"
 
 
 def main():
@@ -50,7 +51,8 @@ def main():
         print(f"verified but uncited ({len(uncited)}): {', '.join(sorted(uncited))}")
 
     pypandoc.convert_file(str(BUILT), "docx", outputfile=str(DOCX),
-                          extra_args=[f"--resource-path={MS}"])
+                          extra_args=[f"--resource-path={MS}",
+                                      f"--reference-doc={REFERENCE_DOCX}"])
     print("wrote", BUILT.name, f"({len(text):,} chars)")
     print("wrote", DOCX.name, f"({DOCX.stat().st_size/1024:.0f} KB)")
 

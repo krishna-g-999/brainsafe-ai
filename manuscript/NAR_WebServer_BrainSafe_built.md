@@ -17,10 +17,10 @@ Venketesh Sivaramakrishnan¹
 - BrainSafe AI profiles small-molecule mechanism in the human brain from structure alone, gating
   every target score by predicted exposure so potency at a target a compound cannot reach
   contributes nothing to the output.
-- Every one of its 74 cross-validated estimators is validated under both random and
-  scaffold-grouped splits and carries a calibrated probability, the core classifiers additionally
-  reporting a conformal interval, and the server reports silence rather than a guess for chemistry
-  outside its measured competence.
+- Every one of its 74 cross-validated estimators is scaffold-grouped cross-validated and carries a
+  calibrated probability; the 22 target-potency, exposure and safety estimators are additionally
+  validated under a random split, the core classifiers reporting a conformal interval as well, and
+  the server reports silence rather than a guess for chemistry outside its measured competence.
 - Its negative class is recovered from compounds measured and found inactive rather than simulated
   with decoys, and every validation, including six adversarial checks written so that each could
   fail, is reported whichever way it falls, which led to withdrawing two endpoints that could not
@@ -40,9 +40,9 @@ predicted brain exposure, so potency at a target a compound cannot reach contrib
 engaged targets are traced through a curated pathway graph to the conditions they touch. The
 server is built on 75 estimators, 70 of them deployed, trained on 228,200 measured
 compound-endpoint records from ChEMBL
-(1), BindingDB (2) and B3DB (3), and validated under both random and
-scaffold-grouped 10-fold cross-validation: mean AUROC 0.958 and 0.925 respectively across the
-measured-label classifiers, with expected calibration error falling from 0.0801 to 0.0147 after
+(1), BindingDB (2) and B3DB (3). The measured-label classifiers are validated
+under both random and scaffold-grouped 10-fold cross-validation: mean AUROC 0.958 and 0.925
+respectively, with expected calibration error falling from 0.0801 to 0.0147 after
 isotonic calibration. Every prediction carries a calibrated probability, a conformal interval and an
 applicability-domain distance to the nearest measured analogue, and the server reports silence rather
 than a guess for compounds outside its competence: on non-CNS chemistry its specificity is 0.925
@@ -614,6 +614,13 @@ inside it, so a download is verified rather than trusted.
 other value in this manuscript, including the author list, the corresponding address and the server
 and repository URLs above, is stated as it currently stands in the repository and the deployed
 server rather than left as a placeholder.
+
+## Author contributions
+
+**[TO BE SUPPLIED BEFORE SUBMISSION]** NAR requires a CRediT-style contribution statement naming
+what each author did (e.g. conceptualisation, methodology, software, validation, writing). This
+cannot be written from the repository the way the rest of this manuscript is, since it is a
+statement about people rather than about artefacts, and must be supplied by the author team.
 
 ## Funding
 

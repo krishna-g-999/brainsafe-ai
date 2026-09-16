@@ -17,9 +17,9 @@ Venketesh Sivaramakrishnan¹
 - BrainSafe AI profiles small-molecule mechanism in the human brain from structure alone, gating
   every target score by predicted exposure so potency at a target a compound cannot reach
   contributes nothing to the output.
-- Its 74 cross-validated estimators are each validated under both random and scaffold-grouped
-  splits and carry a calibrated probability, the core classifiers additionally reporting a
-  conformal interval.
+- Its 74 cross-validated estimators are each scaffold-grouped cross-validated and carry a
+  calibrated probability; the 22 target-potency, exposure and safety estimators are additionally
+  validated under a random split, the core classifiers reporting a conformal interval as well.
 - The negative class is recovered from compounds measured and found inactive rather than simulated
   with decoys, and every validation is reported whichever way it falls, which led to withdrawing
   two endpoints that could not separate a real ligand from an unrelated metabolite.
@@ -236,6 +236,11 @@ every validation artefact are at https://github.com/krishna-g-999/brainsafe-ai u
 licence; underlying data retain their own sources' licences. Trained estimators and the raw API
 responses are deposited separately with a manifest recording the SHA-256 of every file. **[TO BE
 SUPPLIED BEFORE SUBMISSION]** the archive deposit's own DOI.
+
+## Author contributions
+
+**[TO BE SUPPLIED BEFORE SUBMISSION]** NAR requires a CRediT-style contribution statement naming
+what each author did. This must be supplied by the author team.
 
 ## Funding
 
