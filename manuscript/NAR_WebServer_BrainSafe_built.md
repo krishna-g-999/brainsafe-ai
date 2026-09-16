@@ -134,7 +134,7 @@ property-matched decoys, and it left 35 of the 60 protein-target endpoints then 
 A censored bound settles a label whenever the entire interval it defines falls on one side of the
 activity cut. `IC50 > 10 uM` places the true potency strictly below pChEMBL 5.0 and is a measured
 non-binder; `IC50 > 100 nM` spans both classes and is discarded as undecidable rather than guessed
-at. Recovering these added 29,751 measured non-binders across 57 endpoints and reduced the endpoints
+at. Recovering these added 21,994 measured non-binders across 57 endpoints and reduced the endpoints
 above 90 per cent active from 35 to 13 (Supplementary Figure S1). A bound is never used as a value: it assigns a
 class and never enters a regression.
 
@@ -195,12 +195,14 @@ the potency regressions and is stated rather than left for a reader to find.
 
 ### Cross-validation, calibration and uncertainty
 
-Every endpoint is cross-validated ten-fold in two regimes: a random split, and a split grouped on
-Bemis-Murcko scaffolds (25) that withholds entire structural classes. The two answer
-different questions, and the distance between them is the honest statement of how far a model
-travels. Across 74 cross-validated estimators, spanning 70 distinct endpoints because four
-receptors carry both a potency regression and a binder classifier, this is 1,480 fitted models
-standing behind the deployed panel. A complete inventory of every estimator, with its prediction type, training-set size,
+Every endpoint is cross-validated ten-fold, grouped on Bemis-Murcko scaffolds (25) so that
+entire structural classes are withheld together. The 22 target-potency, exposure and safety
+estimators are additionally cross-validated under a random split, and the distance between the two
+regimes is the honest statement of how far a model travels; the 52 binder classifiers, validated
+instead against compounds measured and found inactive at the same target (Section 3.3), are
+cross-validated under the scaffold-grouped regime alone. Across the 74 cross-validated estimators,
+spanning 70 distinct endpoints because four receptors carry both a potency regression and a binder
+classifier, this is 960 fitted models standing behind the deployed panel. A complete inventory of every estimator, with its prediction type, training-set size,
 validation scheme, calibration and fitting date, is given in Supplementary Table S1 and regenerates
 with one command.
 
@@ -233,11 +235,12 @@ restates the target instead of measuring it. The 158,890-compound background lib
 partitioned into three disjoint pools by a stable hash of the canonical structure, so a compound's
 pool is a property of the molecule and never depends on run order: 95,515 compounds supply decoys,
 31,694 set thresholds, and 31,681 measure the false-positive rate. Measured on the pool it was not
-set on, the background false-positive rate has a median of 0.0253 across all 47 deployed endpoints
-and a maximum of exactly 0.05, the target itself, reached by four endpoints; under the previous
-procedure, where the same pool set the threshold and measured the rate, the two could not disagree by
-construction, so a genuinely disjoint measurement landing at rather than below its target is the
-expected behaviour of a real constraint rather than evidence against it.
+set on, the background false-positive rate has a median of 0.0259 across the 44 of 47 deployed
+endpoints for which a held-out measurement exists, and reaches a maximum of 0.0621, exceeding the
+0.05 target at four endpoints; under the previous procedure, where the same pool set the threshold
+and measured the rate, the two could not disagree by construction, so a genuinely disjoint
+measurement exceeding its target is the expected behaviour of a real constraint rather than evidence
+against it.
 
 ### Disease layer and implementation
 
@@ -359,7 +362,7 @@ false-positive rate on background chemistry is unchanged (0.037 against 0.038), 
 once test compounds are stratified by maximum Tanimoto similarity to the training actives. A random
 split of medicinal-chemistry data holds out 83 per cent close analogues of its own training set,
 because the published record is series; a time split holds out 28 per cent chemistry below Tanimoto
-0.40. Within a novelty band the two splits differ by at most 0.081 in AUROC and 0.071 in recall
+0.40. Within a novelty band the two splits differ by at most 0.081 in AUROC and 0.072 in recall
 against aggregate gaps of 0.128 and 0.383. Three test sets built by unrelated rules, withheld by
 date, at random, and by curator, trace one recall curve: 0.16, 0.55, 0.74 and 0.86 by date across the
 four bands, against 0.12, 0.52, 0.77 and 0.93 at random and 0.05, 0.46, 0.83 and 0.90 by curator
@@ -376,7 +379,7 @@ number is predictable rather than that it is better than it appeared.
 **Specificity.** One thousand compounds carrying no recorded activity at any modelled target were
 scored through the deployed pipeline. 925 returned no actionable disease signal, a specificity of
 0.925 (95% CI 0.907 to 0.940). Of the 75 false positives, 49 fired on a single condition rather than
-producing a diffuse profile, and the median score among them was 0.437, only modestly above the
+producing a diffuse profile; the median score across all 75 was 0.437, only modestly above the
 actionable threshold. These compounds are presumed inactive because nothing is recorded, not proven
 inactive, so this is a lower bound.
 
@@ -416,7 +419,7 @@ many CNS endpoints with an explicit applicability-domain statement on every valu
 
 Submitting donepezil returns a barrier probability of 0.99 and acetylcholinesterase as the driving
 target, surfacing Alzheimer's disease at 0.99 with cognition (cholinergic) alongside it. Haloperidol
-returns D2 and psychosis at 0.95; morphine returns the mu-opioid receptor and chronic pain at 0.99;
+returns D2 and psychosis at 0.92; morphine returns the mu-opioid receptor and chronic pain at 0.97;
 fluoxetine returns the serotonin transporter and depression at 0.99 (Figure 4A). In each case the
 server names the mechanism, and the mechanism is the pharmacologically correct one.
 
@@ -531,8 +534,8 @@ Natural-product chemistry is a fourth limit, and it is stated here because a rea
 ask.
 The training library has a median fraction-sp3 of 0.34 and only 9.2 per cent of it is both
 sp3-rich and free of aromatic rings, so terpenoid and steroidal natural products are largely outside it: a
-withanolide submitted to the server returns a maximum Tanimoto of 0.31 and no engagement call, with
-a bile acid as its nearest measured neighbour. Measured activity for such compounds is scarce against
+withanolide (withaferin A) submitted to the server returns a maximum Tanimoto of 0.27 and no
+engagement call, with no measured compound close enough to serve as an analogue. Measured activity for such compounds is scarce against
 these targets and is usually recorded against cell lines rather than proteins. Assembling an external
 test set from NPASS left only three endpoints with enough genuinely external data to score, after
 1,385 nominally new compounds proved on inspection to be training compounds written as a different

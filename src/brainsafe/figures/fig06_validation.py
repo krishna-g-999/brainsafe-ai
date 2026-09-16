@@ -68,8 +68,8 @@ def panel_b(ax, hold) -> None:
     Filtered on threshold_collapsed, NOT on the `usable` column. `usable` is defined in
     scaffold_holdout_report.py as `not collapsed and recall >= 0.50`, so it conditions on the very
     quantity being summarised: selecting on it drops the four weakest targets because they are weak
-    and then reports the median of the survivors, which reads as 0.832 where the panel's median is
-    0.814. Excluding a degenerate threshold is legitimate; excluding a poor result is not.
+    and then reports the median of the survivors, which reads as 0.835 where the panel's median is
+    0.815. Excluding a degenerate threshold is legitimate; excluding a poor result is not.
     """
     d = hold[~hold.threshold_collapsed.astype(bool)] if "threshold_collapsed" in hold.columns \
         else hold

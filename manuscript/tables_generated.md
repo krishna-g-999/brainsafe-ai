@@ -88,21 +88,21 @@ Models are trained only on compounds published before the cutoff year and tested
 
 | Endpoint | Target | Cutoff year | Train | Test | Metric | Score |
 |---|---|---|---|---|---|---|
-| AChE | Acetylcholinesterase | 2020 | 4,141 | 1,028 | AUROC | 0.761 |
-| BChE | Butyrylcholinesterase | 2021 | 2,696 | 617 | AUROC | 0.801 |
-| BACE1 | Beta-secretase 1 | 2017 | 6,901 | 1,673 | AUROC | 0.910 |
-| GSK3B | Glycogen synthase kinase-3 beta | 2021 | 4,205 | 546 | AUROC | 0.764 |
-| MAO_A | Monoamine oxidase A | 2020 | 2,859 | 819 | AUROC | 0.727 |
-| MAO_B | Monoamine oxidase B | 2020 | 3,719 | 923 | AUROC | 0.843 |
-| hERG | hERG potassium channel | 2020 | 8,158 | 2,059 | AUROC | 0.720 |
-| D2 | Dopamine D2 receptor | 2019 | 6,796 | 1,556 | R2 | 0.080 |
-| A2A | Adenosine A2A receptor | 2020 | 4,600 | 1,516 | R2 | 0.229 |
-| HT2A | Serotonin 5-HT2A receptor | 2020 | 4,741 | 986 | R2 | 0.155 |
-| SERT | Serotonin transporter | 2015 | 3,647 | 1,147 | R2 | 0.111 |
-| antioxidant_DPPH | Radical-scavenging capacity | 2016 | 2,340 | 522 | R2 | 0.007 |
+| AChE | Acetylcholinesterase | 2020 | 4,006 | 1,007 | AUROC | 0.751 |
+| BChE | Butyrylcholinesterase | 2021 | 2,624 | 609 | AUROC | 0.804 |
+| BACE1 | Beta-secretase 1 | 2017 | 6,266 | 1,578 | AUROC | 0.913 |
+| GSK3B | Glycogen synthase kinase-3 beta | 2021 | 4,075 | 521 | AUROC | 0.748 |
+| MAO_A | Monoamine oxidase A | 2020 | 2,706 | 792 | AUROC | 0.713 |
+| MAO_B | Monoamine oxidase B | 2020 | 3,525 | 893 | AUROC | 0.845 |
+| hERG | hERG potassium channel | 2020 | 7,888 | 1,986 | AUROC | 0.721 |
+| D2 | Dopamine D2 receptor | 2019 | 6,257 | 1,494 | R2 | 0.082 |
+| A2A | Adenosine A2A receptor | 2020 | 4,509 | 1,423 | R2 | 0.218 |
+| HT2A | Serotonin 5-HT2A receptor | 2020 | 4,509 | 945 | R2 | 0.170 |
+| SERT | Serotonin transporter | 2015 | 3,317 | 1,063 | R2 | 0.111 |
+| antioxidant_DPPH | Radical-scavenging capacity | 2016 | 2,263 | 519 | R2 | 0.012 |
 
 
-Classifier endpoints: mean AUROC 0.789 (range 0.720 to 0.910). Regression endpoints: mean R2 0.116 (range 0.007 to 0.229).
+Classifier endpoints: mean AUROC 0.785 (range 0.713 to 0.913). Regression endpoints: mean R2 0.119 (range 0.012 to 0.218).
 
 
 ## Table 6. Prospective validation under a scaffold hold-out
@@ -168,12 +168,13 @@ Every hypothesis was stated so that it could fail. Where predictive power was at
 | H1 the disease score is informative | **SUPPORTED** | top-3 accuracy 0.790 vs permutation null 0.163 (p=0.005) and frequency null 0.551 |
 | H2 the curated edge weights add value | **REFUTED** | curated 0.7901, uniform 0.7897, permuted 0.7874 |
 | H3 BBB gating discriminates between diseases | **REFUTED (by construction)** | the gate multiplies every disease equally and cannot change their order |
-| H4 specificity transfers to novel chemistry | **SUPPORTED** | false-positive rate 0.016 on 61 distant compounds against 0.051 measured on library chemistry |
+| H4 specificity transfers to novel chemistry | **SUPPORTED** | false-positive rate 0.016 on 61 distant compounds against 0.075 measured on library chemistry |
 | H5 read-across beats a frequency baseline | **SUPPORTED** | recall 0.973 against 0.059 |
 | H6 the disease scores match real clinical indications | **WEAKENED** | top-3 accuracy 0.352 on 162 drugs never seen in training, against permutation null 0.145 (p=0.001) and frequency null 0.654 |
 | H7 some panel targets are non-discriminative and explain the silent antiepileptics | **REFUTED** | none of 37 targets ranks below AUROC 0.70; the cause is the operating point, with median deployed sensitivity 0.79 and 6 targets under 0.50 |
 | H8 engaged targets are independent observations | **REFUTED** | 37 targets fire across approved drugs but span only 16 independent directions; 5 homologous pairs correlate above 0.5 |
 | H9 the disease layer discriminates between compounds, not just between base rates | **SUPPORTED** | mean per-indication AUROC 0.616 against 0.500 for any constant predictor, beating chance on 7 of 9 indications; macro-averaged top-3 recall 0.358 against 0.333 |
+| H10 the barrier model earns its place over a descriptor rule | **WEAKENED** | on unseen approved drugs the deployed forest scores 0.7666 against 0.7431 for a forest on the twelve descriptors alone, a margin of -0.0235 whose bootstrap interval reaches +0.0154 |
 
 
 ## Table 8. Recovery of approved clinical indications, by condition

@@ -144,8 +144,9 @@ scaffold-held-out partition, it agrees with the threshold table on all 47 deploy
 regression test fails if any endpoint reports sensitivity on an undeclared basis. Six endpoints fall
 below the reliability gate on the corrected figure, against one before; each holds its background
 false-positive rate at or below target, so each is weak rather than misleading and stays deployed
-with a low-power marker on any negative call. Five further endpoints are withdrawn outright for
-firing on trivial metabolites at every usable threshold.
+with a low-power marker on any negative call. Five further endpoints are withdrawn outright: two for
+firing on trivial metabolites at every usable threshold, and three added specifically to test
+natural-product coverage, reported in the limitations.
 
 **Leakage and null models.** On the deduplicated matrix the pipeline fits, no InChIKey, no feature
 vector and no scaffold appears on both sides of any fold. With labels permuted the same pipeline

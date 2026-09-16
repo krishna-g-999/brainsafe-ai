@@ -1,4 +1,4 @@
-"""Figure 7. The binder panel, all 49 endpoints, including the ones that do not work.
+"""Figure 7. The binder panel, all 52 endpoints, including the ones that do not work.
 
 The panel is not uniform and a single mean over it would hide that. These classifiers answer "does
 this compound bind this target" for targets whose evidence ranges from thousands of measured actives
@@ -6,12 +6,14 @@ with hundreds of measured non-binders, to a few dozen actives and almost no meas
 all. Performance tracks that, and the figure is ordered so it can be read off.
 
 Panel A places every endpoint by what it discriminates and what it recovers. Panel B lists all of
-them, so a reader can look up any target rather than take a panel average on trust, with the two
+them, so a reader can look up any target rather than take a panel average on trust, with the five
 withdrawn endpoints and the ones that fail the reliability gate marked rather than omitted.
 
-An endpoint is withdrawn when its probability band is too compressed for any threshold to separate
-real ligands from trivial metabolites. That is a property of the fitted model, found by testing it
-against chemistry it should reject, and it is reported here rather than being quietly dropped.
+An endpoint is withdrawn when no threshold can simultaneously separate real ligands from unrelated
+chemistry, hold the background false-positive rate to target and retain usable sensitivity. Most fail
+by firing on trivial metabolites; others fail on discrimination alone. Either is a property of the
+fitted model, found by testing it against chemistry it should reject, and it is reported here rather
+than being quietly dropped.
 
 Reads models_rf/binder_modes.json.
 
