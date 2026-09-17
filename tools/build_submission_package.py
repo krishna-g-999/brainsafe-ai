@@ -74,6 +74,9 @@ LAYOUT: list[tuple[str, list[tuple[str, str, str | None]]]] = [
         ("docs/ENDPOINT_JUSTIFICATION.md", "endpoint_justification.md", None),
         ("docs/DATA_MANIFEST.docx", "data_manifest.docx", None),
         ("docs/DATA_MANIFEST.md", "data_manifest.md", None),
+        ("docs/ML_METHODS_AND_FORMULAS.docx", "ml_methods_and_formulas.docx", None),
+        ("docs/ML_METHODS_AND_FORMULAS.md", "ml_methods_and_formulas.md", None),
+        ("results/tables/decision_tree_example_full.txt", "decision_tree_example_full.txt", None),
     ]),
     ("05_CODE/01_data_acquisition", [("src/brainsafe/data", ".", "*.py")]),
     ("05_CODE/02_featurisation", [("src/brainsafe/features", ".", "*.py")]),
@@ -98,6 +101,7 @@ LAYOUT: list[tuple[str, list[tuple[str, str, str | None]]]] = [
         ("data/endpoints_reg", "endpoints_regression", "*.csv"),
         ("data/adme", "adme", "*.csv"),
         ("data/raw/measured_endpoints_SOURCE.md", "SOURCE_provenance.md", None),
+        ("results/tables/master_training_usage.csv", "master_training_usage.csv", None),
     ]),
     ("07_MODELS", [
         ("models_manifest.json", "models_manifest_with_checksums.json", None),
@@ -106,7 +110,10 @@ LAYOUT: list[tuple[str, list[tuple[str, str, str | None]]]] = [
         ("results/tables/MODEL_INVENTORY.csv", "model_inventory.csv", None),
         ("models_rf", "per_model_metadata", "*_meta.json"),
     ]),
-    ("08_VALIDATION_RESULTS", [("results/tables", ".", "*.csv")]),
+    ("08_VALIDATION_RESULTS", [("results/tables", ".", "*.csv", {
+        "master_feature_vectors.csv",   # gated behind --with-vectors, ~0.8 GB
+        "master_training_usage.csv",    # already placed explicitly in 06_TRAINING_DATA
+    })]),
     ("09_FALSIFICATION_SUITE", [
         ("inversion/results", "results", "*.csv"),
         ("inversion/REPORT.md", "falsification_report.md", None),
@@ -124,8 +131,12 @@ LAYOUT: list[tuple[str, list[tuple[str, str, str | None]]]] = [
 ]
 
 
-def copy(src: Path, dst: Path, pattern: str | None) -> tuple[int, int]:
-    """Copy one file, or every match of a pattern. Returns (files, bytes)."""
+def copy(src: Path, dst: Path, pattern: str | None,
+         exclude: set[str] | None = None) -> tuple[int, int]:
+    """Copy one file, or every match of a pattern (skipping any name in `exclude`).
+
+    Returns (files, bytes).
+    """
     n = size = 0
     if pattern is None:
         if not src.exists():
@@ -137,6 +148,8 @@ def copy(src: Path, dst: Path, pattern: str | None) -> tuple[int, int]:
         return 0, 0
     for p in sorted(src.rglob(pattern)):
         if "__pycache__" in p.parts or p.suffix == ".pyc":
+            continue
+        if exclude and p.name in exclude:
             continue
         rel = p.relative_to(src)
         out = (dst / rel) if dst.name != "." else (dst.parent / rel)
@@ -152,6 +165,8 @@ def main() -> None:
     ap.add_argument("--out", required=True)
     ap.add_argument("--with-models", action="store_true",
                     help="include the fitted estimators, about 0.85 GB")
+    ap.add_argument("--with-vectors", action="store_true",
+                    help="include the full master feature-vector matrix, about 0.8 GB")
     args = ap.parse_args()
 
     out = Path(args.out).resolve()
@@ -163,10 +178,12 @@ def main() -> None:
     summary, total_files, total_bytes, missing = [], 0, 0, []
     for section, items in LAYOUT:
         sec_files = sec_bytes = 0
-        for rel_src, rel_dst, pattern in items:
+        for item in items:
+            rel_src, rel_dst, pattern, *rest = item
+            exclude = rest[0] if rest else None
             src = ROOT / rel_src
             dst = out / section / rel_dst
-            n, b = copy(src, dst, pattern)
+            n, b = copy(src, dst, pattern, exclude)
             if n == 0:
                 missing.append(f"{section}: {rel_src}")
             sec_files += n
@@ -185,11 +202,20 @@ def main() -> None:
         total_bytes += b + b2
         summary.append(("07_MODELS/fitted_estimators", n + n2, b + b2))
 
+    if args.with_vectors:
+        n, b = copy(ROOT / "results" / "tables" / "master_feature_vectors.csv",
+                   out / "06_TRAINING_DATA" / "master_feature_vectors.csv", None)
+        print(f"  {n:>4} files  {b/1e6:>8.2f} MB  06_TRAINING_DATA/master_feature_vectors.csv")
+        total_files += n
+        total_bytes += b
+        summary.append(("06_TRAINING_DATA/master_feature_vectors.csv", n, b))
+
     (out / "PACKAGE_CONTENTS.json").write_text(json.dumps({
         "built": datetime.now().strftime("%Y-%m-%d %H:%M"),
         "total_files": total_files,
         "total_megabytes": round(total_bytes / 1e6, 2),
         "fitted_estimators_included": bool(args.with_models),
+        "master_feature_vectors_included": bool(args.with_vectors),
         "sections": [{"section": s, "files": f, "megabytes": round(b / 1e6, 2)}
                      for s, f, b in summary],
         "expected_but_absent": missing,
@@ -217,9 +243,9 @@ PI-review record behind that manuscript.
 | `01_PROPOSAL/` | The original one-page project proposal. |
 | `02_MANUSCRIPT/` | Every manuscript variant: the NAR-length submission copy, the extended full-length draft, the Supplementary Information, and the raw Markdown and reference data behind both. |
 | `03_FIGURES/` | Every figure and the graphical abstract, PNG and PDF. |
-| `04_TECHNICAL_REPORT/` | The full methods and results narrative, the endpoint justification (why these 75 estimators, why 5 were withdrawn, and the 1,688-target survey behind that), the data manifest, the validation summary, and the dated decisions log. Word and Markdown versions of each. |
+| `04_TECHNICAL_REPORT/` | The full methods and results narrative, the endpoint justification (why these 75 estimators, why 5 were withdrawn, and the 1,688-target survey behind that), the data manifest, the ML methods and formulas document (every calculation the pipeline makes, with a live worked example), the validation summary, and the dated decisions log. Word and Markdown versions of each, plus the complete text export of one decision tree. |
 | `05_CODE/` | Every script that produced a number or figure quoted anywhere above, organised by pipeline stage. |
-| `06_TRAINING_DATA/` | The measured endpoint tables every model is trained and tested on, as CSV. |
+| `06_TRAINING_DATA/` | The measured endpoint tables every model is trained and tested on, as CSV; `master_training_usage.csv` maps every (endpoint, compound) pair actually used to train or test a model, joinable to the numeric feature vectors in `master_feature_vectors.csv` (with `--with-vectors`, ~0.8 GB: the exact 1,036-column input every model receives, one row per distinct compound). |
 | `07_MODELS/` | The model registry, per-model metadata, and (with `--with-models`) the fitted estimators themselves. |
 | `08_VALIDATION_RESULTS/` | Every results table cited in the manuscript or technical report, as CSV. |
 | `09_FALSIFICATION_SUITE/` | The ten-hypothesis falsification suite: evidence, verdicts, and the narrative report. |

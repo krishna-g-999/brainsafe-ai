@@ -85,6 +85,14 @@ pipeline; nothing below points to them.
 - **Recovery of the negative class from censored bounds**, and its effect on class balance per
   endpoint: `results/tables/expansion_inactives.csv`, built by
   `src/brainsafe/data/recover_expansion_inactives.py`.
+- **The actual numeric input every model trains on.** A SMILES string and a label are what the
+  endpoint tables above store; the 1,036-column vector a model actually receives
+  (`src/brainsafe/features/featurize.py`) is computed on the fly and was not previously written to
+  any file. `results/tables/master_feature_vectors.csv` (one row per distinct compound, keyed by
+  InChIKey) and `results/tables/master_training_usage.csv` (one row per endpoint-compound pair
+  actually used, joinable to the vectors on `inchikey`) make it inspectable directly, built by
+  `tools/build_master_training_vectors.py`. Every formula that turns a vector into a reported score
+  is walked through with a live worked example in `docs/ML_METHODS_AND_FORMULAS.md`.
 
 ## Cross-validation - all data saved
 
