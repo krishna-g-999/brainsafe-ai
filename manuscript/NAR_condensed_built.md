@@ -121,7 +121,7 @@ permuted 0.7874), so they are reported as structure rather than as tuned paramet
 ## Results
 
 **Cross-validation.** The panel and its per-endpoint performance are shown in the model atlas
-(`figures/Figure9_model_atlas.png`). Under random 10-fold cross-validation the measured-label
+(Supplementary Figure S1). Under random 10-fold cross-validation the measured-label
 classifiers reach a mean AUROC of 0.958 (0.899 to 0.976); under a scaffold-grouped split that
 withholds entire structural classes, 0.925 (0.878 to 0.965). Expected calibration error falls from
 0.0801 to 0.0147 after isotonic calibration, and conformal prediction (16) on the eight core
@@ -163,7 +163,7 @@ independence were therefore constructed, with every model refitted rather than s
 endpoint refitted on its pre-cutoff rows with its decision threshold also frozen before the cutoff,
 and tested on compounds first published afterwards; 39 of 47 deployed endpoints qualify, giving
 45,244 test compounds. By curator: compounds deposited in BindingDB and absent from ChEMBL, withheld
-entirely (`figures/Figure11_external_validation.png`).
+entirely (Supplementary Figure S3).
 
 Read in aggregate the time split suggests prospective decay, with mean AUROC 0.823 against 0.951 for
 a size-matched random control. It is not decay. The false-positive rate on background chemistry is
@@ -300,10 +300,22 @@ compounds no disease score reaches the reporting threshold. A target score is ad
 proportion to predicted barrier penetration, so a compound that does not arrive cannot generate a
 call.
 
-Three further validation figures, referenced in the Results above, are given in full in the primary
-manuscript and reproduce from the repository named beside each: the per-estimator panel with no
-claim resting on a mean a reader cannot check (`figures/Figure9_model_atlas.png`), the four
-calibration, coverage, specificity and adversarial-check validations
-(`figures/Figure6_validation.png`), and the external and prospective validation showing that an
-apparent temporal decay is a chemical-distance effect rather than model drift
-(`figures/Figure11_external_validation.png`).
+Three further validation figures, referenced in the Results above, are given in full in the
+Supplementary Information submitted alongside this manuscript.
+
+**Supplementary Figure S1.** The panel, one mark per estimator, so that no claim rests on a mean a
+reader cannot check. Training-set size against cross-validated discrimination for every estimator,
+deployed or withdrawn, coloured by model family; and the same population summarised by family
+median.
+
+**Supplementary Figure S2.** Four validations a cross-validated score cannot replace: expected
+calibration error before and after isotonic regression; recall on whole scaffold classes withheld
+before training, with 95% Wilson intervals; specificity on chemistry the server should stay quiet
+about and external discrimination on approved drugs absent from the training source; and the
+adversarial suite, in which every check was written so that it could fail.
+
+**Supplementary Figure S3.** External validation, and an apparent temporal decay that is a
+composition effect rather than model drift: per-endpoint AUROC and sensitivity under a size-matched
+random split against a time split; why the gap exists (a random split holds out mostly close
+analogues of the training set); and the resolution, recall against maximum Tanimoto similarity to
+the training actives tracing one curve across three independently built test sets.

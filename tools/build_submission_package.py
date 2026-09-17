@@ -30,6 +30,17 @@ ROOT = Path(__file__).resolve().parents[1]
 
 # section -> (source, destination subpath, glob or None for a single file)
 LAYOUT: list[tuple[str, list[tuple[str, str, str | None]]]] = [
+    # Exactly what goes to the journal: nothing here needs the reader to have opened any other
+    # folder first. Everything else in this package is institutional/PI-review material the
+    # journal itself does not ask for.
+    ("00_SUBMIT_TO_NAR", [
+        ("manuscript/NAR_WebServer_BrainSafe_condensed.docx", "1_manuscript.docx", None),
+        ("manuscript/figures/GraphicalAbstract.png", "2_graphical_abstract.png", None),
+        ("manuscript/figures/GraphicalAbstract.pdf", "2_graphical_abstract.pdf", None),
+        ("manuscript/Supplementary_Information.docx", "3_supplementary_information.docx", None),
+        ("results/tables/MODEL_INVENTORY.csv", "4_supplementary_table_S1_model_inventory.csv",
+         None),
+    ]),
     ("01_PROPOSAL", [
         ("manuscript/NAR_proposal_onepage.md", "proposal_one_page.md", None),
         ("manuscript/NAR_proposal_onepage.docx", "proposal_one_page.docx", None),
@@ -37,6 +48,7 @@ LAYOUT: list[tuple[str, list[tuple[str, str, str | None]]]] = [
     ("02_MANUSCRIPT", [
         ("manuscript/NAR_WebServer_BrainSafe_condensed.docx", "01_manuscript_for_NAR.docx", None),
         ("manuscript/NAR_condensed_draft.md", "01_manuscript_for_NAR.md", None),
+        ("manuscript/Supplementary_Information.docx", "01b_supplementary_information.docx", None),
         ("manuscript/NAR_WebServer_BrainSafe.docx", "02_manuscript_extended.docx", None),
         ("manuscript/NAR_WebServer_BrainSafe_built.md", "manuscript.md", None),
         ("manuscript/NAR_WebServer_BrainSafe_draft.md", "manuscript_source.md", None),
@@ -52,10 +64,15 @@ LAYOUT: list[tuple[str, list[tuple[str, str, str | None]]]] = [
     ("04_TECHNICAL_REPORT", [
         ("docs/TECHNICAL_REPORT.docx", "technical_report.docx", None),
         ("docs/TECHNICAL_REPORT.md", "technical_report.md", None),
+        ("docs/METHODS.docx", "methods.docx", None),
         ("docs/METHODS.md", "methods.md", None),
+        ("docs/VALIDATION.docx", "validation_summary.docx", None),
         ("docs/VALIDATION.md", "validation_summary.md", None),
+        ("docs/decisions_log.docx", "decisions_log.docx", None),
         ("docs/decisions_log.md", "decisions_log.md", None),
+        ("docs/ENDPOINT_JUSTIFICATION.docx", "endpoint_justification.docx", None),
         ("docs/ENDPOINT_JUSTIFICATION.md", "endpoint_justification.md", None),
+        ("docs/DATA_MANIFEST.docx", "data_manifest.docx", None),
         ("docs/DATA_MANIFEST.md", "data_manifest.md", None),
     ]),
     ("05_CODE/01_data_acquisition", [("src/brainsafe/data", ".", "*.py")]),
@@ -177,6 +194,40 @@ def main() -> None:
                      for s, f, b in summary],
         "expected_but_absent": missing,
     }, indent=2), encoding="utf-8")
+
+    (out / "README.md").write_text(f"""# BrainSafe AI: submission package
+
+Built {datetime.now().strftime("%Y-%m-%d %H:%M")} by `tools/build_submission_package.py`.
+Everything here is a copy; the source of truth is the working repository
+(https://github.com/krishna-g-999/brainsafe-ai), and every file below regenerates from it with the
+command named in the technical documents. Nothing in this package is hand-edited.
+
+## Start here
+
+**`00_SUBMIT_TO_NAR/`** is exactly what goes to the journal: the manuscript, the graphical abstract
+as its own file, the Supplementary Information (the three validation figures cited in the manuscript
+as Supplementary Figures S1 to S3), and Supplementary Table S1 (the full model inventory, as CSV).
+Nothing else in this package is asked for by NAR; the remaining sections are the institutional and
+PI-review record behind that manuscript.
+
+## Everything else, for PI and institutional review
+
+| Folder | What it is |
+|---|---|
+| `01_PROPOSAL/` | The original one-page project proposal. |
+| `02_MANUSCRIPT/` | Every manuscript variant: the NAR-length submission copy, the extended full-length draft, the Supplementary Information, and the raw Markdown and reference data behind both. |
+| `03_FIGURES/` | Every figure and the graphical abstract, PNG and PDF. |
+| `04_TECHNICAL_REPORT/` | The full methods and results narrative, the endpoint justification (why these 75 estimators, why 5 were withdrawn, and the 1,688-target survey behind that), the data manifest, the validation summary, and the dated decisions log. Word and Markdown versions of each. |
+| `05_CODE/` | Every script that produced a number or figure quoted anywhere above, organised by pipeline stage. |
+| `06_TRAINING_DATA/` | The measured endpoint tables every model is trained and tested on, as CSV. |
+| `07_MODELS/` | The model registry, per-model metadata, and (with `--with-models`) the fitted estimators themselves. |
+| `08_VALIDATION_RESULTS/` | Every results table cited in the manuscript or technical report, as CSV. |
+| `09_FALSIFICATION_SUITE/` | The ten-hypothesis falsification suite: evidence, verdicts, and the narrative report. |
+| `10_REPRODUCIBILITY/` | Requirements, deployment configuration, licence, and citation metadata. |
+
+`PACKAGE_CONTENTS.json` lists exactly what was copied and its size, section by section, and names
+anything expected that was not found.
+""", encoding="utf-8")
 
     print(f"\n  {total_files} files, {total_bytes/1e6:.1f} MB")
     if missing:
