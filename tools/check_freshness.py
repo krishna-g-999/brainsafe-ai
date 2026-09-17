@@ -475,6 +475,25 @@ GRAPH: list[tuple[str, list[str], str]] = [
     ("docs/DATA_MANIFEST.md",
      ["models_rf/binder_modes.json", "results/tables/unique_compound_count.csv"],
      "python tools/build_data_manifest.py"),
+
+    # The actual numeric input every model trains on was computed on the fly and never written to
+    # a file anywhere, so a reviewer asking "what did the model see" could not be shown it. This is
+    # a ~10 minute, ~800 MB regeneration (every distinct compound across every endpoint table,
+    # featurised once), which is exactly why it needs a freshness entry rather than being trusted
+    # to stay in sync by memory alone.
+    ("results/tables/master_feature_vectors.csv",
+     ["data/endpoints", "data/adme"],
+     "python tools/build_master_training_vectors.py"),
+    ("results/tables/master_training_usage.csv",
+     ["data/endpoints", "data/adme"],
+     "python tools/build_master_training_vectors.py"),
+
+    # Every formula quoted in the manuscript, checked against the deployed models rather than
+    # restated from memory; the BBB worked example specifically reconciles the 5-fold calibrated
+    # ensemble's own internal arithmetic against app.py's live output.
+    ("docs/ML_METHODS_AND_FORMULAS.md",
+     ["models_rf/BBB_calibrated.joblib", "results/tables/rf_conformal.csv"],
+     "python tools/build_ml_formulas.py"),
 ]
 
 # Checked by content rather than by timestamp, because it carries checksums of what it describes.

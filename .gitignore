@@ -84,6 +84,11 @@ inversion/results/H4_distant_predictions.csv
 dist/
 models_rf_uncompressed/
 
+# Full per-compound feature-vector matrix: regenerable via
+# tools/build_master_training_vectors.py, ~0.75 GB, too large for git.
+# master_training_usage.csv (the endpoint-compound usage table it joins to) IS committed.
+results/tables/master_feature_vectors.csv
+
 # ---- Consolidated archive (see ARCHIVE_MANIFEST.csv, which IS committed) ----
 # Everything superseded lives in one dated folder: the July publication bundle, the 2026-07-20
 # legacy archive, build intermediates, run logs and the unused literature. Roughly 4 GB, all of it

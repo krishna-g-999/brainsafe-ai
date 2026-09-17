@@ -27,6 +27,7 @@ DOCS = [
     ROOT / "docs" / "METHODS.md",
     ROOT / "docs" / "VALIDATION.md",
     ROOT / "docs" / "decisions_log.md",
+    ROOT / "docs" / "ML_METHODS_AND_FORMULAS.md",
 ]
 
 
