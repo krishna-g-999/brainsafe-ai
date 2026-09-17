@@ -462,6 +462,19 @@ GRAPH: list[tuple[str, list[str], str]] = [
      ["manuscript/NAR_WebServer_BrainSafe_draft.md", "manuscript/references_verified.json",
       "manuscript/references_links.json"],
      "python src/brainsafe/analysis/cite.py"),
+
+    # ENDPOINT_JUSTIFICATION.md and DATA_MANIFEST.md previously described a twelve-endpoint,
+    # 61,317-compound panel that predates the binder architecture, for months, because nothing
+    # declared them and no build ever touched them after the panel grew past that snapshot. Both are
+    # now generated from the same registries the manuscript cites, so the documents a reviewer reads
+    # cannot drift from the panel a rebuild would find again.
+    ("docs/ENDPOINT_JUSTIFICATION.md",
+     ["models_rf/binder_modes.json", "results/tables/MODEL_INVENTORY.csv",
+      "results/tables/np_target_survey.csv"],
+     "python tools/build_endpoint_justification.py"),
+    ("docs/DATA_MANIFEST.md",
+     ["models_rf/binder_modes.json", "results/tables/unique_compound_count.csv"],
+     "python tools/build_data_manifest.py"),
 ]
 
 # Checked by content rather than by timestamp, because it carries checksums of what it describes.

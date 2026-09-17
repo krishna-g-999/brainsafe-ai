@@ -1,9 +1,54 @@
-# Data manifest
+"""Generate docs/DATA_MANIFEST.md from the artefacts actually behind the deployed panel.
+
+Replaces an earlier version pointing at data/processed/compound_library.csv, a 61,317-compound,
+thirteen-endpoint snapshot from before the panel's expansion to 54 targets and the binder
+architecture. That file still exists and is left alone; this document simply stops describing it
+as "the master" when it has not been for months. Every count below is read live.
+
+Run:  python tools/build_data_manifest.py
+"""
+from __future__ import annotations
+
+import sys
+from datetime import datetime
+from pathlib import Path
+
+import pandas as pd
+
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+
+OUT = ROOT / "docs" / "DATA_MANIFEST.md"
+
+
+def main() -> None:
+    import warnings
+    warnings.filterwarnings("ignore")
+    import app
+
+    facts = app.panel_facts()
+    shape = app.panel_shape()
+
+    n_endpoint_files = len(list((ROOT / "data" / "endpoints").glob("*.csv")))
+    n_adme_files = len(list((ROOT / "data" / "adme").glob("*.csv"))) \
+        if (ROOT / "data" / "adme").exists() else 0
+    n_results_tables = len(list((ROOT / "results" / "tables").glob("*.csv")))
+    n_model_files = len(list((ROOT / "models_rf").glob("*.joblib")))
+    n_meta_files = len(list((ROOT / "models_rf").glob("*_meta.json")))
+
+    uniq = pd.read_csv(ROOT / "results" / "tables" / "unique_compound_count.csv")
+    uniq_note = {r["measure"]: (r["value"], r["note"]) for _, r in uniq.iterrows()}
+
+    fig_scripts = sorted(p.name for p in (ROOT / "src" / "brainsafe" / "figures").glob("fig*.py"))
+
+    today = datetime.now().strftime("%Y-%m-%d")
+
+    text = f"""# Data manifest
 
 Every data file behind the deployed panel, what it contains, and how it was made. All values are
 measured (ChEMBL 37, BindingDB, B3DB, Therapeutics Data Commons, MoleculeNet, NPASS 3.0); nothing is
 imputed. Regenerate any file by running the script named beside it. Counts below are read live by
-`tools/build_data_manifest.py` and reflect the repository as of 2026-09-17.
+`tools/build_data_manifest.py` and reflect the repository as of {today}.
 
 This replaces an earlier version of this document built around `data/processed/compound_library.csv`,
 a 61,317-compound, thirteen-endpoint snapshot from before the panel grew to its current scope. That
@@ -13,24 +58,24 @@ pipeline; nothing below points to them.
 
 ## The training data
 
-- **`data/endpoints/<TARGET>.csv`** (63 files) - one file per target: the core
+- **`data/endpoints/<TARGET>.csv`** ({n_endpoint_files} files) - one file per target: the core
   target-potency and activity endpoints, the binder panel (including withdrawn endpoints, kept
   rather than deleted), and blood-brain-barrier labels. Columns: `smiles, label, pchembl, year,
   source`, where `source` records ChEMBL, BindingDB, or `ChEMBL_inactive` for a censored bound
   recovered as a measured non-binder. These are exactly what each model is trained and tested on.
-- **`data/adme/<ENDPOINT>.csv`** (9 files) - the nine ADME and exposure endpoints
+- **`data/adme/<ENDPOINT>.csv`** ({n_adme_files} files) - the nine ADME and exposure endpoints
   beyond BBB (Caco-2 permeability, hepatocyte clearance, unbound brain-to-plasma ratio,
   lipophilicity, logBB, P-glycoprotein inhibition and substrate status, plasma-protein binding,
   aqueous solubility).
-- Together, the **55 tables behind currently deployed models** hold
-  **228,200 measured compound-endpoint records**, a median of
-  3,789 rows per table (range 387 to 10,276).
-- **Unique compounds.** 170,619
+- Together, the **{facts['n_endpoint_tables']} tables behind currently deployed models** hold
+  **{facts['n_records']:,} measured compound-endpoint records**, a median of
+  {facts['rows_median']:,} rows per table (range {facts['rows_min']:,} to {facts['rows_max']:,}).
+- **Unique compounds.** {uniq_note['distinct SMILES strings across the endpoint tables'][0]:,}
   distinct SMILES strings appear across the endpoint tables, of which
-  2 could not be parsed. The remaining
-  strings collapse to **169,341
+  {uniq_note['of which parent_mol() could not parse'][0]} could not be parsed. The remaining
+  strings collapse to **{uniq_note['distinct InChIKeys of the desalted, neutralised parent'][0]:,}
   distinct InChIKeys** of the desalted, neutralised parent
-  (1,276 SMILES strings were salts,
+  ({uniq_note['SMILES strings collapsed by this standardisation'][0]:,} SMILES strings were salts,
   tautomers or charge states of a compound already counted) — this is the compound count the
   manuscript's training-data paragraph states.
   Computed by `src/brainsafe/evaluation/unique_compound_count.py`;
@@ -77,9 +122,9 @@ pipeline; nothing below points to them.
 
 ## Models
 
-- **`models_rf/<TARGET>.joblib` / `<TARGET>_binder.joblib`** (74 files) - the deployed
+- **`models_rf/<TARGET>.joblib` / `<TARGET>_binder.joblib`** ({n_model_files} files) - the deployed
   estimators, refit on all available data after cross-validation.
-- **`models_rf/<TARGET>_meta.json`** (51 files) - training size, positives, features,
+- **`models_rf/<TARGET>_meta.json`** ({n_meta_files} files) - training size, positives, features,
   hyperparameters, calibration method.
 - **`models_rf/binder_modes.json`** - the binder panel registry: threshold, AUROC and sensitivity
   against measured inactives, deployment status, and the recorded reason for every withdrawal.
@@ -91,8 +136,8 @@ pipeline; nothing below points to them.
 ## Figures
 
 - **`manuscript/figures/*.png`** (and `.pdf`) - built by the scripts in
-  `src/brainsafe/figures/` (12 scripts:
-  fig01_architecture, fig02_feature_vector, fig03_cv_design, fig04_pools_and_thresholds, fig05_negative_class, fig06_validation, fig07_binder_panel, fig08_use_case, fig09_model_atlas, fig10_endpoint_selection, fig11_external_validation, fig_graphical_abstract), each reading the results tables named in
+  `src/brainsafe/figures/` ({len(fig_scripts)} scripts:
+  {', '.join(s.replace('.py', '') for s in fig_scripts)}), each reading the results tables named in
   its own docstring rather than a value typed into the script. `style.py` in the same directory is
   the single shared colour palette, font and layout convention every figure uses.
 
@@ -114,7 +159,16 @@ pipeline; nothing below points to them.
   and the endpoint justification are companion reference documents.
 
 ---
-*Generated by `tools/build_data_manifest.py`. 88 tables currently sit in
+*Generated by `tools/build_data_manifest.py`. {n_results_tables} tables currently sit in
 `results/tables/`; not all are named individually above, and the full list is browsable directly in
 that directory or in `submission_package/08_VALIDATION_RESULTS/` for a reviewer working from the
 assembled package.*
+"""
+    OUT.write_text(text, encoding="utf-8")
+    print(f"wrote {OUT.relative_to(ROOT)} ({len(text):,} chars)")
+    print(f"  {n_endpoint_files} endpoint files, {n_adme_files} ADME files, "
+          f"{n_results_tables} result tables, {n_model_files} model files")
+
+
+if __name__ == "__main__":
+    main()
