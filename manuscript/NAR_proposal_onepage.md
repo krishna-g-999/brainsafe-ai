@@ -48,9 +48,9 @@ compound cannot reach contributes nothing.
 the same target and found inactive rather than against decoys, reaches a mean AUROC of 0.917 (0.719
 to 0.985). Expected calibration error falls from 0.080 to 0.015 after isotonic calibration. On 306
 FDA-curated approved drugs absent from the training source the barrier model reaches AUROC 0.764,
-and 0.793 on the 241 also distinguishable from training in feature space. On 1,000 compounds with no
-recorded activity at any modelled target the server stays silent 94.9% of the time; those compounds
-are presumed rather than proven inactive, so that figure is a lower bound. Nine falsification
+and 0.767 on the 227 also distinguishable from training in feature space. On 1,000 compounds with no
+recorded activity at any modelled target the server stays silent 92.5% of the time; those compounds
+are presumed rather than proven inactive, so that figure is a lower bound. Ten falsification
 hypotheses were tested and four were refuted; all are reported, including that the curated pathway
 edge weights carry no predictive information beyond the graph topology.
 
