@@ -127,7 +127,7 @@ withholds entire structural classes, 0.925 (0.878 to 0.965). Expected calibratio
 0.0801 to 0.0147 after isotonic calibration, and conformal prediction [@conformal] on the eight core
 classifiers, on the deduplicated matrix the classifiers are trained on, achieves empirical coverage
 of 0.876 to 0.933 against a 0.90 target, with mean set size from 0.956 to 1.215 on a two-class
-problem where 1.0 is a confident single label.
+problem where 1.0 is a confident single label (Supplementary Figure S2).
 
 **The binder panel.** The 52 binder classifiers are validated not against the decoys used to train
 them but against compounds experimentally tested at the same target and found inactive. Across the 47

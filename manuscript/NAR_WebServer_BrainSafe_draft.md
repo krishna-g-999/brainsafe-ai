@@ -143,7 +143,7 @@ class and never enters a regression.
 Each compound is reduced to its largest organic fragment, neutralised, sanitised, and represented
 by a fixed 1,036-column vector: a 1,024-bit folded ECFP-4 fingerprint [@ecfp] and twelve physicochemical
 descriptors (molecular weight, cLogP, TPSA, hydrogen-bond donors and acceptors, rotatable bonds,
-aromatic rings, fraction sp3, ring count, heavy atoms, formal charge, QED). Folding means a set bit
+aromatic rings, fraction sp3, ring count, heavy atoms, formal charge, QED) (Figure S2). Folding means a set bit
 reports that some substructure environment hashing to that index is present, not which one, and
 chirality is excluded, so two enantiomers produce byte-identical rows. Rows identical in feature
 space are therefore collapsed before any split; leaving them in place would put copies of one
@@ -198,7 +198,7 @@ the potency regressions and is stated rather than left for a reader to find.
 Every endpoint is cross-validated ten-fold, grouped on Bemis-Murcko scaffolds [@bemis_murcko] so that
 entire structural classes are withheld together. The 22 target-potency, exposure and safety
 estimators are additionally cross-validated under a random split, and the distance between the two
-regimes is the honest statement of how far a model travels; the 52 binder classifiers, validated
+regimes is the honest statement of how far a model travels (Figure S3); the 52 binder classifiers, validated
 instead against compounds measured and found inactive at the same target (Section 3.3), are
 cross-validated under the scaffold-grouped regime alone. Across the 74 cross-validated estimators,
 spanning 70 distinct endpoints because four receptors carry both a potency regression and a binder
@@ -234,7 +234,7 @@ false-positive rate is then computed on that same sample, the rate cannot exceed
 restates the target instead of measuring it. The 158,890-compound background library is therefore
 partitioned into three disjoint pools by a stable hash of the canonical structure, so a compound's
 pool is a property of the molecule and never depends on run order: 95,515 compounds supply decoys,
-31,694 set thresholds, and 31,681 measure the false-positive rate. Measured on the pool it was not
+31,694 set thresholds, and 31,681 measure the false-positive rate (Figure S4). Measured on the pool it was not
 set on, at the threshold the server currently deploys, the background false-positive rate has a
 median of 0.0262 across all 47 deployed endpoints and a maximum of 0.0512 at HT2A, exceeding the 0.05
 target at two endpoints (HT2A and D2); under the previous procedure, where the same pool set the
@@ -277,8 +277,8 @@ withheld by scaffold, at thresholds constrained simultaneously by held-out measu
 the false-positive rate on a disjoint pool of unrelated chemistry. Both figures are means over 47
 endpoints and the spread behind them is wide: AUROC ranges from 0.719 at GABA-A to 0.985 at CGRP,
 and sensitivity from 0.303 at GABA-A to 0.993 at CGRP with a median of 0.835, so the two means
-describe the panel and not any particular endpoint. Supplementary Table S1 gives every endpoint
-separately.
+describe the panel and not any particular endpoint (Figure S5). Supplementary Table S1 gives every
+endpoint separately.
 
 The sensitivity figure carries a correction we report rather than leave for a reader to find. Four
 scripts write this field in sequence, and the last of them scored every active in the endpoint table,
