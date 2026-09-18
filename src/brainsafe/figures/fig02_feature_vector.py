@@ -76,6 +76,10 @@ def main() -> None:
 
     # ---- A: the molecule -------------------------------------------------------------------
     a = fig.add_subplot(gs[0]); a.axis("off")
+    # imshow below forces an equal aspect ratio, which shrinks this axis's box around its centre
+    # by default and drags the panel letter down with it, out of line with B and C's. Anchoring
+    # to the top keeps the box's top edge fixed instead, so all three panel letters sit level.
+    a.set_anchor("N")
     S.panel(a, "A", f"the molecule: {NAME}", dx=-0.02, dy=1.075, gap=0.075)
     img = structure_image()
     if img is not None:

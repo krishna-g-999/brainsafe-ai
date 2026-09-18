@@ -36,6 +36,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from adjustText import adjust_text
 from matplotlib.lines import Line2D
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -81,18 +82,20 @@ def panel_a(ax, d) -> None:
             ax.scatter(gone.n, gone.score, s=48, marker="o", facecolor="none", edgecolor=S.WARN,
                        linewidth=1.3, zorder=4)
 
-    # name every withdrawal, the weakest few, and the anchors a reader will look for
+    # name every withdrawal, the weakest few, and the anchors a reader will look for. A fixed
+    # vertical step only ever avoided the previously-placed LABELS, not the many unlabelled markers
+    # in the dense high-performance cluster, which is exactly where BACE1 and hERG sit; adjustText
+    # repels every label from every marker (not just the ones it names) and draws a leader line to
+    # its own point whenever it has to move one to do it.
     show = set(d[~d.deployed].model) | {"BBB", "hERG", "BACE1"} | set(d.nsmallest(3, "score").model)
-    placed = []
-    for _, r in d[d.model.isin(show)].iterrows():
-        dy = -2.0
-        while any(abs(np.log10(r["n"]) - px) < 0.16 and abs(r["score"] + dy / 320 - py) < 0.045
-                  for px, py in placed):
-            dy -= 10.0
-        ax.annotate(r["model"].replace("_binder", "").replace("adme_", ""),
-                    (r["n"], r["score"]), textcoords="offset points", xytext=(8, dy),
-                    fontsize=S.pt(6.5), color=S.WARN if not r["deployed"] else S.INK)
-        placed.append((np.log10(r["n"]), r["score"] + dy / 320))
+    rows = d[d.model.isin(show)]
+    texts = [ax.text(r["n"] * 1.05, r["score"],
+                     r["model"].replace("_binder", "").replace("adme_", ""),
+                     fontsize=S.pt(6.5), color=S.WARN if not r["deployed"] else S.INK)
+             for _, r in rows.iterrows()]
+    adjust_text(texts, x=d.n.to_numpy(), y=d.score.to_numpy(), ax=ax,
+                expand_text=(1.08, 1.25), expand_points=(1.8, 2.0), force_points=0.7,
+                arrowprops=dict(arrowstyle="-", color=S.HAIR, lw=0.7, shrinkA=6, shrinkB=3))
 
     ax.set_xscale("log")
     ax.set_xlabel("compounds in the training set\n"
@@ -145,7 +148,7 @@ def main() -> None:
     d = load()
     date = str(d.inventory_date.iloc[0])
     fig = plt.figure(figsize=(S.DOUBLE, 5.9))
-    gs = fig.add_gridspec(2, 1, height_ratios=[1.55, 1.0], hspace=0.38,
+    gs = fig.add_gridspec(2, 1, height_ratios=[1.55, 1.0], hspace=0.58,
                           left=0.100, right=0.735, top=0.905, bottom=0.098)
     a, b = fig.add_subplot(gs[0]), fig.add_subplot(gs[1])
     S.panel(a, "A", "the whole panel, one mark per estimator", dx=-0.095, dy=1.075, gap=0.030)

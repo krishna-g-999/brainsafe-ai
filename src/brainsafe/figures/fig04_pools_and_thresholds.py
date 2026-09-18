@@ -128,17 +128,19 @@ def panel_b(ax, bm) -> None:
     ax.plot(xs[over], ys[over], "o", ms=4.6, mfc=S.WARN, mec="white", mew=0.6, zorder=4)
     # Label the exceedances in descending order with a fixed step, so endpoints within a few
     # thousandths of each other do not print on top of one another.
+    # Stacked well clear of the 0.05 target line's own y-position, not merely spaced from each
+    # other: a label landing on that dashed line reads as struck through.
     for rank, i in enumerate(sorted(np.flatnonzero(over), key=lambda k: -ys[k])):
         ax.annotate(names[i], (xs[i], ys[i]), textcoords="offset points",
-                    xytext=(5.0, 3.0 - rank * 5.6), fontsize=6.5, color=S.WARN)
+                    xytext=(6.0, 4.0 - rank * 8.5), fontsize=6.5, color=S.WARN)
 
     ax.set_xlabel("false-positive rate on the pool the threshold was set on")
     ax.set_ylabel("measured on the held-out\nevaluation pool", linespacing=1.6)
     ax.set_xlim(0, hi); ax.set_ylim(0, hi)
     S.strip(ax, x=True, y=True)
     ax.text(0.03, 0.955, f"{int(over.sum())} of {len(xs)} endpoints exceed the "
-                         f"{BACKGROUND_TARGET:.2f} target\nwhen measured on a pool they were "
-                         "not tuned on",
+                         f"{BACKGROUND_TARGET:.2f} target\nwhen scored on a pool they\n"
+                         "were not tuned on",
             transform=ax.transAxes, fontsize=6.5, color=S.WARN, va="top", linespacing=1.7)
     note = "points above the diagonal are\nendpoints the in-sample rate flattered"
     if absent:

@@ -123,7 +123,7 @@ def draw_tree_panel(ax, root: dict, path: set[int]) -> None:
     ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.axis("off")
     S.panel(ax, "A", "one tree's vote for donepezil "
                      f"(tree 0, fold 0 of the {MODEL} model, shown to depth {MAX_DEPTH_SHOWN} of "
-                     f"{root['full_depth']})", dx=-0.01, dy=1.045, gap=0.235)
+                     f"{root['full_depth']})", dx=-0.01, dy=1.10, gap=0.235)
 
     leaves = leaves_in_order(root)
     n_leaves = len(leaves)
@@ -190,7 +190,8 @@ def draw_tree_panel(ax, root: dict, path: set[int]) -> None:
     ax.annotate(f"{NAME} lands here (tree 0, fold 0 only)",
                 xy=(tx, leaf_top + 0.006), xytext=(tx, (leaf_top + depth2_bottom) / 2),
                 ha="center", va="center", fontsize=6.4, color=S.EXPOSURE, style="italic",
-                fontweight="bold",
+                fontweight="bold", zorder=6,
+                bbox=dict(boxstyle="round,pad=0.25", facecolor="white", edgecolor="none"),
                 arrowprops=dict(arrowstyle="-", color=S.EXPOSURE, lw=0.9, shrinkA=9, shrinkB=2))
 
 
@@ -260,7 +261,7 @@ def main() -> None:
 
     fig = plt.figure(figsize=(13.5, 11.6))
     gs = fig.add_gridspec(2, 1, height_ratios=[1.62, 1.0], hspace=0.20,
-                          left=0.025, right=0.975, top=0.945, bottom=0.06)
+                          left=0.025, right=0.975, top=0.895, bottom=0.06)
     ax_a = fig.add_subplot(gs[0])
     ax_b = fig.add_subplot(gs[1])
 

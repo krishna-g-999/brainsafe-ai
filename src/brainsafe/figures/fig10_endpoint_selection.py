@@ -109,7 +109,7 @@ def panel_b(ax, d):
             color=S.WITHHELD)
     ax.text(AUROC_FLOOR + 0.008, -0.005, f"AUROC floor {AUROC_FLOOR:.2f}", fontsize=S.pt(6.5),
             color=S.WITHHELD)
-    ax.text(0.365, 0.94, "a call is reliable only above both", fontsize=S.pt(6.5), color=S.FAINT)
+    ax.text(0.365, 0.85, "a call is reliable only above both", fontsize=S.pt(6.5), color=S.FAINT)
     # Name the endpoints that discriminate well and are still not deployable: they are the argument.
     for r in g[(~g.deployed) & (g.auroc_inactives >= 0.75)].itertuples():
         ax.annotate(r.endpoint, (r.auroc_inactives, r.sensitivity), fontsize=S.pt(6.5),
