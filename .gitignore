@@ -114,3 +114,7 @@ submission_package/
 
 # A plain copy of submission_package/00_SUBMIT_TO_NAR/, kept separately for handoff; not source.
 NAR_SUBMISSION/
+
+# The one-page Web Server Issue proposal, rendered for sending; not source (edit
+# manuscript/NAR_proposal_onepage.md instead and regenerate).
+NAR_PROPOSAL/
