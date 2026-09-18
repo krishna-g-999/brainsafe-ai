@@ -113,6 +113,35 @@ def receptor(ax, x, y, color, r=0.024):
                         transform=ax.transAxes, zorder=3))
 
 
+def wrap_to_width(fig, ax, text, fontsize, max_width, **kwargs):
+    """Break `text` into lines that measure under `max_width` (axes-fraction) when actually
+    rendered at `fontsize`, rather than trusting matplotlib's own `wrap=True`.
+
+    `wrap=True` only prevents a line from crossing the edge of the whole *figure*, not this
+    figure's own margin: it let one footer line run to within 3 pt of the physical page edge here.
+    Measuring each candidate line's real rendered width against the margin this figure actually
+    wants is the only way to guarantee the margin holds regardless of font or DPI.
+    """
+    words = text.split(" ")
+    probe = ax.text(0, 0, "", fontsize=fontsize, transform=ax.transAxes, **kwargs)
+    lines, cur = [], ""
+    for w in words:
+        trial = f"{cur} {w}".strip()
+        probe.set_text(trial)
+        fig.canvas.draw()
+        width = probe.get_window_extent(renderer=fig.canvas.get_renderer()) \
+                     .transformed(ax.transAxes.inverted()).width
+        if width > max_width and cur:
+            lines.append(cur)
+            cur = w
+        else:
+            cur = trial
+    if cur:
+        lines.append(cur)
+    probe.remove()
+    return "\n".join(lines)
+
+
 def arrow(ax, xy0, xy1, color, rad=0.0, lw=1.3):
     ax.add_patch(FancyArrowPatch(xy0, xy1, transform=ax.transAxes, connectionstyle=f"arc3,rad={rad}",
                                  arrowstyle="-|>", mutation_scale=8.5, linewidth=lw, color=color,
@@ -140,25 +169,32 @@ def main() -> None:
     ax = fig.add_axes([0, 0, 1, 1])
     ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.axis("off")
 
+    # Saving the literal 8 x 6 in canvas (below) rather than letting savefig's tight-bbox add its
+    # usual 0.02 in pad means this figure has to draw its own margin: x=0.0 is the physical edge of
+    # the page, not a safe left indent, and previous drafts of this figure had left-aligned text
+    # starting flush against it (and, on the right, "Alzheimer's disease" running past x=1.0
+    # outright). MX/MY below are that margin, held everywhere rather than eyeballed per element.
+    MX, MY = 0.030, 0.028
+
     # Named vertical levels, top to bottom, so no two elements are tuned in isolation onto the
     # same row of the page.
-    Y_TITLE, Y_SUBTITLE, Y_RULE1 = 0.965, 0.918, 0.888
-    DIAG_TOP, DIAG_BOT = 0.845, 0.300
-    Y_BRANCH_TOP, Y_BRANCH_BOT = 0.735, 0.410
-    DIAG_MID = (Y_BRANCH_TOP + Y_BRANCH_BOT) / 2          # 0.5725: molecule / vector / model trunk
+    Y_TITLE, Y_SUBTITLE, Y_RULE1 = 1.0 - MY - 0.022, 0.912, 0.882
+    DIAG_TOP, DIAG_BOT = 0.840, 0.300
+    Y_BRANCH_TOP, Y_BRANCH_BOT = 0.730, 0.410
+    DIAG_MID = (Y_BRANCH_TOP + Y_BRANCH_BOT) / 2          # 0.57: molecule / vector / model trunk
     Y_HEAD_OFF, Y_VAL_OFF = 0.088, 0.082                   # caption above / value below an icon
-    Y_NOTE = 0.225
-    Y_RULE2 = 0.192
-    Y_STATS1, Y_STATS2, Y_URL = 0.150, 0.098, 0.038
+    Y_NOTE = 0.222
+    Y_RULE2 = 0.190
+    Y_STATS1, Y_STATS2, Y_URL = 0.148, 0.096, MY + 0.017
 
-    ax.text(0.0, Y_TITLE, "BrainSafe AI", fontsize=16, fontweight="bold", ha="left", color=S.INK,
+    ax.text(MX, Y_TITLE, "BrainSafe AI", fontsize=16, fontweight="bold", ha="left", color=S.INK,
             transform=ax.transAxes)
-    ax.text(0.0, Y_SUBTITLE, "does a molecule reach the brain, and what does it do once it is there?",
+    ax.text(MX, Y_SUBTITLE, "does a molecule reach the brain, and what does it do once it is there?",
             fontsize=9.3, ha="left", color=S.MUTED, style="italic", transform=ax.transAxes)
-    ax.plot([0.0, 1.0], [Y_RULE1, Y_RULE1], color=S.HAIR, lw=1.0, transform=ax.transAxes)
+    ax.plot([MX, 1 - MX], [Y_RULE1, Y_RULE1], color=S.HAIR, lw=1.0, transform=ax.transAxes)
 
     # ---- the pipeline, drawn left to right, in the same order Figure 1 states it -------------
-    x_mol, x_vec, x_model, x_branch, x_gate, x_out = 0.105, 0.315, 0.475, 0.650, 0.795, 0.925
+    x_mol, x_vec, x_model, x_branch, x_gate, x_out = 0.125, 0.320, 0.478, 0.648, 0.788, 0.905
 
     mol_w = 0.19
     mol_ax = fig.add_axes([x_mol - mol_w / 2, DIAG_MID - mol_w * 0.375, mol_w, mol_w * 0.75])
@@ -220,10 +256,18 @@ def main() -> None:
 
     arrow(ax, (x_gate + gw / 2, DIAG_MID), (x_out - 0.035, DIAG_MID), S.BINDER)
 
-    ax.text(x_out, DIAG_MID + Y_HEAD_OFF, "disease relevance", ha="center", fontsize=7.6,
+    # However long the reported disease name turns out to be, it must not be able to run past the
+    # page edge the way "Alzheimer's disease" did on one line at the old, wider column position:
+    # broken on its own first space rather than left to matplotlib's figure-wide auto-wrap, which
+    # would not have wrapped a two-word name at all.
+    disease_label = top["disease"]
+    if len(disease_label) > 13 and " " in disease_label:
+        head, _, tail = disease_label.partition(" ")
+        disease_label = f"{head}\n{tail}"
+    ax.text(x_out, DIAG_MID + Y_HEAD_OFF, "disease relevance", ha="center", fontsize=7.4,
             color=S.MUTED, transform=ax.transAxes)
-    ax.text(x_out, DIAG_MID + 0.010, top["disease"], ha="center", va="center", fontsize=8.8,
-            color=S.INK, fontweight="bold", transform=ax.transAxes, linespacing=1.3, wrap=True)
+    ax.text(x_out, DIAG_MID + 0.010, disease_label, ha="center", va="center", fontsize=8.4,
+            color=S.INK, fontweight="bold", transform=ax.transAxes, linespacing=1.35)
     ax.text(x_out, DIAG_MID - Y_VAL_OFF - 0.01, f"{top['gated']:.2f}", ha="center", va="center",
             fontsize=12, color=S.BINDER, fontweight="bold", transform=ax.transAxes)
 
@@ -233,24 +277,24 @@ def main() -> None:
             fontsize=7.8, ha="center", va="center", color=S.MUTED, style="italic",
             transform=ax.transAxes, linespacing=1.5)
 
-    ax.plot([0.0, 1.0], [Y_RULE2, Y_RULE2], color=S.HAIR, lw=1.0, transform=ax.transAxes)
+    ax.plot([MX, 1 - MX], [Y_RULE2, Y_RULE2], color=S.HAIR, lw=1.0, transform=ax.transAxes)
 
     # ---- the evidence, set as a caption rather than as headline numbers ----------------------
-    ax.text(0.0, Y_STATS1,
-            f"{facts['n_records']:,} measured compound-endpoint records"
-            f"  ·  {shape['targets']} molecular targets plus exposure, ADME and safety"
-            f"  ·  {shape['deployed']} of {shape['trained']} trained estimators deployed"
-            f"  ·  scaffold-held-out, calibrated and conformal",
-            fontsize=7.7, ha="left", va="top", color=S.INK, transform=ax.transAxes, wrap=True)
-    ax.text(0.0, Y_STATS2,
-            "negative class recovered from measurement, not decoys  ·  thresholds set on a "
-            "pool disjoint from the one that measures them  ·  every validation reported "
-            "whichever way it falls",
-            fontsize=7.4, ha="left", va="top", color=S.MUTED, transform=ax.transAxes, wrap=True)
+    max_w = 1 - 2 * MX
+    stats1 = (f"{facts['n_records']:,} measured compound-endpoint records"
+              f"  ·  {shape['targets']} molecular targets plus exposure, ADME and safety"
+              f"  ·  {shape['deployed']} of {shape['trained']} trained estimators deployed"
+              f"  ·  scaffold-held-out, calibrated and conformal")
+    ax.text(MX, Y_STATS1, wrap_to_width(fig, ax, stats1, 7.6, max_w), fontsize=7.6, ha="left",
+            va="top", color=S.INK, transform=ax.transAxes, linespacing=1.5)
+    stats2 = ("negative class recovered from measurement, not decoys  ·  thresholds set on a "
+              "disjoint pool  ·  every validation reported whichever way it falls")
+    ax.text(MX, Y_STATS2, wrap_to_width(fig, ax, stats2, 7.0, max_w), fontsize=7.0, ha="left",
+            va="top", color=S.MUTED, transform=ax.transAxes, linespacing=1.5)
 
-    ax.text(0.0, Y_URL,
+    ax.text(MX, Y_URL,
             "freely available, no registration · huggingface.co/spaces/Krishnag999/brainsafe-ai",
-            fontsize=7.9, ha="left", va="center", color=S.EXPOSURE, fontweight="bold",
+            fontsize=7.8, ha="left", va="center", color=S.EXPOSURE, fontweight="bold",
             transform=ax.transAxes)
 
     # Not S.save(): its house style sets bbox_inches="tight", which crops the canvas to content
