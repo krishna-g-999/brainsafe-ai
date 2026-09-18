@@ -26,26 +26,22 @@ Venketesh Sivaramakrishnan¹
 
 ## Abstract
 
-BrainSafe AI predicts, from structure alone, how a small molecule may act on the human brain. For a
-submitted SMILES string or compound name it returns engagement of 54 molecular targets spanning the
-principal neurodegenerative, psychiatric, neuroinflammatory, analgesic and sleep-related mechanisms,
-predicted blood-brain barrier penetration, nine ADME and exposure endpoints including a directly
-modelled unbound brain-to-plasma ratio, and two cardiac safety liabilities. Every target score is
-admitted only in proportion to predicted brain exposure, so potency at a target a compound cannot
-reach contributes nothing, and engaged targets are traced through a curated pathway graph to the
-conditions those mechanisms touch. The server is built on 75 estimators, 70 deployed, trained on
-228,200 measured compound-endpoint records from ChEMBL (1), BindingDB (2) and B3DB
-(3). Under scaffold-grouped 10-fold cross-validation the measured-label classifiers reach a mean
-AUROC of 0.925 (0.958 under a random split), and expected calibration error falls from 0.0801 to
-0.0147 after isotonic calibration (4). The binder panel is validated against compounds
-tested at the same target and found inactive rather than against decoys, reaching a mean AUROC of
-0.917. Every prediction carries a calibrated probability, a conformal interval, and an
-applicability-domain distance to the nearest measured analogue, and the server reports silence
-rather than a guess for compounds outside its competence: on non-CNS chemistry its specificity is
-0.925 (95% CI 0.907 to 0.940). Disease-level scores are presented as a route from a mechanism to the
-conditions it touches, not as an indication prediction. BrainSafe AI is freely available without
-registration at https://huggingface.co/spaces/Krishnag999/brainsafe-ai, with source code, trained
-models and every validation artefact at https://github.com/krishna-g-999/brainsafe-ai.
+BrainSafe AI predicts, from structure alone, how a small molecule may act on the human brain. Given a
+SMILES string or compound name it returns engagement of 54 molecular targets spanning
+neurodegenerative, psychiatric, neuroinflammatory, analgesic and sleep-related mechanisms, predicted
+blood-brain barrier penetration, nine ADME and exposure endpoints, and two safety liabilities. Every
+target score is admitted only in proportion to predicted brain exposure, so potency at a target a
+compound cannot reach contributes nothing; engaged targets are traced through a curated
+pathway graph to the conditions they touch. The server runs 70 deployed estimators trained on 228,200
+records from ChEMBL, BindingDB and B3DB. Under scaffold-grouped cross-validation the measured-label
+classifiers reach a mean AUROC of 0.925, calibration error falling from 0.0801 to 0.0147. The
+binder panel, validated against measured inactives rather than decoys, reaches a mean AUROC of 0.917.
+Every prediction carries a calibrated probability, a conformal interval, and an applicability-domain
+distance, and the server stays silent rather than guessing for compounds outside its competence, with
+specificity 0.925 on non-CNS chemistry. Disease scores are a route from mechanism to condition, not
+an indication prediction. BrainSafe AI is freely available without registration at
+https://huggingface.co/spaces/Krishnag999/brainsafe-ai, with code, models and validation data at
+https://github.com/krishna-g-999/brainsafe-ai.
 
 ## Introduction
 
@@ -66,10 +62,10 @@ every result rather than left to be discovered.
 ## Materials and Methods
 
 **Training data.** Labels are measured experimental values only, never qualitative annotation.
-Potency data are ChEMBL pChEMBL values augmented with BindingDB affinities pooled at compound level;
-blood-brain barrier labels come from B3DB augmented with FDA-curated approved drugs; the nine ADME
-endpoints use measured sets from Therapeutics Data Commons (5), MoleculeNet (6), B3DB
-and ChEMBL. The panel
+Potency data are ChEMBL (1) pChEMBL values augmented with BindingDB (2) affinities
+pooled at compound level; blood-brain barrier labels come from B3DB (3) augmented with
+FDA-curated approved drugs; the nine ADME endpoints use measured sets from Therapeutics Data Commons
+(4), MoleculeNet (5), B3DB and ChEMBL. The panel
 holds 228,200 measured compound-endpoint records over 169,341 unique compounds keyed by the InChIKey
 of the desalted parent. Each endpoint is trained on its own measured set alone; across the deployed
 panel those sets hold a median of 3,789 rows and span 387 compounds (KEAP1) to 10,276 (hERG).
@@ -84,7 +80,7 @@ one side of the activity cut, and is discarded as undecidable when it spans both
 returned experimentally tested non-binders to 57 endpoints.
 
 **Representation.** Each compound is a 1,036-column vector: a 1,024-bit folded ECFP-4 fingerprint
-(7) and twelve physicochemical descriptors. Structures are reduced to the largest organic fragment and
+(6) and twelve physicochemical descriptors. Structures are reduced to the largest organic fragment and
 neutralised. Neutralisation is part of the representation rather than a detail of it, because a drug
 and its salt must give the same answer: removing a counter-ion without it leaves the parent carrying
 the salt's charge, and haloperidol hydrochloride then scored a barrier probability of 0.613 against
@@ -95,14 +91,14 @@ per cent carry a stereocentre, but where one skeleton appears as several stereoi
 the same endpoint the labels agree in 94.6 per cent of 8,013 cases, so the share of the panel where
 chirality could change a class call is 0.19 per cent.
 
-**Models.** A random forest (8) is fitted per endpoint. That choice was made on a
-like-for-like comparison over thirteen core endpoints against XGBoost (9), histogram gradient
+**Models.** A random forest (7) is fitted per endpoint. That choice was made on a
+like-for-like comparison over thirteen core endpoints against XGBoost (8), histogram gradient
 boosting, L2 logistic regression and a nearest-neighbour read-across, and against a graph neural
 network on four of them, which the forest won on all four. Under the scaffold split the forest is
 best on seven of eight classification endpoints, losing AChE to histogram gradient boosting, and on
 none of the five regressions, where boosting scores higher. It was deployed for its stability under
-hyperparameters, for not extrapolating beyond the training range, and because TreeSHAP (10)
-is exact for it rather than approximate. Classifiers are isotonically calibrated (4) on
+hyperparameters, for not extrapolating beyond the training range, and because TreeSHAP (9)
+is exact for it rather than approximate. Classifiers are isotonically calibrated (10) on
 out-of-fold predictions, so no compound contributes to the calibrator that scores it. Binder models
 use Platt scaling (11), the withheld set for one target often being too small to fit a step
 function.
@@ -264,13 +260,13 @@ None declared.
 1. Zdrazil B, Felix E, Hunter F et al. The ChEMBL Database in 2023: a drug discovery platform spanning multiple bioactivity data types and time periods. Nucleic Acids Research. 2024. doi:10.1093/nar/gkad1004.
 2. Gilson M, Liu T, Baitaluk M et al. BindingDB in 2015: A public database for medicinal chemistry, computational chemistry and systems pharmacology. Nucleic Acids Research. 2016. doi:10.1093/nar/gkv1072.
 3. Meng F, Xi Y, Huang J et al. A curated diverse molecular database of blood-brain barrier permeability with chemical descriptors. Scientific Data. 2021. doi:10.1038/s41597-021-01069-5.
-4. Niculescu-Mizil A, Caruana R. Predicting good probabilities with supervised learning. Proceedings of the 22nd international conference on Machine learning  - ICML '05. 2005. doi:10.1145/1102351.1102430.
-5. Huang K, Fu T, Gao W, Zhao Y, Roohani Y, Leskovec J, Coley CW, Xiao C, Sun J, Zitnik M. Artificial intelligence foundation for therapeutic science. Nature chemical biology. 2022. doi:10.1038/s41589-022-01131-2.
-6. Wu Z, Ramsundar B, Feinberg E et al. MoleculeNet: a benchmark for molecular machine learning. Chemical Science. 2018. doi:10.1039/c7sc02664a.
-7. Rogers D, Hahn M. Extended-Connectivity Fingerprints. Journal of Chemical Information and Modeling. 2010. doi:10.1021/ci100050t.
-8. Breiman L. Random Forests. Machine Learning. 2001. doi:10.1023/a:1010933404324.
-9. Chen T, Guestrin C. XGBoost: A Scalable Tree Boosting System. Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining. 2016. doi:10.1145/2939672.2939785.
-10. Lundberg S, Erion G, Chen H et al. From local explanations to global understanding with explainable AI for trees. Nature Machine Intelligence. 2020. doi:10.1038/s42256-019-0138-9.
+4. Huang K, Fu T, Gao W, Zhao Y, Roohani Y, Leskovec J, Coley CW, Xiao C, Sun J, Zitnik M. Artificial intelligence foundation for therapeutic science. Nature chemical biology. 2022. doi:10.1038/s41589-022-01131-2.
+5. Wu Z, Ramsundar B, Feinberg E et al. MoleculeNet: a benchmark for molecular machine learning. Chemical Science. 2018. doi:10.1039/c7sc02664a.
+6. Rogers D, Hahn M. Extended-Connectivity Fingerprints. Journal of Chemical Information and Modeling. 2010. doi:10.1021/ci100050t.
+7. Breiman L. Random Forests. Machine Learning. 2001. doi:10.1023/a:1010933404324.
+8. Chen T, Guestrin C. XGBoost: A Scalable Tree Boosting System. Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining. 2016. doi:10.1145/2939672.2939785.
+9. Lundberg S, Erion G, Chen H et al. From local explanations to global understanding with explainable AI for trees. Nature Machine Intelligence. 2020. doi:10.1038/s42256-019-0138-9.
+10. Niculescu-Mizil A, Caruana R. Predicting good probabilities with supervised learning. Proceedings of the 22nd international conference on Machine learning  - ICML '05. 2005. doi:10.1145/1102351.1102430.
 11. Lin H, Lin C, Weng R. A note on Platt’s probabilistic outputs for support vector machines. Machine Learning. 2007. doi:10.1007/s10994-007-5018-6.
 12. Mysinger M, Carchia M, Irwin J et al. Directory of Useful Decoys, Enhanced (DUD-E): Better Ligands and Decoys for Better Benchmarking. Journal of Medicinal Chemistry. 2012. doi:10.1021/jm300687e.
 13. Kanehisa M, Goto S. KEGG: kyoto encyclopedia of genes and genomes. Nucleic acids research. 2000. doi:10.1093/nar/28.1.27.

@@ -26,26 +26,22 @@ Venketesh Sivaramakrishnan¹
 
 ## Abstract
 
-BrainSafe AI predicts, from structure alone, how a small molecule may act on the human brain. For a
-submitted SMILES string or compound name it returns engagement of 54 molecular targets spanning the
-principal neurodegenerative, psychiatric, neuroinflammatory, analgesic and sleep-related mechanisms,
-predicted blood-brain barrier penetration, nine ADME and exposure endpoints including a directly
-modelled unbound brain-to-plasma ratio, and two cardiac safety liabilities. Every target score is
-admitted only in proportion to predicted brain exposure, so potency at a target a compound cannot
-reach contributes nothing, and engaged targets are traced through a curated pathway graph to the
-conditions those mechanisms touch. The server is built on 75 estimators, 70 deployed, trained on
-228,200 measured compound-endpoint records from ChEMBL [@chembl], BindingDB [@bindingdb] and B3DB
-[@b3db]. Under scaffold-grouped 10-fold cross-validation the measured-label classifiers reach a mean
-AUROC of 0.925 (0.958 under a random split), and expected calibration error falls from 0.0801 to
-0.0147 after isotonic calibration [@calibration]. The binder panel is validated against compounds
-tested at the same target and found inactive rather than against decoys, reaching a mean AUROC of
-0.917. Every prediction carries a calibrated probability, a conformal interval, and an
-applicability-domain distance to the nearest measured analogue, and the server reports silence
-rather than a guess for compounds outside its competence: on non-CNS chemistry its specificity is
-0.925 (95% CI 0.907 to 0.940). Disease-level scores are presented as a route from a mechanism to the
-conditions it touches, not as an indication prediction. BrainSafe AI is freely available without
-registration at https://huggingface.co/spaces/Krishnag999/brainsafe-ai, with source code, trained
-models and every validation artefact at https://github.com/krishna-g-999/brainsafe-ai.
+BrainSafe AI predicts, from structure alone, how a small molecule may act on the human brain. Given a
+SMILES string or compound name it returns engagement of 54 molecular targets spanning
+neurodegenerative, psychiatric, neuroinflammatory, analgesic and sleep-related mechanisms, predicted
+blood-brain barrier penetration, nine ADME and exposure endpoints, and two safety liabilities. Every
+target score is admitted only in proportion to predicted brain exposure, so potency at a target a
+compound cannot reach contributes nothing; engaged targets are traced through a curated
+pathway graph to the conditions they touch. The server runs 70 deployed estimators trained on 228,200
+records from ChEMBL, BindingDB and B3DB. Under scaffold-grouped cross-validation the measured-label
+classifiers reach a mean AUROC of 0.925, calibration error falling from 0.0801 to 0.0147. The
+binder panel, validated against measured inactives rather than decoys, reaches a mean AUROC of 0.917.
+Every prediction carries a calibrated probability, a conformal interval, and an applicability-domain
+distance, and the server stays silent rather than guessing for compounds outside its competence, with
+specificity 0.925 on non-CNS chemistry. Disease scores are a route from mechanism to condition, not
+an indication prediction. BrainSafe AI is freely available without registration at
+https://huggingface.co/spaces/Krishnag999/brainsafe-ai, with code, models and validation data at
+https://github.com/krishna-g-999/brainsafe-ai.
 
 ## Introduction
 
@@ -66,10 +62,10 @@ every result rather than left to be discovered.
 ## Materials and Methods
 
 **Training data.** Labels are measured experimental values only, never qualitative annotation.
-Potency data are ChEMBL pChEMBL values augmented with BindingDB affinities pooled at compound level;
-blood-brain barrier labels come from B3DB augmented with FDA-curated approved drugs; the nine ADME
-endpoints use measured sets from Therapeutics Data Commons [@tdc], MoleculeNet [@moleculenet], B3DB
-and ChEMBL. The panel
+Potency data are ChEMBL [@chembl] pChEMBL values augmented with BindingDB [@bindingdb] affinities
+pooled at compound level; blood-brain barrier labels come from B3DB [@b3db] augmented with
+FDA-curated approved drugs; the nine ADME endpoints use measured sets from Therapeutics Data Commons
+[@tdc], MoleculeNet [@moleculenet], B3DB and ChEMBL. The panel
 holds 228,200 measured compound-endpoint records over 169,341 unique compounds keyed by the InChIKey
 of the desalted parent. Each endpoint is trained on its own measured set alone; across the deployed
 panel those sets hold a median of 3,789 rows and span 387 compounds (KEAP1) to 10,276 (hERG).
