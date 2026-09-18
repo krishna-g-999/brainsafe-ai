@@ -28,6 +28,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from adjustText import adjust_text
 
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -72,18 +73,25 @@ def panel_a(ax, d) -> None:
         ax.scatter(r.auroc, r.sens, s=s, facecolor=col, edgecolor="white", linewidth=0.5,
                    alpha=0.9, zorder=3, label=lab if lab not in seen else None)
         seen.add(lab)
-    # Label the endpoints a reader needs to identify, stepping the offset for any that would
-    # otherwise print on top of a neighbour.
+    # Label the endpoints a reader needs to identify. A fixed step-down offset left names in the
+    # densest cluster (Sigma1/MT1, KEAP1/A1, Nav1_6/a4b2nAChR) printing on top of each other, since
+    # it only ever moved a colliding label further down, never sideways; adjustText repels every
+    # label from every other label and from every marker (not just the ones it labels) and draws a
+    # short leader line back to its point whenever it has to move one to do it.
     weak = d[(d.sens < 0.8) | (d.auroc < 0.85) | (~d.deployed)].sort_values("sens")
-    placed = []
-    for _, r in weak.iterrows():
-        dy = -1.5
-        while any(abs(r.auroc - px) < 0.045 and abs(r.sens + dy / 260 - py) < 0.028
-                  for px, py in placed):
-            dy -= 7.0
-        ax.annotate(r.endpoint, (r.auroc, r.sens), textcoords="offset points", xytext=(5.5, dy),
-                    fontsize=6.5, color=style_of(r)[0])
-        placed.append((r.auroc, r.sens + dy / 260))
+    # Starting each label a hair right of its own marker, rather than exactly on it, means a label
+    # adjustText leaves untouched (no neighbour close enough to force a move) still clears its own
+    # point instead of the first letter sitting on top of the dot.
+    # A white halo behind each label means a leader line that ends up passing almost underneath
+    # its own text (adjustText's fallback annotate arrows do not reliably respect shrinkA once a
+    # label needs barely any nudge) is hidden by the label rather than drawn through it.
+    halo = dict(boxstyle="round,pad=0.05", facecolor="white", edgecolor="none", alpha=0.85)
+    texts = [ax.text(r.auroc + 0.011, r.sens, r.endpoint, fontsize=6.5, color=style_of(r)[0],
+                     bbox=halo)
+             for _, r in weak.iterrows()]
+    adjust_text(texts, x=d.auroc.to_numpy(), y=d.sens.to_numpy(), ax=ax,
+                expand_text=(1.08, 1.25), expand_points=(1.8, 2.0), force_points=0.6,
+                arrowprops=dict(arrowstyle="-", color=S.HAIR, lw=0.7, shrinkA=6, shrinkB=3))
     ax.set_xlabel("AUROC against measured non-binders")
     ax.set_ylabel("sensitivity at the triage threshold,\nheld-out actives by scaffold",
                   linespacing=1.6)

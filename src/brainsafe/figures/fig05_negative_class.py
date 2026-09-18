@@ -136,7 +136,10 @@ def panel_c(ax, now, before) -> None:
 
     ax.axhline(0, color=S.MUTED, lw=0.8)
     ax.set_xticks(xs)
-    ax.set_xticklabels([f"{e}\n{'R2' if e in set(d[d.task=='regression'].endpoint) else 'AUROC'}"
+    # antioxidant_DPPH is wider than its bar slot on one line and was bleeding into its neighbours;
+    # breaking on the underscore keeps every label within its own column regardless of name length.
+    ax.set_xticklabels([f"{e.replace('_', chr(10))}\n"
+                        f"{'R2' if e in set(d[d.task=='regression'].endpoint) else 'AUROC'}"
                         for e in order], fontsize=6.5, linespacing=1.6)
     ax.set_ylabel("change after recovery\n(after minus before)", linespacing=1.6)
     S.strip(ax)

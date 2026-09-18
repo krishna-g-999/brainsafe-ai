@@ -111,11 +111,11 @@ def main() -> None:
     # overstate how much this panel has to say about which peripheral compound is which; the point
     # is that all four are gated out together. They are named once, next to the cluster.
     #
-    # The CNS four are not always this well separated: the deployed pipeline can score two of them
-    # close enough in both axes that the collision loop below pushes a label several steps away from
-    # its own marker. A displaced label with nothing to tie it back to its point is worse than the
-    # overlap it was meant to fix, so any label moved more than one step draws a thin leader line to
-    # the marker it names, exactly as a label that needed no displacement draws none.
+    # The CNS four are not always this well separated: the deployed pipeline can score three of them
+    # (as it does here) within 0.02 of one another, close enough that their markers visually merge
+    # into one blob while the fourth sits apart. A label moved even one step off its own marker is
+    # then genuinely ambiguous about which marker in that blob it names, so any displaced label draws
+    # a thin leader line back to it; only a label that needed no displacement at all draws none.
     cns_rows = [r for r in rows if r["cns"]]
     other_rows = [r for r in rows if not r["cns"]]
 
@@ -127,7 +127,7 @@ def main() -> None:
                   for px, py in placed):
             dy -= 11.0
         leader = dict(arrowstyle="-", color=S.MUTED, lw=0.6, shrinkA=1.5, shrinkB=3.0) \
-            if dy <= -22.0 else None
+            if dy < 0.0 else None
         bx.annotate(r["compound"], (r["bbb"], r["score"]), textcoords="offset points",
                    xytext=(-7, dy - 1.5), fontsize=6.5, ha="right", color=S.INK,
                    arrowprops=leader)
