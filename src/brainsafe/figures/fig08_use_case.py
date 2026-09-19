@@ -93,8 +93,13 @@ def main() -> None:
         called = r["score"] >= REPORT_THRESHOLD
         lab = (f"{r['top']}" + (f"  via {r['driver']}" if r["driver"] else "")) if called \
             else "no call above threshold"
+        # "no call above threshold" starts well left of the reporting line (these bars are tiny)
+        # and is long enough to run past it; without a halo the dashed line struck through a
+        # letter in the middle of the word "above".
+        halo = None if called else dict(boxstyle="round,pad=0.03", facecolor=S.PAPER,
+                                        edgecolor="none", zorder=4)
         ax.text(max(w, 0.02) + 0.02, y, lab, va="center", fontsize=6.5,
-                color=S.INK if called else S.MUTED)
+                color=S.INK if called else S.MUTED, zorder=5, bbox=halo)
     ax.axvline(REPORT_THRESHOLD, color=S.WARN, lw=0.9, ls=(0, (3, 2)), zorder=3)
     ax.text(REPORT_THRESHOLD, len(rows) - 0.35, " reporting threshold", fontsize=6.5,
             color=S.WARN, va="bottom")

@@ -29,6 +29,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from adjustText import adjust_text
 
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -49,9 +50,27 @@ def _paired(ax, d, xcol, ycol, label, lo):
     x, y, names = x[m], y[m], d.endpoint[m]
     ax.plot([lo, 1.0], [lo, 1.0], color=S.FAINT, lw=0.8, ls="--", zorder=1)
     ax.scatter(x, y, s=17, c=S.TARGET, edgecolor="white", linewidth=0.5, zorder=3)
-    for i, _ in (x - y).sort_values(ascending=False).head(3).items():
-        ax.annotate(names[i], (x[i], y[i]), fontsize=S.MIN_PT - 0.5, color=S.MUTED,
-                    xytext=(3, -7), textcoords="offset points")
+    # A fixed offset (3, -7) points put GluN2B's label on the axis spine, since its own y sits
+    # close enough to the axis's bottom (lo) that moving down 7 points landed at or past it; simply
+    # flipping labels near that edge upward then ran two of them into each other in panel A, where
+    # a7nAChR and Nav1_5 are only ~0.07 apart in y. adjustText, already used for this same problem
+    # elsewhere in the figure set, repels each label from the others and from every point, not just
+    # the one it names.
+    halo = dict(boxstyle="round,pad=0.05", facecolor="white", edgecolor="none", alpha=1.0, zorder=5)
+    idx = (x - y).sort_values(ascending=False).head(3).index
+    texts = [ax.text(x[i] + 0.01, y[i] - 0.01, names[i], fontsize=S.MIN_PT - 0.5, color=S.MUTED,
+                     bbox=halo) for i in idx]
+    adjust_text(texts, x=x.to_numpy(), y=y.to_numpy(), ax=ax,
+                expand_text=(1.1, 1.3), expand_points=(1.5, 1.8), force_points=0.6,
+                arrowprops=dict(arrowstyle="-", color=S.HAIR, lw=0.6, shrinkA=2, shrinkB=3,
+                                zorder=1))
+    # adjustText's fallback connector (used whenever the axes transform doesn't support
+    # FancyArrowPatch) can draw on top of the label regardless of the zorder passed to
+    # arrowprops; forcing the label and its halo above that after the fact holds regardless.
+    for t in texts:
+        t.set_zorder(6)
+        if t.get_bbox_patch() is not None:
+            t.get_bbox_patch().set_zorder(6)
     ax.set_xlim(lo, 1.0); ax.set_ylim(lo, 1.0); ax.set_aspect("equal")
     ax.set_xlabel(f"{label}, size-matched random split")
     ax.set_ylabel(f"{label}, time split")

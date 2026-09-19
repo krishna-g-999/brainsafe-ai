@@ -95,14 +95,26 @@ def panel_a(ax, d) -> None:
     # zorder must be set on the bbox dict itself: a Text's bbox patch defaults to zorder 1
     # regardless of the text's own zorder, which sits below the axisbelow grid (2) — the reason the
     # first version of this halo still let the y=0.4 gridline show straight through two labels.
-    halo = dict(boxstyle="round,pad=0.05", facecolor="white", edgecolor="none", alpha=1.0, zorder=5)
-    texts = [ax.text(r["n"] * 1.05, r["score"],
+    # pad=0.05 was not enough to cover BBB's own marker, which sits almost exactly under the label's
+    # first letter on this log-x axis (1.05x is a small absolute shift wherever n itself is small).
+    halo = dict(boxstyle="round,pad=0.15", facecolor="white", edgecolor="none", alpha=1.0, zorder=5)
+    texts = [ax.text(r["n"] * 1.08, r["score"],
                      r["model"].replace("_binder", "").replace("adme_", ""),
                      fontsize=S.pt(6.5), color=S.WARN if not r["deployed"] else S.INK, bbox=halo)
              for _, r in rows.iterrows()]
     adjust_text(texts, x=d.n.to_numpy(), y=d.score.to_numpy(), ax=ax,
                 expand_text=(1.08, 1.25), expand_points=(1.8, 2.0), force_points=0.7,
-                arrowprops=dict(arrowstyle="-", color=S.HAIR, lw=0.7, shrinkA=14, shrinkB=18))
+                arrowprops=dict(arrowstyle="-", color=S.HAIR, lw=0.7, shrinkA=14, shrinkB=18,
+                                zorder=1))
+    # BBB's connector still crossed its own label after the halo and shrink fix above: adjustText's
+    # fallback annotate (used whenever the axes transform doesn't support FancyArrowPatch, per the
+    # warning this prints) draws its arrow last regardless of the zorder passed to arrowprops, so it
+    # can still land on top of the halo. Redrawing every text and its halo after the arrows exist,
+    # rather than relying on zorder to hold across that fallback, puts letters back on top for good.
+    for t in texts:
+        t.set_zorder(6)
+        if t.get_bbox_patch() is not None:
+            t.get_bbox_patch().set_zorder(6)
 
     ax.set_xscale("log")
     ax.set_xlabel("compounds in the training set\n"
