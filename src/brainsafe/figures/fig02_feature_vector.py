@@ -77,10 +77,11 @@ def main() -> None:
     # ---- A: the molecule -------------------------------------------------------------------
     a = fig.add_subplot(gs[0]); a.axis("off")
     # imshow below forces an equal aspect ratio, which shrinks this axis's box around its centre
-    # by default and drags the panel letter down with it, out of line with B and C's. Anchoring
-    # to the top keeps the box's top edge fixed instead, so all three panel letters sit level.
+    # and moves its top edge, so a fraction of ITS OWN height no longer lands beside B and C's
+    # letters, whatever fraction is chosen: B's box shrinks by a different amount than A's, and
+    # C never shrinks at all. Anchoring to the top stops the box drifting downward; the panel
+    # letter itself is placed afterwards, in panel_fig(), from each box's actual final position.
     a.set_anchor("N")
-    S.panel(a, "A", f"the molecule: {NAME}", dx=-0.02, dy=1.075, gap=0.075)
     img = structure_image()
     if img is not None:
         a.imshow(img)
@@ -93,8 +94,7 @@ def main() -> None:
 
     # ---- B: the fingerprint, all 1,024 bits ------------------------------------------------
     b = fig.add_subplot(gs[1]); b.axis("off")
-    S.panel(b, "B", f"the fingerprint: {MORGAN_BITS} bits, {int(bits.sum())} set",
-            dx=-0.03, dy=1.075, gap=0.052)
+    b.set_anchor("N")
     side = int(np.sqrt(MORGAN_BITS))                       # 32 x 32
     grid = bits.reshape(side, side)
     b.imshow(grid, cmap=plt.matplotlib.colors.ListedColormap(["#EDF1F4", S.EXPOSURE]),
@@ -110,8 +110,6 @@ def main() -> None:
 
     # ---- C: the descriptors, with the values this molecule has -----------------------------
     c = fig.add_subplot(gs[2]); c.axis("off")
-    S.panel(c, "C", f"the descriptors: {len(_DESCRIPTORS)} values", dx=-0.06, dy=1.075,
-            gap=0.085)
     names = list(_DESCRIPTORS)          # dict, ordered as the featuriser concatenates them
     for i, (nm, val) in enumerate(zip(names, desc)):
         y = 0.945 - i * 0.0645
@@ -129,6 +127,15 @@ def main() -> None:
                         f"{MORGAN_BITS + len(names):,} columns, every endpoint",
            transform=c.transAxes, ha="center", va="center", fontsize=6.6, color=S.INK,
            fontweight="bold")
+
+    # Panel letters last, from each axes' actual final box: A and B were shrunk to a square by
+    # imshow's forced aspect, by different amounts, and C never was, so a fraction of any one
+    # panel's own height cannot place all three level. draw() first so get_position() reflects the
+    # aspect adjustment rather than the pre-draw box add_subplot handed back.
+    fig.canvas.draw()
+    S.panel_fig(fig, a, "A", f"the molecule: {NAME}")
+    S.panel_fig(fig, b, "B", f"the fingerprint: {MORGAN_BITS} bits, {int(bits.sum())} set")
+    S.panel_fig(fig, c, "C", f"the descriptors: {len(_DESCRIPTORS)} values")
 
     S.save(fig, "Figure2_feature_vector")
 

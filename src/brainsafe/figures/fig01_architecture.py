@@ -66,8 +66,15 @@ def counts() -> dict:
     for f in ("rf_cv_folds", "binder_cv_folds", "adme_cv_folds"):
         p = ROOT / "results" / "tables" / f"{f}.csv"
         if p.exists():
-            d = pd.read_csv(p, usecols=["endpoint"])
-            cv_rows += len(d)
+            d = pd.read_csv(p, usecols=["endpoint", "split"])
+            # binder_cv_folds also carries a random-split re-run, added after training purely so a
+            # reviewer can see the conventional split for comparison (binder_cv_per_fold.py); the
+            # binder classifiers themselves were only ever fitted, at training time, under the
+            # scaffold-grouped split recorded in binder_modes.json. Counting the re-run as though it
+            # were a fit behind the deployed panel double-counts a diagnostic that was never part of
+            # building that panel, which is how this number drifted to 1,480 before.
+            fit_rows = d[d.split == "scaffold"] if f == "binder_cv_folds" else d
+            cv_rows += len(fit_rows)
             cv_est |= {f"{f}:{e}" for e in d.endpoint.unique()}
             cv_eps |= set(d.endpoint.unique())
     return {

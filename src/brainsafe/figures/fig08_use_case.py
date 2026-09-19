@@ -123,9 +123,14 @@ def main() -> None:
     for r in sorted(cns_rows, key=lambda q: (-q["score"], -q["bbb"])):
         bx.plot(r["bbb"], r["score"], "o", ms=6, mfc=S.TARGET, mec="white", mew=0.7, zorder=3)
         dy = 0.0
-        while any(abs(r["bbb"] - px) < 0.18 and abs(r["score"] + dy / 200 - py) < 0.045
+        # The clearance below was tuned against one marker at a time; with three displaced together
+        # (as here, when three of the four scores land within 0.03 of each other) it let two labels
+        # each clear the marker they were escaping while landing within a font's line-height of one
+        # another, so the labels ran together even though neither sat on a marker. 0.045 is 9 points
+        # of clearance at this axis's scale, under the ~8-9 pt a 6.5 pt line actually needs.
+        while any(abs(r["bbb"] - px) < 0.18 and abs(r["score"] + dy / 200 - py) < 0.065
                   for px, py in placed):
-            dy -= 11.0
+            dy -= 13.0
         leader = dict(arrowstyle="-", color=S.MUTED, lw=0.6, shrinkA=1.5, shrinkB=3.0) \
             if dy < 0.0 else None
         bx.annotate(r["compound"], (r["bbb"], r["score"]), textcoords="offset points",

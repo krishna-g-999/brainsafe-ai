@@ -129,12 +129,39 @@ def panel(ax, letter: str, title: str = "", dx: float = -0.085, dy: float = 1.04
     The title is drawn as text rather than through set_title so that it starts after the letter
     instead of underneath it; a bold 10 pt letter and a left-aligned title otherwise land on the
     same point.
+
+    dx/dy/gap are fractions of THIS AXES' own box, not of the figure. That is exactly right when
+    every panel in a figure is a normal data axes of comparable shape, and wrong whenever one panel
+    calls imshow or otherwise forces an equal aspect ratio: matplotlib then shrinks that axes' box
+    around its centre to keep pixels square, so its top edge moves and a fixed dy no longer lines up
+    with a neighbouring panel's. panel_fig() below is immune to this because it reads the box after
+    any such adjustment and works in figure fractions throughout. Reach for it whenever a figure
+    mixes an image panel with plotted panels; it is not the default only because most figures here
+    do not mix the two and the existing dx/dy tuning for them should not be disturbed.
     """
     ax.text(dx, dy, letter, transform=ax.transAxes, fontsize=10, fontweight="bold",
             va="bottom", ha="left", color=INK)
     if title:
         ax.text(dx + gap, dy, title, transform=ax.transAxes, fontsize=8.5, fontweight="bold",
                 va="bottom", ha="left", color=INK)
+
+
+def panel_fig(fig, ax, letter: str, title: str = "", left: float = 0.010, top: float = 0.012,
+              gap: float = 0.022) -> None:
+    """Panel letter aligned by its axes' actual position on the canvas, not by axes-fraction.
+
+    Reads ax.get_position() (figure fractions, current as of the last draw) and places the letter
+    `left` to the left of the axes' left edge and `top` above its top edge, both in figure fractions,
+    so two panels line up whenever a reader would expect them to: because their axes start at the
+    same place on the page, not because someone tuned a fraction of each one's own, possibly
+    aspect-shrunk, box to match by eye.
+    """
+    box = ax.get_position()
+    x, y = box.x0 - left, box.y1 + top
+    fig.text(x, y, letter, fontsize=10, fontweight="bold", va="bottom", ha="left", color=INK)
+    if title:
+        fig.text(x + gap, y, title, fontsize=8.5, fontweight="bold", va="bottom", ha="left",
+                 color=INK)
 
 
 def note(fig, text: str, y: float = -0.01) -> None:

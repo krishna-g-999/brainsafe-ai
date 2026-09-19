@@ -398,7 +398,8 @@ GRAPH: list[tuple[str, list[str], str]] = [
       "results/tables/noncns_specificity_summary.csv",
       "results/tables/external_bbb_validation.csv", "results/tables/inversion_validation.csv"],
      "python src/brainsafe/figures/fig06_validation.py"),
-    ("manuscript/figures/Figure7_binder_panel.png", ["models_rf/binder_modes.json"],
+    ("manuscript/figures/Figure7_binder_panel.png",
+     ["models_rf/binder_modes.json", "results/tables/background_specificity_disjoint.csv"],
      "python src/brainsafe/figures/fig07_binder_panel.py"),
     # Five figures were outside this graph entirely, and one of them mattered. Figure 8 shows real
     # predictions for eight drugs, so it runs through disease_scores and therefore through the
@@ -423,7 +424,9 @@ GRAPH: list[tuple[str, list[str], str]] = [
      "python src/brainsafe/figures/fig09_model_atlas.py"),
     ("manuscript/figures/Figure10_endpoint_selection.png", ["models_rf/binder_modes.json"],
      "python src/brainsafe/figures/fig10_endpoint_selection.py"),
-    ("manuscript/figures/Figure1_architecture.png", ["models_rf/binder_modes.json"],
+    ("manuscript/figures/Figure1_architecture.png",
+     ["models_rf/binder_modes.json", "results/tables/rf_cv_folds.csv",
+      "results/tables/binder_cv_folds.csv", "results/tables/adme_cv_folds.csv"],
      "python src/brainsafe/figures/fig01_architecture.py"),
     ("manuscript/figures/Figure2_feature_vector.png", ["models_rf/binder_modes.json"],
      "python src/brainsafe/figures/fig02_feature_vector.py"),

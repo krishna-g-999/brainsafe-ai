@@ -114,7 +114,7 @@ def main() -> None:
     s = pd.read_csv(TAB / "external_novelty_strata.csv")
 
     fig = plt.figure(figsize=(S.DOUBLE, 6.7))
-    gs = fig.add_gridspec(2, 2, height_ratios=[1.0, 0.92], hspace=0.62, wspace=0.42,
+    gs = fig.add_gridspec(2, 2, height_ratios=[1.0, 0.92], hspace=0.30, wspace=0.42,
                           left=0.085, right=0.985, top=0.915, bottom=0.10)
     a = fig.add_subplot(gs[0, 0]); b = fig.add_subplot(gs[0, 1])
     c = fig.add_subplot(gs[1, 0]); e = fig.add_subplot(gs[1, 1])

@@ -15,7 +15,7 @@ by firing on trivial metabolites; others fail on discrimination alone. Either is
 fitted model, found by testing it against chemistry it should reject, and it is reported here rather
 than being quietly dropped.
 
-Reads models_rf/binder_modes.json.
+Reads models_rf/binder_modes.json and results/tables/background_specificity_disjoint.csv.
 
 Run:  python src/brainsafe/figures/fig07_binder_panel.py
 """
@@ -35,10 +35,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import style as S  # noqa: E402
 
 BM = ROOT / "models_rf" / "binder_modes.json"
+# background_fpr_held_out reflects a threshold from before later pipeline stages raised it further;
+# this table is the honest figure, the deployed threshold scored against the disjoint evaluation pool.
+BG = ROOT / "results" / "tables" / "background_specificity_disjoint.csv"
 
 
 def table() -> pd.DataFrame:
     bm = json.loads(BM.read_text(encoding="utf-8"))
+    bg = pd.read_csv(BG).set_index("target")["background_fpr_disjoint"]
     rows = []
     for ep, v in bm.items():
         rows.append({
@@ -47,7 +51,7 @@ def table() -> pd.DataFrame:
             "sens": v.get("sensitivity_at_threshold"),
             "n_pos": v.get("n_positive"),
             "n_inact": v.get("n_measured_inactive") or v.get("n_measured_inactive_holdout"),
-            "bg_fpr": v.get("background_fpr_held_out"),
+            "bg_fpr": bg.get(ep),
             "reliable": bool(v.get("reliable_call", True)),
             "deployed": bool(v.get("deployed", True)),
             "measured_labels": v.get("mode") == "measured_labels_holdout",
@@ -85,12 +89,18 @@ def panel_a(ax, d) -> None:
     # A white halo behind each label means a leader line that ends up passing almost underneath
     # its own text (adjustText's fallback annotate arrows do not reliably respect shrinkA once a
     # label needs barely any nudge) is hidden by the label rather than drawn through it.
-    halo = dict(boxstyle="round,pad=0.05", facecolor="white", edgecolor="none", alpha=0.85)
-    texts = [ax.text(r.auroc + 0.011, r.sens, r.endpoint, fontsize=6.5, color=style_of(r)[0],
-                     bbox=halo)
-             for _, r in weak.iterrows()]
-    adjust_text(texts, x=d.auroc.to_numpy(), y=d.sens.to_numpy(), ax=ax,
-                expand_text=(1.08, 1.25), expand_points=(1.8, 2.0), force_points=0.6,
+    halo = dict(boxstyle="round,pad=0.08", facecolor="white", edgecolor="none", alpha=1.0)
+    # The starting offset clears a small marker but not one of the largest: HT1A and a4b2nAChR have
+    # among the most measured actives in the whole panel, so their own marker is wide enough to sit
+    # under a label started at the same fixed 0.011 that clears everyone else. Scaling the start by
+    # the point's own marker size (the same sqrt(n_pos) the marker radius already uses) fixes that
+    # without changing where small-marker labels start.
+    weak_sizes = 4 + 22 * np.sqrt(weak.n_pos / d.n_pos.max())
+    texts = [ax.text(r.auroc + 0.004 + 0.0035 * np.sqrt(s), r.sens, r.endpoint, fontsize=6.5,
+                     color=style_of(r)[0], bbox=halo)
+             for (_, r), s in zip(weak.iterrows(), weak_sizes)]
+    adjust_text(texts, x=d.auroc.to_numpy(), y=d.sens.to_numpy(), ax=ax, lim=400,
+                expand_text=(1.08, 1.25), expand_points=(2.8, 3.0), force_points=1.2,
                 arrowprops=dict(arrowstyle="-", color=S.HAIR, lw=0.7, shrinkA=6, shrinkB=3))
     ax.set_xlabel("AUROC against measured non-binders")
     ax.set_ylabel("sensitivity at the triage threshold,\nheld-out actives by scaffold",
