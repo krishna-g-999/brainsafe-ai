@@ -100,7 +100,9 @@ substructure is present" on its own.
 **Twelve physicochemical descriptors**, each RDKit's standard implementation: molecular weight,
 Crippen logP, topological polar surface area, hydrogen-bond donor and acceptor counts, rotatable
 bond count, aromatic ring count, fraction of sp3 carbons, ring count, heavy-atom count, formal
-charge, and QED (a composite 0-1 drug-likeness score).
+charge, and QED (a composite 0-1 drug-likeness score). None of the 1,036 columns is scaled: a random
+forest splits on thresholds and is unchanged by any monotone rescaling, so no scaler is fitted and
+none can leak information across a split.
 
 **Worked example, donepezil:** {n_bits_set} of the 1,024 fingerprint bits are set. Descriptor values:
 molecular weight {vec[mw_i]:.2f}, cLogP {vec[clogp_i]:.2f}, TPSA {vec[tpsa_i]:.2f}
@@ -130,8 +132,10 @@ together reproduce the number the server actually reports.
 individual tree votes in this one fold range from {fold0_raw_votes.min():.3f} to
 {fold0_raw_votes.max():.3f} across its {len(fold0_raw_votes)} trees; this fold's raw forest vote is
 their mean, {fold0_raw_votes.mean():.4f}. Tree 0 of this fold, truncated to depth 3, is Figure S: it
-first splits on molecular weight, then QED, before it needs any fingerprint bit; the complete tree is
-exported as text in `results/tables/decision_tree_example_full.txt`.
+first splits on molecular weight, then QED, before it needs any fingerprint bit; boxes are coloured
+by which side of the split a node's training samples lean, green towards barrier-penetrant and
+vermillion towards non-penetrant. The complete tree is exported as text in
+`results/tables/decision_tree_example_full.txt`.
 
 ## 3. Calibration
 
