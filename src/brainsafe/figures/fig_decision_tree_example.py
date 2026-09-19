@@ -189,7 +189,7 @@ def draw_tree_panel(ax, root: dict, path: set[int]) -> None:
     depth2_bottom = y_by_depth[2] - h_by_depth[2] / 2
     ax.annotate(f"{NAME} lands here (tree 0, fold 0 only)",
                 xy=(tx, leaf_top + 0.006), xytext=(tx, (leaf_top + depth2_bottom) / 2),
-                ha="center", va="center", fontsize=6.4, color=S.EXPOSURE, style="italic",
+                ha="center", va="center", fontsize=S.MIN_PT, color=S.EXPOSURE, style="italic",
                 fontweight="bold", zorder=6,
                 bbox=dict(boxstyle="round,pad=0.25", facecolor="white", edgecolor="none"),
                 arrowprops=dict(arrowstyle="-", color=S.EXPOSURE, lw=0.9, shrinkA=9, shrinkB=2))
@@ -197,11 +197,14 @@ def draw_tree_panel(ax, root: dict, path: set[int]) -> None:
 
 def draw_ensemble_panel(ax, per_fold_raw, per_fold_cal, mean_val, live_check) -> None:
     ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.axis("off")
-    S.panel(ax, "B", "the deployed probability: five folds' calibrated votes, averaged",
-            dx=-0.01, dy=1.11, gap=0.28)
+    # The formula's summation sign is tall enough that, measured against its own rendered bbox, it
+    # reached from axes-fraction 1.045 to 1.20; the title at dy=1.11 sat inside that span instead of
+    # above it. The title now clears the formula's own measured top, not a guessed one.
     ax.text(0.5, 1.045,
             r"$\hat{p}(x) = \frac{1}{5}\sum_{k=1}^{5} g_k\left(\hat{p}_{forest,k}(x)\right)$",
             transform=ax.transAxes, ha="center", va="bottom", fontsize=8.5, color=S.INK)
+    S.panel(ax, "B", "the deployed probability: five folds' calibrated votes, averaged",
+            dx=-0.01, dy=1.225, gap=0.28)
 
     n = len(per_fold_raw)
     centers = [0.10 + (0.80 / n) * (k + 0.5) for k in range(n)]
@@ -214,7 +217,7 @@ def draw_ensemble_panel(ax, per_fold_raw, per_fold_cal, mean_val, live_check) ->
                  fill="#F4F7F9", edge=S.HAIR, fontsize=6.7)
         ax.annotate("", xy=(x, y_cal + 0.10), xytext=(x, y_forest - 0.10),
                     arrowprops=dict(arrowstyle="-|>", color=S.MUTED, lw=1.0))
-        ax.text(x, y_g, "isotonic\n$g_k$", ha="center", va="center", fontsize=6.3,
+        ax.text(x, y_g, "isotonic\n$g_k$", ha="center", va="center", fontsize=S.MIN_PT,
                 color=S.MUTED, style="italic", linespacing=1.3)
         import matplotlib.colors as mcolors
         fill = mcolors.to_rgba(S.TARGET, 0.18 + 0.60 * cal)

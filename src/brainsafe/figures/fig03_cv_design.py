@@ -60,11 +60,16 @@ def panel_a(ax) -> None:
         else:
             held_mask = cls == 2                      # one whole scaffold class withheld
 
+        # The leftmost cluster (cx=0.20) mapped to X = x0 + 0.06, so its disc (radius 0.088)
+        # reached 0.028 past the box's own left edge at x0, and the rightmost (cx=0.55) reached
+        # past the right edge by about as much; both were visibly clipped by the box border. The
+        # offset and scale below keep every disc's edge inside [x0, x0+0.45], not just its centre.
+        CX_OFF, CX_SCALE = 0.10, 0.74
         for k, (cx, cy) in enumerate(centres):
-            ax.add_patch(Circle((x0 + 0.06 + (cx - 0.20) * 0.95, cy - 0.06), 0.088,
+            ax.add_patch(Circle((x0 + CX_OFF + (cx - 0.20) * CX_SCALE, cy - 0.06), 0.088,
                                 facecolor=S.HAIR, edgecolor="none", alpha=0.55, zorder=1))
         for i, (px, py) in enumerate(pts):
-            X = x0 + 0.06 + (px - 0.20) * 0.95
+            X = x0 + CX_OFF + (px - 0.20) * CX_SCALE
             Y = py - 0.06
             if held_mask[i]:
                 ax.plot(X, Y, "o", ms=3.6, mfc=S.WITHHELD, mec="white", mew=0.5, zorder=3)
@@ -83,9 +88,11 @@ def panel_a(ax) -> None:
     ax.plot([], [], "o", ms=3.6, mfc=S.WITHHELD, mec="white", label="held out this fold")
     ax.legend(loc="upper center", bbox_to_anchor=(0.5, 0.055), ncol=2, handletextpad=0.3,
               columnspacing=1.4)
-    ax.text(0.5, 1.055, "grey discs are Bemis-Murcko scaffold classes,\n"
+    # Left-aligned at the same (0.0, 1.015) as B's and C's subheading, not centred at a height of
+    # its own: it was the one panel whose subheading did not line up with the other two.
+    ax.text(0.0, 1.015, "grey discs are Bemis-Murcko scaffold classes,\n"
                         "computed on the desalted parent",
-            ha="center", va="top", fontsize=6.5, color=S.MUTED, linespacing=1.7)
+            transform=ax.transAxes, fontsize=6.5, color=S.MUTED, va="bottom", linespacing=1.6)
 
 
 def panel_b(ax, cv) -> None:

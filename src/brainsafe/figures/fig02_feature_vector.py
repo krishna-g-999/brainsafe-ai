@@ -104,9 +104,11 @@ def main() -> None:
     b.set_xlim(0, side); b.set_ylim(side, 0)
     b.text(0.0, 1.002, "each cell is one bit, read left to right, top to bottom",
            transform=b.transAxes, fontsize=6.5, color=S.MUTED, va="bottom")
-    b.text(0.0, -0.045, f"Morgan / ECFP-4, radius {MORGAN_RADIUS}, folded to {MORGAN_BITS} "
-                        "bits, chirality NOT included.",
-           transform=b.transAxes, fontsize=6.5, color=S.MUTED, va="top")
+    # One line measured almost a fifth wider than B's own axes, running into C's column; the
+    # break below keeps both lines inside B, measured the same way.
+    b.text(0.0, -0.045, f"Morgan / ECFP-4, radius {MORGAN_RADIUS}, folded to {MORGAN_BITS:,} "
+                        "bits,\nchirality NOT included.",
+           transform=b.transAxes, fontsize=6.5, color=S.MUTED, va="top", linespacing=1.6)
 
     # ---- C: the descriptors, with the values this molecule has -----------------------------
     c = fig.add_subplot(gs[2]); c.axis("off")
@@ -126,26 +128,31 @@ def main() -> None:
         c.text(0.97, y, f"{val:,.2f}" if abs(val) < 1e4 else f"{val:,.0f}",
                transform=c.transAxes, fontsize=6.5, color=S.TARGET, va="center", ha="right",
                fontweight="bold")
-    c.add_patch(FancyBboxPatch((0.0, -0.058), 1.0, 0.078, transform=c.transAxes,
+    # One line, even at the print floor MIN_PT, measured wider than the box (and the axes column
+    # holding it); two lines fits with room to spare.
+    c.add_patch(FancyBboxPatch((0.0, -0.078), 1.0, 0.108, transform=c.transAxes,
                                boxstyle="round,pad=0,rounding_size=0.02", clip_on=False,
                                facecolor="#F4F7F9", edgecolor=S.HAIR, lw=0.6))
-    c.text(0.5, -0.019, f"{MORGAN_BITS} + {len(names)} = "
-                        f"{MORGAN_BITS + len(names):,} columns, every endpoint",
-           transform=c.transAxes, ha="center", va="center", fontsize=6.6, color=S.INK,
+    c.text(0.5, -0.010, f"{MORGAN_BITS:,} + {len(names)} = {MORGAN_BITS + len(names):,} columns,",
+           transform=c.transAxes, ha="center", va="top", fontsize=S.MIN_PT, color=S.INK,
            fontweight="bold")
+    c.text(0.5, -0.045, "every endpoint", transform=c.transAxes, ha="center", va="top",
+           fontsize=S.MIN_PT, color=S.INK, fontweight="bold")
 
     # Panel letters last, from each axes' actual final box: A and B were shrunk to a square by
     # imshow's forced aspect, by different amounts, and C never was, so a fraction of any one
     # panel's own height cannot place all three level. draw() first so get_position() reflects the
     # aspect adjustment rather than the pre-draw box add_subplot handed back.
     fig.canvas.draw()
-    S.panel_fig(fig, a, "A", f"the molecule: {NAME}")
-    # B carries its own "each cell is one bit" caption just above the grid (axes-fraction 1.002,
-    # i.e. essentially at the box's own top edge), which the default top clearance was not tall
-    # enough to clear: the caption's own line height reached higher than the headline sat, so the
-    # two overlapped. B needs more headroom than A or C, which have no text this close to their box.
-    S.panel_fig(fig, b, "B", f"the fingerprint: {MORGAN_BITS} bits, {int(bits.sum())} set", top=0.030)
-    S.panel_fig(fig, c, "C", f"the descriptors: {len(_DESCRIPTORS)} values")
+    # A, B and C share one top edge (all three are anchored "N" against the same gridspec top), so
+    # giving B alone a taller top clearance to clear its own "each cell is one bit" caption, sitting
+    # just above B's box, put its letter visibly higher than A's and C's. All three now share the
+    # clearance B needs; A and C do not carry a caption that close to their box, so it only adds a
+    # little air above two boxes that already had room, rather than misaligning the row to save it.
+    top = 0.028
+    S.panel_fig(fig, a, "A", f"the molecule: {NAME}", top=top)
+    S.panel_fig(fig, b, "B", f"the fingerprint: {MORGAN_BITS} bits, {int(bits.sum())} set", top=top)
+    S.panel_fig(fig, c, "C", f"the descriptors: {len(_DESCRIPTORS)} values", top=top)
 
     S.save(fig, "Figure2_feature_vector")
 

@@ -87,7 +87,9 @@ def panel_a(ax, sizes) -> None:
                 color=col, fontweight="bold")
         ax.text(x + w / 2, 0.495, f"{SHARES[key]} per cent of the library", ha="center",
                 va="center", fontsize=6.5, color=S.MUTED)
-        ax.text(x + w / 2, 0.430, sub, ha="center", va="top", fontsize=6.5, color=S.MUTED,
+        # At 0.430 the third line ("to any active" etc.) ran past the box's own bottom edge and
+        # printed on top of the coloured bar under it, measured against the bar's own top edge.
+        ax.text(x + w / 2, 0.465, sub, ha="center", va="top", fontsize=6.5, color=S.MUTED,
                 linespacing=1.8)
         ax.add_patch(FancyArrowPatch((0.5, 0.810), (x + w / 2, 0.716), arrowstyle="-|>",
                                      mutation_scale=7, color=S.FAINT, lw=0.9, shrinkA=0, shrinkB=0))
@@ -125,24 +127,27 @@ def panel_b(ax, bm, bg_disjoint) -> None:
     ax.plot(xs[~over], ys[~over], "o", ms=3.4, mfc=S.TARGET, mec="white", mew=0.5, alpha=0.85,
             zorder=3)
     ax.plot(xs[over], ys[over], "o", ms=4.6, mfc=S.WARN, mec="white", mew=0.6, zorder=4)
-    # Stepping every label DOWN by a fixed amount from its own point, as this used to, put a label
-    # back on the 0.05 line whenever its point sat close enough above the line already: with only
-    # HT2A and D2 exceeding, both barely above 0.05 and 0.003 apart in x, the second label landed
-    # back on the dashed line it was meant to clear. Stacking upward from a shared floor above the
-    # line, instead of downward from each point, cannot land back on it regardless of how close to
-    # the line the point itself is.
+    # Both exceeding points sit close to the top-right corner of a tightly bounded square axes, a
+    # few thousandths apart. Stacking labels upward or sideways by a growing step (tried for two
+    # labels landing on top of each other) pushed one of them past the axes' own edge, off the plot
+    # and into the margin beside or above it: there is only about 10pt of room on either side here.
+    # Alternating a small offset above and below each point in turn spaces two close labels apart
+    # without needing the room a larger, growing step would.
     for rank, i in enumerate(sorted(np.flatnonzero(over), key=lambda k: xs[k])):
         ax.annotate(names[i], (xs[i], ys[i]), textcoords="offset points",
-                    xytext=(6.0, 14.0 + rank * 11.0), fontsize=6.5, color=S.WARN,
+                    xytext=(9.0, 9.0 if rank % 2 == 0 else -13.0), fontsize=6.5, color=S.WARN,
+                    va="center",
                     arrowprops=dict(arrowstyle="-", color=S.HAIR, lw=0.6, shrinkA=2, shrinkB=3))
 
     ax.set_xlabel("false-positive rate on the pool the threshold was set on")
     ax.set_ylabel("measured on the held-out\nevaluation pool", linespacing=1.6)
     ax.set_xlim(0, hi); ax.set_ylim(0, hi)
     S.strip(ax, x=True, y=True)
-    ax.text(0.03, 0.955, f"{int(over.sum())} of {len(xs)} endpoints exceed the "
-                         f"{BACKGROUND_TARGET:.2f} target\nwhen scored on a pool they\n"
-                         "were not tuned on",
+    # At three lines this note (top-left, above the 0.05 line at axes-fraction ~0.87) ran into the
+    # dashed target line itself, its second line striking through it. Two lines, measured against
+    # the room actually open above that line, clears it.
+    ax.text(0.03, 0.99, f"{int(over.sum())} of {len(xs)} endpoints exceed the "
+                        f"{BACKGROUND_TARGET:.2f} target,\nscored on a pool they were not tuned on",
             transform=ax.transAxes, fontsize=6.5, color=S.WARN, va="top", linespacing=1.7)
     note = "points above the diagonal are\nendpoints the in-sample rate flattered"
     ax.text(0.97, 0.06, note, transform=ax.transAxes, fontsize=6.5, color=S.MUTED, ha="right",

@@ -106,13 +106,17 @@ def arrow(ax, x0, y0, x1, y1, color=S.FAINT, lw=0.9, z=1):
 def panel_a(ax, c) -> None:
     ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.axis("off")
 
-    # ---- column 1: the compound and its standardisation ------------------------------------
+    # ---- column 1: the compound -------------------------------------------------------------
+    # The four standardisation steps used to print here at one line each ("largest organic
+    # fragment" and "InChIKey assigned" both ran past the box's own sides, measured against its
+    # usable width); Figure 2 already gives that sequence in full beside the same molecule, and
+    # this panel is about the four model families the vector feeds, not the standardisation step,
+    # so the caption's "standardised" carries it here instead of a second, cut-off copy of it.
     box(ax, 0.005, 0.30, 0.115, 0.40, "#F4F7F9", S.HAIR)
-    ax.text(0.062, 0.655, "INPUT", ha="center", fontsize=6.5, color=S.MUTED, fontweight="bold")
-    ax.text(0.062, 0.545, "SMILES", ha="center", fontsize=7.6, color=S.INK, fontweight="bold")
-    for i, t in enumerate(["largest organic fragment", "salts stripped", "sanitised",
-                           "InChIKey assigned"]):
-        ax.text(0.062, 0.475 - i * 0.048, t, ha="center", fontsize=6.5, color=S.MUTED)
+    ax.text(0.062, 0.550, "INPUT", ha="center", fontsize=6.5, color=S.MUTED, fontweight="bold")
+    ax.text(0.062, 0.470, "SMILES", ha="center", fontsize=8.5, color=S.INK, fontweight="bold")
+    ax.text(0.062, 0.395, "standardised,\ndeduplicated", ha="center", va="top", fontsize=6.5,
+            color=S.MUTED, linespacing=1.5)
 
     # ---- column 2: the feature vector, drawn at its real proportions ------------------------
     x0, w = 0.155, 0.105
@@ -181,30 +185,34 @@ def panel_a(ax, c) -> None:
         arrow(ax, fx + fw + 0.004, top - h / 2, gx - 0.004, 0.50)
 
     # ---- column 5: the output --------------------------------------------------------------
+    # The paragraph below is wrapped at four lines, not three: at three, every line ran past this
+    # box's right edge by 15-20%, measured against the box's own usable width (ow minus its two
+    # insets) with the renderer's own text extents, not guessed from a character count. The header
+    # above the demo bars overflowed the same way at one line and is two below for the same reason.
     ox, ow = 0.735, 0.255
-    box(ax, ox, 0.135, ow, 0.73, "#F4F7F9", S.HAIR)
+    box(ax, ox, 0.055, ow, 0.81, "#F4F7F9", S.HAIR)
     ax.text(ox + ow / 2, 0.825, "OUTPUT", ha="center", fontsize=6.5, color=S.MUTED,
             fontweight="bold")
     ax.text(ox + 0.016, 0.770, "base-rate enrichment", fontsize=7, color=S.INK, fontweight="bold")
-    ax.text(ox + 0.016, 0.740, "a probability is scored against how often that\nendpoint fires "
-                               "across the library, not on its raw\nvalue, so a common endpoint "
+    ax.text(ox + 0.016, 0.740, "a probability is scored against how\noften that endpoint fires "
+                               "across the\nlibrary, not on its raw value, so a\ncommon endpoint "
                                "cannot dominate",
             fontsize=6.5, color=S.MUTED, va="top", linespacing=1.55)
-    ax.plot([ox + 0.016, ox + ow - 0.016], [0.628, 0.628], color=S.HAIR, lw=0.8)
-    ax.text(ox + 0.016, 0.578, "ranked mechanisms and conditions", fontsize=7, color=S.INK,
-            fontweight="bold")
+    ax.plot([ox + 0.016, ox + ow - 0.016], [0.585, 0.585], color=S.HAIR, lw=0.8)
+    ax.text(ox + 0.016, 0.548, "ranked mechanisms\nand conditions", fontsize=7, color=S.INK,
+            fontweight="bold", va="top", linespacing=1.4)
     demo = [("strongest mechanism", 0.92, S.TARGET), ("second mechanism", 0.61, S.TARGET),
             ("exposure", 0.78, S.EXPOSURE), ("liability flag", 0.34, S.SAFETY)]
     for i, (lab, v, col) in enumerate(demo):
-        yy = 0.510 - i * 0.055
+        yy = 0.428 - i * 0.055
         ax.text(ox + 0.016, yy + 0.006, lab, fontsize=6.5, color=S.MUTED)
         ax.add_patch(Rectangle((ox + 0.140, yy), (ow - 0.160) * v, 0.024,
                                facecolor=col, alpha=0.75, edgecolor="none"))
-    ax.plot([ox + 0.016, ox + ow - 0.016], [0.285, 0.285], color=S.HAIR, lw=0.8)
-    ax.text(ox + 0.016, 0.245, "every score carries", fontsize=6.5, color=S.INK, fontweight="bold")
+    ax.plot([ox + 0.016, ox + ow - 0.016], [0.198, 0.198], color=S.HAIR, lw=0.8)
+    ax.text(ox + 0.016, 0.163, "every score carries", fontsize=6.5, color=S.INK, fontweight="bold")
     for i, t in enumerate(["a calibrated probability", "a conformal interval",
                            "an applicability-domain distance"]):
-        ax.text(ox + 0.016, 0.205 - i * 0.031, "•  " + t, fontsize=6.5, color=S.MUTED)
+        ax.text(ox + 0.016, 0.125 - i * 0.031, "•  " + t, fontsize=6.5, color=S.MUTED)
     arrow(ax, gx + gw + 0.004, 0.50, ox - 0.004, 0.50)
 
 

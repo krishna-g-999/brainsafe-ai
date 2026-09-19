@@ -54,12 +54,16 @@ def panel_a(ax) -> None:
     ax.text(5.5, 0.955, "undecided", ha="center", fontsize=6.5, color=S.MUTED, fontweight="bold")
     ax.text(7.8, 0.955, "active", ha="center", fontsize=6.5, color=S.TARGET, fontweight="bold")
 
+    # Both notes below, measured against the room actually open beside them (pChEMBL 3.60 to the
+    # axis's own right edge at 9.6), ran about a sixth wider than that: with nothing to clip them,
+    # they printed straight across the vertical seam into panel B's own y-axis label, the two
+    # panels' text interleaved.
     rows = [
         ("exact value, pChEMBL 8.1", 8.1, None, S.TARGET, "an active, as it always was"),
         ("\"IC50 > 10 uM\"", 5.0, "lt", S.WARN,
-         "whole interval below the cut: a measured non-binder, and the class that was missing"),
+         "whole interval below the cut: a measured non-binder,\nand the class that was missing"),
         ("\"IC50 > 100 nM\"", 7.0, "lt", S.MUTED,
-         "interval spans both classes: undecidable, and discarded rather than guessed"),
+         "interval spans both classes: undecidable,\nand discarded rather than guessed"),
     ]
     # The "exact value" row sits close enough to the undecided/active boundary at pChEMBL 6 that a
     # dash of that vertical line landed inside a letter of the label, reading as a typo ("exaot")
@@ -81,7 +85,7 @@ def panel_a(ax) -> None:
             ax.plot([x], [y], "o", ms=5.0, mfc=col, mec="white", mew=0.7, zorder=4)
             ax.text(x - 0.16, y, label, fontsize=6.5, color=col, fontweight="bold", va="center",
                     ha="right", zorder=5, bbox=halo)
-        ax.text(3.60, y - 0.088, note, fontsize=6.5, color=S.MUTED, va="center")
+        ax.text(3.60, y - 0.088, note, fontsize=6.5, color=S.MUTED, va="center", linespacing=1.6)
 
     S.strip(ax, x=True, y=False)
     ax.text(0.0, 1.055, "a bound settles the label whenever the whole interval falls on one side "
@@ -169,7 +173,9 @@ def main() -> None:
     before = pd.read_csv(TAB / "rf_cv_summary_pre_expansion.csv")
 
     fig = plt.figure(figsize=(S.DOUBLE, 6.16))
-    gs = fig.add_gridspec(2, 2, height_ratios=[0.86, 1.0], hspace=0.32, wspace=0.24,
+    # hspace=0.32 left only 0.02 of figure height between A's x-axis label and C's header, measured
+    # against their actual rendered extents; the two visibly ran into each other.
+    gs = fig.add_gridspec(2, 2, height_ratios=[0.86, 1.0], hspace=0.45, wspace=0.24,
                           left=0.065, right=0.985, top=0.905, bottom=0.085)
     a = fig.add_subplot(gs[0, 0]); b = fig.add_subplot(gs[0, 1]); c = fig.add_subplot(gs[1, :])
     S.panel(a, "A", "what a censored measurement can settle", dx=-0.10, dy=1.13, gap=0.045)
