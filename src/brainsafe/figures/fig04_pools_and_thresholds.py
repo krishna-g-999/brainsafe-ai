@@ -15,7 +15,8 @@ Panel C is the evidence the fix took: measured on a pool it was not set on, the 
 false-positive rate now exceeds its 0.05 target for some endpoints, which under the old procedure
 was arithmetically impossible.
 
-Reads models_rf/binder_modes.json and the pool sizes from models.pools.
+Reads models_rf/binder_modes.json, results/tables/background_specificity_disjoint.csv, and the pool
+sizes from models.pools.
 
 Run:  python src/brainsafe/figures/fig04_pools_and_thresholds.py
 """
@@ -27,6 +28,7 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 from matplotlib.patches import FancyArrowPatch, FancyBboxPatch, Rectangle
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -37,6 +39,7 @@ from models import pools  # noqa: E402
 from models.pools import SHARES  # noqa: E402
 
 BM = ROOT / "models_rf" / "binder_modes.json"
+BG_DISJOINT = ROOT / "results" / "tables" / "background_specificity_disjoint.csv"
 BACKGROUND_TARGET = 0.05          # the intended background false-positive rate
 
 
@@ -94,19 +97,23 @@ def panel_a(ax, sizes) -> None:
             ha="center", va="center", fontsize=6.5, color=S.INK, fontweight="bold")
 
 
-def panel_b(ax, bm) -> None:
-    """In-sample against held-out false-positive rate, per endpoint."""
-    xs, ys, names, absent = [], [], [], []
+def panel_b(ax, bm, bg_disjoint) -> None:
+    """In-sample against held-out false-positive rate, per endpoint, both at the deployed threshold.
+
+    background_fpr_in_sample/held_out (the fields this panel used to read) are each a snapshot from
+    a pipeline stage the deployed threshold has since moved past: final_thresholds.py writes the
+    former and train_binders_hybrid.py the latter, and calibrate_background_specificity.py can raise
+    the threshold again after both. background_fpr_at_threshold is the circular in-sample rate at
+    the threshold actually deployed (by construction close to the 0.05 quantile it was drawn from,
+    which is the point being illustrated); background_specificity_disjoint.csv is the same deployed
+    threshold scored against the evaluation pool, disjoint from both the decoys and the pool the
+    threshold was set on. Both describe the endpoint the server runs today, and both cover all 47.
+    """
+    xs, ys, names = [], [], []
     for ep, v in bm.items():
-        a, b = v.get("background_fpr_in_sample"), v.get("background_fpr_held_out")
-        if a is None or b is None:
-            # No in-sample rate exists for these, and the reason is principled rather than a gap:
-            # they are the measured-label endpoints, trained without decoys, so there is no
-            # decoy-drawn sample for a threshold to have been set on. Named rather than dropped
-            # silently, because a panel of 44 where the text says 49 invites the wrong inference.
-            absent.append(ep)
+        if ep not in bg_disjoint.index:
             continue
-        xs.append(a); ys.append(b); names.append(ep)
+        xs.append(v["background_fpr_at_threshold"]); ys.append(bg_disjoint.loc[ep]); names.append(ep)
     xs, ys = np.asarray(xs, float), np.asarray(ys, float)
 
     hi = max(xs.max(), ys.max()) * 1.12
@@ -118,13 +125,16 @@ def panel_b(ax, bm) -> None:
     ax.plot(xs[~over], ys[~over], "o", ms=3.4, mfc=S.TARGET, mec="white", mew=0.5, alpha=0.85,
             zorder=3)
     ax.plot(xs[over], ys[over], "o", ms=4.6, mfc=S.WARN, mec="white", mew=0.6, zorder=4)
-    # Label the exceedances in descending order with a fixed step, so endpoints within a few
-    # thousandths of each other do not print on top of one another.
-    # Stacked well clear of the 0.05 target line's own y-position, not merely spaced from each
-    # other: a label landing on that dashed line reads as struck through.
-    for rank, i in enumerate(sorted(np.flatnonzero(over), key=lambda k: -ys[k])):
+    # Stepping every label DOWN by a fixed amount from its own point, as this used to, put a label
+    # back on the 0.05 line whenever its point sat close enough above the line already: with only
+    # HT2A and D2 exceeding, both barely above 0.05 and 0.003 apart in x, the second label landed
+    # back on the dashed line it was meant to clear. Stacking upward from a shared floor above the
+    # line, instead of downward from each point, cannot land back on it regardless of how close to
+    # the line the point itself is.
+    for rank, i in enumerate(sorted(np.flatnonzero(over), key=lambda k: xs[k])):
         ax.annotate(names[i], (xs[i], ys[i]), textcoords="offset points",
-                    xytext=(6.0, 4.0 - rank * 8.5), fontsize=6.5, color=S.WARN)
+                    xytext=(6.0, 14.0 + rank * 11.0), fontsize=6.5, color=S.WARN,
+                    arrowprops=dict(arrowstyle="-", color=S.HAIR, lw=0.6, shrinkA=2, shrinkB=3))
 
     ax.set_xlabel("false-positive rate on the pool the threshold was set on")
     ax.set_ylabel("measured on the held-out\nevaluation pool", linespacing=1.6)
@@ -135,9 +145,6 @@ def panel_b(ax, bm) -> None:
                          "were not tuned on",
             transform=ax.transAxes, fontsize=6.5, color=S.WARN, va="top", linespacing=1.7)
     note = "points above the diagonal are\nendpoints the in-sample rate flattered"
-    if absent:
-        note += (f"\n\n{len(absent)} measured-label endpoints are absent:\n"
-                 "trained without decoys, so no in-sample\nrate exists to compare against")
     ax.text(0.97, 0.06, note, transform=ax.transAxes, fontsize=6.5, color=S.MUTED, ha="right",
             va="bottom", linespacing=1.7)
 
@@ -172,6 +179,7 @@ def panel_c(ax, bm) -> None:
 def main() -> None:
     S.use()
     bm = json.loads(BM.read_text(encoding="utf-8"))
+    bg_disjoint = pd.read_csv(BG_DISJOINT).set_index("target")["background_fpr_disjoint"]
     sizes = pool_sizes()
 
     fig = plt.figure(figsize=(S.DOUBLE, 6.10))
@@ -183,7 +191,7 @@ def main() -> None:
             gap=0.030)
     S.panel(b, "B", "a rate that can now disagree with its target", dx=-0.20, dy=1.045, gap=0.048)
     S.panel(c, "C", "two operating points per endpoint", dx=-0.20, dy=1.045, gap=0.048)
-    panel_a(a, sizes); panel_b(b, bm); panel_c(c, bm)
+    panel_a(a, sizes); panel_b(b, bm, bg_disjoint); panel_c(c, bm)
     S.save(fig, "Figure4_pools_and_thresholds")
 
 

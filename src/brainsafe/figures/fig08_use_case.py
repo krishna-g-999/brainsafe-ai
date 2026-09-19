@@ -142,9 +142,14 @@ def main() -> None:
         bx.plot(r["bbb"], r["score"], "o", ms=5, mfc=S.FAINT, mec="white", mew=0.7, zorder=3)
     cx = sum(r["bbb"] for r in other_rows) / len(other_rows)
     cy = max(r["score"] for r in other_rows)
+    # A caption this long, centred on the cluster's own mean bbb, ran into the y-axis whenever that
+    # mean sat close to it (as it does: all four score under 0.05), overlapping the spine and the
+    # 0.2 tick label. A fixed anchor in clear space below the reporting threshold, with a short
+    # leader back to the cluster, does not drift into the axis as the live scores move.
     bx.annotate(", ".join(r["compound"] for r in other_rows), (cx, cy),
-                textcoords="offset points", xytext=(0, 11), fontsize=6.5, ha="center",
-                color=S.MUTED, wrap=True)
+                xytext=(0.5, 0.15), textcoords="data", fontsize=6.5, ha="center", va="bottom",
+                color=S.MUTED, wrap=True,
+                arrowprops=dict(arrowstyle="-", color=S.HAIR, lw=0.7, shrinkA=2, shrinkB=4))
     bx.axhline(REPORT_THRESHOLD, color=S.WARN, lw=0.9, ls=(0, (3, 2)))
     bx.set_xlabel("predicted barrier penetration")
     bx.set_ylabel("top disease score", linespacing=1.6)

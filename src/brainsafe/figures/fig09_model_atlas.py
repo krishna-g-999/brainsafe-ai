@@ -89,13 +89,20 @@ def panel_a(ax, d) -> None:
     # its own point whenever it has to move one to do it.
     show = set(d[~d.deployed].model) | {"BBB", "hERG", "BACE1"} | set(d.nsmallest(3, "score").model)
     rows = d[d.model.isin(show)]
+    # A halo behind each label, as fig07_binder_panel.py uses for the same adjustText leader lines:
+    # without it, a line that ends up passing almost underneath its own text (plasma_protein_binding,
+    # clearance_hepatocyte) draws through the letters rather than stopping at them.
+    # zorder must be set on the bbox dict itself: a Text's bbox patch defaults to zorder 1
+    # regardless of the text's own zorder, which sits below the axisbelow grid (2) — the reason the
+    # first version of this halo still let the y=0.4 gridline show straight through two labels.
+    halo = dict(boxstyle="round,pad=0.05", facecolor="white", edgecolor="none", alpha=1.0, zorder=5)
     texts = [ax.text(r["n"] * 1.05, r["score"],
                      r["model"].replace("_binder", "").replace("adme_", ""),
-                     fontsize=S.pt(6.5), color=S.WARN if not r["deployed"] else S.INK)
+                     fontsize=S.pt(6.5), color=S.WARN if not r["deployed"] else S.INK, bbox=halo)
              for _, r in rows.iterrows()]
     adjust_text(texts, x=d.n.to_numpy(), y=d.score.to_numpy(), ax=ax,
                 expand_text=(1.08, 1.25), expand_points=(1.8, 2.0), force_points=0.7,
-                arrowprops=dict(arrowstyle="-", color=S.HAIR, lw=0.7, shrinkA=6, shrinkB=3))
+                arrowprops=dict(arrowstyle="-", color=S.HAIR, lw=0.7, shrinkA=14, shrinkB=18))
 
     ax.set_xscale("log")
     ax.set_xlabel("compounds in the training set\n"

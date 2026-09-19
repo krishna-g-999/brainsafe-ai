@@ -70,7 +70,7 @@ def main() -> None:
     bits, desc = vec[:MORGAN_BITS], vec[MORGAN_BITS:]
     on = np.flatnonzero(bits)
 
-    fig = plt.figure(figsize=(S.DOUBLE, 4.94))
+    fig = plt.figure(figsize=(S.DOUBLE, 4.3))
     gs = fig.add_gridspec(1, 3, width_ratios=[1.06, 1.30, 0.92], wspace=0.20,
                           left=0.035, right=0.985, top=0.855, bottom=0.075)
 
@@ -111,19 +111,25 @@ def main() -> None:
     # ---- C: the descriptors, with the values this molecule has -----------------------------
     c = fig.add_subplot(gs[2]); c.axis("off")
     names = list(_DESCRIPTORS)          # dict, ordered as the featuriser concatenates them
+    # Row spacing was a fixed 0.0645 regardless of how many descriptors there are; with 12 rows that
+    # stopped at axes-fraction 0.235, leaving a quarter of the panel's own height empty above the
+    # summary box below. Spreading the fixed number of rows over the space actually available (down
+    # to just above the box) fills that height instead of stranding it as dead space.
+    y_top, y_bottom = 0.945, 0.075
+    step = (y_top - y_bottom) / (len(names) - 1)
     for i, (nm, val) in enumerate(zip(names, desc)):
-        y = 0.945 - i * 0.0645
-        c.add_patch(Rectangle((0.0, y - 0.020), 1.0, 0.052, transform=c.transAxes,
+        y = y_top - i * step
+        c.add_patch(Rectangle((0.0, y - step / 2), 1.0, step * 0.8, transform=c.transAxes,
                               facecolor="#F4F7F9" if i % 2 == 0 else "white", edgecolor="none"))
         c.text(0.03, y, DESC_LABEL.get(nm, nm), transform=c.transAxes, fontsize=6.5,
                color=S.MUTED, va="center")
         c.text(0.97, y, f"{val:,.2f}" if abs(val) < 1e4 else f"{val:,.0f}",
                transform=c.transAxes, fontsize=6.5, color=S.TARGET, va="center", ha="right",
                fontweight="bold")
-    c.add_patch(FancyBboxPatch((0.0, -0.115), 1.0, 0.078, transform=c.transAxes,
+    c.add_patch(FancyBboxPatch((0.0, -0.058), 1.0, 0.078, transform=c.transAxes,
                                boxstyle="round,pad=0,rounding_size=0.02", clip_on=False,
                                facecolor="#F4F7F9", edgecolor=S.HAIR, lw=0.6))
-    c.text(0.5, -0.076, f"{MORGAN_BITS} + {len(names)} = "
+    c.text(0.5, -0.019, f"{MORGAN_BITS} + {len(names)} = "
                         f"{MORGAN_BITS + len(names):,} columns, every endpoint",
            transform=c.transAxes, ha="center", va="center", fontsize=6.6, color=S.INK,
            fontweight="bold")
@@ -134,7 +140,11 @@ def main() -> None:
     # aspect adjustment rather than the pre-draw box add_subplot handed back.
     fig.canvas.draw()
     S.panel_fig(fig, a, "A", f"the molecule: {NAME}")
-    S.panel_fig(fig, b, "B", f"the fingerprint: {MORGAN_BITS} bits, {int(bits.sum())} set")
+    # B carries its own "each cell is one bit" caption just above the grid (axes-fraction 1.002,
+    # i.e. essentially at the box's own top edge), which the default top clearance was not tall
+    # enough to clear: the caption's own line height reached higher than the headline sat, so the
+    # two overlapped. B needs more headroom than A or C, which have no text this close to their box.
+    S.panel_fig(fig, b, "B", f"the fingerprint: {MORGAN_BITS} bits, {int(bits.sum())} set", top=0.030)
     S.panel_fig(fig, c, "C", f"the descriptors: {len(_DESCRIPTORS)} values")
 
     S.save(fig, "Figure2_feature_vector")

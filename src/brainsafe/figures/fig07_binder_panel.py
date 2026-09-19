@@ -89,7 +89,9 @@ def panel_a(ax, d) -> None:
     # A white halo behind each label means a leader line that ends up passing almost underneath
     # its own text (adjustText's fallback annotate arrows do not reliably respect shrinkA once a
     # label needs barely any nudge) is hidden by the label rather than drawn through it.
-    halo = dict(boxstyle="round,pad=0.08", facecolor="white", edgecolor="none", alpha=1.0)
+    # zorder must be set on the bbox dict itself: a Text's bbox patch defaults to zorder 1
+    # regardless of the text's own zorder, which sits below the axisbelow grid (2).
+    halo = dict(boxstyle="round,pad=0.08", facecolor="white", edgecolor="none", alpha=1.0, zorder=5)
     # The starting offset clears a small marker but not one of the largest: HT1A and a4b2nAChR have
     # among the most measured actives in the whole panel, so their own marker is wide enough to sit
     # under a label started at the same fixed 0.011 that clears everyone else. Scaling the start by

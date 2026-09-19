@@ -79,7 +79,11 @@ def use() -> None:
         "figure.dpi": 150,
         "savefig.dpi": 400,
         "savefig.bbox": "tight",
-        "savefig.pad_inches": 0.02,
+        # "tight" crops to the rendered content's own bounding box, and the panel letter is often
+        # the topmost thing in that box (it sits above the axes, not inside them). At 0.02 in this
+        # left the letter within a point or two of the image's physical edge, printing as though the
+        # headline runs into the trim rather than sitting in a margin.
+        "savefig.pad_inches": 0.06,
         "figure.facecolor": PAPER,
         "axes.facecolor": PAPER,
         "font.family": "sans-serif",

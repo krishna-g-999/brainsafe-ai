@@ -61,17 +61,26 @@ def panel_a(ax) -> None:
         ("\"IC50 > 100 nM\"", 7.0, "lt", S.MUTED,
          "interval spans both classes: undecidable, and discarded rather than guessed"),
     ]
+    # The "exact value" row sits close enough to the undecided/active boundary at pChEMBL 6 that a
+    # dash of that vertical line landed inside a letter of the label, reading as a typo ("exaot")
+    # rather than a line crossing behind text. A halo, the same fix used for a leader line crossing
+    # its own label elsewhere in this figure set, hides whatever passes behind any of these three.
+    # zorder inside the bbox dict, not just on the text: a Text's bbox patch defaults to zorder 1
+    # regardless of the text's own zorder, which sits below axisbelow-grid (2) and an explicit
+    # axvline (also 2 here); without it the halo is painted, then drawn over by the line anyway.
+    halo = dict(boxstyle="round,pad=0.05", facecolor=S.PAPER, edgecolor="none", alpha=0.92, zorder=5)
     for i, (label, x, arrow, col, note) in enumerate(rows):
         y = 0.755 - i * 0.245
         if arrow == "lt":
             ax.add_patch(FancyArrowPatch((x, y), (3.60, y), arrowstyle="-|>", mutation_scale=7,
                                          color=col, lw=1.2, shrinkA=0, shrinkB=0, zorder=3))
             ax.plot([x], [y], "|", ms=8, color=col, mew=1.4, zorder=4)
-            ax.text(x + 0.14, y, label, fontsize=6.5, color=col, fontweight="bold", va="center")
+            ax.text(x + 0.14, y, label, fontsize=6.5, color=col, fontweight="bold", va="center",
+                    zorder=5, bbox=halo)
         else:
             ax.plot([x], [y], "o", ms=5.0, mfc=col, mec="white", mew=0.7, zorder=4)
             ax.text(x - 0.16, y, label, fontsize=6.5, color=col, fontweight="bold", va="center",
-                    ha="right")
+                    ha="right", zorder=5, bbox=halo)
         ax.text(3.60, y - 0.088, note, fontsize=6.5, color=S.MUTED, va="center")
 
     S.strip(ax, x=True, y=False)
