@@ -58,15 +58,11 @@ def panel_a(ax, sizes) -> None:
     """The hash partition, and what each pool is used for."""
     ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.axis("off")
 
-    ax.add_patch(FancyBboxPatch((0.02, 0.815), 0.96, 0.170,
+    ax.add_patch(FancyBboxPatch((0.02, 0.815), 0.96, 0.090,
                                 boxstyle="round,pad=0,rounding_size=0.02",
                                 facecolor="#F4F7F9", edgecolor=S.HAIR, lw=0.7))
-    ax.text(0.5, 0.945, f"background library, {sizes['total']:,} compounds",
+    ax.text(0.5, 0.860, f"background library, {sizes['total']:,} compounds",
             ha="center", va="center", fontsize=7.2, color=S.INK, fontweight="bold")
-    ax.text(0.5, 0.868, "assigned by blake2b(salt + canonical SMILES) mod 100, so a compound's pool "
-                        "is a property of the\nstructure: it never depends on run order, and "
-                        "re-running the split cannot move one",
-            ha="center", va="center", fontsize=6.5, color=S.MUTED, linespacing=1.7)
 
     pools = [
         ("DECOY POOL", "decoy", S.BINDER, 0.02,
@@ -93,13 +89,9 @@ def panel_a(ax, sizes) -> None:
         ax.add_patch(FancyArrowPatch((0.5, 0.810), (x + w / 2, 0.716), arrowstyle="-|>",
                                      mutation_scale=7, color=S.FAINT, lw=0.9, shrinkA=0, shrinkB=0))
 
-    ax.text(0.5, 0.170, "no compound appears in more than one pool, and the overlap was measured "
+    ax.text(0.5, 0.140, "no compound appears in more than one pool, and the overlap was measured "
                         "rather than assumed",
             ha="center", va="center", fontsize=6.5, color=S.INK, fontweight="bold")
-    ax.text(0.5, 0.108, "A threshold chosen on a sample and scored on that same sample returns the "
-                        "quantile it was given.\nSeparating the two is what allows the measurement "
-                        "to disagree with the target.",
-            ha="center", va="top", fontsize=6.5, color=S.MUTED, linespacing=1.8)
 
 
 def panel_b(ax, bm) -> None:

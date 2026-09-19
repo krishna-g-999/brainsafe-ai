@@ -716,7 +716,12 @@ ChEMBL. They trace one curve, so recall is a function of chemical distance rathe
 was held out, and the expected sensitivity for a submitted compound is knowable at query time.
 
 **Figure S1** (`figures/Figure5_negative_class.png`). Recovery of the measured negative class
-from censored bounds, and its effect on class balance per endpoint.
+from censored bounds, and its effect on class balance per endpoint. Classification gets slightly
+harder and regression gets better after the recovery, both in the expected direction: replacing
+decoys with compounds that were assayed and did not bind removes an easy negative class from the
+classifiers and adds real low-potency anchors to the regressions. Endpoints flat at exactly zero
+change are not missing data: they simply do not draw from a ChEMBL target, so no censored bounds
+existed to recover for them.
 
 **Figure S2** (`figures/Figure2_feature_vector.png`). The 1,036-column feature vector computed
 for a worked molecule, block by block.

@@ -207,10 +207,6 @@ def panel_b(ax, c) -> None:
 
     ax.text(0.0, 0.955, "One endpoint is twenty-one fits", fontsize=7.6, color=S.INK,
             fontweight="bold")
-    ax.text(0.0, 0.885, "The panel above counts the estimators that answer a query. Each was "
-                        "preceded by twenty that never serve a\nprediction and exist only to "
-                        "measure how the twenty-first behaves on compounds it has not seen.",
-            fontsize=6.5, color=S.MUTED, va="top", linespacing=1.6)
 
     groups = [
         ("10 random folds", 10, S.FAINT, 0.02,
@@ -232,12 +228,12 @@ def panel_b(ax, c) -> None:
                         color=col, lw=0.45, alpha=0.9, zorder=4)
         ax.text(x, 0.420, sub, fontsize=6.5, color=S.MUTED, va="top", linespacing=1.6)
 
-    ax.text(0.0, 0.290, "Each block is one random forest of 300 trees, so the panel rests on far "
-                        "more fitted estimators than it deploys,\nand every reported interval is "
-                        "measured on compounds withheld from the fit that produced it.",
-            fontsize=6.5, color=S.MUTED, va="top", linespacing=1.6)
-
-    ax.add_patch(Rectangle((0.0, 0.015), 1.0, 0.145, facecolor="#F4F7F9", edgecolor=S.HAIR, lw=0.6))
+    # The box has to actually hold two lines of the small text below it, not just the big number:
+    # at the old height (0.145) the second line of "8 isotonic calibrators" and its neighbours
+    # printed below the box's own bottom edge, half in and half out of the shaded background.
+    # Every position below is measured against the rendered text's own bounding box (not eyeballed)
+    # against the paragraph above it and the box itself, since guessing this by eye is how it broke.
+    ax.add_patch(Rectangle((0.0, 0.015), 1.0, 0.181, facecolor="#F4F7F9", edgecolor=S.HAIR, lw=0.6))
     for i, (big, small) in enumerate([
             (f"{c['n_deployed']}", "deployed estimators, plus\n"
                                    f"{c['n_calibrators']} isotonic calibrators"),
@@ -246,8 +242,8 @@ def panel_b(ax, c) -> None:
             ("300", "trees in every forest,\nleaf size 2"),
             ("1,036", "input columns, identical\nfor every endpoint")]):
         xx = 0.040 + i * 0.245
-        ax.text(xx, 0.100, big, fontsize=11, color=S.INK, fontweight="bold")
-        ax.text(xx, 0.082, small, fontsize=6.5, color=S.MUTED, va="top", linespacing=1.7)
+        ax.text(xx, 0.137, big, fontsize=11, color=S.INK, fontweight="bold")
+        ax.text(xx, 0.122, small, fontsize=6.5, color=S.MUTED, va="top", linespacing=1.5)
 
 
 def main() -> None:

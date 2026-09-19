@@ -3,7 +3,7 @@
 Every formula below is the one actually implemented in the deployed pipeline, not a textbook
 restatement of it, and every numeric example is computed live by `tools/build_ml_formulas.py` from
 the deployed models on donepezil (`COc1cc2c(cc1OC)C(=O)C(CC1CCN(Cc3ccccc3)CC1)C2`), the same worked example the manuscript and
-graphical abstract use, so the figures here cannot disagree with the ones there. Generated 2026-09-17.
+graphical abstract use, so the figures here cannot disagree with the ones there. Generated 2026-09-19.
 
 ## 1. Feature representation
 
@@ -20,7 +20,9 @@ substructure is present" on its own.
 **Twelve physicochemical descriptors**, each RDKit's standard implementation: molecular weight,
 Crippen logP, topological polar surface area, hydrogen-bond donor and acceptor counts, rotatable
 bond count, aromatic ring count, fraction of sp3 carbons, ring count, heavy-atom count, formal
-charge, and QED (a composite 0-1 drug-likeness score).
+charge, and QED (a composite 0-1 drug-likeness score). None of the 1,036 columns is scaled: a random
+forest splits on thresholds and is unchanged by any monotone rescaling, so no scaler is fitted and
+none can leak information across a split.
 
 **Worked example, donepezil:** 47 of the 1,024 fingerprint bits are set. Descriptor values:
 molecular weight 379.50, cLogP 4.36, TPSA 38.77
@@ -50,8 +52,10 @@ together reproduce the number the server actually reports.
 individual tree votes in this one fold range from 0.000 to
 1.000 across its 300 trees; this fold's raw forest vote is
 their mean, 0.9170. Tree 0 of this fold, truncated to depth 3, is Figure S: it
-first splits on molecular weight, then QED, before it needs any fingerprint bit; the complete tree is
-exported as text in `results/tables/decision_tree_example_full.txt`.
+first splits on molecular weight, then QED, before it needs any fingerprint bit; boxes are coloured
+by which side of the split a node's training samples lean, green towards barrier-penetrant and
+vermillion towards non-penetrant. The complete tree is exported as text in
+`results/tables/decision_tree_example_full.txt`.
 
 ## 3. Calibration
 

@@ -163,19 +163,11 @@ def main() -> None:
     S.panel(ax_b, "B", "but discrimination is not what decides deployment")
     S.panel(ax_c, "C", "the same bar, applied to every candidate target surveyed", dx=-0.045)
 
-    dep = int(d.deployed.sum())
-    tail = (f"{surveyed[1]} of {surveyed[0]:,} surveyed targets clear the data bar. "
-            if surveyed else "")
-    S.note(fig,
-           f"{tail}Of the {len(d)} endpoints trained here, {dep} are deployed. Panel B is the "
-           f"decision that matters: an endpoint is deployed only if a threshold exists that "
-           f"recovers actives without firing on unrelated chemistry, which is why endpoints that "
-           f"rank well can still be withheld.")
     out = S.save(fig, "Figure10_endpoint_selection")
     print(f"  wrote {out.relative_to(ROOT)}")
     if surveyed:
         print(f"  surveyed {surveyed[0]:,} candidate targets, {surveyed[1]} clear the data bar")
-    print(f"  panel: {len(d)} trained, {dep} deployed")
+    print(f"  panel: {len(d)} trained, {int(d.deployed.sum())} deployed")
 
 
 if __name__ == "__main__":

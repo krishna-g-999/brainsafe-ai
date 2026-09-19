@@ -147,20 +147,10 @@ def panel_c(ax, now, before) -> None:
 
     cls = d[d.task == "classification"].delta
     reg = d[d.task == "regression"].delta
-    flat = sorted({e for e in order if abs(d[d.endpoint == e].delta).max() < 5e-4})
     ax.text(0.995, 0.95, f"classification  median {cls.median():+.4f}\n"
                          f"regression      median {reg.median():+.4f}",
             transform=ax.transAxes, fontsize=6.5, color=S.INK, ha="right", va="top",
             family="monospace", linespacing=1.8)
-    ax.text(0.0, 1.185, "Classification gets slightly harder and regression gets better, both in "
-                        "the expected direction: replacing decoys with compounds that were assayed\n"
-                        "and did not bind removes an easy negative class from the classifiers, and "
-                        "adds real low-potency anchors to the regressions.",
-            transform=ax.transAxes, fontsize=6.5, color=S.MUTED, va="top", linespacing=1.7)
-    if flat:
-        ax.text(0.0, 1.075, f"{' and '.join(flat)} are flat at exactly zero, not missing: neither "
-                            "draws from a ChEMBL target, so no negatives were recovered for them.",
-                transform=ax.transAxes, fontsize=6.5, color=S.MUTED, va="top")
 
 
 def main() -> None:
@@ -170,12 +160,12 @@ def main() -> None:
     before = pd.read_csv(TAB / "rf_cv_summary_pre_expansion.csv")
 
     fig = plt.figure(figsize=(S.DOUBLE, 6.16))
-    gs = fig.add_gridspec(2, 2, height_ratios=[0.86, 1.0], hspace=0.62, wspace=0.24,
+    gs = fig.add_gridspec(2, 2, height_ratios=[0.86, 1.0], hspace=0.32, wspace=0.24,
                           left=0.065, right=0.985, top=0.905, bottom=0.085)
     a = fig.add_subplot(gs[0, 0]); b = fig.add_subplot(gs[0, 1]); c = fig.add_subplot(gs[1, :])
     S.panel(a, "A", "what a censored measurement can settle", dx=-0.10, dy=1.13, gap=0.045)
     S.panel(b, "B", "class balance, before and after", dx=-0.12, dy=1.13, gap=0.045)
-    S.panel(c, "C", "and what it did to the models", dx=-0.055, dy=1.245, gap=0.022)
+    S.panel(c, "C", "and what it did to the models", dx=-0.055, dy=1.10, gap=0.022)
     panel_a(a); panel_b(b, exp); panel_c(c, now, before)
     S.save(fig, "Figure5_negative_class")
 

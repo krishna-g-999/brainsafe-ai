@@ -105,13 +105,8 @@ def main() -> None:
     b.text(0.0, 1.002, "each cell is one bit, read left to right, top to bottom",
            transform=b.transAxes, fontsize=6.5, color=S.MUTED, va="bottom")
     b.text(0.0, -0.045, f"Morgan / ECFP-4, radius {MORGAN_RADIUS}, folded to {MORGAN_BITS} "
-                        "bits, chirality NOT included.\n"
-                        "Folding means a set bit reports that some environment hashing\n"
-                        "to that index is present, not which one: several substructures\n"
-                        "share a bit. Excluding chirality means two enantiomers produce\n"
-                        "identical rows, which is why identical rows are collapsed before\n"
-                        "any split rather than left to fall on both sides of one.",
-           transform=b.transAxes, fontsize=6.5, color=S.MUTED, va="top", linespacing=1.7)
+                        "bits, chirality NOT included.",
+           transform=b.transAxes, fontsize=6.5, color=S.MUTED, va="top")
 
     # ---- C: the descriptors, with the values this molecule has -----------------------------
     c = fig.add_subplot(gs[2]); c.axis("off")
@@ -127,10 +122,6 @@ def main() -> None:
         c.text(0.97, y, f"{val:,.2f}" if abs(val) < 1e4 else f"{val:,.0f}",
                transform=c.transAxes, fontsize=6.5, color=S.TARGET, va="center", ha="right",
                fontweight="bold")
-    c.text(0.0, 0.108, "Unscaled. A random forest splits on thresholds\nand is unchanged by any "
-                       "monotone rescaling, so\nno scaler is fitted and none can leak across a\n"
-                       "split.",
-           transform=c.transAxes, fontsize=6.5, color=S.MUTED, va="top", linespacing=1.7)
     c.add_patch(FancyBboxPatch((0.0, -0.115), 1.0, 0.078, transform=c.transAxes,
                                boxstyle="round,pad=0,rounding_size=0.02", clip_on=False,
                                facecolor="#F4F7F9", edgecolor=S.HAIR, lw=0.6))

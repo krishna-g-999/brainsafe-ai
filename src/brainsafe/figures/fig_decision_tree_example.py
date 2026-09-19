@@ -272,16 +272,6 @@ def main() -> None:
                          f"{SMILES}", ha="center", va="top", fontsize=8.5, color=S.MUTED,
               family="monospace")
 
-    S.note(fig,
-           f"Every number above is read directly from {MODEL}_calibrated.joblib for this molecule, "
-           f"not typed in: Panel A walks the fitted tree's own arrays (feature, threshold, "
-           f"sample count at each node); Panel B calls each fold's forest and calibrator "
-           f"directly. Colour in Panel A shows which side of the split a node's training samples "
-           f"lean, green towards barrier-penetrant, vermillion towards non-penetrant. The full "
-           f"1,247-node tree is exported as text in results/tables/decision_tree_example_full.txt; "
-           f"the pipeline itself is derived in docs/ML_METHODS_AND_FORMULAS.md, section 3.",
-           y=0.012)
-
     out = S.save(fig, "FigureS_decision_tree_example")
     print(f"  wrote {out.relative_to(ROOT)}")
     print(f"  donepezil per-fold calibrated: {[round(v, 4) for v in per_fold_cal]}  "

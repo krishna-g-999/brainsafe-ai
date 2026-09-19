@@ -118,3 +118,7 @@ NAR_SUBMISSION/
 # The one-page Web Server Issue proposal, rendered for sending; not source (edit
 # manuscript/NAR_proposal_onepage.md instead and regenerate).
 NAR_PROPOSAL/
+
+# A curated copy of submission_package/, assembled for sending to the author's own guides/PIs for
+# review; not source.
+FOR_GUIDES_REVIEW/
