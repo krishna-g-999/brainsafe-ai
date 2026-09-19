@@ -455,6 +455,14 @@ GRAPH: list[tuple[str, list[str], str]] = [
       "manuscript/references_links.json"],
      "python src/brainsafe/analysis/build_manuscript_condensed.py"),
 
+    # Supplementary_Information.docx embeds Figure9_model_atlas.png, Figure6_validation.png and
+    # Figure11_external_validation.png as S1-S3; it went stale relative to two of the three, twice,
+    # because nothing declared the dependency and check_freshness had no way to catch it.
+    ("manuscript/Supplementary_Information.docx",
+     ["manuscript/figures/Figure9_model_atlas.png", "manuscript/figures/Figure6_validation.png",
+      "manuscript/figures/Figure11_external_validation.png"],
+     "python src/brainsafe/analysis/build_supplementary_information.py"),
+
     # references.md used to be a hand-maintained second copy of the bibliography, numbered by year
     # rather than by citation order, so it silently disagreed with every number actually printed in
     # the manuscript. cite.py now writes it as a byproduct of the same resolution the built manuscript
