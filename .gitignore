@@ -122,3 +122,24 @@ NAR_PROPOSAL/
 # A curated copy of submission_package/, assembled for sending to the author's own guides/PIs for
 # review; not source.
 FOR_GUIDES_REVIEW/
+
+# ---- Publication content: kept on this machine, not on the public repository ----
+# The public repo now carries only the tool (the app, its source, its tests) so that an evaluator
+# can run it without anything about the unpublished manuscript being visible. Every path below
+# still exists in full on disk; git simply stops tracking it. Removed from every past commit too,
+# via git filter-repo, on 2026-09-20.
+manuscript/
+docs/
+thesis/
+presentation/
+supplementary/
+figures/
+AUDIT_PACKAGE/
+archive/
+reviewer_package/
+validation/
+results/
+data/
+inversion/
+audit/
+repro/
