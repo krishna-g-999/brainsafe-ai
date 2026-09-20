@@ -361,7 +361,14 @@ class TestFingerprintIsNotDescribedAsCollisionFree(unittest.TestCase):
 
     def test_no_document_claims_the_encoding_is_collision_free(self):
         for rel in self.FILES:
-            text = (ROOT / rel).read_text(encoding="utf-8").lower()
+            path = ROOT / rel
+            if not path.exists():
+                # submission_package/ is a local, gitignored copy built by
+                # tools/build_submission_package.py, not a tracked source file, so it is absent on
+                # a fresh checkout (a clean clone, or CI) exactly the way models_rf/ is: this failed
+                # every CI run since the check was added, on every OS, for that reason alone.
+                continue
+            text = path.read_text(encoding="utf-8").lower()
             for phrase in ("collision-free by construction", "collision-free-by-construction"):
                 # The corrected text may quote the old claim to say it was wrong; only an assertion
                 # that the encoding *is* collision-free should fail.
