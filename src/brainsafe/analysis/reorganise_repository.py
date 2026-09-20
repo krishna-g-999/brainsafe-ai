@@ -38,7 +38,11 @@ from datetime import date
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
-ARCHIVE = ROOT / f"_ARCHIVE_{date.today().isoformat()}"
+# Reuse an existing archive folder rather than starting a new dated one on every run: the point of
+# consolidating superseded material is one place to look, and a fresh folder each run would scatter
+# it back across as many dates as the script has been invoked.
+_existing_archives = sorted(ROOT.glob("_ARCHIVE_*"))
+ARCHIVE = _existing_archives[-1] if _existing_archives else ROOT / f"_ARCHIVE_{date.today().isoformat()}"
 
 # What moves, where it lands inside the archive, and why. The reason is written into the manifest
 # rather than into a commit message, so it stays attached to the files themselves.
@@ -65,9 +69,17 @@ TO_ARCHIVE = [
      "harvest was run and rejected: the validation gate measured 7.7 per cent extraction error and "
      "only one usable paired measurement was recovered against a requirement of 800. Retained "
      "because they were gathered by hand and the decision not to use them is itself a result."),
+    ("AUDIT_PACKAGE", "06_superseded_audit_snapshot",
+     "A one-time external-reviewer audit bundle, last written 2026-08-10. No script, test or "
+     "current document reads from it; audit/ is the live equivalent, last written today."),
+    ("presentation", "07_superseded_presentation",
+     "Slide decks last built 2026-07-18, before the binder panel's expansion to 52 endpoints (47 "
+     "deployed) and before base-rate enrichment replaced raw probability as the scoring rule. No "
+     "script or document references this folder; the numbers and figures in it no longer match the "
+     "deployed panel."),
 ]
 
-EMPTY_TO_REMOVE = ["data/interim", "results/metrics", "scripts", "tests"]
+EMPTY_TO_REMOVE = ["data/interim", "results/metrics", "scripts", "tests", "archive"]
 
 # Pipeline order. A reviewer reading the scripts should meet them in the order they run, not
 # alphabetically, so each directory is given a stage and a rank.
@@ -232,12 +244,26 @@ def main():
 
     # Re-running after the moves have happened finds nothing left to archive. That is the normal way
     # to refresh the indexes, so keep the existing manifest rather than truncating it to a header.
+    #
+    # A run that DOES find something to archive used to write manifest_rows alone, overwriting
+    # ROOT/ARCHIVE_MANIFEST.csv and losing every row from a previous run in the same archive folder
+    # (471 rows from 2026-08-10, on the run that first found this). The manifest is the only record
+    # of what an earlier run moved and why, so this reads whatever is already there first and adds
+    # to it, keyed on archived_from so re-running after a partial apply cannot duplicate a row.
+    all_rows = []
     if manifest_rows:
+        existing_rows = []
+        existing_path = ROOT / "ARCHIVE_MANIFEST.csv"
+        if existing_path.exists():
+            with existing_path.open(encoding="utf-8") as fh:
+                existing_rows = list(csv.DictReader(fh))
+        seen = {r["archived_from"] for r in existing_rows}
+        all_rows = existing_rows + [r for r in manifest_rows if r["archived_from"] not in seen]
         ARCHIVE.mkdir(exist_ok=True)
         with (ARCHIVE / "ARCHIVE_MANIFEST.csv").open("w", newline="", encoding="utf-8") as fh:
-            w = csv.DictWriter(fh, fieldnames=list(manifest_rows[0].keys()))
+            w = csv.DictWriter(fh, fieldnames=list(all_rows[0].keys()))
             w.writeheader()
-            w.writerows(manifest_rows)
+            w.writerows(all_rows)
         shutil.copy2(ARCHIVE / "ARCHIVE_MANIFEST.csv", ROOT / "ARCHIVE_MANIFEST.csv")
     else:
         print("  nothing left to archive; manifest left as it stands, indexes refreshed")
@@ -294,9 +320,11 @@ def main():
     stage_rows = "\n".join(
         f"| {s} | {sum(1 for r in scripts if r['stage'] == s)} |"
         for s, _ in STAGES if any(r["stage"] == s for r in scripts))
-    arch_total = sum(r["size_bytes"] for r in manifest_rows) if manifest_rows else None
-    arch_line = (f"{len(manifest_rows):,} files, {arch_total / 2**30:.2f} GB"
-                 if manifest_rows else "see ARCHIVE_MANIFEST.csv")
+    # all_rows is the full accumulated manifest (existing rows plus this run's), not just what this
+    # run added, so the total reported here matches what ARCHIVE_MANIFEST.csv actually lists.
+    arch_total = sum(int(r["size_bytes"]) for r in all_rows) if all_rows else None
+    arch_line = (f"{len(all_rows):,} files, {arch_total / 2**30:.2f} GB"
+                 if all_rows else "see ARCHIVE_MANIFEST.csv")
 
     (ROOT / "REPOSITORY_MAP.md").write_text(f"""# Repository map
 
@@ -333,7 +361,7 @@ with its checksum in `ARCHIVE_MANIFEST.csv`. Nothing was deleted. The folder is 
 because its contents are either regenerable or already in git history; the manifest is committed, so
 the repository records what was moved and where.
 
-Four categories were archived:
+Six categories have been archived so far, across two passes (2026-08-10 and 2026-09-20):
 
 - **The July publication bundle.** Superseded by `manuscript/NAR_WebServer_BrainSafe_built.md`. This
   is the one that mattered most: its `Supplementary/Datasets/*.csv` files carry the same names as the
@@ -349,6 +377,18 @@ Four categories were archived:
   thirteen papers gathered for state-dependent potency extraction, which were harvested, measured at
   7.7 per cent extraction error, and rejected. The papers are kept because the decision not to use
   them is itself a result.
+- **A superseded audit snapshot.** A one-time external-reviewer bundle from 2026-08-10, superseded
+  by `audit/`, the version that stays current.
+- **A superseded presentation.** Slide decks from 2026-07-18, predating the binder panel's expansion
+  to 52 endpoints and the switch to base-rate enrichment; the numbers and figures in them no longer
+  match the deployed panel.
+
+Three folders were considered and deliberately left in place rather than archived, because each has
+at least one live script still reading from it: `reviewer_package/model_outputs/` is a
+`check_freshness.py` artefact, `validation/repro/r03_ledger.py` is one of `tools/reproduce.py`'s
+targets, and `supplementary/` is cited by `docs/BS_MODEL_CARD.md` (itself unreferenced elsewhere,
+but the citation was enough to hold off). Archiving any of the three needs that script updated in
+the same pass, not just the folder moved.
 
 ## Regenerating these indexes
 
