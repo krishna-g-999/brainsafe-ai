@@ -26,8 +26,11 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 COPY app.py api.py serve.py model_fetch.py models_manifest.json ./
 COPY src/ ./src/
 COPY assets/ ./assets/
-COPY results/ ./results/
-COPY docs/ ./docs/
+# results/ and docs/ are not copied in: they hold validation tables and write-ups for the paper,
+# not anything the running server needs. Every place app.py/api.py reads from either is already
+# guarded (an .exists() check or a try/except returning an empty result), verified by grep across
+# both files before this line was removed, so their absence here degrades a few optional UI
+# sections rather than failing the build or a request.
 
 # The models are fetched at BUILD time from the published archive rather than copied from the build
 # context or downloaded at start-up. Three reasons, in order of importance:

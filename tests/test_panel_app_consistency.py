@@ -100,6 +100,11 @@ class TestManuscriptCountsMatchThePanel(unittest.TestCase):
             (ROOT / "manuscript" / f).read_text(encoding="utf-8")
             for f in ("NAR_WebServer_BrainSafe_draft.md", "NAR_condensed_draft.md")
             if (ROOT / "manuscript" / f).exists())
+        if not cls.text:
+            # manuscript/ is not part of this repository (it lives in the private working copy
+            # this tool is built from), so there is nothing here for either count to be checked
+            # against; the check belongs where the manuscript does.
+            raise unittest.SkipTest("manuscript/ is not present in this checkout")
 
     def test_pathway_graph_target_count(self):
         import re
@@ -136,6 +141,12 @@ class TestPanelCountsReconcile(unittest.TestCase):
         import app
         cls.sh = app.panel_shape()
         cls.app = app
+        if "targets" not in cls.sh:
+            # panel_shape() reads results/tables/MODEL_INVENTORY.csv and returns {} rather than
+            # raising when it is absent, which is the right behaviour for the running app (callers
+            # there already tolerate a partial shape) but leaves nothing here for these identities
+            # to check: results/ is not part of this repository.
+            raise unittest.SkipTest("results/tables/MODEL_INVENTORY.csv is not present in this checkout")
 
     def test_quantities_partition_into_targets_exposure_and_other(self):
         s = self.sh
@@ -251,6 +262,8 @@ class TestReportedTablesAgreeWithRegistry(unittest.TestCase):
 
     def test_sensitivity_and_reliability_match_the_registry(self):
         import json
+        if not (ROOT / "results" / "tables" / "background_specificity.csv").exists():
+            self.skipTest("results/tables/background_specificity.csv is not present in this checkout")
         modes = json.loads((ROOT / "models_rf" / "binder_modes.json").read_text(encoding="utf-8"))
         wrong = []
         for r in self._rows():
@@ -381,7 +394,10 @@ class TestFingerprintIsNotDescribedAsCollisionFree(unittest.TestCase):
 
     def test_the_measurement_contradicts_the_old_claim(self):
         import pandas as pd
-        d = pd.read_csv(ROOT / "results" / "tables" / "fingerprint_collisions.csv").set_index("measure")
+        p = ROOT / "results" / "tables" / "fingerprint_collisions.csv"
+        if not p.exists():
+            self.skipTest("results/tables/fingerprint_collisions.csv is not present in this checkout")
+        d = pd.read_csv(p).set_index("measure")
         bits = int(d.loc["fingerprint bits", "value"])
         colliding = int(d.loc["bits carrying more than one environment", "value"])
         occupied = int(d.loc["bits occupied", "value"])
@@ -392,7 +408,10 @@ class TestFingerprintIsNotDescribedAsCollisionFree(unittest.TestCase):
 
     def test_featurize_quotes_the_artefact(self):
         import pandas as pd
-        d = pd.read_csv(ROOT / "results" / "tables" / "fingerprint_collisions.csv").set_index("measure")
+        p = ROOT / "results" / "tables" / "fingerprint_collisions.csv"
+        if not p.exists():
+            self.skipTest("results/tables/fingerprint_collisions.csv is not present in this checkout")
+        d = pd.read_csv(p).set_index("measure")
         text = (ROOT / "src" / "brainsafe" / "features" / "featurize.py").read_text(encoding="utf-8")
         for key in ("distinct atomic environments", "environments per occupied bit, median",
                     "environments per occupied bit, max"):
