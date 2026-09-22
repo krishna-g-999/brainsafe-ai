@@ -139,7 +139,9 @@ archive/
 reviewer_package/
 validation/
 results/
-data/
+# anchored to the repository root: an unanchored 'data/' also matched
+# src/brainsafe/data/, so new source files there were silently untracked
+/data/
 inversion/
 audit/
 repro/

@@ -55,6 +55,7 @@ RDLogger.DisableLog("rdApp.*")
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import _tls  # noqa: E402
+from activity_labels import ACTIVE_CUT, INACTIVE_CUT, label_from  # noqa: E402,F401
 
 CHEMBL = "https://www.ebi.ac.uk/chembl/api/data"
 CACHE = ROOT / "data" / "_chembl_cache"
@@ -63,7 +64,6 @@ ENDPOINTS = ROOT / "data" / "endpoints"
 
 KEEP_TYPES = ("IC50", "Ki", "Kd", "EC50", "Potency")
 PAGE, MAX_PAGES = 1000, 12
-ACTIVE_CUT, INACTIVE_CUT = 6.0, 5.0
 
 # A compound counts as the chemistry this panel lacks when it is sp3-rich and not built on a flat
 # aromatic core. These are the thresholds the coverage analysis used, and withaferin A sits well
@@ -115,26 +115,6 @@ def describe(smiles: str) -> dict | None:
         # the class the panel is short of, judged on structure rather than on a database field
         "fills_the_gap": bool(fsp3 >= SP3_RICH and arom <= MAX_AROMATIC),
     }
-
-
-def label_from_bound(pvalue: float, relation: str) -> int | None:
-    """The project's label rule, with a censored bound settling a label only when it can.
-
-    An exact value is active above ACTIVE_CUT and inactive at or below INACTIVE_CUT, with the band
-    between them discarded as ambiguous. A `>` bound places the true potency strictly below the
-    quoted value, so it settles the compound as inactive only when the whole interval lies below the
-    inactive cut. Passing a bound to the exact-value rule is the defect that lost 253 measured
-    non-binders for AChE alone.
-    """
-    if relation == ">":
-        return 0 if pvalue <= INACTIVE_CUT else None
-    if relation == "<":
-        return 1 if pvalue >= ACTIVE_CUT else None
-    if pvalue >= ACTIVE_CUT:
-        return 1
-    if pvalue <= INACTIVE_CUT:
-        return 0
-    return None
 
 
 def fetch_target(name: str, tid: str, max_pages: int, refresh: bool) -> list[dict]:
@@ -207,7 +187,7 @@ def main(argv=None) -> None:
 
         kept = gap = novel = 0
         for r in rows:
-            lab = label_from_bound(r["pchembl"], r["relation"])
+            lab = label_from(r["pchembl"], r["relation"])
             if lab is None:
                 continue
             d = describe(r["smiles"])

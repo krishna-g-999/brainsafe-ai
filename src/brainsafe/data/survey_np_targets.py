@@ -36,6 +36,9 @@ import pandas as pd
 from rdkit import Chem, RDLogger
 from rdkit.Chem import rdMolDescriptors
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from activity_labels import ACTIVE_CUT, INACTIVE_CUT, label_from  # noqa: E402,F401
+
 RDLogger.DisableLog("rdApp.*")
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -44,7 +47,6 @@ ENDPOINTS = ROOT / "data" / "endpoints"
 
 KEEP_TYPES = {"IC50", "Ki", "Kd", "EC50", "Potency"}
 TO_NM = {"nM": 1.0, "uM": 1e3, "mM": 1e6, "M": 1e9, "pM": 1e-3}
-ACTIVE_CUT, INACTIVE_CUT = 6.0, 5.0
 MIN_COMPOUNDS = 60          # below this a per-target model is not defensible
 MIN_PER_CLASS = 15
 SP3_RICH, MAX_AROMATIC = 0.55, 1
@@ -57,19 +59,6 @@ CNS_HINTS = re.compile(
     r"secretase|synuclein|amyloid|tau|deacetylase|sirtuin|nitric oxide|cyclooxygenase|"
     r"aromatase|carbonic anhydrase|topoisomerase|tyrosinase|xanthine|aldose|glycogen",
     re.I)
-
-
-def label_from(p: float, relation: str) -> int | None:
-    rel = (relation or "=").strip()
-    if rel in (">", ">="):
-        return 0 if p <= INACTIVE_CUT else None
-    if rel in ("<", "<="):
-        return 1 if p >= ACTIVE_CUT else None
-    if p >= ACTIVE_CUT:
-        return 1
-    if p <= INACTIVE_CUT:
-        return 0
-    return None
 
 
 def panel_accessions() -> dict[str, str]:

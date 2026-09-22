@@ -52,6 +52,7 @@ RDLogger.DisableLog("rdApp.*")
 
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from activity_labels import ACTIVE_CUT, INACTIVE_CUT, label_from  # noqa: E402,F401
 
 TAB = ROOT / "results" / "tables"
 ENDPOINTS = ROOT / "data" / "endpoints"
@@ -62,7 +63,6 @@ CACHE = ROOT / "data" / "_chembl_cache"
 KEEP_TYPES = {"IC50", "Ki", "Kd", "EC50", "Potency"}
 # Molar-convertible units only. ug/mL needs a per-record molecular weight to convert and is dropped.
 TO_NM = {"nM": 1.0, "uM": 1e3, "mM": 1e6, "M": 1e9, "pM": 1e-3}
-ACTIVE_CUT, INACTIVE_CUT = 6.0, 5.0
 SP3_RICH, MAX_AROMATIC = 0.55, 1
 
 
@@ -106,20 +106,6 @@ def panel_uniprots() -> dict[str, str]:
     CACHE.mkdir(parents=True, exist_ok=True)
     cache.write_text(json.dumps(out, indent=2), encoding="utf-8")
     return out
-
-
-def label_from(pvalue: float, relation: str) -> int | None:
-    """The project's rule, with a censored bound settling a label only when it can."""
-    rel = (relation or "=").strip()
-    if rel in (">", ">="):
-        return 0 if pvalue <= INACTIVE_CUT else None
-    if rel in ("<", "<="):
-        return 1 if pvalue >= ACTIVE_CUT else None
-    if pvalue >= ACTIVE_CUT:
-        return 1
-    if pvalue <= INACTIVE_CUT:
-        return 0
-    return None
 
 
 def describe(smiles: str) -> dict | None:

@@ -45,6 +45,7 @@ import requests
 import _tls  # noqa: E402  (sibling module)
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from activity_labels import INACTIVE_CUT, bound_settles_inactive  # noqa: E402,F401
 ROOT = Path(__file__).resolve().parents[3]
 CHEMBL_CACHE = ROOT / "data" / "_chembl_cache"
 ENDPOINTS = ROOT / "data" / "endpoints"
@@ -85,7 +86,6 @@ MAX_PAGES, PAGE = 16, 1000
 MIN_BBB_ROWS = 1000
 # Potency at or below this is inactive under the project label rule, so a ">" bound
 # reaching it settles the compound whatever the true value is.
-INACTIVE_CUT = 5.0
 
 
 def chembl_version() -> dict:
@@ -174,7 +174,7 @@ def fetch_inactive_activities(name: str, tid: str, refresh: bool = False) -> lis
             if nm <= 0:
                 continue
             bound = 9.0 - math.log10(nm)          # potency is strictly below this
-            if bound > INACTIVE_CUT:
+            if not bound_settles_inactive(bound):
                 undecidable += 1                   # e.g. ">100 nM": could still be active
                 continue
             rows.append({"smiles": smi, "pchembl_bound": bound, "relation": ">",

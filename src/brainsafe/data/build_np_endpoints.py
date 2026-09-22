@@ -42,13 +42,13 @@ RDLogger.DisableLog("rdApp.*")
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from build_compound_library import standardise  # noqa: E402
+from activity_labels import ACTIVE_CUT, INACTIVE_CUT, label_from  # noqa: E402,F401
 
 ENDPOINTS = ROOT / "data" / "endpoints"
 TAB = ROOT / "results" / "tables"
 
 KEEP_TYPES = {"IC50", "Ki", "Kd", "EC50", "Potency"}
 TO_NM = {"nM": 1.0, "uM": 1e3, "mM": 1e6, "M": 1e9, "pM": 1e-3}
-ACTIVE_CUT, INACTIVE_CUT = 6.0, 5.0
 
 # endpoint name -> (UniProt, why it is here)
 SELECTED = {
@@ -59,20 +59,6 @@ SELECTED = {
     "NR3C1": ("P04150", "glucocorticoid receptor; stress and depression axis, best class balance "
                         "and richest in sp3 chemistry of the candidates"),
 }
-
-
-def label_from(p: float, relation: str) -> int | None:
-    """The project's label rule. A bound settles a class only when the whole interval does."""
-    rel = (relation or "=").strip()
-    if rel in (">", ">="):
-        return 0 if p <= INACTIVE_CUT else None
-    if rel in ("<", "<="):
-        return 1 if p >= ACTIVE_CUT else None
-    if p >= ACTIVE_CUT:
-        return 1
-    if p <= INACTIVE_CUT:
-        return 0
-    return None
 
 
 def assay_composition(m: pd.DataFrame) -> pd.DataFrame:

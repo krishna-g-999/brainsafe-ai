@@ -18,6 +18,8 @@ Run:  python -m pytest tests/ -v
 """
 from __future__ import annotations
 
+import importlib
+import re
 import sys
 import unittest
 from pathlib import Path
@@ -26,6 +28,9 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src" / "brainsafe"))
+sys.path.insert(0, str(ROOT / "src" / "brainsafe" / "data"))
+from data.activity_labels import (ACTIVE_CUT, INACTIVE_CUT,                # noqa: E402
+                                  bound_settles_inactive, label_from)
 from features.featurize import N_FEATURES                                  # noqa: E402
 from models.pools import SHARES, _band, role_of                            # noqa: E402
 from models.train_rf import SEED, _dedup_features                          # noqa: E402
@@ -118,33 +123,127 @@ class TestBackgroundPools(unittest.TestCase):
 class TestCensoredLabelRule(unittest.TestCase):
     """A bound settles a label only when the whole interval lies on one side of the cut.
 
-    Reproduced here rather than imported, because the rule lives in several fetchers and the
-    property under test is the rule itself. The defect this pins lost 253 measured non-binders for
-    AChE by passing a bound to the exact-value rule, which treats it as a potency and discards the
-    ambiguous 5 to 6 band.
+    This exercises the shipped rule in data/activity_labels.py. An earlier version of this class
+    re-implemented the rule as a local `settles()` helper and asserted against that, so it would
+    have passed unchanged had the production rule broken; the property under test is the rule the
+    fetchers actually call, not a copy of it that happens to live beside the assertions.
+
+    The defect this pins lost 253 measured non-binders for AChE by passing a bound to the
+    exact-value rule, which treats it as a potency and discards the ambiguous 5 to 6 band.
     """
-
-    INACTIVE_CUT = 5.0
-    ACTIVE_CUT = 6.0
-
-    @staticmethod
-    def settles(bound: float, inactive_cut=5.0) -> bool:
-        """`> bound` means the true potency is strictly below `bound`."""
-        return bound <= inactive_cut
 
     def test_a_weak_bound_settles_the_compound_as_inactive(self):
         # "IC50 > 10 uM" is pChEMBL 5.0: everything below, so unambiguously inactive
-        self.assertTrue(self.settles(5.0))
-        self.assertTrue(self.settles(4.2))
+        self.assertEqual(label_from(5.0, ">"), 0)
+        self.assertEqual(label_from(4.2, ">"), 0)
 
     def test_a_bound_spanning_both_classes_is_undecidable(self):
         # "IC50 > 100 nM" is pChEMBL 7.0: the true value could be active or inactive
-        self.assertFalse(self.settles(7.0))
-        self.assertFalse(self.settles(5.5))
+        self.assertIsNone(label_from(7.0, ">"))
+        self.assertIsNone(label_from(5.5, ">"))
 
     def test_the_boundary_case_is_included(self):
-        self.assertTrue(self.settles(self.INACTIVE_CUT),
-                        "a bound exactly at the cut still places the true value below it")
+        self.assertEqual(label_from(INACTIVE_CUT, ">"), 0,
+                         "a bound exactly at the cut still places the true value below it")
+
+    def test_a_strong_bound_settles_the_compound_as_active(self):
+        self.assertEqual(label_from(ACTIVE_CUT, "<"), 1)
+        self.assertEqual(label_from(9.0, "<"), 1)
+        self.assertIsNone(label_from(5.5, "<"), "a '<' bound below the active cut settles nothing")
+
+    def test_an_exact_value_in_the_ambiguous_band_is_discarded(self):
+        # Literal values, not the constants. Asserting label_from(ACTIVE_CUT, "=") == 1 is true
+        # for any cut whatsoever and so pins nothing; these pin the band to 5-6 specifically.
+        self.assertEqual(label_from(6.0, "="), 1)
+        self.assertEqual(label_from(6.1, "="), 1)
+        self.assertIsNone(label_from(5.9, "="), "just below the active cut is ambiguous")
+        self.assertIsNone(label_from(5.5, "="))
+        self.assertIsNone(label_from(5.1, "="), "just above the inactive cut is ambiguous")
+        self.assertEqual(label_from(5.0, "="), 0)
+        self.assertEqual(label_from(4.9, "="), 0)
+
+    def test_the_cuts_are_the_documented_values(self):
+        """The two cuts are load-bearing, so they are pinned to literals here.
+
+        Every label in data/endpoints was produced against 6.0 and 5.0, and the manuscript
+        describes the 5 to 6 band as the ambiguous one. Moving either constant silently
+        re-labels the training data without re-fitting anything.
+        """
+        self.assertEqual(ACTIVE_CUT, 6.0)
+        self.assertEqual(INACTIVE_CUT, 5.0)
+
+    def test_inclusive_bounds_are_read_as_bounds_not_as_potencies(self):
+        """The divergence that made a single source of truth worth having.
+
+        One fetcher matched only a bare '>' and '<', so a '>=' fell through to the exact-value
+        branch and a bound at pChEMBL 7 was labelled ACTIVE. ChEMBL's standard_relation emits both
+        forms, so this was a live trap on any re-fetch.
+        """
+        self.assertIsNone(label_from(7.0, ">="))
+        self.assertEqual(label_from(4.0, ">="), 0)
+        self.assertIsNone(label_from(5.5, "<="))
+        self.assertEqual(label_from(7.0, "<="), 1)
+
+    def test_the_relation_is_normalised_before_it_is_read(self):
+        """pChEMBL 7.0 is the value that tells the two branches apart.
+
+        As a '>' bound it settles nothing, because the true potency lies somewhere below 7 and
+        could be either class. Read as an exact potency it is comfortably ACTIVE. A padded or
+        tab-terminated symbol that is not normalised falls through to the exact branch and turns
+        an undecidable bound into a confident active, so testing normalisation at a value like
+        4.0, which is inactive under either reading, would prove nothing.
+        """
+        for rel in (" > ", ">\t", " >", ">"):
+            with self.subTest(relation=rel):
+                self.assertIsNone(label_from(7.0, rel))
+        for rel in (None, "", "=", "~"):
+            with self.subTest(relation=rel):
+                self.assertEqual(label_from(7.0, rel), 1,
+                                 "an absent or non-bound relation is read as an exact value")
+
+    def test_a_non_numeric_measurement_cannot_settle_a_class(self):
+        nan = float("nan")
+        self.assertIsNone(label_from(nan, ">"))
+        self.assertIsNone(label_from(nan, "="))
+        self.assertFalse(bound_settles_inactive(nan))
+
+    def test_the_two_halves_of_the_rule_agree(self):
+        """bound_settles_inactive must stay the '>' branch of label_from, not drift from it."""
+        for b in (0.0, 4.2, 4.999, 5.0, 5.001, 5.5, 6.0, 7.0, 12.0, float("nan")):
+            with self.subTest(bound=b):
+                self.assertEqual(bound_settles_inactive(b), label_from(b, ">") == 0)
+
+
+class TestTheLabelRuleHasOneDefinition(unittest.TestCase):
+    """The cuts must be declared in exactly one place.
+
+    They were previously re-declared in six fetchers plus this test file. The values agreed, but
+    the rules did not, and nothing would have caught them drifting apart.
+    """
+
+    def test_no_other_module_declares_the_cuts(self):
+        src = ROOT / "src" / "brainsafe"
+        pattern = re.compile(r"^\s*(ACTIVE_CUT|INACTIVE_CUT)\s*[:,=]", re.M)
+        offenders = []
+        for path in src.rglob("*.py"):
+            if path.name == "activity_labels.py":
+                continue
+            text = path.read_text(encoding="utf-8")
+            body = "\n".join(l for l in text.splitlines()
+                             if not l.lstrip().startswith(("from ", "import ")))
+            if pattern.search(body):
+                offenders.append(path.relative_to(ROOT).as_posix())
+        self.assertEqual(offenders, [],
+                         "these modules declare the activity cuts locally instead of importing "
+                         "them from data/activity_labels.py: " + ", ".join(offenders))
+
+    def test_every_fetcher_uses_the_shared_rule_object(self):
+        import activity_labels
+        for mod_name in ("build_np_endpoints", "fetch_natural_products",
+                         "ingest_npass", "survey_np_targets"):
+            with self.subTest(module=mod_name):
+                mod = importlib.import_module(mod_name)
+                self.assertIs(mod.label_from, activity_labels.label_from)
 
 
 class TestDeterminism(unittest.TestCase):

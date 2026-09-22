@@ -39,13 +39,13 @@ ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import _tls  # noqa: E402
 from build_compound_library import standardise  # noqa: E402
+from activity_labels import INACTIVE_CUT, bound_settles_inactive  # noqa: E402,F401
 
 CHEMBL = "https://www.ebi.ac.uk/chembl/api/data"
 CACHE = ROOT / "data" / "_chembl_cache"
 ENDPOINTS = ROOT / "data" / "endpoints"
 KEEP_TYPES = ("IC50", "Ki", "Kd", "EC50", "Potency")
 MAX_PAGES, PAGE = 16, 1000
-INACTIVE_CUT = 5.0          # potency at or below this is inactive under the project label rule
 MIN_EXISTING = 50           # a table smaller than this is not one of ours; leave it alone
 
 _SESSION = None
@@ -98,7 +98,7 @@ def fetch_inactives(name: str, tid: str, refresh: bool = False) -> list[dict]:
             if nm <= 0:
                 continue
             bound = 9.0 - math.log10(nm)
-            if bound > INACTIVE_CUT:
+            if not bound_settles_inactive(bound):
                 undecidable += 1          # consistent with either label; not guessed at
                 continue
             rows.append({"smiles": smi, "pchembl_bound": bound, "relation": ">",
